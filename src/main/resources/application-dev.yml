@@ -8,10 +8,11 @@ server:
 spring:
   data:
     neo4j:
-      username: techial
+      username: neo4j
       password: techial
+      uri: bolt://localhost:7687
     mongodb:
-      host: mongo
+      host: localhost
       port: 27017
       database: activity
   cache:
