@@ -18,4 +18,8 @@ public class HuDongItemServer {
     public HuDongItem save(HuDongItem huDongItems) {
         return huDongItemRepository.save(huDongItems);
     }
+
+    public void deleteAll() {
+        huDongItemRepository.deleteAll();
+    }
 }

@@ -19,6 +19,7 @@ public class HuDongItem {
     @GeneratedValue
     private Long id;
 
+    @Index(unique = true)
     private String title;
 
     private String image;
