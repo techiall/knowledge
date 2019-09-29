@@ -1,0 +1,22 @@
+server:
+  port: 8080
+  address: 0.0.0.0
+  undertow:
+    io-threads: 12
+    direct-buffers: true
+
+spring:
+  data:
+    neo4j:
+      username: techial
+      password: techial
+    mongodb:
+      host: mongo
+      port: 27017
+      database: activity
+  cache:
+    type: simple
+logging:
+  level:
+    top.techial: debug
+
