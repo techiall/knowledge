@@ -15,6 +15,10 @@ public class HuDongItemServer {
         this.huDongItemRepository = huDongItemRepository;
     }
 
+    public long count() {
+        return huDongItemRepository.count();
+    }
+
     public HuDongItem save(HuDongItem huDongItems) {
         return huDongItemRepository.save(huDongItems);
     }
@@ -25,5 +29,9 @@ public class HuDongItemServer {
 
     public HuDongItem findById(Long id) {
         return huDongItemRepository.findById(id).orElseThrow(NullPointerException::new);
+    }
+
+    public HuDongItem findByTitle(String title) {
+        return huDongItemRepository.findFirstByTitle(title).orElseThrow(NullPointerException::new);
     }
 }

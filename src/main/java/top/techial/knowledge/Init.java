@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import top.techial.knowledge.domain.HuDongItem;
 import top.techial.knowledge.service.HuDongItemServer;
+import top.techial.knowledge.service.NewNodeServer;
 import top.techial.knowledge.utils.ResourceUtils;
 
 import java.util.List;
@@ -25,17 +26,20 @@ public class Init implements CommandLineRunner {
             .setDetail(key[4].trim().replace("\"", ""))
             .setBaseInfoKeyList(key[5].trim().replace("\"", ""))
             .setBaseInfoValueList(key[6].trim().replace("\"", ""));
-    private final HuDongItemServer huDongItemServer;
 
-    public Init(HuDongItemServer huDongItemServer) {
+    private final HuDongItemServer huDongItemServer;
+    private final NewNodeServer newNodeServer;
+
+    public Init(HuDongItemServer huDongItemServer, NewNodeServer newNodeServer) {
         this.huDongItemServer = huDongItemServer;
+        this.newNodeServer = newNodeServer;
     }
 
     @Override
     public void run(String... args) {
-        huDongItemServer.deleteAll();
-        List<HuDongItem> list = ResourceUtils.read("data/hu-dong.csv", HU_DONG_ITEM_FUNCTION, ",");
-
-        list.stream().map(huDongItemServer::save).forEach(System.out::println);
+        if (huDongItemServer.count() == 0L) {
+            List<HuDongItem> list = ResourceUtils.read("data/hu-dong.csv", HU_DONG_ITEM_FUNCTION, ",");
+            list.stream().map(huDongItemServer::save).forEach(System.out::println);
+        }
     }
 }
