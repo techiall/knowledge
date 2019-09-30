@@ -33,9 +33,9 @@ public class Init implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        huDongItemServer.deleteAll();
         List<HuDongItem> list = ResourceUtils.read("data/hu-dong.csv", HU_DONG_ITEM_FUNCTION, ",");
 
-        huDongItemServer.deleteAll();
-        list.forEach(huDongItemServer::save);
+        list.stream().map(huDongItemServer::save).forEach(System.out::println);
     }
 }

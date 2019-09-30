@@ -22,4 +22,8 @@ public class HuDongItemServer {
     public void deleteAll() {
         huDongItemRepository.deleteAll();
     }
+
+    public HuDongItem findById(Long id) {
+        return huDongItemRepository.findById(id).orElseThrow(NullPointerException::new);
+    }
 }

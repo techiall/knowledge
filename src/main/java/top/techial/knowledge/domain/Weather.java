@@ -8,25 +8,12 @@ import org.neo4j.ogm.annotation.NodeEntity;
 /**
  * @author techial
  */
-@NodeEntity()
+@NodeEntity
 @Data
 @Accessors(chain = true)
-public class HuDongItem {
+public class Weather {
     private Long id;
 
     @Index(unique = true)
     private String title;
-
-    private String image;
-
-    private String detail;
-
-    private String url;
-
-    private String openTypeList;
-
-    private String baseInfoKeyList;
-
-    private String baseInfoValueList;
-
 }
