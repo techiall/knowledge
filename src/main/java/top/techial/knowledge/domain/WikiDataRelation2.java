@@ -13,6 +13,7 @@ import org.neo4j.ogm.annotation.StartNode;
 @Data
 @Accessors(chain = true)
 public class WikiDataRelation2 {
+    private Long id;
 
     @StartNode
     private HuDongItem huDongItem;
@@ -21,4 +22,5 @@ public class WikiDataRelation2 {
     private NewNode newNode;
 
     private String relation;
+
 }

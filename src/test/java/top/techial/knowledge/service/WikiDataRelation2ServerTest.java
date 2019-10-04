@@ -8,13 +8,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class NewNodeServerTest {
+public class WikiDataRelation2ServerTest {
     @Autowired
-    private NewNodeServer newNodeServer;
+    private WikiDataRelation2Server wikiDataRelation2Server;
 
     @Test
-    public void findByTitle() {
-        System.out.println(newNodeServer.findByTitle("香草植物"));
+    public void findById() {
+        System.out.println(wikiDataRelation2Server.findById(28903L));
     }
-
 }

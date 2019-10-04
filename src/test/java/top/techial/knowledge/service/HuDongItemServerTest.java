@@ -16,6 +16,6 @@ public class HuDongItemServerTest {
 
     @Test
     public void findByTitle() {
-        System.out.println(huDongItemServer.findByTitle("主导地位"));
+        System.out.println(huDongItemServer.findByTitle("留兰香"));
     }
 }

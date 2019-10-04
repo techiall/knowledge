@@ -21,9 +21,6 @@ spring:
     type: simple
 logging:
   level:
-    org:
-      springframework:
-        data:
-          neo4j: debug
+    org.springframework.data: debug
     top.techial: debug
 
