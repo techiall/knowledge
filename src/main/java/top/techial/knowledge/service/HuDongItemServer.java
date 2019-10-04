@@ -34,4 +34,8 @@ public class HuDongItemServer {
     public HuDongItem findByTitle(String title) {
         return huDongItemRepository.findFirstByTitle(title).orElseThrow(NullPointerException::new);
     }
+
+    public Iterable<HuDongItem> saveAll(Iterable<HuDongItem> huDongItems) {
+        return huDongItemRepository.saveAll(huDongItems);
+    }
 }

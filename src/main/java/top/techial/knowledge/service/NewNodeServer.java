@@ -25,6 +25,10 @@ public class NewNodeServer {
         return newNodeRepository.saveAll(newNodes);
     }
 
+    public void deleteAll() {
+        newNodeRepository.deleteAll();
+    }
+
     public long count() {
         return newNodeRepository.count();
     }
