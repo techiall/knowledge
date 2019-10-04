@@ -6,14 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.junit.Assert.*;
+
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class WikiDataRelation2ServerTest {
+public class WeatherServerTest {
     @Autowired
-    private WikiDataRelation2Server wikiDataRelation2Server;
+    private WeatherServer weatherServer;
 
     @Test
-    public void findById() {
-        System.out.println(wikiDataRelation2Server.findById(28903L));
+    public void findByTitle() {
+        System.out.println(weatherServer.findByTitle("亚热带季风性湿润气候"));
     }
 }

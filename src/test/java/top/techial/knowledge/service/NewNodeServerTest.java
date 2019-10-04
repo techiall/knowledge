@@ -14,7 +14,7 @@ public class NewNodeServerTest {
 
     @Test
     public void findByTitle() {
-        System.out.println(newNodeServer.findByTitle("香草植物"));
+        System.out.println(newNodeServer.findByTitle("化学"));
     }
 
 }

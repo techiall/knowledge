@@ -2,7 +2,7 @@ package top.techial.knowledge.dao;
 
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.stereotype.Repository;
-import top.techial.knowledge.domain.HuDongItem;
+import top.techial.knowledge.domain.Weather;
 
 import java.util.Optional;
 
@@ -10,12 +10,10 @@ import java.util.Optional;
  * @author techial
  */
 @Repository
-public interface HuDongItemRepository extends Neo4jRepository<HuDongItem, Long> {
+public interface WeatherRepository extends Neo4jRepository<Weather, Long> {
     /**
-     * find by title
-     *
      * @param title
      * @return
      */
-    Optional<HuDongItem> findByTitle(String title);
+    Optional<Weather> findByTitle(String title);
 }
