@@ -4,15 +4,17 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.Property;
 
 /**
  * @author techial
  */
-@NodeEntity
+@NodeEntity(label = "Weather")
 @Data
 @Accessors(chain = true)
 public class Weather {
 
     @Index(unique = true)
+    @Property(name = "title")
     private String title;
 }
