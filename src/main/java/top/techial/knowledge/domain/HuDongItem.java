@@ -8,13 +8,14 @@ import org.neo4j.ogm.annotation.NodeEntity;
 /**
  * @author techial
  */
-@NodeEntity()
+@NodeEntity(label = "HudongItem")
 @Data
 @Accessors(chain = true)
 public class HuDongItem {
     private Long id;
 
     @Index(unique = true)
+
     private String title;
 
     private String image;

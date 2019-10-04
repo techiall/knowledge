@@ -12,7 +12,6 @@ import org.neo4j.ogm.annotation.NodeEntity;
 @Data
 @Accessors(chain = true)
 public class Weather {
-    private Long id;
 
     @Index(unique = true)
     private String title;

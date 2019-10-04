@@ -11,9 +11,7 @@ import top.techial.knowledge.domain.WikiDataRelation;
 import top.techial.knowledge.service.HuDongItemServer;
 import top.techial.knowledge.service.NewNodeServer;
 import top.techial.knowledge.service.WikiDataRelationServer;
-import top.techial.knowledge.utils.ResourceUtils;
 
-import java.util.Iterator;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -95,22 +93,22 @@ public class Init implements CommandLineRunner {
     public void run(String... args) {
         log.info("init start");
 
-        if (huDongItemServer.count() == 0L) {
-            Iterator<HuDongItem> dongItemIterator = ResourceUtils.read("data/hudong_pedia.csv", HU_DONG_ITEM_FUNCTION);
-            huDongItemServer.saveAll(() -> dongItemIterator);
-        }
-        if (newNodeServer.count() == 0L) {
-            Iterator<NewNode> newNodeIterator = ResourceUtils.read("data/new_node.csv", NEW_NODE_FUNCTION);
-            newNodeServer.saveAll(() -> newNodeIterator);
-        }
-
-        wikiDataRelationServer.deleteAll();
-        if (wikiDataRelationServer.count() == 0L) {
-            Iterator<WikiDataRelation> wikiDataRelationIterator =
-                ResourceUtils.read("data/wikidata_relation.csv", WIKI_DATA_RELATION_FUNCTION);
-            wikiDataRelationIterator.forEachRemaining(this::wikiDataRelationFunction);
-        }
-
+//        if (huDongItemServer.count() == 0L) {
+//            Iterator<HuDongItem> dongItemIterator = ResourceUtils.read("data/hudong_pedia.csv", HU_DONG_ITEM_FUNCTION);
+//            huDongItemServer.saveAll(() -> dongItemIterator);
+//        }
+//        if (newNodeServer.count() == 0L) {
+//            Iterator<NewNode> newNodeIterator = ResourceUtils.read("data/new_node.csv", NEW_NODE_FUNCTION);
+//            newNodeServer.saveAll(() -> newNodeIterator);
+//        }
+//
+//        wikiDataRelationServer.deleteAll();
+//        if (wikiDataRelationServer.count() == 0L) {
+//            Iterator<WikiDataRelation> wikiDataRelationIterator =
+//                ResourceUtils.read("data/wikidata_relation.csv", WIKI_DATA_RELATION_FUNCTION);
+//            wikiDataRelationIterator.forEachRemaining(this::wikiDataRelationFunction);
+//        }
+//
 
         log.info("init success");
     }
