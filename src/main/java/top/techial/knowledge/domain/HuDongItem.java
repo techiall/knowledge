@@ -5,6 +5,9 @@ import lombok.experimental.Accessors;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Property;
+import org.neo4j.ogm.annotation.Relationship;
+
+import java.util.List;
 
 /**
  * @author techial
@@ -37,4 +40,6 @@ public class HuDongItem {
     @Property(name = "baseInfoKeyList")
     private String baseInfoValueList;
 
+    @Relationship(type = "RELATION")
+    private List<HuDongItem> huDongItems;
 }
