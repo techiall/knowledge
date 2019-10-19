@@ -3,6 +3,7 @@ package top.techial.knowledge.service;
 import org.springframework.stereotype.Service;
 import top.techial.knowledge.dao.KnowledgeNodeRelationRepository;
 import top.techial.knowledge.dao.KnowledgeNodeRepository;
+import top.techial.knowledge.domain.KnowledgeNodeRelation;
 
 /**
  * @author techial
@@ -17,4 +18,7 @@ public class KnowledgeNodeRelationService {
         this.knowledgeNodeRelationRepository = knowledgeNodeRelationRepository;
     }
 
+    public Iterable<KnowledgeNodeRelation> saveAll(Iterable<KnowledgeNodeRelation> buildNodeRelation) {
+        return knowledgeNodeRelationRepository.saveAll(buildNodeRelation);
+    }
 }

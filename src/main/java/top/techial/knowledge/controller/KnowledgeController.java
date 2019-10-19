@@ -32,7 +32,7 @@ public class KnowledgeController {
 
     @GetMapping("/query")
     public ResultBean<Page<KnowledgeNode>> findByName(@RequestParam String name, Pageable pageable) {
-        return new ResultBean<>(knowledgeNodeService.findByName(name, pageable));
+        return new ResultBean<>(knowledgeNodeService.findByNameLike(name, pageable));
     }
 
     @GetMapping("/{id}/graph")

@@ -26,7 +26,7 @@ public class KnowledgeNodeService {
         this.knowledgeNodeRelationRepository = knowledgeNodeRelationRepository;
     }
 
-    public Iterable<KnowledgeNode> save(Iterable<KnowledgeNode> iterable) {
+    public Iterable<KnowledgeNode> saveAll(Iterable<KnowledgeNode> iterable) {
         return knowledgeNodeRepository.saveAll(iterable);
     }
 
@@ -64,8 +64,12 @@ public class KnowledgeNodeService {
             .flatMap(Function.identity()).collect(Collectors.toList());
     }
 
-    public Page<KnowledgeNode> findByName(String name, Pageable pageable) {
+    public Page<KnowledgeNode> findByNameLike(String name, Pageable pageable) {
         return knowledgeNodeRepository.findByNameLike(name, pageable);
+    }
+
+    public KnowledgeNode findByName(String name) {
+        return knowledgeNodeRepository.findFirstByName(name).orElseThrow(NullPointerException::new);
     }
 
     public void deleteAll() {

@@ -24,7 +24,7 @@ public class KnowledgeNode {
     @Labels
     private Collection<String> labels;
 
-    @Indexed
+    @Indexed(unique = true)
     private String name;
 
     @Properties(allowCast = true)
