@@ -67,7 +67,7 @@ public class Init implements CommandLineRunner {
             knowledgeNodeRelations.add(new KnowledgeNodeRelation()
                 .setStartNode(knowledgeNodeService.findByName(relationVO.getBeginNodeName()))
                 .setEndNode(knowledgeNodeService.findByName(relationVO.getEndNodeName()))
-                .setProperty(relationVO.getRelation()));
+                .setProperty(relationVO.getProperty()));
         }
         return knowledgeNodeRelations;
     }
