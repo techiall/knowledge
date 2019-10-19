@@ -18,9 +18,6 @@ import java.util.Map;
 public class KnowledgeNodeRelation {
     private Long id;
 
-    @Relationship
-    private String relation;
-
     @StartNode
     private KnowledgeNode startNode;
 
