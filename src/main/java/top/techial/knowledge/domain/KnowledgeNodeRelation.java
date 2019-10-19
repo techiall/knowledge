@@ -2,12 +2,11 @@ package top.techial.knowledge.domain;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.neo4j.ogm.annotation.Labels;
-import org.neo4j.ogm.annotation.NodeEntity;
+import org.neo4j.ogm.annotation.EndNode;
 import org.neo4j.ogm.annotation.Properties;
-import org.springframework.data.mongodb.core.index.Indexed;
+import org.neo4j.ogm.annotation.RelationshipEntity;
+import org.neo4j.ogm.annotation.StartNode;
 
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -15,15 +14,15 @@ import java.util.Map;
  */
 @Data
 @Accessors(chain = true)
-@NodeEntity
-public class KnowledgeNode {
+@RelationshipEntity(type = "RELATION")
+public class KnowledgeNodeRelation {
     private Long id;
 
-    @Labels
-    private Collection<String> labels;
+    @StartNode
+    private KnowledgeNode startNode;
 
-    @Indexed
-    private String name;
+    @EndNode
+    private KnowledgeNode endNode;
 
     @Properties(allowCast = true)
     private Map<String, String> property;
