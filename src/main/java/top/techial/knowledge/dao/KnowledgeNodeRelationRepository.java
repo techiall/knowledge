@@ -13,6 +13,14 @@ import java.util.List;
 public interface KnowledgeNodeRelationRepository extends Neo4jRepository<KnowledgeNodeRelation, Long> {
 
     /**
+     * findFirstByStartNodeName
+     *
+     * @param name
+     * @return
+     */
+    List<KnowledgeNodeRelation> findFirstByStartNodeName(String name);
+
+    /**
      * start end
      *
      * @param start

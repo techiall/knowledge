@@ -53,7 +53,10 @@ public class Init implements CommandLineRunner {
         list.add(new RelationVO("暖温带半湿润大陆性季风气候", "济南市", Collections.singletonMap("type", "气候")));
         list.add(new RelationVO("暖温带半湿润大陆性季风气候", "运城市", Collections.singletonMap("type", "气候")));
         list.add(new RelationVO("暖温带半湿润大陆性季风气候", "阔叶树", Collections.singletonMap("type", "包含")));
-        list.add(new RelationVO("暖温带半湿润大陆性季风气候", "阔叶树", Collections.singletonMap("type=1", "包含=1")));
+        list.add(new RelationVO("济南市", "运城市", Collections.singletonMap("type", "城市")));
+        list.add(new RelationVO("运城市", "济南市", Collections.singletonMap("type", "城市")));
+        list.add(new RelationVO("济南市", "阔叶树", Collections.singletonMap("type", "种植")));
+        list.add(new RelationVO("运城市", "阔叶树", Collections.singletonMap("type", "种植")));
         return list;
     }
 

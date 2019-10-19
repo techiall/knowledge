@@ -5,12 +5,10 @@ import lombok.experimental.Accessors;
 import org.neo4j.ogm.annotation.Labels;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Properties;
-import org.neo4j.ogm.annotation.Relationship;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author techial
@@ -29,7 +27,4 @@ public class KnowledgeNode {
 
     @Properties(allowCast = true)
     private Map<String, String> property;
-
-    @Relationship
-    private Set<KnowledgeNode> relations;
 }

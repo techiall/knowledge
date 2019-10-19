@@ -47,12 +47,8 @@ public class KnowledgeNodeService {
         Map<String, Object> result = new HashMap<>(16);
         List<KnowledgeNodeDTO> list = new ArrayList<>();
         list.add(new KnowledgeNodeDTO(node));
-        node.getRelations().stream().map(KnowledgeNodeDTO::new).forEach(list::add);
         result.put("nodes", list);
         List<LinksDTO> linksDTOS = new ArrayList<>();
-        for (KnowledgeNode knowledgeNode : node.getRelations()) {
-            linksDTOS.addAll(buildLinks(node, knowledgeNode));
-        }
         result.put("links", linksDTOS);
         return result;
     }
