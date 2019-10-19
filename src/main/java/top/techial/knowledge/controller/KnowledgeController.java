@@ -1,5 +1,7 @@
 package top.techial.knowledge.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.KnowledgeNode;
@@ -28,13 +30,18 @@ public class KnowledgeController {
         return new ResultBean<>(knowledgeNodeService.save(nodeVO.toKnowledgeNode().setId(id)));
     }
 
-    @GetMapping("/{id}")
-    public ResultBean<KnowledgeNode> findById(@PathVariable Long id) {
-        return new ResultBean<>(knowledgeNodeService.findById(id));
+    @GetMapping("/query")
+    public ResultBean<Page<KnowledgeNode>> findByName(@RequestParam String name, Pageable pageable) {
+        return new ResultBean<>(knowledgeNodeService.findByName(name, pageable));
+    }
+
+    @GetMapping("/{id}/graph")
+    public ResultBean<Object> findById(@PathVariable Long id) {
+        return new ResultBean<>(knowledgeNodeService.findByIdGraph(id));
     }
 
     @DeleteMapping("/{id}")
-    public ResultBean<Boolean> deleteById(@PathVariable Integer id) {
+    public ResultBean<Boolean> deleteById(@PathVariable Long id) {
         knowledgeNodeService.deleteById(id);
         return new ResultBean<>(true);
     }

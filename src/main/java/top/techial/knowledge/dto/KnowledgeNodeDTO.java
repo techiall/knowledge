@@ -1,4 +1,4 @@
-package top.techial.knowledge.vo;
+package top.techial.knowledge.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import top.techial.knowledge.domain.KnowledgeNode;
 
-import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -16,17 +15,16 @@ import java.util.Map;
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class NodeVO {
-    private String table;
+public class KnowledgeNodeDTO {
+    private Long group;
 
     private String name;
 
     private Map<String, String> property;
 
-    public KnowledgeNode toKnowledgeNode() {
-        return new KnowledgeNode()
-            .setName(this.name)
-            .setLabels(Collections.singleton(this.table))
-            .setProperty(property);
+    public KnowledgeNodeDTO(KnowledgeNode node) {
+        this.group = node.getId();
+        this.name = node.getName();
+        this.property = node.getProperty();
     }
 }

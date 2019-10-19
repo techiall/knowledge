@@ -4,9 +4,20 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.stereotype.Repository;
 import top.techial.knowledge.domain.KnowledgeNodeRelation;
 
+import java.util.List;
+
 /**
  * @author techial
  */
 @Repository
 public interface KnowledgeNodeRelationRepository extends Neo4jRepository<KnowledgeNodeRelation, Long> {
+
+    /**
+     * start end
+     *
+     * @param start
+     * @param end
+     * @return
+     */
+    List<KnowledgeNodeRelation> findByStartNodeIdAndEndNodeId(Long start, Long end);
 }
