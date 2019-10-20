@@ -28,7 +28,6 @@ public class KnowledgeController {
         return new ResultBean<>(knowledgeNodeService.save(nodeVO.toKnowledgeNode()));
     }
 
-
     @PutMapping("/{id}")
     public ResultBean<KnowledgeNode> update(@PathVariable Long id, @RequestBody NodeVO nodeVO) {
         return new ResultBean<>(knowledgeNodeService.save(nodeVO.toKnowledgeNode().setId(id)));

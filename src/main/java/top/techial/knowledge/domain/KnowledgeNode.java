@@ -2,10 +2,10 @@ package top.techial.knowledge.domain;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.Labels;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Properties;
-import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.util.Collection;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class KnowledgeNode {
     @Labels
     private Collection<String> labels;
 
-    @Indexed(unique = true)
+    @Index(unique = true)
     private String name;
 
     @Properties(allowCast = true)
