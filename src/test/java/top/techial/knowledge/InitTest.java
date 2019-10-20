@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import top.techial.knowledge.domain.HuDongItem;
-import top.techial.knowledge.utils.ResourceUtils;
 
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -36,7 +35,7 @@ public class InitTest {
 
     @Test
     public void importTest() {
-        ResourceUtils.read("data/hudong_pedia.csv", HU_DONG_ITEM_FUNCTION);
+//        ResourceUtils.read("data/hudong_pedia.csv", HU_DONG_ITEM_FUNCTION);
     }
 
 }

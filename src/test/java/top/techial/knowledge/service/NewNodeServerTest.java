@@ -1,5 +1,6 @@
 package top.techial.knowledge.service;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ public class NewNodeServerTest {
 
     @Test
     public void findByTitle() {
-        System.out.println(newNodeServer.findByTitle("化学"));
+        Assert.assertNotNull(newNodeServer.findByTitle("化学"));
     }
 
 }
