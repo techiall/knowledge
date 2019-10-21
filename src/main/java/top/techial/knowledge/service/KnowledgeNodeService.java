@@ -6,12 +6,11 @@ import org.springframework.stereotype.Service;
 import top.techial.knowledge.dao.KnowledgeNodeRelationRepository;
 import top.techial.knowledge.dao.KnowledgeNodeRepository;
 import top.techial.knowledge.domain.KnowledgeNode;
-import top.techial.knowledge.dto.KnowledgeNodeDTO;
-import top.techial.knowledge.dto.LinksDTO;
+import top.techial.knowledge.domain.KnowledgeNodeRelation;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author techial
@@ -43,22 +42,35 @@ public class KnowledgeNodeService {
     }
 
     public Object findByIdGraph(Long id) {
-        KnowledgeNode node = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
+        KnowledgeNode knowledgeNode = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
         Map<String, Object> result = new HashMap<>(16);
-        List<KnowledgeNodeDTO> list = new ArrayList<>();
-        list.add(new KnowledgeNodeDTO(node));
-        result.put("nodes", list);
-        List<LinksDTO> linksDTOS = new ArrayList<>();
-        result.put("links", linksDTOS);
+        List<KnowledgeNodeRelation> list = knowledgeNodeRelationRepository.findFirstByStartNodeName(knowledgeNode.getName());
+        Map<String, Object> nodes = new HashMap<>(16);
+        Map<String, Object> links = new HashMap<>(16);
+
+        nodes.put("id", knowledgeNode.getId());
+        nodes.put("labels", knowledgeNode.getLabels());
+        nodes.put("name", knowledgeNode.getName());
+        nodes.putAll(knowledgeNode.getProperty());
+        for (KnowledgeNodeRelation knowledgeNodeRelation : list) {
+            nodes.put("id", knowledgeNodeRelation.getEndNode().getId());
+            nodes.put("labels", knowledgeNodeRelation.getEndNode().getLabels());
+            nodes.put("name", knowledgeNodeRelation.getEndNode().getName());
+            nodes.putAll(knowledgeNodeRelation.getEndNode().getProperty());
+            links.putAll(buildLinks("source", knowledgeNode.getId(), "target", knowledgeNodeRelation.getEndNode().getId()));
+        }
+        result.put("nodes", nodes);
+        result.put("links", links);
         return result;
     }
 
-    public List<LinksDTO> buildLinks(KnowledgeNode begin, KnowledgeNode end) {
-        return knowledgeNodeRelationRepository.findByStartNodeIdAndEndNodeId(begin.getId(), end.getId()).stream()
-            .map(it -> it.getProperty().entrySet().stream().map(
-                map -> new LinksDTO(begin, end, Collections.singletonMap(map.getKey(), map.getValue()))))
-            .flatMap(Function.identity()).collect(Collectors.toList());
+    private Map<String, Object> buildLinks(String source, Long sourceId, String target, Long targetId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(source, sourceId);
+        map.put(target, targetId);
+        return map;
     }
+
 
     public Page<KnowledgeNode> findByNameLike(String name, Pageable pageable) {
         return knowledgeNodeRepository.findByNameLike(name, pageable);
