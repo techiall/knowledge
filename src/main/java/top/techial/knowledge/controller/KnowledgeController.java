@@ -26,21 +26,6 @@ public class KnowledgeController {
         return new ResultBean<>(knowledgeNodeService.findAll(pageable));
     }
 
-    @PostMapping
-    public ResultBean<KnowledgeNode> save(@RequestBody NodeVO nodeVO) {
-        return new ResultBean<>(knowledgeNodeService.save(nodeVO.toKnowledgeNode()));
-    }
-
-    @PutMapping("/{id}")
-    public ResultBean<KnowledgeNode> update(@PathVariable Long id, @RequestBody NodeVO nodeVO) {
-        return new ResultBean<>(knowledgeNodeService.save(nodeVO.toKnowledgeNode().setId(id)));
-    }
-
-    @GetMapping("/name")
-    public ResultBean<KnowledgeNode> findByName(@RequestParam(name = "query") String name) {
-        return new ResultBean<>(knowledgeNodeService.findByName(name));
-    }
-
     @GetMapping("/{id}")
     public ResultBean<KnowledgeNode> findById(@PathVariable Long id) {
         return new ResultBean<>(knowledgeNodeService.findById(id));
@@ -49,6 +34,21 @@ public class KnowledgeController {
     @GetMapping("/{id}/graph")
     public ResultBean<Object> findByIdGraph(@PathVariable Long id) {
         return new ResultBean<>(knowledgeNodeService.findByIdGraph(id));
+    }
+
+    @GetMapping("/name")
+    public ResultBean<KnowledgeNode> findByName(@RequestParam(name = "query") String name) {
+        return new ResultBean<>(knowledgeNodeService.findByName(name));
+    }
+
+    @PostMapping
+    public ResultBean<KnowledgeNode> save(@RequestBody NodeVO nodeVO) {
+        return new ResultBean<>(knowledgeNodeService.save(nodeVO.toKnowledgeNode()));
+    }
+
+    @PutMapping("/{id}")
+    public ResultBean<KnowledgeNode> update(@PathVariable Long id, @RequestBody NodeVO nodeVO) {
+        return new ResultBean<>(knowledgeNodeService.save(nodeVO.toKnowledgeNode().setId(id)));
     }
 
     @DeleteMapping("/{id}")

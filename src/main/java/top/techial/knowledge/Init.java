@@ -66,7 +66,7 @@ public class Init implements CommandLineRunner {
         List<KnowledgeNodeRelation> knowledgeNodeRelations = new ArrayList<>();
         for (RelationVO relationVO : list) {
             KnowledgeNodeRelation relation = new KnowledgeNodeRelation()
-                .setStartNode(knowledgeNodeService.findByName(relationVO.getBeginNodeName()))
+                .setStartNode(knowledgeNodeService.findByName(relationVO.getStartNode()))
                 .setEndNode(knowledgeNodeService.findByName(relationVO.getEndNodeName()))
                 .setProperty(relationVO.getProperty());
             knowledgeNodeRelations.add(relation);

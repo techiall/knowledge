@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.KnowledgeNodeRelation;
 import top.techial.knowledge.service.KnowledgeNodeRelationService;
+import top.techial.knowledge.vo.RelationVO;
 
 import java.util.List;
 
@@ -37,4 +38,19 @@ public class KnowledgeRelationController {
         return new ResultBean<>(knowledgeNodeRelationService.findFirstByStartNodeName(name));
     }
 
+    @PostMapping
+    public ResultBean<KnowledgeNodeRelation> save(@RequestBody RelationVO relationVO) {
+        return new ResultBean<>(knowledgeNodeRelationService.save(relationVO));
+    }
+
+    @PutMapping("/{id}")
+    public ResultBean<KnowledgeNodeRelation> updateById(@PathVariable Long id, @RequestBody RelationVO relationVO) {
+        return new ResultBean<>(knowledgeNodeRelationService.updateById(id, relationVO));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResultBean<Boolean> deleteById(@PathVariable Long id) {
+        knowledgeNodeRelationService.deleteById(id);
+        return new ResultBean<>(true);
+    }
 }
