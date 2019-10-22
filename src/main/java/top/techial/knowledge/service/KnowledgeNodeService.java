@@ -4,10 +4,10 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import top.techial.knowledge.dao.KnowledgeNodeRelationRepository;
+import top.techial.knowledge.dao.NodeRelationRepository;
 import top.techial.knowledge.dao.KnowledgeNodeRepository;
 import top.techial.knowledge.domain.KnowledgeNode;
-import top.techial.knowledge.domain.KnowledgeNodeRelation;
+import top.techial.knowledge.domain.NodeRelation;
 
 import java.util.*;
 
@@ -18,11 +18,11 @@ import java.util.*;
 @Log4j2
 public class KnowledgeNodeService {
     private final KnowledgeNodeRepository knowledgeNodeRepository;
-    private final KnowledgeNodeRelationRepository knowledgeNodeRelationRepository;
+    private final NodeRelationRepository nodeRelationRepository;
 
-    public KnowledgeNodeService(KnowledgeNodeRepository knowledgeNodeRepository, KnowledgeNodeRelationRepository knowledgeNodeRelationRepository) {
+    public KnowledgeNodeService(KnowledgeNodeRepository knowledgeNodeRepository, NodeRelationRepository nodeRelationRepository) {
         this.knowledgeNodeRepository = knowledgeNodeRepository;
-        this.knowledgeNodeRelationRepository = knowledgeNodeRelationRepository;
+        this.nodeRelationRepository = nodeRelationRepository;
     }
 
     public Iterable<KnowledgeNode> saveAll(Iterable<KnowledgeNode> iterable) {
@@ -43,7 +43,7 @@ public class KnowledgeNodeService {
 
     public Object findByIdGraph(Long id) {
         KnowledgeNode knowledgeNode = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
-        List<KnowledgeNodeRelation> list = knowledgeNodeRelationRepository.findFirstByStartNodeName(knowledgeNode.getName());
+        List<NodeRelation> list = nodeRelationRepository.findFirstByStartNodeName(knowledgeNode.getName());
         log.debug(list);
 
         Map<String, Object> result = new HashMap<>(16);
@@ -51,12 +51,12 @@ public class KnowledgeNodeService {
         List<Object> links = new ArrayList<>(16);
 
         nodes.add(buildNodes(knowledgeNode.getId(), knowledgeNode.getName(), knowledgeNode.getProperty(), knowledgeNode.getLabels()));
-        for (KnowledgeNodeRelation knowledgeNodeRelation : list) {
-            nodes.add(buildNodes(knowledgeNodeRelation.getEndNode().getId(),
-                knowledgeNodeRelation.getEndNode().getName(),
-                knowledgeNodeRelation.getEndNode().getProperty(),
+        for (NodeRelation nodeRelation : list) {
+            nodes.add(buildNodes(nodeRelation.getEndNode().getId(),
+                nodeRelation.getEndNode().getName(),
+                nodeRelation.getEndNode().getProperty(),
                 knowledgeNode.getLabels()));
-            links.add(buildLinks(knowledgeNode.getId(), knowledgeNodeRelation.getEndNode().getId(), knowledgeNodeRelation.getProperty()));
+            links.add(buildLinks(knowledgeNode.getId(), nodeRelation.getEndNode().getId(), nodeRelation.getProperty()));
         }
         result.put("nodes", nodes);
         result.put("links", links);

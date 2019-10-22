@@ -12,7 +12,7 @@ import java.util.Map;
 @Data
 @RelationshipEntity(type = "RELATION")
 @Accessors(chain = true)
-public class KnowledgeNodeRelation {
+public class NodeRelation {
     @Id
     private Long id;
 

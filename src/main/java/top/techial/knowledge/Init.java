@@ -4,8 +4,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import top.techial.knowledge.domain.KnowledgeNode;
-import top.techial.knowledge.domain.KnowledgeNodeRelation;
-import top.techial.knowledge.service.KnowledgeNodeRelationService;
+import top.techial.knowledge.domain.NodeRelation;
+import top.techial.knowledge.service.NodeRelationService;
 import top.techial.knowledge.service.KnowledgeNodeService;
 import top.techial.knowledge.vo.NodeVO;
 import top.techial.knowledge.vo.RelationVO;
@@ -22,19 +22,19 @@ import java.util.stream.Collectors;
 @Log4j2
 public class Init implements CommandLineRunner {
     private final KnowledgeNodeService knowledgeNodeService;
-    private final KnowledgeNodeRelationService knowledgeNodeRelationService;
+    private final NodeRelationService nodeRelationService;
 
-    public Init(KnowledgeNodeService knowledgeNodeService, KnowledgeNodeRelationService knowledgeNodeRelationService) {
+    public Init(KnowledgeNodeService knowledgeNodeService, NodeRelationService nodeRelationService) {
         this.knowledgeNodeService = knowledgeNodeService;
-        this.knowledgeNodeRelationService = knowledgeNodeRelationService;
+        this.nodeRelationService = nodeRelationService;
     }
 
     @Override
     public void run(String... args) {
         log.info("init ...");
-        if (knowledgeNodeRelationService.count() == 0L) {
+        if (nodeRelationService.count() == 0L) {
             knowledgeNodeService.saveAll(buildNodeVO());
-            knowledgeNodeRelationService.saveAll(buildNodeRelation());
+            nodeRelationService.saveAll(buildNodeRelation());
         }
 
         log.info("end ...");
@@ -61,16 +61,16 @@ public class Init implements CommandLineRunner {
         return list;
     }
 
-    private List<KnowledgeNodeRelation> buildNodeRelation() {
+    private List<NodeRelation> buildNodeRelation() {
         List<RelationVO> list = buildRelationVO();
-        List<KnowledgeNodeRelation> knowledgeNodeRelations = new ArrayList<>();
+        List<NodeRelation> nodeRelations = new ArrayList<>();
         for (RelationVO relationVO : list) {
-            KnowledgeNodeRelation relation = new KnowledgeNodeRelation()
+            NodeRelation relation = new NodeRelation()
                 .setStartNode(knowledgeNodeService.findByName(relationVO.getStartNode()))
                 .setEndNode(knowledgeNodeService.findByName(relationVO.getEndNodeName()))
                 .setProperty(relationVO.getProperty());
-            knowledgeNodeRelations.add(relation);
+            nodeRelations.add(relation);
         }
-        return knowledgeNodeRelations;
+        return nodeRelations;
     }
 }
