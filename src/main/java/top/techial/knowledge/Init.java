@@ -32,10 +32,11 @@ public class Init implements CommandLineRunner {
     @Override
     public void run(String... args) {
         log.info("init ...");
-        knowledgeNodeService.deleteAll();
-        knowledgeNodeService.saveAll(buildNodeVO());
+        if (knowledgeNodeRelationService.count() == 0L) {
+            knowledgeNodeService.saveAll(buildNodeVO());
+            knowledgeNodeRelationService.saveAll(buildNodeRelation());
+        }
 
-        knowledgeNodeRelationService.saveAll(buildNodeRelation());
         log.info("end ...");
     }
 
@@ -64,10 +65,11 @@ public class Init implements CommandLineRunner {
         List<RelationVO> list = buildRelationVO();
         List<KnowledgeNodeRelation> knowledgeNodeRelations = new ArrayList<>();
         for (RelationVO relationVO : list) {
-            knowledgeNodeRelations.add(new KnowledgeNodeRelation()
-                .setStartNode(knowledgeNodeService.findByName(relationVO.getBeginNodeName()))
-                .setEndNode(knowledgeNodeService.findByName(relationVO.getEndNodeName()))
-                .setProperty(relationVO.getProperty()));
+            KnowledgeNodeRelation relation = new KnowledgeNodeRelation();
+            relation.setStartNode(knowledgeNodeService.findByName(relationVO.getBeginNodeName()));
+            relation.setEndNode(knowledgeNodeService.findByName(relationVO.getEndNodeName()));
+            relation.setProperty(relationVO.getProperty());
+            knowledgeNodeRelations.add(relation);
         }
         return knowledgeNodeRelations;
     }

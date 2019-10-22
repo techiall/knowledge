@@ -24,9 +24,10 @@ public class NodeVO {
     private Map<String, String> property;
 
     public KnowledgeNode toKnowledgeNode() {
-        return new KnowledgeNode()
-            .setName(this.name)
-            .setLabels(Collections.singleton(this.table))
-            .setProperty(property);
+        KnowledgeNode k = new KnowledgeNode();
+        k.setName(this.name);
+        k.setLabels(Collections.singleton(this.table));
+        k.setProperty(property);
+        return k;
     }
 }

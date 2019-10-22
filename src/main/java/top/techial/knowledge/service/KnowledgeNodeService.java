@@ -1,5 +1,6 @@
 package top.techial.knowledge.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.Map;
  * @author techial
  */
 @Service
+@Log4j2
 public class KnowledgeNodeService {
     private final KnowledgeNodeRepository knowledgeNodeRepository;
     private final KnowledgeNodeRelationRepository knowledgeNodeRelationRepository;
@@ -44,9 +46,10 @@ public class KnowledgeNodeService {
     public Object findByIdGraph(Long id) {
         KnowledgeNode knowledgeNode = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
         Map<String, Object> result = new HashMap<>(16);
-        List<KnowledgeNodeRelation> list = knowledgeNodeRelationRepository.findFirstByStartNodeName(knowledgeNode.getName());
+        List<KnowledgeNodeRelation> list = knowledgeNodeRelationRepository.findByStartNodeId(knowledgeNode.getId());
         Map<String, Object> nodes = new HashMap<>(16);
         Map<String, Object> links = new HashMap<>(16);
+        log.debug(links);
 
         nodes.put("id", knowledgeNode.getId());
         nodes.put("labels", knowledgeNode.getLabels());

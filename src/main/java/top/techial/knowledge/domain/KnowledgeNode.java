@@ -1,7 +1,6 @@
 package top.techial.knowledge.domain;
 
 import lombok.Data;
-import lombok.experimental.Accessors;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.Labels;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -14,7 +13,6 @@ import java.util.Map;
  * @author techial
  */
 @Data
-@Accessors(chain = true)
 @NodeEntity
 public class KnowledgeNode {
     private Long id;

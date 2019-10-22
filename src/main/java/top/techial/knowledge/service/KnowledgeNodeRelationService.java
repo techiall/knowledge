@@ -38,4 +38,8 @@ public class KnowledgeNodeRelationService {
     public Page<KnowledgeNodeRelation> findAll(Pageable pageable) {
         return knowledgeNodeRelationRepository.findAll(pageable);
     }
+
+    public long count() {
+        return knowledgeNodeRelationRepository.count();
+    }
 }
