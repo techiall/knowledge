@@ -29,7 +29,7 @@ public class NodeVO {
     public KnowledgeNode toKnowledgeNode() {
         return new KnowledgeNode()
             .setName(this.name)
-            .setLabels(labels.isEmpty() ? Collections.singletonList(this.name) : labels)
+            .setLabels(labels == null || labels.isEmpty() ? Collections.singletonList(this.name) : labels)
             .setLabels(Collections.singleton(this.table))
             .setProperty(property);
     }
