@@ -13,7 +13,7 @@ import top.techial.knowledge.vo.NodeVO;
  * @author techial
  */
 @RestController
-@RequestMapping("/api/knowledge")
+@RequestMapping("/api/node")
 public class KnowledgeController {
     private final KnowledgeNodeService knowledgeNodeService;
 

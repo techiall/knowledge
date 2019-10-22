@@ -17,7 +17,7 @@ import java.util.List;
  * @author techial
  */
 @RestController
-@RequestMapping("/api/knowledge/relation")
+@RequestMapping("/api/relation")
 public class KnowledgeRelationController {
     private final KnowledgeNodeRelationService knowledgeNodeRelationService;
 
