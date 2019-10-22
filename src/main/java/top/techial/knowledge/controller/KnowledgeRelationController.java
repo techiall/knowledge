@@ -40,8 +40,4 @@ public class KnowledgeRelationController {
         return new ResultBean<>(knowledgeNodeRelationService.findFirstByStartNodeName(name));
     }
 
-    @GetMapping("/id/{id}")
-    public ResultBean<List<KnowledgeNodeRelation>> findByStartId(@PathVariable Long id) {
-        return new ResultBean<>(knowledgeNodeRelationService.findFirstByStartNodeId(id));
-    }
 }

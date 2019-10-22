@@ -32,6 +32,7 @@ public class Init implements CommandLineRunner {
     @Override
     public void run(String... args) {
         log.info("init ...");
+        knowledgeNodeService.deleteAll();
         if (knowledgeNodeRelationService.count() == 0L) {
             knowledgeNodeService.saveAll(buildNodeVO());
             knowledgeNodeRelationService.saveAll(buildNodeRelation());
@@ -42,10 +43,10 @@ public class Init implements CommandLineRunner {
 
     private List<KnowledgeNode> buildNodeVO() {
         List<NodeVO> list = new ArrayList<>();
-        list.add(new NodeVO("天气", "暖温带半湿润大陆性季风气候", null));
-        list.add(new NodeVO("城市", "济南市", null));
-        list.add(new NodeVO("城市", "运城市", null));
-        list.add(new NodeVO("项目", "阔叶树", Collections.singletonMap("baseInfoKeyList", "##界：##门：##纲：")));
+        list.add(new NodeVO("天气", "暖温带半湿润大陆性季风气候", null, null));
+        list.add(new NodeVO("城市", "济南市", null, null));
+        list.add(new NodeVO("城市", "运城市", null, null));
+        list.add(new NodeVO("项目", "阔叶树", null, Collections.singletonMap("baseInfoKeyList", "##界：##门：##纲：")));
         return list.stream().map(NodeVO::toKnowledgeNode).collect(Collectors.toList());
     }
 
@@ -65,10 +66,10 @@ public class Init implements CommandLineRunner {
         List<RelationVO> list = buildRelationVO();
         List<KnowledgeNodeRelation> knowledgeNodeRelations = new ArrayList<>();
         for (RelationVO relationVO : list) {
-            KnowledgeNodeRelation relation = new KnowledgeNodeRelation();
-            relation.setStartNode(knowledgeNodeService.findByName(relationVO.getBeginNodeName()));
-            relation.setEndNode(knowledgeNodeService.findByName(relationVO.getEndNodeName()));
-            relation.setProperty(relationVO.getProperty());
+            KnowledgeNodeRelation relation = new KnowledgeNodeRelation()
+                .setStartNode(knowledgeNodeService.findByName(relationVO.getBeginNodeName()))
+                .setEndNode(knowledgeNodeService.findByName(relationVO.getEndNodeName()))
+                .setProperty(relationVO.getProperty());
             knowledgeNodeRelations.add(relation);
         }
         return knowledgeNodeRelations;

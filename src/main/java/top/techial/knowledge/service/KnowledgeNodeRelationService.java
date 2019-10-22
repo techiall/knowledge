@@ -27,10 +27,6 @@ public class KnowledgeNodeRelationService {
         return knowledgeNodeRelationRepository.findFirstByStartNodeName(name);
     }
 
-    public List<KnowledgeNodeRelation> findFirstByStartNodeId(Long id) {
-        return knowledgeNodeRelationRepository.findByStartNodeId(id);
-    }
-
     public KnowledgeNodeRelation findById(Long id) {
         return knowledgeNodeRelationRepository.findById(id).orElseThrow(NullPointerException::new);
     }

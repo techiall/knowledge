@@ -20,20 +20,4 @@ public interface KnowledgeNodeRelationRepository extends Neo4jRepository<Knowled
      */
     List<KnowledgeNodeRelation> findFirstByStartNodeName(String name);
 
-    /**
-     * start end
-     *
-     * @param start
-     * @param end
-     * @return
-     */
-    List<KnowledgeNodeRelation> findByStartNodeIdAndEndNodeId(Long start, Long end);
-
-    /**
-     * find by start node id
-     *
-     * @param id
-     * @return
-     */
-    List<KnowledgeNodeRelation> findByStartNodeId(Long id);
 }
