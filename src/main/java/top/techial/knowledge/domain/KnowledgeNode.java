@@ -2,10 +2,7 @@ package top.techial.knowledge.domain;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.neo4j.ogm.annotation.Index;
-import org.neo4j.ogm.annotation.Labels;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Properties;
+import org.neo4j.ogm.annotation.*;
 
 import java.util.Collection;
 import java.util.Map;
@@ -17,6 +14,7 @@ import java.util.Map;
 @NodeEntity
 @Accessors(chain = true)
 public class KnowledgeNode {
+    @Id
     private Long id;
 
     @Labels
