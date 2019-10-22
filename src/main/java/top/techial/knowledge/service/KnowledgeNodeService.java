@@ -83,4 +83,8 @@ public class KnowledgeNodeService {
     public void deleteAll() {
         knowledgeNodeRepository.deleteAll();
     }
+
+    public Page<KnowledgeNode> findAll(Pageable pageable) {
+        return knowledgeNodeRepository.findAll(pageable);
+    }
 }

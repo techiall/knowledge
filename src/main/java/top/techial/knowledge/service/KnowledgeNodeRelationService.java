@@ -1,5 +1,7 @@
 package top.techial.knowledge.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import top.techial.knowledge.dao.KnowledgeNodeRelationRepository;
 import top.techial.knowledge.domain.KnowledgeNodeRelation;
@@ -23,5 +25,17 @@ public class KnowledgeNodeRelationService {
 
     public List<KnowledgeNodeRelation> findFirstByStartNodeName(String name) {
         return knowledgeNodeRelationRepository.findFirstByStartNodeName(name);
+    }
+
+    public List<KnowledgeNodeRelation> findFirstByStartNodeId(Long id) {
+        return knowledgeNodeRelationRepository.findByStartNodeId(id);
+    }
+
+    public KnowledgeNodeRelation findById(Long id) {
+        return knowledgeNodeRelationRepository.findById(id).orElseThrow(NullPointerException::new);
+    }
+
+    public Page<KnowledgeNodeRelation> findAll(Pageable pageable) {
+        return knowledgeNodeRelationRepository.findAll(pageable);
     }
 }

@@ -2,10 +2,10 @@ package top.techial.knowledge.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.KnowledgeNode;
-import top.techial.knowledge.service.KnowledgeNodeRelationService;
 import top.techial.knowledge.service.KnowledgeNodeService;
 import top.techial.knowledge.vo.NodeVO;
 
@@ -16,11 +16,14 @@ import top.techial.knowledge.vo.NodeVO;
 @RequestMapping("/api/knowledge")
 public class KnowledgeController {
     private final KnowledgeNodeService knowledgeNodeService;
-    private final KnowledgeNodeRelationService knowledgeNodeRelationService;
 
-    public KnowledgeController(KnowledgeNodeService knowledgeNodeService, KnowledgeNodeRelationService knowledgeNodeRelationService) {
+    public KnowledgeController(KnowledgeNodeService knowledgeNodeService) {
         this.knowledgeNodeService = knowledgeNodeService;
-        this.knowledgeNodeRelationService = knowledgeNodeRelationService;
+    }
+
+    @GetMapping
+    public ResultBean<Page<KnowledgeNode>> findAll(@PageableDefault Pageable pageable) {
+        return new ResultBean<>(knowledgeNodeService.findAll(pageable));
     }
 
     @PostMapping
