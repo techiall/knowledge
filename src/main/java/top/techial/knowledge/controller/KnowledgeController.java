@@ -48,7 +48,6 @@ public class KnowledgeController {
         return new ResultBean<>(knowledgeNodeService.findByName(name));
     }
 
-
     @GetMapping("/{id}")
     public ResultBean<KnowledgeNode> findById(@PathVariable Long id) {
         return new ResultBean<>(knowledgeNodeService.findById(id));

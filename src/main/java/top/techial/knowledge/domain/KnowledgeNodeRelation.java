@@ -22,6 +22,6 @@ public class KnowledgeNodeRelation {
     @EndNode
     private KnowledgeNode endNode;
 
-    @Properties(allowCast = true)
+    @Properties
     private Map<String, String> property;
 }
