@@ -12,7 +12,7 @@ spring:
       password: techial
       uri: bolt://localhost:7687
       open-in-view: true
-      auto-index: assert
+      auto-index: dump
     mongodb:
       host: localhost
       port: 27017
