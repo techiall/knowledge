@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import top.techial.knowledge.domain.KnowledgeNode;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author techial
@@ -22,14 +22,14 @@ public class NodeVO {
 
     private String name;
 
-    private Collection<String> labels;
+    private Set<String> labels;
 
     private Map<String, String> property;
 
     public KnowledgeNode toKnowledgeNode() {
         return new KnowledgeNode()
             .setName(this.name)
-            .setLabels(labels == null || labels.isEmpty() ? Collections.singletonList(this.name) : labels)
+            .setLabels(labels == null || labels.isEmpty() ? Collections.singleton(this.name) : labels)
             .setLabels(Collections.singleton(this.table))
             .setProperty(property);
     }

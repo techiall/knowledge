@@ -9,9 +9,7 @@ import top.techial.knowledge.dao.KnowledgeNodeRepository;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.KnowledgeNodeRelation;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author techial
@@ -45,32 +43,40 @@ public class KnowledgeNodeService {
 
     public Object findByIdGraph(Long id) {
         KnowledgeNode knowledgeNode = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
-        Map<String, Object> result = new HashMap<>(16);
         List<KnowledgeNodeRelation> list = knowledgeNodeRelationRepository.findFirstByStartNodeName(knowledgeNode.getName());
-        Map<String, Object> nodes = new HashMap<>(16);
-        Map<String, Object> links = new HashMap<>(16);
-        log.debug(links);
+        log.debug(list);
 
-        nodes.put("id", knowledgeNode.getId());
-        nodes.put("labels", knowledgeNode.getLabels());
-        nodes.put("name", knowledgeNode.getName());
-        nodes.putAll(knowledgeNode.getProperty());
+        Map<String, Object> result = new HashMap<>(16);
+        List<Object> nodes = new ArrayList<>(16);
+        List<Object> links = new ArrayList<>(16);
+
+        nodes.add(buildNodes(knowledgeNode.getId(), knowledgeNode.getName(), knowledgeNode.getProperty(), knowledgeNode.getLabels()));
         for (KnowledgeNodeRelation knowledgeNodeRelation : list) {
-            nodes.put("id", knowledgeNodeRelation.getEndNode().getId());
-            nodes.put("labels", knowledgeNodeRelation.getEndNode().getLabels());
-            nodes.put("name", knowledgeNodeRelation.getEndNode().getName());
-            nodes.putAll(knowledgeNodeRelation.getEndNode().getProperty());
-            links.putAll(buildLinks("source", knowledgeNode.getId(), "target", knowledgeNodeRelation.getEndNode().getId()));
+            nodes.add(buildNodes(knowledgeNodeRelation.getEndNode().getId(),
+                knowledgeNodeRelation.getEndNode().getName(),
+                knowledgeNodeRelation.getEndNode().getProperty(),
+                knowledgeNode.getLabels()));
+            links.add(buildLinks(knowledgeNode.getId(), knowledgeNodeRelation.getEndNode().getId(), knowledgeNodeRelation.getProperty()));
         }
         result.put("nodes", nodes);
         result.put("links", links);
         return result;
     }
 
-    private Map<String, Object> buildLinks(String source, Long sourceId, String target, Long targetId) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(source, sourceId);
-        map.put(target, targetId);
+    private Map<String, Object> buildNodes(Long id, String name, Map<String, String> property, Collection<String> labels) {
+        Map<String, Object> map = new HashMap<>(16);
+        map.put("id", id);
+        map.put("name", name);
+        map.put("property", property);
+        map.put("labels", labels);
+        return map;
+    }
+
+    private Map<String, Object> buildLinks(Long sourceId, Long targetId, Map<String, String> property) {
+        Map<String, Object> map = new HashMap<>(16);
+        map.put("source", sourceId);
+        map.put("target", targetId);
+        map.put("property", property);
         return map;
     }
 
