@@ -36,13 +36,8 @@ public class KnowledgeController {
         return new ResultBean<>(knowledgeNodeService.save(nodeVO.toKnowledgeNode().setId(id)));
     }
 
-    @GetMapping("/query")
-    public ResultBean<Page<KnowledgeNode>> findByName(@RequestParam String name, Pageable pageable) {
-        return new ResultBean<>(knowledgeNodeService.findByNameLike(name, pageable));
-    }
-
-    @GetMapping("/name/{name}")
-    public ResultBean<KnowledgeNode> findByName(@PathVariable String name) {
+    @GetMapping("/name")
+    public ResultBean<KnowledgeNode> findByName(@RequestParam(name = "query") String name) {
         return new ResultBean<>(knowledgeNodeService.findByName(name));
     }
 

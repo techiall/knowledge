@@ -3,10 +3,7 @@ package top.techial.knowledge.controller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.KnowledgeNodeRelation;
 import top.techial.knowledge.service.KnowledgeNodeRelationService;
@@ -35,8 +32,8 @@ public class KnowledgeRelationController {
         return new ResultBean<>(knowledgeNodeRelationService.findById(id));
     }
 
-    @GetMapping("/name/{name}")
-    public ResultBean<List<KnowledgeNodeRelation>> findByNameRelation(@PathVariable String name) {
+    @GetMapping("/name")
+    public ResultBean<List<KnowledgeNodeRelation>> findByNameRelation(@RequestParam(value = "query") String name) {
         return new ResultBean<>(knowledgeNodeRelationService.findFirstByStartNodeName(name));
     }
 
