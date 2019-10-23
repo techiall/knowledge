@@ -1,9 +1,11 @@
 server:
-  port: 8080
+  port: 8443
   address: 0.0.0.0
   undertow:
     io-threads: 12
     direct-buffers: true
+  compression:
+    enabled: true
 
 spring:
   data:

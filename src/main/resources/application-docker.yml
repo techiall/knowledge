@@ -4,6 +4,8 @@ server:
   undertow:
     io-threads: 2
     direct-buffers: true
+  compression:
+    enabled: true
 
 spring:
   data:

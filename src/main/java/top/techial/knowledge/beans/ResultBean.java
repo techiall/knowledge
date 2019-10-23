@@ -33,7 +33,7 @@ public class ResultBean<T> implements Serializable {
     }
 
     public ResultBean(ResultCode code, T data) {
-        this(code.getCode(), code.getTips(), null);
+        this(code.getCode(), code.getTips(), data);
     }
 
     public ResultBean(T data) {
