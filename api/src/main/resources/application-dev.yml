@@ -8,6 +8,8 @@ server:
     enabled: true
 
 spring:
+  application:
+    name: knowledge-dev
   data:
     neo4j:
       username: neo4j
@@ -18,9 +20,10 @@ spring:
     mongodb:
       host: localhost
       port: 27017
-      database: activity
+      database: knowledge
   cache:
     type: simple
+
 logging:
   level:
     org.neo4j.ogm: debug

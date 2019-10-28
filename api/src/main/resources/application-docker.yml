@@ -8,17 +8,24 @@ server:
     enabled: true
 
 spring:
+  application:
+    name: knowledge-docker
   data:
     neo4j:
       username: techial
       password: techial
+      uri: bolt://neo4j:7687
+      open-in-view: true
+      auto-index: update
     mongodb:
       host: mongo
       port: 27017
-      database: activity
+      database: knowledge
   cache:
     type: simple
+
 logging:
   level:
+    org.neo4j.ogm: debug
     top.techial: debug
 
