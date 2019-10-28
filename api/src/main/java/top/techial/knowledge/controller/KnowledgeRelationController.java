@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-import top.techial.knowledge.beans.ResultBean;
+import top.techial.beans.ResultBean;
 import top.techial.knowledge.domain.NodeRelation;
 import top.techial.knowledge.service.NodeRelationService;
 import top.techial.knowledge.vo.RelationVO;

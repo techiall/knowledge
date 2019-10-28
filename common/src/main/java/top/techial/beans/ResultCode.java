@@ -1,4 +1,4 @@
-package top.techial.knowledge.beans;
+package top.techial.beans;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,15 +34,35 @@ public enum ResultCode {
     NO_PERMISSION(2, "Forbidden"),
 
     /**
+     * 帐号禁用
+     */
+    ACCOUNT_DISABLE(3, "Account Disable"),
+
+    /**
+     * 多处登录
+     */
+    MAXIMUM_SESSION(4, " Maximum sessions"),
+
+    /**
+     * session 失效
+     */
+    SESSION_EXPIRED(5, " Session expired"),
+
+    /**
+     * is register
+     */
+    IS_REGISTER(6, "Is register"),
+
+    /**
      * 未知异常
      */
     UNKNOWN_EXCEPTION(-99, "Unknown Exception");
 
-    private static final Map<Integer, ResultCode> mappings = new HashMap<>(16);
+    private static final Map<Integer, ResultCode> MAPPINGS = new HashMap<>(16);
 
     static {
         for (ResultCode resultCode : values()) {
-            mappings.put(resultCode.getCode(), resultCode);
+            MAPPINGS.put(resultCode.getCode(), resultCode);
         }
     }
 
@@ -52,10 +72,6 @@ public enum ResultCode {
     ResultCode(int code, String tips) {
         this.code = code;
         this.tips = tips;
-    }
-
-    public static Map<Integer, ResultCode> getMappings() {
-        return mappings;
     }
 
     public String getTips() {

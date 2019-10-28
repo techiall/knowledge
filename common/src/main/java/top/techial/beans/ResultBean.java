@@ -1,7 +1,6 @@
-package top.techial.knowledge.beans;
+package top.techial.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -13,7 +12,6 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@AllArgsConstructor
 public class ResultBean<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -25,23 +23,34 @@ public class ResultBean<T> implements Serializable {
     private T data;
 
     public ResultBean() {
-        this(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getTips(), null);
+        this.msg = ResultCode.SUCCESS.getTips();
+        this.code = ResultCode.SUCCESS.getCode();
+        this.data = null;
     }
 
     public ResultBean(ResultCode code) {
-        this(code.getCode(), code.getTips(), null);
+        this.msg = code.getTips();
+        this.code = code.getCode();
+        this.data = null;
     }
 
     public ResultBean(ResultCode code, T data) {
-        this(code.getCode(), code.getTips(), data);
+        this.msg = code.getTips();
+        this.code = code.getCode();
+        this.data = data;
     }
 
     public ResultBean(T data) {
-        this(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getTips(), data);
+        this.msg = ResultCode.SUCCESS.getTips();
+        this.code = ResultCode.SUCCESS.getCode();
+        this.data = data;
     }
 
     public ResultBean(Throwable e) {
-        this(ResultCode.UNKNOWN_EXCEPTION.getCode(), ResultCode.UNKNOWN_EXCEPTION.getTips(), null);
+        super();
+        this.code = ResultCode.UNKNOWN_EXCEPTION.getCode();
+        this.msg = ResultCode.UNKNOWN_EXCEPTION.getTips();
+        this.data = null;
     }
 
 }
