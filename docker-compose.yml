@@ -1,0 +1,41 @@
+version: '3.7'
+services:
+  web:
+    image: top.techial/knowledge/api:latest
+    networks:
+      - knowledge
+    depends_on:
+      - neo4j
+    ports:
+      - "8080:8080"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - web_data:/web-logs
+    restart: always
+
+  neo4j:
+    image: neo4j:latest
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    networks:
+      - knowledge
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - neo4j_logs:/logs
+      - neo4j_conf:/var/lib/neo4j/conf
+      - neo4j_import:/var/lib/neo4j/import
+      - neo4j_plugins:/plugins
+    environment:
+      NEO4J_AUTH: techial/techial
+
+networks:
+  knowledge:
+
+volumes:
+  web_data:
+  neo4j_logs:
+  neo4j_conf:
+  neo4j_import:
+  neo4j_plugins:
+

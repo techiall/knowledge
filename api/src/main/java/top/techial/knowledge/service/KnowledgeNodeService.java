@@ -4,8 +4,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import top.techial.knowledge.dao.NodeRelationRepository;
 import top.techial.knowledge.dao.KnowledgeNodeRepository;
+import top.techial.knowledge.dao.NodeRelationRepository;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
 
