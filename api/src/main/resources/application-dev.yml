@@ -1,5 +1,5 @@
 server:
-  port: 8443
+  port: 8080
   address: 0.0.0.0
   undertow:
     io-threads: 12

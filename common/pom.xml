@@ -12,6 +12,5 @@
     <artifactId>common</artifactId>
     <version>0.1.0</version>
     <description>basic model</description>
-    <packaging>pom</packaging>
 
 </project>
