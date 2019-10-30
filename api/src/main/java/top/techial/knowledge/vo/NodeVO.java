@@ -20,7 +20,6 @@ import java.util.Set;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NodeVO {
-    private String table;
 
     private String name;
 
@@ -32,7 +31,6 @@ public class NodeVO {
         return new KnowledgeNode()
             .setName(this.name)
             .setLabels(labels == null || labels.isEmpty() ? Collections.singleton(this.name) : labels)
-            .setLabels(Collections.singleton(this.table))
             .setProperty(property);
     }
 }

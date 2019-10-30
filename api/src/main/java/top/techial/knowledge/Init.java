@@ -5,8 +5,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
-import top.techial.knowledge.service.NodeRelationService;
 import top.techial.knowledge.service.KnowledgeNodeService;
+import top.techial.knowledge.service.NodeRelationService;
 import top.techial.knowledge.vo.NodeVO;
 import top.techial.knowledge.vo.RelationVO;
 
@@ -42,10 +42,10 @@ public class Init implements CommandLineRunner {
 
     private List<KnowledgeNode> buildNodeVO() {
         List<NodeVO> list = new ArrayList<>();
-        list.add(new NodeVO("天气", "暖温带半湿润大陆性季风气候", null, null));
-        list.add(new NodeVO("城市", "济南市", null, null));
-        list.add(new NodeVO("城市", "运城市", null, null));
-        list.add(new NodeVO("项目", "阔叶树", null, Collections.singletonMap("baseInfoKeyList", "##界：##门：##纲：")));
+        list.add(new NodeVO("暖温带半湿润大陆性季风气候", Collections.singleton("天气"), null));
+        list.add(new NodeVO("济南市", Collections.singleton("城市"), null));
+        list.add(new NodeVO("运城市", Collections.singleton("城市"), null));
+        list.add(new NodeVO("阔叶树", Collections.singleton("项目"), Collections.singletonMap("baseInfoKeyList", "##界：##门：##纲：")));
         return list.stream().map(NodeVO::toKnowledgeNode).collect(Collectors.toList());
     }
 

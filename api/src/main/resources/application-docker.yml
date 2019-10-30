@@ -12,7 +12,7 @@ spring:
     name: knowledge-docker
   data:
     neo4j:
-      username: techial
+      username: neo4j
       password: techial
       uri: bolt://neo4j:7687
       open-in-view: true
