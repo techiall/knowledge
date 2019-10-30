@@ -6,11 +6,21 @@ services:
       - knowledge
     depends_on:
       - neo4j
+      - mongo
     ports:
       - "9090:8080"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - web_data:/web-logs
+    restart: always
+
+  mongo:
+    image: mongo:latest
+    networks:
+      - knowledge
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - mongo_data:/data/db
     restart: always
 
   neo4j:
@@ -25,12 +35,14 @@ services:
       - neo4j_plugins:/plugins
     environment:
       - NEO4J_AUTH=neo4j/techial
+    restart: always
 
 networks:
   knowledge:
 
 volumes:
   web_data:
+  mongo_data:
   neo4j_logs:
   neo4j_conf:
   neo4j_import:
