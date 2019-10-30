@@ -14,6 +14,7 @@ import java.util.Map;
 @Accessors(chain = true)
 public class NodeRelation {
     @Id
+    @GeneratedValue
     private Long id;
 
     @StartNode

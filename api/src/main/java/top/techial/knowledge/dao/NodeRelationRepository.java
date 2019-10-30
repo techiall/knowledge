@@ -13,11 +13,18 @@ import java.util.List;
 public interface NodeRelationRepository extends Neo4jRepository<NodeRelation, Long> {
 
     /**
-     * findFirstByStartNodeName
+     * find byStartNodeName
      *
      * @param name
      * @return
      */
-    List<NodeRelation> findFirstByStartNodeName(String name);
+    List<NodeRelation> findByStartNodeName(String name);
 
+    /**
+     * find by start node id
+     *
+     * @param id
+     * @return
+     */
+    List<NodeRelation> findByStartNodeId(Long id);
 }

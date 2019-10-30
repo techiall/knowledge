@@ -33,9 +33,14 @@ public class KnowledgeRelationController {
         return new ResultBean<>(nodeRelationService.findById(id));
     }
 
-    @GetMapping("/name")
+    @GetMapping("/start/id")
+    public ResultBean<List<NodeRelation>> findByStartId(@RequestParam(value = "query") Long id) {
+        return new ResultBean<>(nodeRelationService.findByStartNodeId(id));
+    }
+
+    @GetMapping("/start/name")
     public ResultBean<List<NodeRelation>> findByNameRelation(@RequestParam(value = "query") String name) {
-        return new ResultBean<>(nodeRelationService.findFirstByStartNodeName(name));
+        return new ResultBean<>(nodeRelationService.findByStartNodeName(name));
     }
 
     @PostMapping

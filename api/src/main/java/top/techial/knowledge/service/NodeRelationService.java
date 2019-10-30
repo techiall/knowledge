@@ -3,8 +3,8 @@ package top.techial.knowledge.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import top.techial.knowledge.dao.NodeRelationRepository;
 import top.techial.knowledge.dao.KnowledgeNodeRepository;
+import top.techial.knowledge.dao.NodeRelationRepository;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
 import top.techial.knowledge.vo.RelationVO;
@@ -29,8 +29,12 @@ public class NodeRelationService {
         return nodeRelationRepository.saveAll(buildNodeRelation);
     }
 
-    public List<NodeRelation> findFirstByStartNodeName(String name) {
-        return nodeRelationRepository.findFirstByStartNodeName(name);
+    public List<NodeRelation> findByStartNodeName(String name) {
+        return nodeRelationRepository.findByStartNodeName(name);
+    }
+
+    public List<NodeRelation> findByStartNodeId(Long id) {
+        return nodeRelationRepository.findByStartNodeId(id);
     }
 
     public NodeRelation findById(Long id) {
@@ -61,5 +65,9 @@ public class NodeRelationService {
 
     public void deleteById(Long id) {
         nodeRelationRepository.deleteById(id);
+    }
+
+    public void deleteAll() {
+        nodeRelationRepository.deleteAll();
     }
 }

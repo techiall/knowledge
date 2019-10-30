@@ -43,7 +43,7 @@ public class KnowledgeNodeService {
 
     public Object findByIdGraph(Long id) {
         KnowledgeNode knowledgeNode = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
-        List<NodeRelation> list = nodeRelationRepository.findFirstByStartNodeName(knowledgeNode.getName());
+        List<NodeRelation> list = nodeRelationRepository.findByStartNodeName(knowledgeNode.getName());
         log.debug(list);
 
         Map<String, Object> result = new HashMap<>(16);

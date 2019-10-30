@@ -19,7 +19,7 @@ public class NodeRelationRepositoryTest {
 
     @Test
     public void findByStartNodeId() {
-        List<NodeRelation> k = nodeRelationRepository.findFirstByStartNodeName("暖温带半湿润大陆性季风气候");
+        List<NodeRelation> k = nodeRelationRepository.findByStartNodeName("暖温带半湿润大陆性季风气候");
         Assert.assertNotNull(k);
     }
 }
