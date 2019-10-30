@@ -19,7 +19,7 @@ import top.techial.beans.ResultCode;
 @Log4j2
 @ControllerAdvice
 @ResponseBody
-public class ExceptionHandlers {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
