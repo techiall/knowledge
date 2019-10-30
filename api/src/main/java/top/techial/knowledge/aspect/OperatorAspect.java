@@ -74,7 +74,12 @@ public class OperatorAspect {
             return;
         }
         KnowledgeNode data = (KnowledgeNode) node.getData();
-        recordService.save(new Record().setNodeId(data.getId()).setInput(input).setResult(result).setOperator(operator));
+        recordService.save(new Record()
+            .setUserId(1)
+            .setNodeId(data.getId())
+            .setInput(input)
+            .setResult(result)
+            .setOperator(operator));
     }
 
 }

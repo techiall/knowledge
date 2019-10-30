@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.neo4j.ogm.annotation.*;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,7 +14,10 @@ import java.util.Set;
 @Data
 @NodeEntity
 @Accessors(chain = true)
-public class KnowledgeNode {
+public class KnowledgeNode implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue
     private Long id;

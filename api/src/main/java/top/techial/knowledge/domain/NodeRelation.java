@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.neo4j.ogm.annotation.*;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -12,7 +13,10 @@ import java.util.Map;
 @Data
 @RelationshipEntity(type = "RELATION")
 @Accessors(chain = true)
-public class NodeRelation {
+public class NodeRelation implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue
     private Long id;

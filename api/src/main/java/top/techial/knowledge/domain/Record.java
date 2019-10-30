@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,7 +15,9 @@ import java.util.Date;
 @Data
 @Document
 @Accessors(chain = true)
-public class Record {
+public class Record implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     private String id;
