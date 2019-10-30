@@ -96,4 +96,8 @@ public class KnowledgeNodeService {
     public Page<KnowledgeNode> findAll(Pageable pageable) {
         return knowledgeNodeRepository.findAll(pageable);
     }
+
+    public long count() {
+        return knowledgeNodeRepository.count();
+    }
 }

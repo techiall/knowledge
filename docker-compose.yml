@@ -7,7 +7,7 @@ services:
     depends_on:
       - neo4j
     ports:
-      - "8080:8080"
+      - "9090:8080"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - web_data:/web-logs
@@ -15,9 +15,6 @@ services:
 
   neo4j:
     image: neo4j:latest
-    ports:
-      - "7474:7474"
-      - "7687:7687"
     networks:
       - knowledge
     volumes:
@@ -27,7 +24,7 @@ services:
       - neo4j_import:/var/lib/neo4j/import
       - neo4j_plugins:/plugins
     environment:
-      NEO4J_AUTH: techial/techial
+      - NEO4J_AUTH=neo4j/techial
 
 networks:
   knowledge:
