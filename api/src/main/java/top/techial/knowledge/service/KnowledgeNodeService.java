@@ -30,7 +30,11 @@ public class KnowledgeNodeService {
     }
 
     public KnowledgeNode save(KnowledgeNode knowledgeNode) {
-        return knowledgeNodeRepository.save(knowledgeNode);
+        KnowledgeNode node = knowledgeNodeRepository.findFirstByName(knowledgeNode.getName()).orElse(null);
+        if (node == null) {
+            return knowledgeNodeRepository.save(knowledgeNode);
+        }
+        return node;
     }
 
     public KnowledgeNode findById(Long id) {
