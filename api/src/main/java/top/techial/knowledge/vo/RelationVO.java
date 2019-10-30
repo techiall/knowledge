@@ -20,7 +20,7 @@ public class RelationVO {
 
     private String startNode;
 
-    private String endNodeName;
+    private String endNode;
 
     private Map<String, String> property;
 }

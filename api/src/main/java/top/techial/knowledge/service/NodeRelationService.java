@@ -51,7 +51,7 @@ public class NodeRelationService {
 
     public NodeRelation save(RelationVO relationVO) {
         KnowledgeNode startNode = knowledgeNodeRepository.findFirstByName(relationVO.getStartNode()).orElseThrow(NullPointerException::new);
-        KnowledgeNode endNode = knowledgeNodeRepository.findFirstByName(relationVO.getEndNodeName()).orElseThrow(NullPointerException::new);
+        KnowledgeNode endNode = knowledgeNodeRepository.findFirstByName(relationVO.getEndNode()).orElseThrow(NullPointerException::new);
         return nodeRelationRepository.save(new NodeRelation()
             .setStartNode(startNode)
             .setEndNode(endNode)
