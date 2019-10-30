@@ -1,8 +1,9 @@
-package top.techial.knowledge.config;
+package top.techial.knowledge.exception;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,12 +29,14 @@ public class ExceptionHandlers {
     }
 
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class,
+        MissingServletRequestParameterException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Object methodArgumentNotValidException(Throwable throwable) {
         log.warn(throwable.getMessage());
         return new ResultBean<>(ResultCode.CHECK_FAIL);
     }
+
 
     @ExceptionHandler(MediaTypeNotSupportedStatusException.class)
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
