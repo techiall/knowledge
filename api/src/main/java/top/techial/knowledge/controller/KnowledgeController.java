@@ -1,5 +1,6 @@
 package top.techial.knowledge.controller;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
@@ -8,8 +9,6 @@ import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.dto.NodeDTO;
 import top.techial.knowledge.service.KnowledgeNodeService;
 import top.techial.knowledge.vo.NodeVO;
-
-import java.util.List;
 
 /**
  * @author techial
@@ -24,7 +23,7 @@ public class KnowledgeController {
     }
 
     @GetMapping
-    public ResultBean<List<NodeDTO>> findAll(@PageableDefault Pageable pageable) {
+    public ResultBean<Page<NodeDTO>> findAll(@PageableDefault Pageable pageable) {
         return new ResultBean<>(knowledgeNodeService.findAllByIsParentNode(pageable));
     }
 

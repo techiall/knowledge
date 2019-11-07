@@ -8,6 +8,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import top.techial.beans.ResultBean;
+import top.techial.spring.data.PageDTO;
 
 /**
  * convent org.springframework.data.domain.Page to PageVO
@@ -21,7 +22,7 @@ public class ResultBeanAspect {
 
     private static ResultBean<PageDTO> convent(Page page) {
         return new ResultBean<>(new PageDTO()
-            .setList(page.getContent())
+            .setContent(page.getContent())
             .setTotalElements(page.getTotalElements())
             .setPageSize(page.getPageable().getPageSize())
             .setPageNum(page.getPageable().getPageNumber())

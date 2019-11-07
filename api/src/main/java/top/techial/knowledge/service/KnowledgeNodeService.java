@@ -106,7 +106,7 @@ public class KnowledgeNodeService {
         return knowledgeNodeRepository.count();
     }
 
-    public List<NodeDTO> findAllByIsParentNode(Pageable pageable) {
+    public Page<NodeDTO> findAllByIsParentNode(Pageable pageable) {
         return knowledgeNodeRepository.findByIsParentNode(true, pageable).map(NodeDTO::new);
     }
 
