@@ -8,6 +8,7 @@ import top.techial.knowledge.dao.KnowledgeNodeRepository;
 import top.techial.knowledge.dao.NodeRelationRepository;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
+import top.techial.knowledge.dto.NodeDTO;
 
 import java.util.*;
 
@@ -104,4 +105,9 @@ public class KnowledgeNodeService {
     public long count() {
         return knowledgeNodeRepository.count();
     }
+
+    public List<NodeDTO> findAllByIsParentNode(Pageable pageable) {
+        return knowledgeNodeRepository.findByIsParentNode(true, pageable).map(NodeDTO::new);
+    }
+
 }

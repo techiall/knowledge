@@ -32,7 +32,8 @@ public class KnowledgeNode implements Serializable {
     @Properties(allowCast = true)
     private Map<String, String> property;
 
-    private boolean isParentNode = false;
+    @Property
+    private Boolean isParentNode = false;
 
     @Relationship(value = "parent-child-relation")
     private List<KnowledgeNode> childNodes;

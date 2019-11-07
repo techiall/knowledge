@@ -27,10 +27,13 @@ public class NodeVO {
 
     private Map<String, String> property;
 
+    private Long parentId;
+
     public KnowledgeNode toKnowledgeNode() {
         return new KnowledgeNode()
             .setName(this.name)
             .setLabels(labels == null || labels.isEmpty() ? Collections.singleton(this.name) : labels)
-            .setProperty(property);
+            .setProperty(property)
+            .setIsParentNode(true);
     }
 }

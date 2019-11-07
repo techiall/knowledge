@@ -32,6 +32,7 @@ public class Init implements CommandLineRunner {
     @Override
     public void run(String... args) {
         log.info("init ...");
+        knowledgeNodeService.deleteAll();
         if (knowledgeNodeService.count() == 0L) {
             knowledgeNodeService.saveAll(buildNodeVO());
             nodeRelationService.saveAll(buildNodeRelation());
@@ -42,10 +43,10 @@ public class Init implements CommandLineRunner {
 
     private List<KnowledgeNode> buildNodeVO() {
         List<NodeVO> list = new ArrayList<>();
-        list.add(new NodeVO("暖温带半湿润大陆性季风气候", Collections.singleton("天气"), null));
-        list.add(new NodeVO("济南市", Collections.singleton("城市"), null));
-        list.add(new NodeVO("运城市", Collections.singleton("城市"), null));
-        list.add(new NodeVO("阔叶树", Collections.singleton("项目"), Collections.singletonMap("baseInfoKeyList", "##界：##门：##纲：")));
+        list.add(new NodeVO("暖温带半湿润大陆性季风气候", Collections.singleton("天气"), null, null));
+        list.add(new NodeVO("济南市", Collections.singleton("城市"), null, null));
+        list.add(new NodeVO("运城市", Collections.singleton("城市"), null, null));
+        list.add(new NodeVO("阔叶树", Collections.singleton("项目"), Collections.singletonMap("baseInfoKeyList", "##界：##门：##纲："), null));
         return list.stream().map(NodeVO::toKnowledgeNode).collect(Collectors.toList());
     }
 
