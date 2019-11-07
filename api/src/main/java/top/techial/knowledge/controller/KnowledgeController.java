@@ -44,7 +44,7 @@ public class KnowledgeController {
 
     @PostMapping
     public ResultBean<KnowledgeNode> save(@RequestBody NodeVO nodeVO) {
-        return new ResultBean<>(knowledgeNodeService.save(nodeVO.toKnowledgeNode()));
+        return new ResultBean<>(knowledgeNodeService.save(nodeVO));
     }
 
     @PutMapping("/{id}")

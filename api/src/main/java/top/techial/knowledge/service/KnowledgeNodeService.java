@@ -9,6 +9,7 @@ import top.techial.knowledge.dao.NodeRelationRepository;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
 import top.techial.knowledge.dto.NodeDTO;
+import top.techial.knowledge.vo.NodeVO;
 
 import java.util.*;
 
@@ -34,6 +35,14 @@ public class KnowledgeNodeService {
         KnowledgeNode node = knowledgeNodeRepository.findFirstByName(knowledgeNode.getName()).orElse(null);
         if (node == null) {
             return knowledgeNodeRepository.save(knowledgeNode);
+        }
+        return node;
+    }
+
+    public KnowledgeNode save(NodeVO nodeVO) {
+        KnowledgeNode node = knowledgeNodeRepository.findFirstByName(nodeVO.getName()).orElse(null);
+        if (node == null) {
+            return knowledgeNodeRepository.save(nodeVO.toKnowledgeNode());
         }
         return node;
     }
