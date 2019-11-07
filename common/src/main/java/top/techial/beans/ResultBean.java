@@ -1,6 +1,5 @@
 package top.techial.beans;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -11,7 +10,6 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ResultBean<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,7 +45,6 @@ public class ResultBean<T> implements Serializable {
     }
 
     public ResultBean(Throwable e) {
-        super();
         this.code = ResultCode.UNKNOWN_EXCEPTION.getCode();
         this.msg = ResultCode.UNKNOWN_EXCEPTION.getTips();
         this.data = null;

@@ -11,7 +11,7 @@ import top.techial.beans.ResultBean;
 import top.techial.spring.data.PageDTO;
 
 /**
- * convent org.springframework.data.domain.Page to PageVO
+ * convent {@link org.springframework.data.domain.Page} to {@link top.techial.spring.data.PageDTO}
  *
  * @author techial
  */

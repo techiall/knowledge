@@ -1,6 +1,5 @@
 package top.techial.spring.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,29 +18,27 @@ import java.util.List;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-public
-class PageDTO implements Serializable {
+public class PageDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * list
+     * content
      */
     private List<?> content;
 
     /**
-     * length
+     * total elements
      */
     private long totalElements;
 
     /**
-     * page
+     * page num
      */
     private int pageNum;
 
     /**
-     * size
+     * page size
      */
     private int pageSize;
 
