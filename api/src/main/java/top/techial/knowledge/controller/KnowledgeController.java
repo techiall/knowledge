@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.dto.NodeDTO;
+import top.techial.knowledge.dto.NodeInfoDTO;
 import top.techial.knowledge.service.KnowledgeNodeService;
 import top.techial.knowledge.vo.NodeVO;
 
@@ -28,8 +29,8 @@ public class KnowledgeController {
     }
 
     @GetMapping("/{id}")
-    public ResultBean<KnowledgeNode> findById(@PathVariable Long id) {
-        return new ResultBean<>(knowledgeNodeService.findById(id));
+    public ResultBean<NodeInfoDTO> findById(@PathVariable Long id) {
+        return new ResultBean<>(new NodeInfoDTO(knowledgeNodeService.findById(id)));
     }
 
     @GetMapping("/{id}/graph")
