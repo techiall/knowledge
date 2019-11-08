@@ -16,7 +16,8 @@ public interface KnowledgeNodeRepository extends Neo4jRepository<KnowledgeNode, 
     /**
      * find by name
      *
-     * @param name name
+     * @param name     name
+     * @param pageable pageable
      * @return page
      */
     Page<KnowledgeNode> findByNameLike(String name, Pageable pageable);

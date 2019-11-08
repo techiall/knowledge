@@ -31,11 +31,11 @@ public class KnowledgeNodeService {
         return knowledgeNodeRepository.saveAll(iterable);
     }
 
-    public KnowledgeNode update(KnowledgeNode knowledgeNode) {
-        KnowledgeNode node = knowledgeNodeRepository.findById(knowledgeNode.getId()).orElseThrow(NullPointerException::new);
-        node.setName(knowledgeNode.getName())
-            .setLabels(knowledgeNode.getLabels())
-            .setProperty(knowledgeNode.getProperty());
+    public KnowledgeNode update(Long id, NodeVO nodeVO) {
+        KnowledgeNode node = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
+        node.setName(nodeVO.getName())
+            .setLabels(nodeVO.getLabels())
+            .setProperty(nodeVO.getProperty());
         return knowledgeNodeRepository.save(node);
     }
 
@@ -127,4 +127,5 @@ public class KnowledgeNodeService {
     public Optional<KnowledgeNode> findByName(String name) {
         return knowledgeNodeRepository.findFirstByName(name);
     }
+
 }

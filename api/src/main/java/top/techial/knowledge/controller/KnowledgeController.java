@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
-import top.techial.knowledge.domain.KnowledgeNode;
+import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.dto.NodeDTO;
 import top.techial.knowledge.dto.NodeInfoDTO;
 import top.techial.knowledge.service.KnowledgeNodeService;
@@ -33,24 +33,14 @@ public class KnowledgeController {
         return new ResultBean<>(new NodeInfoDTO(knowledgeNodeService.findById(id)));
     }
 
-    @GetMapping("/{id}/graph")
-    public ResultBean<Object> findByIdGraph(@PathVariable Long id) {
-        return new ResultBean<>(knowledgeNodeService.findByIdGraph(id));
-    }
-
-    @GetMapping("/name")
-    public ResultBean<Page<KnowledgeNode>> findByName(@RequestParam(name = "query") String name, @PageableDefault Pageable pageable) {
-        return new ResultBean<>(knowledgeNodeService.findByNameLike(name, pageable));
-    }
-
     @PostMapping
-    public ResultBean<KnowledgeNode> save(@RequestBody NodeVO nodeVO) {
-        return new ResultBean<>(knowledgeNodeService.save(nodeVO));
+    public ResultBean<NodeInfoDTO> save(@RequestBody NodeVO nodeVO) {
+        return new ResultBean<>(new NodeInfoDTO(knowledgeNodeService.save(nodeVO)));
     }
 
     @PutMapping("/{id}")
-    public ResultBean<KnowledgeNode> update(@PathVariable Long id, @RequestBody NodeVO nodeVO) {
-        return new ResultBean<>(knowledgeNodeService.update(nodeVO.toKnowledgeNode().setId(id)));
+    public ResultBean<NodeInfoDTO> update(@PathVariable Long id, @RequestBody NodeVO nodeVO) {
+        return new ResultBean<>(new NodeInfoDTO(knowledgeNodeService.update(id, nodeVO)));
     }
 
     @DeleteMapping("/{id}")
@@ -58,5 +48,16 @@ public class KnowledgeController {
         knowledgeNodeService.deleteById(id);
         return new ResultBean<>(true);
     }
+
+    @GetMapping("/{id}/graph")
+    public ResultBean<Object> findByIdGraph(@PathVariable Long id) {
+        return new ResultBean<>(knowledgeNodeService.findByIdGraph(id));
+    }
+
+    @GetMapping("/name")
+    public ResultBean<Page<NodeBaseDTO>> findByName(@RequestParam(name = "query") String name, @PageableDefault Pageable pageable) {
+        return new ResultBean<>(knowledgeNodeService.findByNameLike("*" + name + "*", pageable).map(NodeBaseDTO::new));
+    }
+
 
 }
