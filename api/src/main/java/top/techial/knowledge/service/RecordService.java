@@ -1,5 +1,7 @@
 package top.techial.knowledge.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import top.techial.knowledge.dao.RecordRepository;
 import top.techial.knowledge.domain.Record;
@@ -17,5 +19,9 @@ public class RecordService {
 
     public Record save(Record record) {
         return recordRepository.save(record);
+    }
+
+    public Page<Record> findAll(Pageable pageable) {
+        return recordRepository.findAll(pageable);
     }
 }

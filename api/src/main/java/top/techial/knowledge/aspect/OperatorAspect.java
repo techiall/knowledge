@@ -78,7 +78,7 @@ public class OperatorAspect {
             .setUserId(1)
             .setNodeId(data.getId())
             .setInput(input)
-            .setResult(result)
+            .setResult(data)
             .setOperator(operator));
     }
 
