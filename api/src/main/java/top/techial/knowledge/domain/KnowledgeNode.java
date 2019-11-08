@@ -5,6 +5,7 @@ import lombok.experimental.Accessors;
 import org.neo4j.ogm.annotation.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,6 +37,6 @@ public class KnowledgeNode implements Serializable {
     private Boolean isParentNode = false;
 
     @Relationship(value = "parent-child-relation")
-    private List<KnowledgeNode> childNodes;
+    private List<KnowledgeNode> childNodes = new ArrayList<>();
 
 }

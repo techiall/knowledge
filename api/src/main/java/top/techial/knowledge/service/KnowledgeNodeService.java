@@ -41,17 +41,20 @@ public class KnowledgeNodeService {
 
     public KnowledgeNode save(NodeVO nodeVO) {
         KnowledgeNode node = nodeVO.toKnowledgeNode();
-        if (nodeVO.getParentId() != null) {
-            KnowledgeNode parentNode = knowledgeNodeRepository.findById(nodeVO.getParentId())
-                .orElseThrow(NullPointerException::new);
-            node.setIsParentNode(false);
-            parentNode.setChildNodes(parentNode.getChildNodes().add(node))
+        if (nodeVO.getParentId() == null) {
+            node.setIsParentNode(true);
+            return knowledgeNodeRepository.save(node);
+        } else {
+            KnowledgeNode parentNode = knowledgeNodeRepository.findById(nodeVO.getParentId()).orElse(null);
+            if (parentNode == null) {
+                node.setIsParentNode(true);
+                return knowledgeNodeRepository.save(node);
+            }
+            parentNode.setIsParentNode(true);
+            parentNode.getChildNodes().add(node);
+            knowledgeNodeRepository.save(parentNode);
+            return knowledgeNodeRepository.save(node);
         }
-        KnowledgeNode node = knowledgeNodeRepository.findFirstByName(nodeVO.getName()).orElse(null);
-        if (node == null) {
-            return knowledgeNodeRepository.save(nodeVO.toKnowledgeNode());
-        }
-        return node;
     }
 
     public KnowledgeNode findById(Long id) {

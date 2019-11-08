@@ -27,6 +27,11 @@ public class NodeVO {
 
     private Map<String, String> property;
 
+    /**
+     * parentId = null -> parent
+     * parentId != null && parentId is exists -> child
+     * parent != null && parentId is not exists -> parent
+     */
     private Long parentId;
 
     public KnowledgeNode toKnowledgeNode() {

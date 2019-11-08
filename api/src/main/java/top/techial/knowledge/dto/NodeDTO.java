@@ -16,8 +16,11 @@ import java.util.stream.Collectors;
 public class NodeDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     private Long id;
+
     private String name;
+
     private List<NodeDTO> childNodes;
 
     public NodeDTO(KnowledgeNode knowledgeNode) {
