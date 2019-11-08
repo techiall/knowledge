@@ -38,8 +38,8 @@ public class KnowledgeController {
     }
 
     @GetMapping("/name")
-    public ResultBean<KnowledgeNode> findByName(@RequestParam(name = "query") String name) {
-        return new ResultBean<>(knowledgeNodeService.findByName(name));
+    public ResultBean<Page<KnowledgeNode>> findByName(@RequestParam(name = "query") String name, @PageableDefault Pageable pageable) {
+        return new ResultBean<>(knowledgeNodeService.findByNameLike(name, pageable));
     }
 
     @PostMapping
@@ -49,7 +49,7 @@ public class KnowledgeController {
 
     @PutMapping("/{id}")
     public ResultBean<KnowledgeNode> update(@PathVariable Long id, @RequestBody NodeVO nodeVO) {
-        return new ResultBean<>(knowledgeNodeService.save(nodeVO.toKnowledgeNode().setId(id)));
+        return new ResultBean<>(knowledgeNodeService.update(nodeVO.toKnowledgeNode().setId(id)));
     }
 
     @DeleteMapping("/{id}")

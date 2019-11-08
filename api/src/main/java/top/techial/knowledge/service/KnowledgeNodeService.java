@@ -31,12 +31,12 @@ public class KnowledgeNodeService {
         return knowledgeNodeRepository.saveAll(iterable);
     }
 
-    public KnowledgeNode save(KnowledgeNode knowledgeNode) {
-        KnowledgeNode node = knowledgeNodeRepository.findFirstByName(knowledgeNode.getName()).orElse(null);
-        if (node == null) {
-            return knowledgeNodeRepository.save(knowledgeNode);
-        }
-        return node;
+    public KnowledgeNode update(KnowledgeNode knowledgeNode) {
+        KnowledgeNode node = knowledgeNodeRepository.findById(knowledgeNode.getId()).orElseThrow(NullPointerException::new);
+        node.setName(knowledgeNode.getName())
+            .setLabels(knowledgeNode.getLabels())
+            .setProperty(knowledgeNode.getProperty());
+        return knowledgeNodeRepository.save(node);
     }
 
     public KnowledgeNode save(NodeVO nodeVO) {
@@ -104,13 +104,8 @@ public class KnowledgeNodeService {
         return map;
     }
 
-
     public Page<KnowledgeNode> findByNameLike(String name, Pageable pageable) {
         return knowledgeNodeRepository.findByNameLike(name, pageable);
-    }
-
-    public KnowledgeNode findByName(String name) {
-        return knowledgeNodeRepository.findFirstByName(name).orElseThrow(NullPointerException::new);
     }
 
     public void deleteAll() {
