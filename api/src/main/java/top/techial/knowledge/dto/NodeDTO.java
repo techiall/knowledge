@@ -6,6 +6,7 @@ import top.techial.knowledge.domain.KnowledgeNode;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author techial
@@ -17,11 +18,12 @@ public class NodeDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long id;
     private String name;
-    private List<KnowledgeNode> childNodes;
+    private List<NodeDTO> childNodes;
 
     public NodeDTO(KnowledgeNode knowledgeNode) {
         this.id = knowledgeNode.getId();
         this.name = knowledgeNode.getName();
-        this.childNodes = knowledgeNode.getChildNodes();
+        this.childNodes = knowledgeNode.getChildNodes().stream()
+            .map(NodeDTO::new).collect(Collectors.toList());
     }
 }
