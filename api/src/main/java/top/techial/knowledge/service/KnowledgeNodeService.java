@@ -124,4 +124,7 @@ public class KnowledgeNodeService {
         return knowledgeNodeRepository.findByIsParentNode(true, pageable).map(NodeDTO::new);
     }
 
+    public Optional<KnowledgeNode> findByName(String name) {
+        return knowledgeNodeRepository.findFirstByName(name);
+    }
 }
