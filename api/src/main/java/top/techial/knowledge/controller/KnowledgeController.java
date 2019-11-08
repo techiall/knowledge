@@ -43,6 +43,11 @@ public class KnowledgeController {
         return new ResultBean<>(new NodeInfoDTO(knowledgeNodeService.update(id, nodeVO)));
     }
 
+    @PatchMapping("/{id}/name")
+    public ResultBean<NodeInfoDTO> updateName(@PathVariable Long id, @RequestBody NodeVO nodeVO) {
+        return new ResultBean<>(new NodeInfoDTO(knowledgeNodeService.updateName(id, nodeVO.getName())));
+    }
+
     @DeleteMapping("/{id}")
     public ResultBean<Boolean> deleteById(@PathVariable Long id) {
         knowledgeNodeService.deleteById(id);

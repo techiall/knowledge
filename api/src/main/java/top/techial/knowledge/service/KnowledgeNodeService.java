@@ -125,4 +125,8 @@ public class KnowledgeNodeService {
         return knowledgeNodeRepository.findFirstByName(name);
     }
 
+    public KnowledgeNode updateName(Long id, String name) {
+        KnowledgeNode node = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new).setName(name);
+        return knowledgeNodeRepository.save(node);
+    }
 }
