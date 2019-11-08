@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.techial.beans.ResultBean;
-import top.techial.knowledge.domain.Record;
+import top.techial.knowledge.dto.RecordDTO;
 import top.techial.knowledge.service.RecordService;
 
 /**
@@ -24,9 +24,9 @@ public class RecordController {
     }
 
     @GetMapping
-    public ResultBean<Page<Record>> findAll(
+    public ResultBean<Page<RecordDTO>> findAll(
         @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        return new ResultBean<>(recordService.findAll(pageable));
+        return new ResultBean<>(recordService.findAll(pageable).map(RecordDTO::new));
     }
 }
