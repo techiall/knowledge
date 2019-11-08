@@ -24,4 +24,8 @@ public class RecordService {
     public Page<Record> findAll(Pageable pageable) {
         return recordRepository.findAll(pageable);
     }
+
+    public Page<Record> findByNodeId(Long id, Pageable pageable) {
+        return recordRepository.findByNodeId(id, pageable);
+    }
 }

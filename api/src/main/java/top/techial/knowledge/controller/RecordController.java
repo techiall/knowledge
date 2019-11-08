@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.techial.beans.ResultBean;
@@ -28,5 +29,10 @@ public class RecordController {
         @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return new ResultBean<>(recordService.findAll(pageable).map(RecordDTO::new));
+    }
+
+    @GetMapping("/node/{id}")
+    public ResultBean<Page<RecordDTO>> findByNodeId(@PathVariable Long id, @PageableDefault Pageable pageable) {
+        return new ResultBean<>(recordService.findByNodeId(id, pageable).map(RecordDTO::new));
     }
 }

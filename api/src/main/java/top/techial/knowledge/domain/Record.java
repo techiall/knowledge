@@ -22,16 +22,28 @@ public class Record implements Serializable {
     @Id
     private String id;
 
+    /**
+     * neo4j node id
+     */
     private Long nodeId;
 
+    /**
+     * user id
+     */
     private Integer userId;
 
     private Object input;
 
     private Object result;
 
+    /**
+     * operator
+     */
     private Operator operator;
 
+    /**
+     * time
+     */
     @CreatedDate
     private Date createTime;
 
