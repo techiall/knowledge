@@ -74,12 +74,11 @@ public class KnowledgeNodeService {
         List<Object> nodes = new ArrayList<>(16);
         List<Object> links = new ArrayList<>(16);
 
-        nodes.add(buildNodes(knowledgeNode.getId(), knowledgeNode.getName(), knowledgeNode.getProperty(), knowledgeNode.getLabels()));
+        nodes.add(buildNodes(knowledgeNode.getId(), knowledgeNode.getName()));
         for (NodeRelation nodeRelation : list) {
             nodes.add(buildNodes(nodeRelation.getEndNode().getId(),
-                nodeRelation.getEndNode().getName(),
-                nodeRelation.getEndNode().getProperty(),
-                knowledgeNode.getLabels()));
+                nodeRelation.getEndNode().getName()
+            ));
             links.add(buildLinks(knowledgeNode.getId(), nodeRelation.getEndNode().getId(), nodeRelation.getProperty()));
         }
         result.put("nodes", nodes);
@@ -87,12 +86,10 @@ public class KnowledgeNodeService {
         return result;
     }
 
-    private Map<String, Object> buildNodes(Long id, String name, Map<String, String> property, Collection<String> labels) {
+    private Map<String, Object> buildNodes(Long id, String name) {
         Map<String, Object> map = new HashMap<>(16);
         map.put("id", id);
         map.put("name", name);
-        map.put("property", property);
-        map.put("labels", labels);
         return map;
     }
 
