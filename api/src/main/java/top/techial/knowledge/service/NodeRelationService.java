@@ -76,13 +76,14 @@ public class NodeRelationService {
     }
 
     public ParentChildRelation updateParent(ParentVO parentVO) {
-        ParentChildRelation parentChildRelation = parentChildRelationRepository.findFirstByStartNodeNameAndEndNodeName(parentVO.getParentName(), parentVO.getSrcChildName())
+        ParentChildRelation parentChildRelation = parentChildRelationRepository
+            .findFirstByStartNodeNameAndEndNodeName(parentVO.getSrcParentName(), parentVO.getChildName())
             .orElseThrow(NullPointerException::new);
         parentChildRelationRepository.deleteById(parentChildRelation.getId());
         return parentChildRelationRepository.save(new ParentChildRelation().setStartNode(
-            knowledgeNodeRepository.findFirstByName(parentVO.getParentName())
+            knowledgeNodeRepository.findFirstByName(parentVO.getNewParentName())
                 .orElseThrow(NullPointerException::new))
-            .setEndNode(knowledgeNodeRepository.findFirstByName(parentVO.getNewChildName())
+            .setEndNode(knowledgeNodeRepository.findFirstByName(parentVO.getChildName())
                 .orElseThrow(NullPointerException::new)));
     }
 }

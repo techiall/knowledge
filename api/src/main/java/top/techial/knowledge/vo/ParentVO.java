@@ -16,10 +16,10 @@ import lombok.experimental.Accessors;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ParentVO {
 
-    private String parentName;
+    private String srcParentName;
 
-    private String srcChildName;
+    private String newParentName;
 
-    private String newChildName;
+    private String childName;
 }
 
