@@ -48,6 +48,11 @@ public class KnowledgeRelationController {
         return new ResultBean<>(nodeRelationService.updateById(id, relationVO));
     }
 
+    @PutMapping("/start/{startId}/end/{endId}")
+    public ResultBean<NodeRelation> updateRelation(@PathVariable Long startId, @PathVariable Long endId) {
+        return null;
+    }
+
     @DeleteMapping("/{id}")
     public ResultBean<Boolean> deleteById(@PathVariable Long id) {
         nodeRelationService.deleteById(id);
