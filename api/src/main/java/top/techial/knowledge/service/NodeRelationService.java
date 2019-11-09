@@ -5,8 +5,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import top.techial.knowledge.dao.KnowledgeNodeRepository;
 import top.techial.knowledge.dao.NodeRelationRepository;
+import top.techial.knowledge.dao.ParentChildRelationRepository;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
+import top.techial.knowledge.domain.ParentChildRelation;
+import top.techial.knowledge.vo.ParentVO;
 import top.techial.knowledge.vo.RelationVO;
 
 import java.util.List;
@@ -18,11 +21,12 @@ import java.util.List;
 public class NodeRelationService {
     private final NodeRelationRepository nodeRelationRepository;
     private final KnowledgeNodeRepository knowledgeNodeRepository;
+    private final ParentChildRelationRepository parentChildRelationRepository;
 
-
-    public NodeRelationService(NodeRelationRepository nodeRelationRepository, KnowledgeNodeRepository knowledgeNodeRepository) {
+    public NodeRelationService(NodeRelationRepository nodeRelationRepository, KnowledgeNodeRepository knowledgeNodeRepository, ParentChildRelationRepository parentChildRelationRepository) {
         this.nodeRelationRepository = nodeRelationRepository;
         this.knowledgeNodeRepository = knowledgeNodeRepository;
+        this.parentChildRelationRepository = parentChildRelationRepository;
     }
 
     public Iterable<NodeRelation> saveAll(Iterable<NodeRelation> buildNodeRelation) {
@@ -69,5 +73,16 @@ public class NodeRelationService {
 
     public void deleteAll() {
         nodeRelationRepository.deleteAll();
+    }
+
+    public ParentChildRelation updateParent(ParentVO parentVO) {
+        ParentChildRelation parentChildRelation = parentChildRelationRepository.findFirstByStartNodeNameAndEndNodeName(parentVO.getParentName(), parentVO.getSrcChildName())
+            .orElseThrow(NullPointerException::new);
+        parentChildRelationRepository.deleteById(parentChildRelation.getId());
+        return parentChildRelationRepository.save(new ParentChildRelation().setStartNode(
+            knowledgeNodeRepository.findFirstByName(parentVO.getParentName())
+                .orElseThrow(NullPointerException::new))
+            .setEndNode(knowledgeNodeRepository.findFirstByName(parentVO.getNewChildName())
+                .orElseThrow(NullPointerException::new)));
     }
 }

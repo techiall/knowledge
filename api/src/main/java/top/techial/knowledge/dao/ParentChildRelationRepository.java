@@ -12,11 +12,11 @@ import java.util.Optional;
 @Repository
 public interface ParentChildRelationRepository extends Neo4jRepository<ParentChildRelation, Long> {
     /**
-     * findByStartNodeIdAndEndNodeId
+     * findFirstByStartNodeNameAndEndNodeName
      *
-     * @param startId id
-     * @param endId   id
+     * @param start id
+     * @param end   id
      * @return relation
      */
-    Optional<ParentChildRelation> findFirstByStartNodeIdAndEndNodeId(Long startId, Long endId);
+    Optional<ParentChildRelation> findFirstByStartNodeNameAndEndNodeName(String start, String end);
 }
