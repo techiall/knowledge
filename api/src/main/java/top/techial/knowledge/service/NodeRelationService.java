@@ -54,8 +54,10 @@ public class NodeRelationService {
     }
 
     public NodeRelation save(RelationVO relationVO) {
-        KnowledgeNode startNode = knowledgeNodeRepository.findFirstByName(relationVO.getStartNode()).orElseThrow(NullPointerException::new);
-        KnowledgeNode endNode = knowledgeNodeRepository.findFirstByName(relationVO.getEndNode()).orElseThrow(NullPointerException::new);
+        KnowledgeNode startNode = knowledgeNodeRepository.findFirstByName(relationVO.getStartNode())
+            .orElseThrow(NullPointerException::new);
+        KnowledgeNode endNode = knowledgeNodeRepository.findFirstByName(relationVO.getEndNode())
+            .orElseThrow(NullPointerException::new);
         return nodeRelationRepository.save(new NodeRelation()
             .setStartNode(startNode)
             .setEndNode(endNode)
@@ -80,10 +82,26 @@ public class NodeRelationService {
             .findFirstByStartNodeNameAndEndNodeName(parentVO.getSrcParentName(), parentVO.getChildName())
             .orElseThrow(NullPointerException::new);
         parentChildRelationRepository.deleteById(parentChildRelation.getId());
-        return parentChildRelationRepository.save(new ParentChildRelation().setStartNode(
-            knowledgeNodeRepository.findFirstByName(parentVO.getNewParentName())
-                .orElseThrow(NullPointerException::new))
-            .setEndNode(knowledgeNodeRepository.findFirstByName(parentVO.getChildName())
-                .orElseThrow(NullPointerException::new)));
+
+        KnowledgeNode srcNode = knowledgeNodeRepository.findFirstByName(parentVO.getNewParentName())
+            .orElseThrow(NullPointerException::new);
+
+        if (srcNode.getChildNodes().isEmpty()) {
+            srcNode.setIsParentNode(false);
+        }
+
+        knowledgeNodeRepository.save(srcNode);
+
+        KnowledgeNode childNode = knowledgeNodeRepository.findFirstByName(parentVO.getChildName())
+            .orElseThrow(NullPointerException::new);
+
+        KnowledgeNode newParent = knowledgeNodeRepository.findFirstByName(parentVO.getNewParentName())
+            .orElseThrow(NullPointerException::new);
+        newParent.setIsParentNode(true);
+        knowledgeNodeRepository.save(newParent);
+
+        return parentChildRelationRepository.save(new ParentChildRelation()
+            .setStartNode(newParent)
+            .setEndNode(childNode));
     }
 }
