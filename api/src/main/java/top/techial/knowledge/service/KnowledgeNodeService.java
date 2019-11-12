@@ -140,4 +140,13 @@ public class KnowledgeNodeService {
         KnowledgeNode node = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new).setName(name);
         return knowledgeNodeRepository.save(node);
     }
+
+    public List<NodeDTO> findByChildNode(Long id) {
+        KnowledgeNode node = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
+        return parentChildRelationRepository.findByStartNodeName(node.getName())
+            .stream()
+            .map(ParentChildRelation::getEndNode)
+            .map(NodeDTO::new)
+            .collect(Collectors.toList());
+    }
 }

@@ -11,6 +11,8 @@ import top.techial.knowledge.dto.NodeInfoDTO;
 import top.techial.knowledge.service.KnowledgeNodeService;
 import top.techial.knowledge.vo.NodeVO;
 
+import java.util.List;
+
 /**
  * @author techial
  */
@@ -102,6 +104,11 @@ public class KnowledgeController {
     @GetMapping("/{id}/graph")
     public ResultBean<Object> findByIdGraph(@PathVariable Long id) {
         return new ResultBean<>(knowledgeNodeService.findByIdGraph(id));
+    }
+
+    @GetMapping("/{id}/child")
+    public ResultBean<List<NodeDTO>> findChildNode(@PathVariable Long id) {
+        return new ResultBean<>(knowledgeNodeService.findByChildNode(id));
     }
 
     /**
