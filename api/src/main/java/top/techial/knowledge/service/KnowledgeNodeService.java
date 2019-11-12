@@ -6,12 +6,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import top.techial.knowledge.dao.KnowledgeNodeRepository;
 import top.techial.knowledge.dao.NodeRelationRepository;
+import top.techial.knowledge.dao.ParentChildRelationRepository;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
+import top.techial.knowledge.domain.ParentChildRelation;
 import top.techial.knowledge.dto.NodeDTO;
 import top.techial.knowledge.vo.NodeVO;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author techial
@@ -21,10 +24,12 @@ import java.util.*;
 public class KnowledgeNodeService {
     private final KnowledgeNodeRepository knowledgeNodeRepository;
     private final NodeRelationRepository nodeRelationRepository;
+    private final ParentChildRelationRepository parentChildRelationRepository;
 
-    public KnowledgeNodeService(KnowledgeNodeRepository knowledgeNodeRepository, NodeRelationRepository nodeRelationRepository) {
+    public KnowledgeNodeService(KnowledgeNodeRepository knowledgeNodeRepository, NodeRelationRepository nodeRelationRepository, ParentChildRelationRepository parentChildRelationRepository) {
         this.knowledgeNodeRepository = knowledgeNodeRepository;
         this.nodeRelationRepository = nodeRelationRepository;
+        this.parentChildRelationRepository = parentChildRelationRepository;
     }
 
     public Iterable<KnowledgeNode> saveAll(Iterable<KnowledgeNode> iterable) {
@@ -118,7 +123,13 @@ public class KnowledgeNodeService {
     }
 
     public Page<NodeDTO> findAllByIsParentNode(Pageable pageable) {
-        return knowledgeNodeRepository.findByIsParentNode(true, pageable).map(NodeDTO::new);
+        return knowledgeNodeRepository.findByIsParentNode(true, pageable).map(NodeDTO::new)
+            .map(it -> it.setChildNodes(parentChildRelationRepository
+                .findByStartNodeName(it.getName())
+                .stream()
+                .map(ParentChildRelation::getEndNode)
+                .map(NodeDTO::new)
+                .collect(Collectors.toList())));
     }
 
     public Optional<KnowledgeNode> findByName(String name) {
