@@ -40,6 +40,10 @@ public class KnowledgeNodeService {
         return knowledgeNodeRepository.save(node);
     }
 
+    public KnowledgeNode save(KnowledgeNode node) {
+        return knowledgeNodeRepository.save(node);
+    }
+
     public KnowledgeNode save(NodeVO nodeVO) {
         KnowledgeNode node = nodeVO.toKnowledgeNode();
         if (nodeVO.getParentId() == null) {
@@ -58,7 +62,7 @@ public class KnowledgeNodeService {
     }
 
     public KnowledgeNode findById(Long id) {
-        return knowledgeNodeRepository.findById(id).orElse(null);
+        return knowledgeNodeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
 
     public void deleteById(Long id) {

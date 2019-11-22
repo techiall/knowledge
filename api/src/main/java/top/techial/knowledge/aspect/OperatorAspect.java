@@ -47,7 +47,7 @@ public class OperatorAspect {
         return map;
     }
 
-    @Around("execution(public * top.techial.knowledge.controller.KnowledgeController.*(..))")
+    @Around("execution(public * top.techial.knowledge.controller.Knowledge*.*(..))")
     public Object before(ProceedingJoinPoint joinPoint) throws Throwable {
         Signature signature = joinPoint.getSignature();
         MethodSignature methodSignature = (MethodSignature) signature;

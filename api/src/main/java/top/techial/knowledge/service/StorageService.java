@@ -2,16 +2,18 @@ package top.techial.knowledge.service;
 
 import com.mongodb.client.gridfs.model.GridFSFile;
 import lombok.extern.log4j.Log4j2;
-import org.bson.types.ObjectId;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
-import org.springframework.web.multipart.MultipartFile;
+import top.techial.knowledge.domain.KnowledgeNode;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 /**
  * @author techial
@@ -27,42 +29,48 @@ public class StorageService {
         this.knowledgeNodeService = knowledgeNodeService;
     }
 
-    public GridFsResource findById(String id) {
-        GridFSFile file = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(id)));
+    public String findById(Long id) throws IOException {
+        String resourceId = knowledgeNodeService.findById(id).getResourceId();
+        if (log.isDebugEnabled()) {
+            log.debug("resource id = {}", resourceId);
+        }
+        GridFSFile file = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(resourceId)));
         if (file == null) {
             throw new NullPointerException();
         }
-        return gridFsTemplate.getResource(file);
+        return new BufferedReader(new InputStreamReader(gridFsTemplate.getResource(file).getInputStream()))
+            .lines().collect(Collectors.joining(System.lineSeparator()));
     }
 
-    public ObjectId findByIdResource(Long id) {
-        GridFSFile file = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(id)));
-        return file == null ? null : file.getObjectId();
-    }
-
-    public void delete(String id) {
-        gridFsTemplate.delete(new Query(Criteria.where("_id").is(id)));
-    }
-
-    public String save(MultipartFile file) throws IOException {
-        String digest = DigestUtils.md5DigestAsHex(file.getInputStream());
-        GridFSFile fsFile = gridFsTemplate.findOne(new Query(Criteria.where("md5").is(digest)));
-        if (fsFile == null) {
-            return gridFsTemplate.store(
-                file.getInputStream(),
-                file.getOriginalFilename(),
-                file.getContentType()
-            ).toString();
-        }
-        return fsFile.getObjectId().toHexString();
-    }
-
-    public ObjectId update(Long id) {
+    public void delete(Long id) {
         String resourceId = knowledgeNodeService.findById(id).getResourceId();
         if (resourceId == null) {
             throw new IllegalArgumentException();
         }
-        return null;
-//        return gridFsTemplate.store(new ByteArrays(resource.getBytes())).toString();
+        gridFsTemplate.delete(new Query(Criteria.where("_id").is(resourceId)));
+    }
+
+    public String save(String resource, Long id) {
+        KnowledgeNode node = knowledgeNodeService.findById(id);
+        if (node.getResourceId() != null) {
+            throw new IllegalArgumentException();
+        }
+        String resourceId = gridFsTemplate.store(new ByteArrayInputStream(resource.getBytes()), RandomStringUtils.randomAlphanumeric(19))
+            .toString();
+        node.setResourceId(resourceId);
+        knowledgeNodeService.save(node);
+        return resourceId;
+    }
+
+    public String update(Long id, String resource) {
+        KnowledgeNode node = knowledgeNodeService.findById(id);
+        if (node.getResourceId() == null) {
+            throw new IllegalArgumentException();
+        }
+        this.delete(id);
+        String resourceId = gridFsTemplate.store(new ByteArrayInputStream(resource.getBytes()), String.valueOf(id)).toString();
+        node.setResourceId(resourceId);
+        knowledgeNodeService.save(node);
+        return resourceId;
     }
 }
