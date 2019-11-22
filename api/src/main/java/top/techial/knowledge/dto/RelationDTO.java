@@ -12,7 +12,7 @@ import java.util.Map;
  */
 @Data
 @Accessors(chain = true)
-public class NodeRelationDTO implements Serializable {
+public class RelationDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,7 +22,7 @@ public class NodeRelationDTO implements Serializable {
 
     private Map<String, String> property;
 
-    public NodeRelationDTO(NodeRelation nodeRelation) {
+    public RelationDTO(NodeRelation nodeRelation) {
         this.id = nodeRelation.getId();
         this.node = new NodeBaseDTO(nodeRelation.getEndNode());
         this.property = nodeRelation.getProperty();

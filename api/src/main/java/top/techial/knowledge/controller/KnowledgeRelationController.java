@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
 import top.techial.knowledge.domain.NodeRelation;
 import top.techial.knowledge.dto.NodeInfoDTO;
-import top.techial.knowledge.dto.NodeRelationDTO;
+import top.techial.knowledge.dto.RelationDTO;
 import top.techial.knowledge.service.NodeRelationService;
 import top.techial.knowledge.vo.ParentVO;
 import top.techial.knowledge.vo.RelationVO;
@@ -32,23 +32,23 @@ public class KnowledgeRelationController {
     }
 
     @GetMapping("/{id}")
-    public ResultBean<NodeRelationDTO> findAll(@PathVariable Long id) {
-        return new ResultBean<>(new NodeRelationDTO(nodeRelationService.findById(id)));
+    public ResultBean<RelationDTO> findAll(@PathVariable Long id) {
+        return new ResultBean<>(new RelationDTO(nodeRelationService.findById(id)));
     }
 
     @GetMapping("/start/name")
-    public ResultBean<List<NodeRelationDTO>> findByNameRelation(@RequestParam(value = "query") String name) {
+    public ResultBean<List<RelationDTO>> findByNameRelation(@RequestParam(value = "query") String name) {
         return new ResultBean<>(nodeRelationService.findByStartNodeName(name));
     }
 
     @PostMapping
-    public ResultBean<NodeRelationDTO> save(@RequestBody RelationVO relationVO) {
-        return new ResultBean<>(new NodeRelationDTO(nodeRelationService.save(relationVO)));
+    public ResultBean<RelationDTO> save(@RequestBody RelationVO relationVO) {
+        return new ResultBean<>(new RelationDTO(nodeRelationService.save(relationVO)));
     }
 
     @PutMapping("/{id}")
-    public ResultBean<NodeRelationDTO> updateById(@PathVariable Long id, @RequestBody RelationVO relationVO) {
-        return new ResultBean<>(new NodeRelationDTO(nodeRelationService.updateById(id, relationVO)));
+    public ResultBean<RelationDTO> updateById(@PathVariable Long id, @RequestBody RelationVO relationVO) {
+        return new ResultBean<>(new RelationDTO(nodeRelationService.updateById(id, relationVO)));
     }
 
     @PatchMapping("/parent")
