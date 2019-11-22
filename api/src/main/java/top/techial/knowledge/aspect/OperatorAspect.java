@@ -12,9 +12,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import top.techial.beans.ResultBean;
-import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.Operator;
 import top.techial.knowledge.domain.Record;
+import top.techial.knowledge.dto.NodeInfoDTO;
+import top.techial.knowledge.dto.RelationDTO;
 import top.techial.knowledge.service.RecordService;
 
 import java.lang.reflect.Method;
@@ -70,10 +71,10 @@ public class OperatorAspect {
             return;
         }
         ResultBean node = (ResultBean) result;
-        if (!(node.getData() instanceof KnowledgeNode)) {
+        if (!(node.getData() instanceof NodeInfoDTO)) {
             return;
         }
-        KnowledgeNode data = (KnowledgeNode) node.getData();
+        RelationDTO data = (RelationDTO) node.getData();
         recordService.save(new Record()
             .setUserId(1)
             .setNodeId(data.getId())
