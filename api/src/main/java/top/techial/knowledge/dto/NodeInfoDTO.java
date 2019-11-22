@@ -21,7 +21,10 @@ public class NodeInfoDTO implements Serializable {
         this.labels = knowledgeNode.getLabels();
         this.name = knowledgeNode.getName();
         this.property = knowledgeNode.getProperty();
+        this.isParentNode = knowledgeNode.getIsParentNode();
     }
+
+    private final Boolean isParentNode;
 
     private Long id;
 
