@@ -86,9 +86,19 @@ public class KnowledgeNodeService {
             links.add(buildLinks(knowledgeNode.getId(), nodeRelation.getEndNode().getId(), nodeRelation.getProperty()));
         }
 
-        for (KnowledgeNode childNode : knowledgeNode.getChildNodes()) {
-            nodes.add(buildNodes(childNode.getId(), childNode.getName()));
-            links.add(buildLinks(knowledgeNode.getId(), childNode.getId(), Collections.singletonMap("relation", "parent-child-relation")));
+        LinkedList<KnowledgeNode> queue = new LinkedList<>();
+        queue.add(knowledgeNode);
+        while (!queue.isEmpty()) {
+            KnowledgeNode node = knowledgeNodeRepository
+                .findById(queue.removeFirst().getId())
+                .orElseThrow(NullPointerException::new);
+
+            for (KnowledgeNode childNode : node.getChildNodes()) {
+                nodes.add(buildNodes(childNode.getId(), childNode.getName()));
+                links.add(buildLinks(node.getId(), childNode.getId(),
+                    Collections.singletonMap("relation", "parent-child-relation")));
+                queue.add(childNode);
+            }
         }
 
         result.put("nodes", nodes);
