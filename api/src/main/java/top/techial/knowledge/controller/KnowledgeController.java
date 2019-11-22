@@ -11,7 +11,7 @@ import top.techial.knowledge.dto.NodeInfoDTO;
 import top.techial.knowledge.service.KnowledgeNodeService;
 import top.techial.knowledge.vo.NodeVO;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author techial
@@ -32,8 +32,10 @@ public class KnowledgeController {
      * @return nodes
      */
     @GetMapping
-    public ResultBean<Page<NodeDTO>> findAll(@PageableDefault Pageable pageable) {
-        return new ResultBean<>(knowledgeNodeService.findAll(pageable));
+    public ResultBean<Page<NodeDTO>> findAll(
+        @PageableDefault Pageable pageable,
+        @RequestParam(defaultValue = "10", required = false) int depth) {
+        return new ResultBean<>(knowledgeNodeService.findAll(pageable, depth));
     }
 
     /**
@@ -107,8 +109,10 @@ public class KnowledgeController {
     }
 
     @GetMapping("/{id}/child")
-    public ResultBean<List<NodeDTO>> findChildNode(@PathVariable Long id) {
-        return new ResultBean<>(knowledgeNodeService.findByChildNode(id));
+    public ResultBean<Set<NodeDTO>> findChildNode(
+        @PathVariable Long id,
+        @RequestParam(required = false, defaultValue = "10") int depth) {
+        return new ResultBean<>(knowledgeNodeService.findByChildNode(id, depth));
     }
 
     /**

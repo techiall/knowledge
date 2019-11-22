@@ -42,7 +42,6 @@ public class KnowledgeNode implements Serializable {
     @Relationship(value = "parent-child-relation")
     private Set<KnowledgeNode> childNodes = new HashSet<>();
 
-
     @Override
     public int hashCode() {
         return Math.toIntExact(id);

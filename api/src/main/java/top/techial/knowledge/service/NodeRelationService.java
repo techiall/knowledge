@@ -5,11 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import top.techial.knowledge.dao.KnowledgeNodeRepository;
 import top.techial.knowledge.dao.NodeRelationRepository;
-import top.techial.knowledge.dao.ParentChildRelationRepository;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
-import top.techial.knowledge.domain.ParentChildRelation;
-import top.techial.knowledge.vo.ParentVO;
 import top.techial.knowledge.vo.RelationVO;
 
 import java.util.List;
@@ -21,12 +18,10 @@ import java.util.List;
 public class NodeRelationService {
     private final NodeRelationRepository nodeRelationRepository;
     private final KnowledgeNodeRepository knowledgeNodeRepository;
-    private final ParentChildRelationRepository parentChildRelationRepository;
 
-    public NodeRelationService(NodeRelationRepository nodeRelationRepository, KnowledgeNodeRepository knowledgeNodeRepository, ParentChildRelationRepository parentChildRelationRepository) {
+    public NodeRelationService(NodeRelationRepository nodeRelationRepository, KnowledgeNodeRepository knowledgeNodeRepository) {
         this.nodeRelationRepository = nodeRelationRepository;
         this.knowledgeNodeRepository = knowledgeNodeRepository;
-        this.parentChildRelationRepository = parentChildRelationRepository;
     }
 
     public Iterable<NodeRelation> saveAll(Iterable<NodeRelation> buildNodeRelation) {
@@ -76,32 +71,32 @@ public class NodeRelationService {
     public void deleteAll() {
         nodeRelationRepository.deleteAll();
     }
-
-    public ParentChildRelation updateParent(ParentVO parentVO) {
-        ParentChildRelation parentChildRelation = parentChildRelationRepository
-            .findFirstByStartNodeNameAndEndNodeName(parentVO.getSrcParentName(), parentVO.getChildName())
-            .orElseThrow(NullPointerException::new);
-        parentChildRelationRepository.deleteById(parentChildRelation.getId());
-
-        KnowledgeNode srcNode = knowledgeNodeRepository.findFirstByName(parentVO.getNewParentName())
-            .orElseThrow(NullPointerException::new);
-
-        if (srcNode.getChildNodes().isEmpty()) {
-            srcNode.setIsParentNode(false);
-        }
-
-        knowledgeNodeRepository.save(srcNode);
-
-        KnowledgeNode childNode = knowledgeNodeRepository.findFirstByName(parentVO.getChildName())
-            .orElseThrow(NullPointerException::new);
-
-        KnowledgeNode newParent = knowledgeNodeRepository.findFirstByName(parentVO.getNewParentName())
-            .orElseThrow(NullPointerException::new);
-        newParent.setIsParentNode(true);
-        knowledgeNodeRepository.save(newParent);
-
-        return parentChildRelationRepository.save(new ParentChildRelation()
-            .setStartNode(newParent)
-            .setEndNode(childNode));
-    }
+//
+//    public ParentChildRelation updateParent(ParentVO parentVO) {
+//        ParentChildRelation parentChildRelation = parentChildRelationRepository
+//            .findFirstByStartNodeNameAndEndNodeName(parentVO.getSrcParentName(), parentVO.getChildName())
+//            .orElseThrow(NullPointerException::new);
+//        parentChildRelationRepository.deleteById(parentChildRelation.getId());
+//
+//        KnowledgeNode srcNode = knowledgeNodeRepository.findFirstByName(parentVO.getNewParentName())
+//            .orElseThrow(NullPointerException::new);
+//
+//        if (srcNode.getChildNodes().isEmpty()) {
+//            srcNode.setIsParentNode(false);
+//        }
+//
+//        knowledgeNodeRepository.save(srcNode);
+//
+//        KnowledgeNode childNode = knowledgeNodeRepository.findFirstByName(parentVO.getChildName())
+//            .orElseThrow(NullPointerException::new);
+//
+//        KnowledgeNode newParent = knowledgeNodeRepository.findFirstByName(parentVO.getNewParentName())
+//            .orElseThrow(NullPointerException::new);
+//        newParent.setIsParentNode(true);
+//        knowledgeNodeRepository.save(newParent);
+//
+//        return parentChildRelationRepository.save(new ParentChildRelation()
+//            .setStartNode(newParent)
+//            .setEndNode(childNode));
+//    }
 }

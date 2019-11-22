@@ -1,5 +1,14 @@
 ## knowledge
 
+
+```
+ 
+MATCH (n)
+OPTIONAL MATCH (n)-[r]-()
+DELETE n,r
+
+```
+
 ## target
 
 -[ ] 编写接口文档

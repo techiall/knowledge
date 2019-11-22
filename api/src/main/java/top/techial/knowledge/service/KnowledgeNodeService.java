@@ -6,10 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import top.techial.knowledge.dao.KnowledgeNodeRepository;
 import top.techial.knowledge.dao.NodeRelationRepository;
-import top.techial.knowledge.dao.ParentChildRelationRepository;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
-import top.techial.knowledge.domain.ParentChildRelation;
 import top.techial.knowledge.dto.NodeDTO;
 import top.techial.knowledge.vo.NodeVO;
 
@@ -24,12 +22,10 @@ import java.util.stream.Collectors;
 public class KnowledgeNodeService {
     private final KnowledgeNodeRepository knowledgeNodeRepository;
     private final NodeRelationRepository nodeRelationRepository;
-    private final ParentChildRelationRepository parentChildRelationRepository;
 
-    public KnowledgeNodeService(KnowledgeNodeRepository knowledgeNodeRepository, NodeRelationRepository nodeRelationRepository, ParentChildRelationRepository parentChildRelationRepository) {
+    public KnowledgeNodeService(KnowledgeNodeRepository knowledgeNodeRepository, NodeRelationRepository nodeRelationRepository) {
         this.knowledgeNodeRepository = knowledgeNodeRepository;
         this.nodeRelationRepository = nodeRelationRepository;
-        this.parentChildRelationRepository = parentChildRelationRepository;
     }
 
     public Iterable<KnowledgeNode> saveAll(Iterable<KnowledgeNode> iterable) {
@@ -49,17 +45,16 @@ public class KnowledgeNodeService {
         if (nodeVO.getParentId() == null) {
             node.setIsParentNode(true);
             return knowledgeNodeRepository.save(node);
-        } else {
-            KnowledgeNode parentNode = knowledgeNodeRepository.findById(nodeVO.getParentId()).orElse(null);
-            if (parentNode == null) {
-                node.setIsParentNode(true);
-                return knowledgeNodeRepository.save(node);
-            }
-            parentNode.setIsParentNode(true);
-            parentNode.getChildNodes().add(node);
-            knowledgeNodeRepository.save(parentNode);
+        }
+        KnowledgeNode parentNode = knowledgeNodeRepository.findById(nodeVO.getParentId()).orElse(null);
+        if (parentNode == null) {
+            node.setIsParentNode(true);
             return knowledgeNodeRepository.save(node);
         }
+        parentNode.setIsParentNode(true);
+        parentNode.getChildNodes().add(node);
+        knowledgeNodeRepository.save(parentNode);
+        return knowledgeNodeRepository.save(node);
     }
 
     public KnowledgeNode findById(Long id) {
@@ -114,23 +109,23 @@ public class KnowledgeNodeService {
         knowledgeNodeRepository.deleteAll();
     }
 
-    public Page<NodeDTO> findAll(Pageable pageable) {
-        return knowledgeNodeRepository.findAll(pageable).map(NodeDTO::new);
+    public Page<NodeDTO> findAll(Pageable pageable, int depth) {
+        return knowledgeNodeRepository.findAll(pageable, depth).map(NodeDTO::new);
     }
 
     public long count() {
         return knowledgeNodeRepository.count();
     }
 
-    public Page<NodeDTO> findAllByIsParentNode(Pageable pageable) {
-        return knowledgeNodeRepository.findByIsParentNode(true, pageable).map(NodeDTO::new)
-            .map(it -> it.setChildNodes(parentChildRelationRepository
-                .findByStartNodeName(it.getName())
-                .stream()
-                .map(ParentChildRelation::getEndNode)
-                .map(NodeDTO::new)
-                .collect(Collectors.toList())));
-    }
+//    public Page<NodeDTO> findAllByIsParentNode(Pageable pageable) {
+//        return knowledgeNodeRepository.findByIsParentNode(true, pageable).map(NodeDTO::new)
+//            .map(it -> it.setChildNodes(parentChildRelationRepository
+//                .findByStartNodeName(it.getName())
+//                .stream()
+//                .map(ParentChildRelation::getEndNode)
+//                .map(NodeDTO::new)
+//                .collect(Collectors.toList())));
+//    }
 
     public Optional<KnowledgeNode> findByName(String name) {
         return knowledgeNodeRepository.findFirstByName(name);
@@ -141,12 +136,9 @@ public class KnowledgeNodeService {
         return knowledgeNodeRepository.save(node);
     }
 
-    public List<NodeDTO> findByChildNode(Long id) {
-        KnowledgeNode node = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
-        return parentChildRelationRepository.findByStartNodeName(node.getName())
-            .stream()
-            .map(ParentChildRelation::getEndNode)
-            .map(NodeDTO::new)
-            .collect(Collectors.toList());
+
+    public Set<NodeDTO> findByChildNode(Long id, int depth) {
+        KnowledgeNode node = knowledgeNodeRepository.findById(id, depth).orElseThrow(NullPointerException::new);
+        return node.getChildNodes().stream().map(NodeDTO::new).collect(Collectors.toSet());
     }
 }
