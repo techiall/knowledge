@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
@@ -36,7 +35,7 @@ public class StorageService {
         return gridFsTemplate.getResource(file);
     }
 
-    public ObjectId findByIdResource(String id) {
+    public ObjectId findByIdResource(Long id) {
         GridFSFile file = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(id)));
         return file == null ? null : file.getObjectId();
     }
@@ -58,11 +57,12 @@ public class StorageService {
         return fsFile.getObjectId().toHexString();
     }
 
-    public Object update(Long id, String resource) {
+    public ObjectId update(Long id) {
         String resourceId = knowledgeNodeService.findById(id).getResourceId();
         if (resourceId == null) {
             throw new IllegalArgumentException();
         }
-        return gridFsTemplate.store(new ByteArrays(resource.getBytes())).toString();
+        return null;
+//        return gridFsTemplate.store(new ByteArrays(resource.getBytes())).toString();
     }
 }
