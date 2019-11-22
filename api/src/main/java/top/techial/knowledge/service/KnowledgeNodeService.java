@@ -72,7 +72,9 @@ public class KnowledgeNodeService {
     public Object findByIdGraph(Long id) {
         KnowledgeNode knowledgeNode = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
         List<NodeRelation> list = nodeRelationRepository.findByStartNodeName(knowledgeNode.getName());
-        log.debug(list);
+        if (log.isDebugEnabled()) {
+            log.debug(list);
+        }
 
         Map<String, Object> result = new HashMap<>(16);
         List<Object> nodes = new ArrayList<>(16);
@@ -80,11 +82,15 @@ public class KnowledgeNodeService {
 
         nodes.add(buildNodes(knowledgeNode.getId(), knowledgeNode.getName()));
         for (NodeRelation nodeRelation : list) {
-            nodes.add(buildNodes(nodeRelation.getEndNode().getId(),
-                nodeRelation.getEndNode().getName()
-            ));
+            nodes.add(buildNodes(nodeRelation.getEndNode().getId(), nodeRelation.getEndNode().getName()));
             links.add(buildLinks(knowledgeNode.getId(), nodeRelation.getEndNode().getId(), nodeRelation.getProperty()));
         }
+
+        for (KnowledgeNode childNode : knowledgeNode.getChildNodes()) {
+            nodes.add(buildNodes(childNode.getId(), childNode.getName()));
+            links.add(buildLinks(knowledgeNode.getId(), childNode.getId(), Collections.singletonMap("relation", "parent-child-relation")));
+        }
+
         result.put("nodes", nodes);
         result.put("links", links);
         return result;

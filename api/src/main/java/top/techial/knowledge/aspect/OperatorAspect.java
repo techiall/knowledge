@@ -74,7 +74,7 @@ public class OperatorAspect {
         if (!(node.getData() instanceof NodeInfoDTO)) {
             return;
         }
-        RelationDTO data = (RelationDTO) node.getData();
+        NodeInfoDTO data = (NodeInfoDTO) node.getData();
         recordService.save(new Record()
             .setUserId(1)
             .setNodeId(data.getId())
