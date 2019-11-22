@@ -38,4 +38,5 @@ public class KnowledgeNode implements Serializable {
     @Relationship(value = "parent-child-relation")
     private Set<KnowledgeNode> childNodes = new HashSet<>();
 
+    private String resourceId;
 }
