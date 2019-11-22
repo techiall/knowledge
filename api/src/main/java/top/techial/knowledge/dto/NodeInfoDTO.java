@@ -15,6 +15,11 @@ import java.util.Set;
 @Accessors(chain = true)
 public class NodeInfoDTO implements Serializable {
     private static final long serialVersionUID = 1L;
+    private final Boolean isParentNode;
+    private Long id;
+    private Set<String> labels;
+    private String name;
+    private Map<String, String> property;
 
     public NodeInfoDTO(KnowledgeNode knowledgeNode) {
         this.id = knowledgeNode.getId();
@@ -23,15 +28,5 @@ public class NodeInfoDTO implements Serializable {
         this.property = knowledgeNode.getProperty();
         this.isParentNode = knowledgeNode.getIsParentNode();
     }
-
-    private final Boolean isParentNode;
-
-    private Long id;
-
-    private Set<String> labels;
-
-    private String name;
-
-    private Map<String, String> property;
 
 }

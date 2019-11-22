@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
 import top.techial.knowledge.domain.NodeRelation;
 import top.techial.knowledge.service.NodeRelationService;
-import top.techial.knowledge.vo.ParentVO;
 import top.techial.knowledge.vo.RelationVO;
 
 import java.util.List;
@@ -48,11 +47,6 @@ public class KnowledgeRelationController {
     public ResultBean<NodeRelation> updateById(@PathVariable Long id, @RequestBody RelationVO relationVO) {
         return new ResultBean<>(nodeRelationService.updateById(id, relationVO));
     }
-
-//    @PutMapping("/parent")
-//    public ResultBean<ParentChildRelation> updateRelation(@RequestBody ParentVO parentVO) {
-//        return new ResultBean<>(nodeRelationService.updateParent(parentVO));
-//    }
 
     @DeleteMapping("/{id}")
     public ResultBean<Boolean> deleteById(@PathVariable Long id) {
