@@ -7,6 +7,7 @@ import top.techial.knowledge.dao.KnowledgeNodeRepository;
 import top.techial.knowledge.dao.NodeRelationRepository;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
+import top.techial.knowledge.vo.ParentVO;
 import top.techial.knowledge.vo.RelationVO;
 
 import java.util.List;
@@ -75,4 +76,16 @@ public class NodeRelationService {
         nodeRelationRepository.deleteAll();
     }
 
+    public KnowledgeNode updateParent(ParentVO parentVO) {
+        KnowledgeNode node = knowledgeNodeRepository.findFirstByName(parentVO.getSrcParentName()).orElseThrow(NullPointerException::new);
+        if (node.getChildNodes().isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        KnowledgeNode childNode = knowledgeNodeRepository.findFirstByName(parentVO.getChildName()).orElseThrow(NullPointerException::new);
+        node.getChildNodes().remove(childNode);
+        knowledgeNodeRepository.save(node);
+        KnowledgeNode node1 = knowledgeNodeRepository.findFirstByName(parentVO.getNewParentName()).orElseThrow(NullPointerException::new);
+        node1.getChildNodes().add(childNode);
+        return knowledgeNodeRepository.save(node1);
+    }
 }

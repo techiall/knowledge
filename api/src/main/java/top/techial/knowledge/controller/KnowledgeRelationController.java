@@ -5,8 +5,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
+import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
 import top.techial.knowledge.service.NodeRelationService;
+import top.techial.knowledge.vo.ParentVO;
 import top.techial.knowledge.vo.RelationVO;
 
 import java.util.List;
@@ -46,6 +48,11 @@ public class KnowledgeRelationController {
     @PutMapping("/{id}")
     public ResultBean<NodeRelation> updateById(@PathVariable Long id, @RequestBody RelationVO relationVO) {
         return new ResultBean<>(nodeRelationService.updateById(id, relationVO));
+    }
+
+    @PatchMapping("/parent")
+    public ResultBean<KnowledgeNode> parent(@RequestBody ParentVO parentVO) {
+        return new ResultBean<>(nodeRelationService.updateParent(parentVO));
     }
 
     @DeleteMapping("/{id}")
