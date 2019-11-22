@@ -5,8 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
-import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
+import top.techial.knowledge.dto.NodeInfoDTO;
 import top.techial.knowledge.dto.NodeRelationDTO;
 import top.techial.knowledge.service.NodeRelationService;
 import top.techial.knowledge.vo.ParentVO;
@@ -32,8 +32,8 @@ public class KnowledgeRelationController {
     }
 
     @GetMapping("/{id}")
-    public ResultBean<NodeRelation> findAll(@PathVariable Long id) {
-        return new ResultBean<>(nodeRelationService.findById(id));
+    public ResultBean<NodeRelationDTO> findAll(@PathVariable Long id) {
+        return new ResultBean<>(new NodeRelationDTO(nodeRelationService.findById(id)));
     }
 
     @GetMapping("/start/name")
@@ -42,18 +42,18 @@ public class KnowledgeRelationController {
     }
 
     @PostMapping
-    public ResultBean<NodeRelation> save(@RequestBody RelationVO relationVO) {
-        return new ResultBean<>(nodeRelationService.save(relationVO));
+    public ResultBean<NodeRelationDTO> save(@RequestBody RelationVO relationVO) {
+        return new ResultBean<>(new NodeRelationDTO(nodeRelationService.save(relationVO)));
     }
 
     @PutMapping("/{id}")
-    public ResultBean<NodeRelation> updateById(@PathVariable Long id, @RequestBody RelationVO relationVO) {
-        return new ResultBean<>(nodeRelationService.updateById(id, relationVO));
+    public ResultBean<NodeRelationDTO> updateById(@PathVariable Long id, @RequestBody RelationVO relationVO) {
+        return new ResultBean<>(new NodeRelationDTO(nodeRelationService.updateById(id, relationVO)));
     }
 
     @PatchMapping("/parent")
-    public ResultBean<KnowledgeNode> parent(@RequestBody ParentVO parentVO) {
-        return new ResultBean<>(nodeRelationService.updateParent(parentVO));
+    public ResultBean<NodeInfoDTO> parent(@RequestBody ParentVO parentVO) {
+        return new ResultBean<>(new NodeInfoDTO(nodeRelationService.updateParent(parentVO)));
     }
 
     @DeleteMapping("/{id}")

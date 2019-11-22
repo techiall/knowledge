@@ -14,17 +14,11 @@ public interface NodeRelationRepository extends Neo4jRepository<NodeRelation, Lo
 
     /**
      * find byStartNodeName
-     *
-     * @param name
-     * @return
      */
     List<NodeRelation> findByStartNodeName(String name);
 
     /**
      * find by start node id
-     *
-     * @param id
-     * @return
      */
     List<NodeRelation> findByStartNodeId(Long id);
 }
