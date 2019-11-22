@@ -19,11 +19,8 @@ public class NodeBaseDTO implements Serializable {
 
     private String name;
 
-    private Boolean isParentNode;
-
     public NodeBaseDTO(KnowledgeNode knowledgeNode) {
         this.id = knowledgeNode.getId();
         this.name = knowledgeNode.getName();
-        this.isParentNode = knowledgeNode.getIsParentNode();
     }
 }
