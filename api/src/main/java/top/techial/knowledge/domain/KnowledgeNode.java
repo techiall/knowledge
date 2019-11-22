@@ -1,8 +1,6 @@
 package top.techial.knowledge.domain;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 import lombok.experimental.Accessors;
 import org.neo4j.ogm.annotation.*;
 
@@ -14,9 +12,7 @@ import java.util.Set;
 /**
  * @author techial
  */
-@Getter
-@Setter
-@ToString
+@Data
 @NodeEntity
 @Accessors(chain = true)
 public class KnowledgeNode implements Serializable {
@@ -42,16 +38,4 @@ public class KnowledgeNode implements Serializable {
     @Relationship(value = "parent-child-relation")
     private Set<KnowledgeNode> childNodes = new HashSet<>();
 
-    @Override
-    public int hashCode() {
-        return Math.toIntExact(id);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o instanceof KnowledgeNode) {
-            return this.id.equals(((KnowledgeNode) o).getId());
-        }
-        return false;
-    }
 }

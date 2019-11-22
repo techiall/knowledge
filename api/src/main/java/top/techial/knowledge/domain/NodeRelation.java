@@ -1,9 +1,6 @@
 package top.techial.knowledge.domain;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.neo4j.ogm.annotation.*;
 
@@ -13,9 +10,7 @@ import java.util.Map;
 /**
  * @author techial
  */
-@Getter
-@Setter
-@ToString
+@Data
 @RelationshipEntity(type = "RELATION")
 @Accessors(chain = true)
 public class NodeRelation implements Serializable {
@@ -35,16 +30,4 @@ public class NodeRelation implements Serializable {
     @Properties
     private Map<String, String> property;
 
-    @Override
-    public int hashCode() {
-        return Math.toIntExact(id);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o instanceof NodeRelation) {
-            return this.id.equals(((NodeRelation) o).getId());
-        }
-        return false;
-    }
 }

@@ -29,7 +29,7 @@ public interface KnowledgeNodeRepository extends Neo4jRepository<KnowledgeNode, 
      * @param pageable     pageable
      * @return page
      */
-    Page<KnowledgeNode> findByIsParentNode(Boolean isParentNode, Pageable pageable);
+    Page<KnowledgeNode> findByIsParentNode(Boolean isParentNode, Pageable pageable, int depth);
 
     /**
      * find by name

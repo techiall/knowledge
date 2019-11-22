@@ -110,22 +110,13 @@ public class KnowledgeNodeService {
     }
 
     public Page<NodeDTO> findAll(Pageable pageable, int depth) {
-        return knowledgeNodeRepository.findAll(pageable, depth).map(NodeDTO::new);
+        return knowledgeNodeRepository.findByIsParentNode(true, pageable, depth).map(NodeDTO::new);
+//        return knowledgeNodeRepository.findAll(pageable, depth).map(NodeDTO::new);
     }
 
     public long count() {
         return knowledgeNodeRepository.count();
     }
-
-//    public Page<NodeDTO> findAllByIsParentNode(Pageable pageable) {
-//        return knowledgeNodeRepository.findByIsParentNode(true, pageable).map(NodeDTO::new)
-//            .map(it -> it.setChildNodes(parentChildRelationRepository
-//                .findByStartNodeName(it.getName())
-//                .stream()
-//                .map(ParentChildRelation::getEndNode)
-//                .map(NodeDTO::new)
-//                .collect(Collectors.toList())));
-//    }
 
     public Optional<KnowledgeNode> findByName(String name) {
         return knowledgeNodeRepository.findFirstByName(name);
