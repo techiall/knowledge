@@ -60,8 +60,11 @@ public class NodeRelationService {
     }
 
     public NodeRelation updateById(Long id, RelationVO relationVO) {
-        return nodeRelationRepository.findById(id).orElseThrow(NullPointerException::new)
-            .setProperty(relationVO.getProperty());
+        NodeRelation relation = nodeRelationRepository.findById(id).orElseThrow(NullPointerException::new);
+        KnowledgeNode node1 = knowledgeNodeRepository.findFirstByName(relationVO.getStartNode()).orElseThrow(NullPointerException::new);
+        KnowledgeNode node2 = knowledgeNodeRepository.findFirstByName(relationVO.getEndNode()).orElseThrow(NullPointerException::new);
+        relation.setStartNode(node1).setEndNode(node2).setProperty(relationVO.getProperty());
+        return nodeRelationRepository.save(relation);
     }
 
     public void deleteById(Long id) {
@@ -71,32 +74,5 @@ public class NodeRelationService {
     public void deleteAll() {
         nodeRelationRepository.deleteAll();
     }
-//
-//    public ParentChildRelation updateParent(ParentVO parentVO) {
-//        ParentChildRelation parentChildRelation = parentChildRelationRepository
-//            .findFirstByStartNodeNameAndEndNodeName(parentVO.getSrcParentName(), parentVO.getChildName())
-//            .orElseThrow(NullPointerException::new);
-//        parentChildRelationRepository.deleteById(parentChildRelation.getId());
-//
-//        KnowledgeNode srcNode = knowledgeNodeRepository.findFirstByName(parentVO.getNewParentName())
-//            .orElseThrow(NullPointerException::new);
-//
-//        if (srcNode.getChildNodes().isEmpty()) {
-//            srcNode.setIsParentNode(false);
-//        }
-//
-//        knowledgeNodeRepository.save(srcNode);
-//
-//        KnowledgeNode childNode = knowledgeNodeRepository.findFirstByName(parentVO.getChildName())
-//            .orElseThrow(NullPointerException::new);
-//
-//        KnowledgeNode newParent = knowledgeNodeRepository.findFirstByName(parentVO.getNewParentName())
-//            .orElseThrow(NullPointerException::new);
-//        newParent.setIsParentNode(true);
-//        knowledgeNodeRepository.save(newParent);
-//
-//        return parentChildRelationRepository.save(new ParentChildRelation()
-//            .setStartNode(newParent)
-//            .setEndNode(childNode));
-//    }
+
 }
