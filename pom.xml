@@ -110,23 +110,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <finalName>${project.parent.groupId}-${project.parent.artifactId}-${project.artifactId}</finalName>
-        <pluginManagement>
-            <plugins>
-                <!-- Docker maven plugin -->
-                <plugin>
-                    <groupId>com.spotify</groupId>
-                    <artifactId>docker-maven-plugin</artifactId>
-                    <version>1.2.0</version>
-                </plugin>
-                <!-- Docker maven plugin -->
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
-
 </project>

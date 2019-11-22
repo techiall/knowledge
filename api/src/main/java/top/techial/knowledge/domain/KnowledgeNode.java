@@ -1,19 +1,22 @@
 package top.techial.knowledge.domain;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.neo4j.ogm.annotation.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 /**
  * @author techial
  */
-@Data
+@Getter
+@Setter
+@ToString
 @NodeEntity
 @Accessors(chain = true)
 public class KnowledgeNode implements Serializable {
@@ -37,6 +40,19 @@ public class KnowledgeNode implements Serializable {
     private Boolean isParentNode = false;
 
     @Relationship(value = "parent-child-relation")
-    private List<KnowledgeNode> childNodes = new ArrayList<>();
+    private Set<KnowledgeNode> childNodes = new HashSet<>();
 
+
+    @Override
+    public int hashCode() {
+        return Math.toIntExact(id);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof KnowledgeNode) {
+            return this.id.equals(((KnowledgeNode) o).getId());
+        }
+        return false;
+    }
 }

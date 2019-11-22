@@ -114,8 +114,8 @@ public class KnowledgeNodeService {
         knowledgeNodeRepository.deleteAll();
     }
 
-    public Page<KnowledgeNode> findAll(Pageable pageable) {
-        return knowledgeNodeRepository.findAll(pageable);
+    public Page<NodeDTO> findAll(Pageable pageable) {
+        return knowledgeNodeRepository.findAll(pageable).map(NodeDTO::new);
     }
 
     public long count() {

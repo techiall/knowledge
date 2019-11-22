@@ -33,7 +33,7 @@ public class KnowledgeController {
      */
     @GetMapping
     public ResultBean<Page<NodeDTO>> findAll(@PageableDefault Pageable pageable) {
-        return new ResultBean<>(knowledgeNodeService.findAllByIsParentNode(pageable));
+        return new ResultBean<>(knowledgeNodeService.findAll(pageable));
     }
 
     /**
