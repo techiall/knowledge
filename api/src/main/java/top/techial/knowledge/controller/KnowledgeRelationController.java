@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
+import top.techial.knowledge.dto.NodeRelationDTO;
 import top.techial.knowledge.service.NodeRelationService;
 import top.techial.knowledge.vo.ParentVO;
 import top.techial.knowledge.vo.RelationVO;
@@ -36,7 +37,7 @@ public class KnowledgeRelationController {
     }
 
     @GetMapping("/start/name")
-    public ResultBean<List<NodeRelation>> findByNameRelation(@RequestParam(value = "query") String name) {
+    public ResultBean<List<NodeRelationDTO>> findByNameRelation(@RequestParam(value = "query") String name) {
         return new ResultBean<>(nodeRelationService.findByStartNodeName(name));
     }
 

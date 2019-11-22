@@ -7,10 +7,12 @@ import top.techial.knowledge.dao.KnowledgeNodeRepository;
 import top.techial.knowledge.dao.NodeRelationRepository;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
+import top.techial.knowledge.dto.NodeRelationDTO;
 import top.techial.knowledge.vo.ParentVO;
 import top.techial.knowledge.vo.RelationVO;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author techial
@@ -29,8 +31,11 @@ public class NodeRelationService {
         return nodeRelationRepository.saveAll(buildNodeRelation);
     }
 
-    public List<NodeRelation> findByStartNodeName(String name) {
-        return nodeRelationRepository.findByStartNodeName(name);
+    public List<NodeRelationDTO> findByStartNodeName(String name) {
+        return nodeRelationRepository.findByStartNodeName(name)
+            .stream()
+            .map(NodeRelationDTO::new)
+            .collect(Collectors.toList());
     }
 
     public List<NodeRelation> findByStartNodeId(Long id) {
