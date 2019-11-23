@@ -46,6 +46,10 @@ public class KnowledgeNodeService {
 
     public KnowledgeNode save(NodeVO nodeVO) {
         KnowledgeNode node = nodeVO.toKnowledgeNode();
+        KnowledgeNode findNode = knowledgeNodeRepository.findFirstByName(node.getName()).orElse(null);
+        if (findNode != null) {
+            return findNode;
+        }
         if (nodeVO.getParentId() == null) {
             node.setIsParentNode(true);
             return knowledgeNodeRepository.save(node);

@@ -32,10 +32,6 @@ public class Record implements Serializable {
      */
     private Integer userId;
 
-    private Object input;
-
-    private Object result;
-
     /**
      * operator
      */

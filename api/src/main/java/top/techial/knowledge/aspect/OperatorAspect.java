@@ -15,7 +15,6 @@ import top.techial.beans.ResultBean;
 import top.techial.knowledge.domain.Operator;
 import top.techial.knowledge.domain.Record;
 import top.techial.knowledge.dto.NodeInfoDTO;
-import top.techial.knowledge.dto.RelationDTO;
 import top.techial.knowledge.service.RecordService;
 
 import java.lang.reflect.Method;
@@ -78,8 +77,6 @@ public class OperatorAspect {
         recordService.save(new Record()
             .setUserId(1)
             .setNodeId(data.getId())
-            .setInput(input)
-            .setResult(data)
             .setOperator(operator));
     }
 
