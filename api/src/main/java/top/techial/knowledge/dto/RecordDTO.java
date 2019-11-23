@@ -19,6 +19,7 @@ public class RecordDTO implements Serializable {
     private String id;
     private Long nodeId;
     private Integer userId;
+    private Object requests;
     private Operator operator;
     private Date createTime;
 
@@ -28,5 +29,6 @@ public class RecordDTO implements Serializable {
         this.userId = record.getUserId();
         this.operator = record.getOperator();
         this.createTime = record.getCreateTime();
+        this.requests = record.getRequests();
     }
 }
