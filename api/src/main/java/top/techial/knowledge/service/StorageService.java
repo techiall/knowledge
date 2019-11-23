@@ -5,8 +5,11 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
+import org.springframework.web.multipart.MultipartFile;
 import top.techial.knowledge.domain.KnowledgeNode;
 
 import java.io.BufferedReader;
@@ -29,10 +32,13 @@ public class StorageService {
         this.knowledgeNodeService = knowledgeNodeService;
     }
 
-    public String findById(Long id) throws IOException {
+    public String findByNodeId(Long id) throws IOException {
         String resourceId = knowledgeNodeService.findById(id).getResourceId();
         if (log.isDebugEnabled()) {
             log.debug("resource id = {}", resourceId);
+        }
+        if (resourceId == null) {
+            throw new IllegalArgumentException();
         }
         GridFSFile file = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(resourceId)));
         if (file == null) {
@@ -42,7 +48,7 @@ public class StorageService {
             .lines().collect(Collectors.joining(System.lineSeparator()));
     }
 
-    public void delete(Long id) {
+    private void deleteNodeStorage(Long id) {
         String resourceId = knowledgeNodeService.findById(id).getResourceId();
         if (resourceId == null) {
             throw new IllegalArgumentException();
@@ -50,27 +56,42 @@ public class StorageService {
         gridFsTemplate.delete(new Query(Criteria.where("_id").is(resourceId)));
     }
 
-    public String save(String resource, Long id) {
+    public String saveNodeStorage(String resource, Long id) {
         KnowledgeNode node = knowledgeNodeService.findById(id);
         if (node.getResourceId() != null) {
-            throw new IllegalArgumentException();
+            deleteNodeStorage(id);
         }
-        String resourceId = gridFsTemplate.store(new ByteArrayInputStream(resource.getBytes()), RandomStringUtils.randomAlphanumeric(19))
+        String resourceId = gridFsTemplate.store(new ByteArrayInputStream(resource.getBytes()),
+            RandomStringUtils.randomAlphanumeric(19))
             .toString();
         node.setResourceId(resourceId);
         knowledgeNodeService.save(node);
         return resourceId;
     }
 
-    public String update(Long id, String resource) {
-        KnowledgeNode node = knowledgeNodeService.findById(id);
-        if (node.getResourceId() == null) {
-            throw new IllegalArgumentException();
+    public GridFsResource findById(String id) {
+        GridFSFile file = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(id)));
+        if (file == null) {
+            throw new NullPointerException();
         }
-        this.delete(id);
-        String resourceId = gridFsTemplate.store(new ByteArrayInputStream(resource.getBytes()), String.valueOf(id)).toString();
-        node.setResourceId(resourceId);
-        knowledgeNodeService.save(node);
-        return resourceId;
+        return gridFsTemplate.getResource(file);
     }
+
+    public void delete(String id) {
+        gridFsTemplate.delete(new Query(Criteria.where("_id").is(id)));
+    }
+
+    public String save(MultipartFile file) throws IOException {
+        String digest = DigestUtils.md5DigestAsHex(file.getInputStream());
+        GridFSFile fsFile = gridFsTemplate.findOne(new Query(Criteria.where("md5").is(digest)));
+        if (fsFile == null) {
+            return gridFsTemplate.store(
+                file.getInputStream(),
+                file.getOriginalFilename(),
+                file.getContentType()
+            ).toString();
+        }
+        return fsFile.getObjectId().toHexString();
+    }
+
 }

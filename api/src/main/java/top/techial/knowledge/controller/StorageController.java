@@ -1,7 +1,12 @@
 package top.techial.knowledge.controller;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.core.io.Resource;
+import org.springframework.data.mongodb.gridfs.GridFsResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import top.techial.beans.ResultBean;
 import top.techial.knowledge.service.StorageService;
 
@@ -20,25 +25,42 @@ public class StorageController {
         this.storageService = storageService;
     }
 
-    @PostMapping("/{id}")
+    /**
+     * 文本上传，对应 node 节点
+     */
+    @PostMapping("/text/{id}")
     public ResultBean<String> save(@RequestBody String resource, @PathVariable Long id) {
-        return new ResultBean<>(storageService.save(resource, id));
+        return new ResultBean<>(storageService.saveNodeStorage(resource, id));
     }
 
-    @GetMapping("/{id}")
+    /**
+     * 文本获取，对应 node 节点
+     */
+    @GetMapping("/text/{id}")
     public ResultBean<String> findById(@PathVariable Long id) throws IOException {
-        return new ResultBean<>(storageService.findById(id));
+        return new ResultBean<>(storageService.findByNodeId(id));
     }
 
-    @PutMapping("/{id}")
-    public ResultBean<String> update(@PathVariable Long id, @RequestBody String body) {
-        return new ResultBean<>(storageService.update(id, body));
+    @PostMapping
+    public ResultBean<String> save(@RequestParam MultipartFile file) throws IOException {
+        return new ResultBean<>(storageService.save(file));
     }
 
     @DeleteMapping("/{id}")
-    public ResultBean<Boolean> delete(@PathVariable Long id) {
+    public ResultBean<Boolean> delete(@PathVariable String id) {
         storageService.delete(id);
         return new ResultBean<>(true);
     }
+
+
+    @GetMapping(value = "/preview/{id}")
+    public ResponseEntity<Resource> preview(@PathVariable String id) {
+        GridFsResource gridFsResource = storageService.findById(id);
+        return ResponseEntity
+            .ok()
+            .header(HttpHeaders.CONTENT_TYPE, gridFsResource.getContentType())
+            .body(gridFsResource);
+    }
+
 
 }
