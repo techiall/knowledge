@@ -109,5 +109,33 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
     </dependencies>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Docker maven plugin -->
+                <plugin>
+                    <groupId>com.google.cloud.tools</groupId>
+                    <artifactId>jib-maven-plugin</artifactId>
+                    <version>1.8.0</version>
+                    <configuration>
+                        <to>
+                            <image>${parent.groupId}/${parent.artifactId}/${artifactId}</image>
+                        </to>
+                        <from>
+                            <image>openjdk:8-jre-alpine</image>
+                        </from>
+                        <container>
+                            <jvmFlags>-Dspring.profiles.active=docker</jvmFlags>
+                        </container>
+                    </configuration>
+                </plugin>
+                <!-- Docker maven plugin -->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
 </project>
