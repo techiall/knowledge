@@ -66,7 +66,7 @@ public class OperatorAspect {
         }
         NodeInfoDTO data = (NodeInfoDTO) node.getData();
         recordService.save(new Record()
-            .setUserId(1)
+            .setUserId(httpServletRequest.getRemoteAddr())
             .setRequests(param)
             .setNodeId(data.getId())
             .setOperator(operator));

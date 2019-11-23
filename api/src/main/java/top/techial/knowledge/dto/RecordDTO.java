@@ -18,7 +18,7 @@ public class RecordDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     private String id;
     private Long nodeId;
-    private Integer userId;
+    private String userId;
     private Object requests;
     private Operator operator;
     private Date createTime;
