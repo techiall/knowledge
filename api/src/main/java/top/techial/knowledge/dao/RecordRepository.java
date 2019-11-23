@@ -12,12 +12,5 @@ import top.techial.knowledge.domain.Record;
 @Repository
 public interface RecordRepository extends MongoRepository<Record, String> {
 
-    /**
-     * find by node id
-     *
-     * @param id       id
-     * @param pageable pageable
-     * @return page
-     */
     Page<Record> findByNodeId(Long id, Pageable pageable);
 }
