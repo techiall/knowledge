@@ -23,6 +23,9 @@ spring:
       database: knowledge
   cache:
     type: simple
+  servlet:
+    multipart:
+      max-file-size: -1
 
 logging:
   level:

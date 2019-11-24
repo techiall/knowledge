@@ -7,7 +7,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,7 +27,6 @@ import java.util.Map;
 @Aspect
 @Component
 @Log4j2
-@Order(100)
 public class OperatorAspect {
     private final RecordService recordService;
     private final HttpServletRequest httpServletRequest;
