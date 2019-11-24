@@ -23,7 +23,10 @@ spring:
       database: knowledge
   cache:
     type: simple
-
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
 logging:
   level:
     org.neo4j.ogm: debug
