@@ -38,11 +38,11 @@ public class StorageService {
             log.debug("resource id = {}", resourceId);
         }
         if (resourceId == null) {
-            throw new IllegalArgumentException();
+            return null;
         }
         GridFSFile file = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(resourceId)));
         if (file == null) {
-            throw new NullPointerException();
+            return null;
         }
         return new BufferedReader(new InputStreamReader(gridFsTemplate.getResource(file).getInputStream()))
             .lines().collect(Collectors.joining(System.lineSeparator()));
