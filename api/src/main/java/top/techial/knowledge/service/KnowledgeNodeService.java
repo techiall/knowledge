@@ -134,7 +134,7 @@ public class KnowledgeNodeService {
     }
 
     public Page<NodeDTO> findAll(Pageable pageable, int depth) {
-        return knowledgeNodeRepository.findAllByIsParentNode(true, pageable, depth).map(NodeDTO::new);
+        return knowledgeNodeRepository.findAll(pageable, depth).map(NodeDTO::new);
     }
 
     public long count() {
