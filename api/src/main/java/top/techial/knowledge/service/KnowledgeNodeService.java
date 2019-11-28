@@ -155,4 +155,14 @@ public class KnowledgeNodeService {
         KnowledgeNode node = knowledgeNodeRepository.findById(id, depth).orElseThrow(NullPointerException::new);
         return node.getChildNodes().stream().map(NodeDTO::new).collect(Collectors.toSet());
     }
+
+    public void deleteChildId(Long parentId, Long childId) {
+        KnowledgeNode child = knowledgeNodeRepository.findById(childId).orElseThrow(NullPointerException::new);
+        knowledgeNodeRepository.delete(child);
+        KnowledgeNode parent = knowledgeNodeRepository.findById(parentId).orElseThrow(NullPointerException::new);
+        if (parent.getChildNodes().isEmpty()) {
+            parent.setIsParentNode(false);
+            knowledgeNodeRepository.save(parent);
+        }
+    }
 }

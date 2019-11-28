@@ -58,6 +58,12 @@ public class KnowledgeController {
         return new ResultBean<>(true);
     }
 
+    @DeleteMapping("/parent/{parentId}/child/{childId}")
+    public ResultBean<Boolean> deleteChildId(@PathVariable Long parentId, @PathVariable Long childId) {
+        knowledgeNodeService.deleteChildId(parentId, childId);
+        return new ResultBean<>(true);
+    }
+
     @GetMapping("/{id}/graph")
     public ResultBean<Object> findByIdGraph(@PathVariable Long id) {
         return new ResultBean<>(knowledgeNodeService.findByIdGraph(id));
