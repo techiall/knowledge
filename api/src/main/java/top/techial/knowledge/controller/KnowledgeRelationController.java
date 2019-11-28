@@ -9,6 +9,7 @@ import top.techial.knowledge.domain.NodeRelation;
 import top.techial.knowledge.dto.NodeInfoDTO;
 import top.techial.knowledge.dto.RelationDTO;
 import top.techial.knowledge.service.NodeRelationService;
+import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.vo.ParentVO;
 import top.techial.knowledge.vo.RelationVO;
 
@@ -21,9 +22,11 @@ import java.util.List;
 @RequestMapping("/api/relation")
 public class KnowledgeRelationController {
     private final NodeRelationService nodeRelationService;
+    private final RecordService recordService;
 
-    public KnowledgeRelationController(NodeRelationService nodeRelationService) {
+    public KnowledgeRelationController(NodeRelationService nodeRelationService, RecordService recordService) {
         this.nodeRelationService = nodeRelationService;
+        this.recordService = recordService;
     }
 
     @GetMapping
@@ -59,6 +62,7 @@ public class KnowledgeRelationController {
     @DeleteMapping("/{id}")
     public ResultBean<Boolean> deleteById(@PathVariable Long id) {
         nodeRelationService.deleteById(id);
+        recordService.deleteByNodeId(id);
         return new ResultBean<>(true);
     }
 }

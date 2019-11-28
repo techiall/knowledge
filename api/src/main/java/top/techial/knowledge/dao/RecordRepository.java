@@ -13,4 +13,6 @@ import top.techial.knowledge.domain.Record;
 public interface RecordRepository extends MongoRepository<Record, String> {
 
     Page<Record> findByNodeId(Long id, Pageable pageable);
+
+    Long deleteByNodeId(Long id);
 }

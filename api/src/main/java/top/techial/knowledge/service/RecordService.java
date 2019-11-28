@@ -28,4 +28,8 @@ public class RecordService {
     public Page<Record> findByNodeId(Long id, Pageable pageable) {
         return recordRepository.findByNodeId(id, pageable);
     }
+
+    public void deleteByNodeId(Long id) {
+        recordRepository.deleteByNodeId(id);
+    }
 }
