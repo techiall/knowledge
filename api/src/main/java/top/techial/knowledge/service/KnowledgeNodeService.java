@@ -165,4 +165,8 @@ public class KnowledgeNodeService {
             knowledgeNodeRepository.save(parent);
         }
     }
+
+    public void deleteByIds(Set<Long> ids) {
+        knowledgeNodeRepository.deleteByIdIn(ids);
+    }
 }

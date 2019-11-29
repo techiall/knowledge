@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import top.techial.knowledge.domain.KnowledgeNode;
 
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author techial
@@ -18,4 +19,6 @@ public interface KnowledgeNodeRepository extends Neo4jRepository<KnowledgeNode, 
     Page<KnowledgeNode> findAllByIsParentNode(Boolean isParentNode, Pageable pageable, int depth);
 
     Optional<KnowledgeNode> findFirstByName(String name);
+
+    int deleteByIdIn(Set<Long> ids);
 }

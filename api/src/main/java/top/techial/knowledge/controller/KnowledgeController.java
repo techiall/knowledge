@@ -58,6 +58,12 @@ public class KnowledgeController {
         return new ResultBean<>(true);
     }
 
+    @DeleteMapping
+    public ResultBean<Boolean> deleteByIds(@RequestParam Set<Long> ids) {
+        knowledgeNodeService.deleteByIds(ids);
+        return new ResultBean<>(true);
+    }
+
     @DeleteMapping("/parent/{parentId}/child/{childId}")
     public ResultBean<Boolean> deleteChildId(@PathVariable Long parentId, @PathVariable Long childId) {
         knowledgeNodeService.deleteChildId(parentId, childId);
