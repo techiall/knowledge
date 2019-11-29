@@ -17,18 +17,18 @@ public class NodeDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final Boolean isParentNode;
+    private final Long parentNodeId;
 
-    private Long id;
+    private final Long id;
 
-    private String name;
+    private final String name;
 
-    private List<NodeDTO> childNodes;
+    private final List<NodeDTO> childNodes;
 
     public NodeDTO(KnowledgeNode knowledgeNode) {
         this.id = knowledgeNode.getId();
         this.name = knowledgeNode.getName();
-        this.isParentNode = knowledgeNode.getIsParentNode();
+        this.parentNodeId = knowledgeNode.getParentNodeId();
         this.childNodes = knowledgeNode.getChildNodes().stream()
             .map(NodeDTO::new).collect(Collectors.toList());
     }

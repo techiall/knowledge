@@ -33,7 +33,7 @@ public class KnowledgeNode implements Serializable {
     private Map<String, String> property;
 
     @Property
-    private Boolean isParentNode = false;
+    private Long parentNodeId;
 
     @Relationship(value = "parent-child-relation")
     private Set<KnowledgeNode> childNodes = new HashSet<>();

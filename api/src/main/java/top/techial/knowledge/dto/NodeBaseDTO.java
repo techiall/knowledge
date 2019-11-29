@@ -15,14 +15,14 @@ public class NodeBaseDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final Boolean isParentNode;
+    private final Long parentNodeId;
 
-    private Long id;
+    private final Long id;
 
-    private String name;
+    private final String name;
 
     public NodeBaseDTO(KnowledgeNode knowledgeNode) {
-        this.isParentNode = knowledgeNode.getIsParentNode();
+        this.parentNodeId = knowledgeNode.getParentNodeId();
         this.id = knowledgeNode.getId();
         this.name = knowledgeNode.getName();
     }

@@ -46,20 +46,24 @@ public class KnowledgeNodeService {
 
     public KnowledgeNode save(NodeVO nodeVO) {
         KnowledgeNode node = nodeVO.toKnowledgeNode();
+
+        // if exists, return
         KnowledgeNode findNode = knowledgeNodeRepository.findFirstByName(node.getName()).orElse(null);
         if (findNode != null) {
             return findNode;
         }
+
+        // if parentId == null, return
         if (nodeVO.getParentId() == null) {
-            node.setIsParentNode(true);
             return knowledgeNodeRepository.save(node);
         }
+
         KnowledgeNode parentNode = knowledgeNodeRepository.findById(nodeVO.getParentId()).orElse(null);
         if (parentNode == null) {
-            node.setIsParentNode(true);
             return knowledgeNodeRepository.save(node);
         }
-        parentNode.setIsParentNode(true);
+
+        parentNode.setParentNodeId(parentNode.getId());
         parentNode.getChildNodes().add(node);
         knowledgeNodeRepository.save(parentNode);
         return knowledgeNodeRepository.save(node);
