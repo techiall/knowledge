@@ -138,7 +138,7 @@ public class KnowledgeNodeService {
     }
 
     public Page<NodeDTO> findAll(Pageable pageable, int depth) {
-        return knowledgeNodeRepository.findAllByIsParentNode(true, pageable, depth).map(NodeDTO::new);
+        return knowledgeNodeRepository.findAllByParentNodeIdIsNull(pageable, depth).map(NodeDTO::new);
     }
 
     public long count() {
@@ -165,7 +165,6 @@ public class KnowledgeNodeService {
         knowledgeNodeRepository.delete(child);
         KnowledgeNode parent = knowledgeNodeRepository.findById(parentId).orElseThrow(NullPointerException::new);
         if (parent.getChildNodes().isEmpty()) {
-            parent.setIsParentNode(false);
             knowledgeNodeRepository.save(parent);
         }
     }

@@ -16,7 +16,7 @@ import java.util.Set;
 public interface KnowledgeNodeRepository extends Neo4jRepository<KnowledgeNode, Long> {
     Page<KnowledgeNode> findByNameLike(String name, Pageable pageable);
 
-    Page<KnowledgeNode> findAllByIsParentNode(Boolean isParentNode, Pageable pageable, int depth);
+    Page<KnowledgeNode> findAllByParentNodeIdIsNull(Pageable pageable, int depth);
 
     Optional<KnowledgeNode> findFirstByName(String name);
 
