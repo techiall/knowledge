@@ -52,13 +52,18 @@ public class KnowledgeNodeService {
             return findNode;
         }
 
+        if (node.getParentNodeId() == null) {
+            return knowledgeNodeRepository.save(node);
+        }
+
         KnowledgeNode parentNode = knowledgeNodeRepository.findById(node.getParentNodeId()).orElse(null);
         if (parentNode == null) {
             return knowledgeNodeRepository.save(node);
         }
+        node = knowledgeNodeRepository.save(node);
         parentNode.getChildNodes().add(node);
         knowledgeNodeRepository.save(parentNode);
-        return knowledgeNodeRepository.save(node);
+        return node;
     }
 
     public KnowledgeNode findById(Long id) {
