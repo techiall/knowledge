@@ -32,4 +32,8 @@ public class RecordService {
     public void deleteByNodeId(Long id) {
         recordRepository.deleteByNodeId(id);
     }
+
+    public void deleteAll() {
+        recordRepository.deleteAll();
+    }
 }

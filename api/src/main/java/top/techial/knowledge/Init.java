@@ -7,6 +7,7 @@ import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
 import top.techial.knowledge.service.KnowledgeNodeService;
 import top.techial.knowledge.service.NodeRelationService;
+import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.vo.NodeVO;
 import top.techial.knowledge.vo.RelationVO;
 
@@ -22,19 +23,23 @@ import java.util.List;
 public class Init implements CommandLineRunner {
     private final KnowledgeNodeService knowledgeNodeService;
     private final NodeRelationService nodeRelationService;
+    private final RecordService recordService;
 
-    public Init(KnowledgeNodeService knowledgeNodeService, NodeRelationService nodeRelationService) {
+    public Init(KnowledgeNodeService knowledgeNodeService, NodeRelationService nodeRelationService, RecordService recordService) {
         this.knowledgeNodeService = knowledgeNodeService;
         this.nodeRelationService = nodeRelationService;
+        this.recordService = recordService;
     }
 
     @Override
     public void run(String... args) {
         log.info("init ...");
+        knowledgeNodeService.deleteAll();
         if (knowledgeNodeService.count() == 0L) {
             saveNodeVO();
             nodeRelationService.saveAll(buildNodeRelation());
         }
+        recordService.deleteAll();
 
         log.info("end ...");
     }
