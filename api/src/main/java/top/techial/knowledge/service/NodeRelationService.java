@@ -1,5 +1,8 @@
 package top.techial.knowledge.service;
 
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import java.util.stream.Collectors;
  * @author techial
  */
 @Service
+@CacheConfig(cacheNames = "node-relation")
 public class NodeRelationService {
     private final NodeRelationRepository nodeRelationRepository;
     private final KnowledgeNodeRepository knowledgeNodeRepository;
@@ -27,10 +31,12 @@ public class NodeRelationService {
         this.knowledgeNodeRepository = knowledgeNodeRepository;
     }
 
+    @CacheEvict(allEntries = true)
     public Iterable<NodeRelation> saveAll(Iterable<NodeRelation> buildNodeRelation) {
         return nodeRelationRepository.saveAll(buildNodeRelation);
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #name", unless = "#result == null")
     public List<RelationDTO> findByStartNodeName(String name) {
         return nodeRelationRepository.findByStartNodeName(name)
             .stream()
@@ -38,22 +44,27 @@ public class NodeRelationService {
             .collect(Collectors.toList());
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #id", unless = "#result == null")
     public List<NodeRelation> findByStartNodeId(Long id) {
         return nodeRelationRepository.findByStartNodeId(id);
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #id", unless = "#result == null")
     public NodeRelation findById(Long id) {
         return nodeRelationRepository.findById(id).orElseThrow(NullPointerException::new);
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #pageable", unless = "#result == null")
     public Page<NodeRelation> findAll(Pageable pageable) {
         return nodeRelationRepository.findAll(pageable);
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName", unless = "#result == null")
     public long count() {
         return nodeRelationRepository.count();
     }
 
+    @CacheEvict(allEntries = true)
     public NodeRelation save(RelationVO relationVO) {
         KnowledgeNode startNode = knowledgeNodeRepository.findFirstByName(relationVO.getStartNode())
             .orElseThrow(NullPointerException::new);
@@ -65,6 +76,7 @@ public class NodeRelationService {
             .setProperty(relationVO.getProperty()));
     }
 
+    @CacheEvict(allEntries = true)
     public NodeRelation updateById(Long id, RelationVO relationVO) {
         NodeRelation relation = nodeRelationRepository.findById(id).orElseThrow(NullPointerException::new);
         KnowledgeNode node1 = knowledgeNodeRepository.findFirstByName(relationVO.getStartNode()).orElseThrow(NullPointerException::new);
@@ -73,14 +85,17 @@ public class NodeRelationService {
         return nodeRelationRepository.save(relation);
     }
 
+    @CacheEvict(allEntries = true)
     public void deleteById(Long id) {
         nodeRelationRepository.deleteById(id);
     }
 
+    @CacheEvict(allEntries = true)
     public void deleteAll() {
         nodeRelationRepository.deleteAll();
     }
 
+    @CacheEvict(allEntries = true)
     public KnowledgeNode updateParent(ParentVO parentVO) {
         KnowledgeNode node = knowledgeNodeRepository.findFirstByName(parentVO.getSrcParentName()).orElseThrow(NullPointerException::new);
         if (node.getChildNodes().isEmpty()) {
