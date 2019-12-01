@@ -11,6 +11,8 @@ import top.techial.beans.ResultBean;
 import top.techial.knowledge.service.StorageService;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * @author techial
@@ -42,8 +44,9 @@ public class StorageController {
     }
 
     @PostMapping
-    public ResultBean<String> save(@RequestParam MultipartFile file) throws IOException {
-        return new ResultBean<>(storageService.save(file));
+    public ResultBean<Map<String, String>> save(@RequestParam MultipartFile file) throws IOException {
+        String str = storageService.save(file);
+        return new ResultBean<>(Collections.singletonMap("link", "preview/" + str));
     }
 
     @DeleteMapping("/{id}")
