@@ -49,7 +49,7 @@ public class StorageController {
         Map<String, String> map = new HashMap<>();
         map.put("code", "0");
         map.put("msg", "Success");
-        map.put("link", "preview/" + str);
+        map.put("link", "api/storage/preview/" + str);
         return map;
     }
 

@@ -119,7 +119,7 @@
                     <version>1.8.0</version>
                     <configuration>
                         <to>
-                            <image>${parent.groupId}/${parent.artifactId}/${artifactId}</image>
+                            <image>${project.parent.groupId}/${project.parent.artifactId}/${project.artifactId}</image>
                         </to>
                         <from>
                             <image>openjdk:8-jre-alpine</image>
