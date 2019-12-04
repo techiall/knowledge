@@ -58,7 +58,7 @@ public class OperatorAspect {
         if (!(result instanceof ResultBean)) {
             return;
         }
-        ResultBean node = (ResultBean) result;
+        ResultBean<?> node = (ResultBean<?>) result;
         if (!(node.getData() instanceof NodeInfoDTO)) {
             return;
         }

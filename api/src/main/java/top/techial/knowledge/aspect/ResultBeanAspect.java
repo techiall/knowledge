@@ -11,7 +11,7 @@ import top.techial.beans.ResultBean;
 import top.techial.spring.data.PageDTO;
 
 /**
- * convent {@link org.springframework.data.domain.Page} to {@link top.techial.spring.data.PageDTO}
+ * convent {@link Page} to {@link PageDTO}
  *
  * @author techial
  */
@@ -20,7 +20,7 @@ import top.techial.spring.data.PageDTO;
 @Log4j2
 public class ResultBeanAspect {
 
-    private static ResultBean<PageDTO> convent(Page page) {
+    private static ResultBean<PageDTO> convent(Page<?> page) {
         return new ResultBean<>(new PageDTO()
             .setContent(page.getContent())
             .setTotalElements(page.getTotalElements())
@@ -31,10 +31,10 @@ public class ResultBeanAspect {
 
     @Around(value = "execution(public top.techial.beans.ResultBean *(..))")
     public Object invoke(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        ResultBean result = (ResultBean) proceedingJoinPoint.proceed();
+        ResultBean<?> result = (ResultBean<?>) proceedingJoinPoint.proceed();
         Object data = result.getData();
         if (data instanceof Page) {
-            Page page = (Page) data;
+            Page<?> page = (Page<?>) data;
             return ResultBeanAspect.convent(page);
         }
         return result;
