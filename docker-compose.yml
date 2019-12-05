@@ -33,7 +33,7 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
       - ./nginx/certificate:/etc/nginx/certificate:ro
       - ./nginx/log:/var/log/nginx
-      - ./nginx/www:/var/www:ro
+      - /usr/share/nginx/html:/var/www
 
   neo4j:
     image: neo4j:latest
@@ -54,9 +54,15 @@ networks:
 
 volumes:
   web_data:
+    external: true
   mongo_data:
+    external: true
   neo4j_logs:
+    external: true
   neo4j_conf:
+    external: true
   neo4j_import:
+    external: true
   neo4j_plugins:
+    external: true
 
