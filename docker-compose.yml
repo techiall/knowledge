@@ -7,8 +7,6 @@ services:
     depends_on:
       - neo4j
       - mongo
-    ports:
-      - "9090:8080"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - web_data:/web-logs
@@ -22,6 +20,20 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - mongo_data:/data/db
     restart: always
+
+  nginx:
+    restart: always
+    image: nginx:latest
+    networks:
+      - knowledge
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/certificate:/etc/nginx/certificate
+      - ./nginx/log:/var/log/nginx
+      - ./nginx/www:/var/www
 
   neo4j:
     image: neo4j:latest
