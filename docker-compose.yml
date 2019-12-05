@@ -7,9 +7,11 @@ services:
     depends_on:
       - neo4j
       - mongo
+    ports:
+      - 9090:8080
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - web_data:/web-logs
+      - knowledge_web_data:/web-logs
     restart: always
 
   mongo:
@@ -18,22 +20,8 @@ services:
       - knowledge
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - mongo_data:/data/db
+      - knowledge_mongo_data:/data/db
     restart: always
-
-  nginx:
-    restart: always
-    image: nginx:latest
-    networks:
-      - knowledge
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/certificate:/etc/nginx/certificate:ro
-      - ./nginx/log:/var/log/nginx
-      - /usr/share/nginx/html:/var/www
 
   neo4j:
     image: neo4j:latest
@@ -41,28 +29,29 @@ services:
       - knowledge
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - neo4j_logs:/logs
-      - neo4j_conf:/var/lib/neo4j/conf
-      - neo4j_import:/var/lib/neo4j/import
-      - neo4j_plugins:/plugins
+      - knowledge_neo4j_logs:/logs
+      - knowledge_neo4j_conf:/var/lib/neo4j/conf
+      - knowledge_neo4j_import:/var/lib/neo4j/import
+      - knowledge_neo4j_plugins:/plugins
     environment:
       - NEO4J_AUTH=neo4j/techial
     restart: always
 
 networks:
   knowledge:
+    external: true
 
 volumes:
-  web_data:
+  knowledge_web_data:
     external: true
-  mongo_data:
+  knowledge_mongo_data:
     external: true
-  neo4j_logs:
+  knowledge_neo4j_logs:
     external: true
-  neo4j_conf:
+  knowledge_neo4j_conf:
     external: true
-  neo4j_import:
+  knowledge_neo4j_import:
     external: true
-  neo4j_plugins:
+  knowledge_neo4j_plugins:
     external: true
 
