@@ -30,10 +30,10 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/certificate:/etc/nginx/certificate
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/certificate:/etc/nginx/certificate:ro
       - ./nginx/log:/var/log/nginx
-      - ./nginx/www:/var/www
+      - ./nginx/www:/var/www:ro
 
   neo4j:
     image: neo4j:latest
