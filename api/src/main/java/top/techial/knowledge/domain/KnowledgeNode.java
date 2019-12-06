@@ -3,8 +3,11 @@ package top.techial.knowledge.domain;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.neo4j.ogm.annotation.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -41,4 +44,10 @@ public class KnowledgeNode implements Serializable {
 
     @Property
     private String resourceId;
+
+    @CreatedDate
+    private Instant createTime;
+
+    @LastModifiedDate
+    private Instant updateTime;
 }

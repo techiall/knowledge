@@ -47,11 +47,6 @@ public class KnowledgeController {
         return new ResultBean<>(new NodeInfoDTO(knowledgeNodeService.update(id, nodeVO)));
     }
 
-    @PatchMapping("/{id}/name")
-    public ResultBean<NodeInfoDTO> updateName(@PathVariable Long id, @RequestBody NodeVO nodeVO) {
-        return new ResultBean<>(new NodeInfoDTO(knowledgeNodeService.updateName(id, nodeVO.getName())));
-    }
-
     @DeleteMapping("/{id}")
     public ResultBean<Boolean> deleteById(@PathVariable Long id) {
         knowledgeNodeService.deleteById(id);
@@ -61,12 +56,6 @@ public class KnowledgeController {
     @DeleteMapping
     public ResultBean<Boolean> deleteByIds(@RequestParam Set<Long> ids) {
         knowledgeNodeService.deleteByIds(ids);
-        return new ResultBean<>(true);
-    }
-
-    @DeleteMapping("/parent/{parentId}/child/{childId}")
-    public ResultBean<Boolean> deleteChildId(@PathVariable Long parentId, @PathVariable Long childId) {
-        knowledgeNodeService.deleteChildId(parentId, childId);
         return new ResultBean<>(true);
     }
 
@@ -86,6 +75,5 @@ public class KnowledgeController {
     public ResultBean<Page<NodeBaseDTO>> findByName(@RequestParam(name = "query") String name, @PageableDefault Pageable pageable) {
         return new ResultBean<>(knowledgeNodeService.findByNameLike("*" + name + "*", pageable).map(NodeBaseDTO::new));
     }
-
 
 }

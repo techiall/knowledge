@@ -34,12 +34,12 @@ public class Init implements CommandLineRunner {
     @Override
     public void run(String... args) {
         log.info("init ...");
-//        knowledgeNodeService.deleteAll();
-//        recordService.deleteAll();
-//        if (knowledgeNodeService.count() == 0L) {
-//            saveNodeVO();
-//            nodeRelationService.saveAll(buildNodeRelation());
-//        }
+        knowledgeNodeService.deleteAll();
+        recordService.deleteAll();
+        if (knowledgeNodeService.count() == 0L) {
+            saveNodeVO();
+            nodeRelationService.saveAll(buildNodeRelation());
+        }
 
         log.info("end ...");
     }
