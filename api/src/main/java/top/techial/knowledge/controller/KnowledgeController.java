@@ -2,6 +2,7 @@ package top.techial.knowledge.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
@@ -27,7 +28,7 @@ public class KnowledgeController {
 
     @GetMapping
     public ResultBean<Page<NodeDTO>> findAll(
-        @PageableDefault Pageable pageable,
+        @PageableDefault(sort = "createTime", direction = Sort.Direction.ASC) Pageable pageable,
         @RequestParam(defaultValue = "10", required = false) int depth) {
         return new ResultBean<>(knowledgeNodeService.findAll(pageable, depth));
     }
