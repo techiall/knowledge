@@ -29,6 +29,6 @@ spring:
       max-request-size: -1
 logging:
   level:
-    org.neo4j.ogm: debug
-    top.techial: debug
+    org.neo4j.ogm: info
+    top.techial: info
 
