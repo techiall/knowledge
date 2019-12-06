@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import top.techial.knowledge.dao.RecordRepository;
 import top.techial.knowledge.domain.Record;
 
+import java.util.Set;
+
 /**
  * @author techial
  */
@@ -48,5 +50,11 @@ public class RecordService {
     @CacheEvict(allEntries = true)
     public void deleteAll() {
         recordRepository.deleteAll();
+    }
+
+    @CacheEvict(allEntries = true)
+    @Async
+    public void deleteByNodeIds(Set<Long> ids) {
+        recordRepository.deleteByNodeIdIn(ids);
     }
 }

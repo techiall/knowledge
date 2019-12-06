@@ -10,6 +10,7 @@ import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.dto.NodeDTO;
 import top.techial.knowledge.dto.NodeInfoDTO;
 import top.techial.knowledge.service.KnowledgeNodeService;
+import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.vo.NodeVO;
 
 import java.util.Set;
@@ -21,9 +22,11 @@ import java.util.Set;
 @RequestMapping("/api/node")
 public class KnowledgeController {
     private final KnowledgeNodeService knowledgeNodeService;
+    private final RecordService recordService;
 
-    public KnowledgeController(KnowledgeNodeService knowledgeNodeService) {
+    public KnowledgeController(KnowledgeNodeService knowledgeNodeService, RecordService recordService) {
         this.knowledgeNodeService = knowledgeNodeService;
+        this.recordService = recordService;
     }
 
     @GetMapping
@@ -57,12 +60,14 @@ public class KnowledgeController {
     @DeleteMapping("/{id}")
     public ResultBean<Boolean> deleteById(@PathVariable Long id) {
         knowledgeNodeService.deleteById(id);
+        recordService.deleteByNodeId(id);
         return new ResultBean<>(true);
     }
 
     @DeleteMapping
     public ResultBean<Boolean> deleteByIds(@RequestParam Set<Long> ids) {
         knowledgeNodeService.deleteByIds(ids);
+        recordService.deleteByNodeIds(ids);
         return new ResultBean<>(true);
     }
 

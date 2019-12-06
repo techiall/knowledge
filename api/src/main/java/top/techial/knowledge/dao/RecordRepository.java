@@ -6,6 +6,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import top.techial.knowledge.domain.Record;
 
+import java.util.Collection;
+
 /**
  * @author techial
  */
@@ -15,4 +17,6 @@ public interface RecordRepository extends MongoRepository<Record, String> {
     Page<Record> findByNodeId(Long id, Pageable pageable);
 
     void deleteByNodeId(Long id);
+
+    void deleteByNodeIdIn(Collection<Long> ids);
 }

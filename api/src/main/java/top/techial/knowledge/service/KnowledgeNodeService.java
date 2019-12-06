@@ -79,22 +79,6 @@ public class KnowledgeNodeService {
         return knowledgeNodeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
 
-    @CacheEvict(allEntries = true)
-    public void deleteById(Long id) {
-        KnowledgeNode node = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
-        knowledgeNodeRepository.delete(node);
-        if (node.getParentNodeId() == null) {
-            return;
-        }
-        KnowledgeNode parent = knowledgeNodeRepository.findById(node.getParentNodeId()).orElse(null);
-        if (parent == null) {
-            return;
-        }
-        if (parent.getChildNodes().isEmpty()) {
-            knowledgeNodeRepository.save(parent);
-        }
-    }
-
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #id", unless = "#result == null")
     public Object findByIdGraph(Long id) {
         KnowledgeNode knowledgeNode = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
@@ -183,6 +167,27 @@ public class KnowledgeNodeService {
         knowledgeNodeRepository.deleteAll();
     }
 
+    @CacheEvict(allEntries = true)
+    public void deleteByIds(Set<Long> ids) {
+        knowledgeNodeRepository.deleteByIdIn(ids);
+    }
+
+    @CacheEvict(allEntries = true)
+    public void deleteById(Long id) {
+        KnowledgeNode node = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
+        knowledgeNodeRepository.delete(node);
+        if (node.getParentNodeId() == null) {
+            return;
+        }
+        KnowledgeNode parent = knowledgeNodeRepository.findById(node.getParentNodeId()).orElse(null);
+        if (parent == null) {
+            return;
+        }
+        if (parent.getChildNodes().isEmpty()) {
+            knowledgeNodeRepository.save(parent);
+        }
+    }
+
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #pageable + #depth", unless = "#result == null")
     public Page<NodeDTO> findAll(Pageable pageable, int depth) {
         return knowledgeNodeRepository.findAllByParentNodeIdIsNull(pageable, depth).map(NodeDTO::new);
@@ -203,10 +208,5 @@ public class KnowledgeNodeService {
     public Set<NodeDTO> findByChildNode(Long id, int depth) {
         KnowledgeNode node = knowledgeNodeRepository.findById(id, depth).orElseThrow(NullPointerException::new);
         return node.getChildNodes().stream().map(NodeDTO::new).collect(Collectors.toSet());
-    }
-
-    @CacheEvict(allEntries = true)
-    public void deleteByIds(Set<Long> ids) {
-        knowledgeNodeRepository.deleteByIdIn(ids);
     }
 }
