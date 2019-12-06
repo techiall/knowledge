@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static org.neo4j.ogm.annotation.Relationship.INCOMING;
-
 
 /**
  * @author techial
@@ -38,7 +36,7 @@ public class KnowledgeNode implements Serializable {
     @Property
     private Long parentNodeId;
 
-    @Relationship(value = "parent-child-relation", direction = INCOMING)
+    @Relationship(value = "parent-child-relation", direction = Relationship.UNDIRECTED)
     private Set<KnowledgeNode> childNodes = new HashSet<>();
 
     @Property
