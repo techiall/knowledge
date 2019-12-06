@@ -187,17 +187,6 @@ public class KnowledgeNodeService {
         return knowledgeNodeRepository.findFirstByName(name);
     }
 
-    @CacheEvict(allEntries = true)
-    public KnowledgeNode updateName(Long id, String name) {
-        KnowledgeNode node = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
-        if (node.getLabels() != null && !node.getLabels().isEmpty()) {
-            node.getLabels().remove(node.getName());
-            node.getLabels().add(name);
-        }
-        node.setName(name);
-        return knowledgeNodeRepository.save(node);
-    }
-
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #id + #depth", unless = "#result == null")
     public Set<NodeDTO> findByChildNode(Long id, int depth) {
