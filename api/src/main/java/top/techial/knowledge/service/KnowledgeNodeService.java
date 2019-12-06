@@ -81,7 +81,18 @@ public class KnowledgeNodeService {
 
     @CacheEvict(allEntries = true)
     public void deleteById(Long id) {
-        knowledgeNodeRepository.deleteById(id);
+        KnowledgeNode node = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
+        knowledgeNodeRepository.delete(node);
+        if (node.getParentNodeId() == null) {
+            return;
+        }
+        KnowledgeNode parent = knowledgeNodeRepository.findById(node.getParentNodeId()).orElse(null);
+        if (parent == null) {
+            return;
+        }
+        if (parent.getChildNodes().isEmpty()) {
+            knowledgeNodeRepository.save(parent);
+        }
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #id", unless = "#result == null")
@@ -192,16 +203,6 @@ public class KnowledgeNodeService {
     public Set<NodeDTO> findByChildNode(Long id, int depth) {
         KnowledgeNode node = knowledgeNodeRepository.findById(id, depth).orElseThrow(NullPointerException::new);
         return node.getChildNodes().stream().map(NodeDTO::new).collect(Collectors.toSet());
-    }
-
-    @CacheEvict(allEntries = true)
-    public void deleteChildId(Long parentId, Long childId) {
-        KnowledgeNode child = knowledgeNodeRepository.findById(childId).orElseThrow(NullPointerException::new);
-        knowledgeNodeRepository.delete(child);
-        KnowledgeNode parent = knowledgeNodeRepository.findById(parentId).orElseThrow(NullPointerException::new);
-        if (parent.getChildNodes().isEmpty()) {
-            knowledgeNodeRepository.save(parent);
-        }
     }
 
     @CacheEvict(allEntries = true)
