@@ -97,11 +97,14 @@ public class KnowledgeNodeService {
         List<Object> links = new ArrayList<>(16);
 
         nodes.add(buildNodes(knowledgeNode.getId(), knowledgeNode.getName()));
+
+        // 关系
         for (NodeRelation nodeRelation : list) {
             nodes.add(buildNodes(nodeRelation.getEndNode().getId(), nodeRelation.getEndNode().getName()));
             links.add(buildLinks(knowledgeNode.getId(), nodeRelation.getEndNode().getId(), nodeRelation.getProperty()));
         }
 
+        // 子节点
         LinkedList<KnowledgeNode> queue = new LinkedList<>();
         queue.add(knowledgeNode);
         while (!queue.isEmpty()) {
@@ -112,9 +115,20 @@ public class KnowledgeNodeService {
             for (KnowledgeNode childNode : node.getChildNodes()) {
                 nodes.add(buildNodes(childNode.getId(), childNode.getName()));
                 links.add(buildLinks(node.getId(), childNode.getId(),
-                    Collections.singletonMap("relation", "parent-child-relation")));
+                    Collections.singletonMap("relation", "child-relation")));
                 queue.add(childNode);
             }
+        }
+
+        // 父节点
+        KnowledgeNode tmpNode = knowledgeNode;
+        while (tmpNode.getParentNodeId() != null) {
+            KnowledgeNode node = knowledgeNodeRepository.findById(tmpNode.getParentNodeId())
+                .orElseThrow(NullPointerException::new);
+            nodes.add(buildNodes(node.getId(), node.getName()));
+            links.add(buildLinks(node.getId(), tmpNode.getId(),
+                Collections.singletonMap("relation", "parent-relation")));
+            tmpNode = node;
         }
 
         result.put("nodes", nodes);

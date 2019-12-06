@@ -14,6 +14,16 @@ import java.util.Map;
 public enum ResultCode {
 
     /**
+     * Too Many Requests
+     */
+    TOO_MANY_REQUESTS(429, "Too Many Requests"),
+
+    /**
+     * Not Found
+     */
+    NOT_FOUND(-2, "Not Found"),
+
+    /**
      * Unauthorized
      */
     UNAUTHORIZED(-1, "Unauthorized"),

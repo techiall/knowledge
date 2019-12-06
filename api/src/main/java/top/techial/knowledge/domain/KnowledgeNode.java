@@ -36,7 +36,7 @@ public class KnowledgeNode implements Serializable {
     @Property
     private Long parentNodeId;
 
-    @Relationship(value = "parent-child-relation", direction = Relationship.UNDIRECTED)
+    @Relationship(value = "parent-child-relation", direction = Relationship.INCOMING)
     private Set<KnowledgeNode> childNodes = new HashSet<>();
 
     @Property
