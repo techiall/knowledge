@@ -24,10 +24,13 @@ public class NodeDTO implements Serializable {
 
     private final String name;
 
+    private final String sort;
+
     private final List<NodeDTO> childNodes;
 
     public NodeDTO(KnowledgeNode knowledgeNode) {
         this.id = knowledgeNode.getId();
+        this.sort = knowledgeNode.getSortId();
         this.name = knowledgeNode.getName();
         this.parentNodeId = knowledgeNode.getParentNodeId();
         this.childNodes = knowledgeNode.getChildNodes().stream()
