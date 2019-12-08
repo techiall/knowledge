@@ -27,6 +27,8 @@ public class NodeVO {
 
     private Map<String, String> property;
 
+    private String sortId;
+
     /**
      * parentId = null -> parent
      * parentId != null && parentId is exists -> child
@@ -39,6 +41,7 @@ public class NodeVO {
             .setName(this.name)
             .setLabels(labels == null || labels.isEmpty() ? Collections.singleton(this.name) : labels)
             .setProperty(property)
+            .setSortId(sortId)
             .setParentNodeId(parentId);
     }
 }

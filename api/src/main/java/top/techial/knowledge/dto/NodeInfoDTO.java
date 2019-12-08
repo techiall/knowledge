@@ -19,12 +19,14 @@ public class NodeInfoDTO implements Serializable {
     private final Long id;
     private final Set<String> labels;
     private final String name;
+    private final String sortId;
     private final Map<String, String> property;
 
     public NodeInfoDTO(KnowledgeNode knowledgeNode) {
         this.id = knowledgeNode.getId();
         this.labels = knowledgeNode.getLabels();
         this.name = knowledgeNode.getName();
+        this.sortId = knowledgeNode.getSortId();
         this.property = knowledgeNode.getProperty();
         this.parentNodeId = knowledgeNode.getParentNodeId();
     }
