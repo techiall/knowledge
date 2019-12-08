@@ -14,4 +14,5 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     Optional<User> findFirstByUserName(String name);
 
+    boolean existsByUserName(String name);
 }
