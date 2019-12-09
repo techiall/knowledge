@@ -179,8 +179,8 @@ public class KnowledgeNodeService {
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #pageable + #depth", unless = "#result == null")
-    public Page<NodeDTO> findAll(Pageable pageable, int depth) {
-        return knowledgeNodeRepository.findAllByParentNodeIdIsNull(pageable, depth).map(NodeDTO::new);
+    public Page<NodeDTO> findAll(String userId, Pageable pageable, int depth) {
+        return knowledgeNodeRepository.findAllByUserIdAndParentNodeIdIsNotNull(userId, pageable, depth).map(NodeDTO::new);
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName", unless = "#result == null")

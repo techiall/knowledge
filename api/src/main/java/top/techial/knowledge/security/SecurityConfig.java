@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -82,6 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
 
             .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             .sessionAuthenticationFailureHandler(authenticationFailureHandler)
             .sessionFixation()
             .newSession()
@@ -90,7 +92,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .maxSessionsPreventsLogin(false);
 
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-//        http.csrf().disable();
 
     }
 

@@ -4,11 +4,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
 import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.dto.NodeDTO;
 import top.techial.knowledge.dto.NodeInfoDTO;
+import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.KnowledgeNodeService;
 import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.vo.NodeVO;
@@ -31,9 +33,10 @@ public class KnowledgeController {
 
     @GetMapping
     public ResultBean<Page<NodeDTO>> findAll(
+        @AuthenticationPrincipal UserPrincipal userPrincipal,
         @PageableDefault(sort = "createTime", direction = Sort.Direction.ASC) Pageable pageable,
         @RequestParam(defaultValue = "10", required = false) int depth) {
-        return new ResultBean<>(knowledgeNodeService.findAll(pageable, depth));
+        return new ResultBean<>(knowledgeNodeService.findAll(userPrincipal.getId(), pageable, depth));
     }
 
     @GetMapping("/{id}")
