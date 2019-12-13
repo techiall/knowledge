@@ -11,13 +11,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import top.techial.knowledge.security.UserPrincipal;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Collections;
 
 @Data
 @Document
 @Accessors(chain = true)
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     @Id
     private String id;
 
@@ -32,7 +36,6 @@ public class User {
 
     @LastModifiedDate
     private Instant updateTime;
-
 
     public UserPrincipal toUserPrincipal() {
         return new UserPrincipal(this.id, this.userName, this.password,

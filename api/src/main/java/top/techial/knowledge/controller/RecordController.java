@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.techial.beans.ResultBean;
+import top.techial.knowledge.domain.Record;
 import top.techial.knowledge.dto.RecordDTO;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.RecordService;
+import top.techial.knowledge.service.UserService;
 
 /**
  * @author techial
@@ -21,16 +23,18 @@ import top.techial.knowledge.service.RecordService;
 @RequestMapping("/api/record")
 public class RecordController {
     private final RecordService recordService;
+    private final UserService userService;
 
-    public RecordController(RecordService recordService) {
+    public RecordController(RecordService recordService, UserService userService) {
         this.recordService = recordService;
+        this.userService = userService;
     }
 
     @GetMapping
     public ResultBean<Page<RecordDTO>> findAll(
         @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        return new ResultBean<>(recordService.findAll(pageable).map(RecordDTO::new));
+        return new ResultBean<>(recordService.findAll(pageable).map(this::convent));
     }
 
     @GetMapping("/node/{id}")
@@ -39,6 +43,12 @@ public class RecordController {
         @AuthenticationPrincipal UserPrincipal userPrincipal,
         @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        return new ResultBean<>(recordService.findByNodeId(id, userPrincipal.getId(), pageable).map(RecordDTO::new));
+        return new ResultBean<>(recordService.findByNodeId(id, userPrincipal.getId(), pageable).map(this::convent));
+    }
+
+    private RecordDTO convent(Record record) {
+        RecordDTO dto = new RecordDTO(record);
+        dto.setUser(userService.findById(record.getUserId()).orElseThrow(NullPointerException::new));
+        return dto;
     }
 }
