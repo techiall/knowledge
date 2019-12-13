@@ -6,6 +6,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import top.techial.knowledge.dao.KnowledgeNodeRepository;
 import top.techial.knowledge.dao.NodeRelationRepository;
@@ -33,11 +34,15 @@ public class KnowledgeNodeService {
     }
 
     @CacheEvict(allEntries = true)
-    public KnowledgeNode update(Long id, NodeVO nodeVO) {
+    public KnowledgeNode update(Long id, String userId, NodeVO nodeVO) {
         KnowledgeNode node = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
+        if (!Objects.equals(userId, node.getUserId())) {
+            throw new IllegalArgumentException();
+        }
         node.setName(nodeVO.getName())
             .setLabels(nodeVO.getLabels())
-            .setProperty(nodeVO.getProperty());
+            .setProperty(nodeVO.getProperty())
+            .setUserId(node.getUserId());
         return knowledgeNodeRepository.save(node);
     }
 
@@ -76,8 +81,11 @@ public class KnowledgeNodeService {
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #id", unless = "#result == null")
-    public Object findByIdGraph(Long id) {
+    public Object findByIdGraph(Long id, String userId) {
         KnowledgeNode knowledgeNode = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
+        if (!Objects.equals(knowledgeNode.getUserId(), userId)) {
+            throw new IllegalArgumentException();
+        }
         List<NodeRelation> list = nodeRelationRepository.findByStartNodeName(knowledgeNode.getName());
         if (log.isDebugEnabled()) {
             log.debug(list);
@@ -143,8 +151,11 @@ public class KnowledgeNodeService {
     }
 
     @CacheEvict(allEntries = true)
-    public KnowledgeNode updateName(Long id, String name) {
+    public KnowledgeNode updateName(Long id, String userId, String name) {
         KnowledgeNode node = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
+        if (!Objects.equals(userId, node.getUserId())) {
+            throw new IllegalArgumentException();
+        }
         if (node.getLabels() != null && !node.getLabels().isEmpty()) {
             node.getLabels().remove(node.getName());
             node.getLabels().add(name);
@@ -154,18 +165,22 @@ public class KnowledgeNodeService {
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #name + #pageable", unless = "#result == null")
-    public Page<KnowledgeNode> findByNameLike(String name, Pageable pageable) {
-        return knowledgeNodeRepository.findByNameLike(name, pageable);
+    public Page<KnowledgeNode> findByNameLike(String name, String userId, Pageable pageable) {
+        return knowledgeNodeRepository.findByNameLikeAndUserId(name, userId, pageable);
     }
 
     @CacheEvict(allEntries = true)
-    public void deleteByIds(Set<Long> ids) {
-        knowledgeNodeRepository.deleteByIdIn(ids);
+    @Async
+    public void deleteByIds(Set<Long> ids, String userId) {
+        ids.forEach(it -> deleteById(it, userId));
     }
 
     @CacheEvict(allEntries = true)
-    public void deleteById(Long id) {
+    public void deleteById(Long id, String userId) {
         KnowledgeNode node = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
+        if (!Objects.equals(userId, node.getUserId())) {
+            throw new IllegalArgumentException();
+        }
         knowledgeNodeRepository.delete(node);
         if (node.getParentNodeId() == null) {
             return;
@@ -184,15 +199,17 @@ public class KnowledgeNodeService {
         return knowledgeNodeRepository.findByUserIdAndParentNodeIdIsNull(userId, pageable, depth).map(NodeDTO::new);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName", unless = "#result == null")
-    public Optional<KnowledgeNode> findByName(String name) {
-        return knowledgeNodeRepository.findFirstByName(name);
-    }
-
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #id + #depth", unless = "#result == null")
-    public Set<NodeDTO> findByChildNode(Long id, int depth) {
+    public Set<NodeDTO> findByChildNode(Long id, String userPrincipalId, int depth) {
         KnowledgeNode node = knowledgeNodeRepository.findById(id, depth).orElseThrow(NullPointerException::new);
+        if (!Objects.equals(userPrincipalId, node.getUserId())) {
+            throw new IllegalArgumentException();
+        }
         return node.getChildNodes().stream().map(NodeDTO::new).collect(Collectors.toSet());
+    }
+
+    public void deleteAll() {
+        knowledgeNodeRepository.deleteAll();
     }
 }

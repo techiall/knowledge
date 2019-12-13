@@ -7,6 +7,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
+import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.dto.NodeDTO;
 import top.techial.knowledge.dto.NodeInfoDTO;
@@ -15,6 +16,7 @@ import top.techial.knowledge.service.KnowledgeNodeService;
 import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.vo.NodeVO;
 
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -40,7 +42,11 @@ public class KnowledgeController {
     }
 
     @GetMapping("/{id}")
-    public ResultBean<NodeInfoDTO> findById(@PathVariable Long id) {
+    public ResultBean<Object> findById(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable Long id) {
+        KnowledgeNode node = knowledgeNodeService.findById(id);
+        if (!Objects.equals(node.getUserId(), userPrincipal.getId())) {
+            throw new IllegalArgumentException();
+        }
         return new ResultBean<>(new NodeInfoDTO(knowledgeNodeService.findById(id)));
     }
 
@@ -50,45 +56,46 @@ public class KnowledgeController {
     }
 
     @PutMapping("/{id}")
-    public ResultBean<NodeInfoDTO> update(@PathVariable Long id, @RequestBody NodeVO nodeVO) {
-        return new ResultBean<>(new NodeInfoDTO(knowledgeNodeService.update(id, nodeVO)));
+    public ResultBean<NodeInfoDTO> update(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable Long id, @RequestBody NodeVO nodeVO) {
+        return new ResultBean<>(new NodeInfoDTO(knowledgeNodeService.update(id, userPrincipal.getId(), nodeVO)));
     }
 
     @PatchMapping("/{id}/name")
-    public ResultBean<NodeInfoDTO> updateName(@PathVariable Long id, @RequestBody NodeVO nodeVO) {
-        return new ResultBean<>(new NodeInfoDTO(knowledgeNodeService.updateName(id, nodeVO.getName())));
+    public ResultBean<NodeInfoDTO> updateName(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable Long id, @RequestBody NodeVO nodeVO) {
+        return new ResultBean<>(new NodeInfoDTO(knowledgeNodeService.updateName(id, userPrincipal.getId(), nodeVO.getName())));
     }
 
 
     @DeleteMapping("/{id}")
-    public ResultBean<Boolean> deleteById(@PathVariable Long id) {
-        knowledgeNodeService.deleteById(id);
+    public ResultBean<Boolean> deleteById(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable Long id) {
+        knowledgeNodeService.deleteById(id, userPrincipal.getId());
         recordService.deleteByNodeId(id);
         return new ResultBean<>(true);
     }
 
     @DeleteMapping
-    public ResultBean<Boolean> deleteByIds(@RequestParam Set<Long> ids) {
-        knowledgeNodeService.deleteByIds(ids);
+    public ResultBean<Boolean> deleteByIds(@RequestBody Set<Long> ids, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        knowledgeNodeService.deleteByIds(ids, userPrincipal.getId());
         recordService.deleteByNodeIds(ids);
         return new ResultBean<>(true);
     }
 
     @GetMapping("/{id}/graph")
-    public ResultBean<Object> findByIdGraph(@PathVariable Long id) {
-        return new ResultBean<>(knowledgeNodeService.findByIdGraph(id));
+    public ResultBean<Object> findByIdGraph(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return new ResultBean<>(knowledgeNodeService.findByIdGraph(id, userPrincipal.getId()));
     }
 
     @GetMapping("/{id}/child")
     public ResultBean<Set<NodeDTO>> findChildNode(
         @PathVariable Long id,
+        @AuthenticationPrincipal UserPrincipal userPrincipal,
         @RequestParam(required = false, defaultValue = "10") int depth) {
-        return new ResultBean<>(knowledgeNodeService.findByChildNode(id, depth));
+        return new ResultBean<>(knowledgeNodeService.findByChildNode(id, userPrincipal.getId(), depth));
     }
 
     @GetMapping("/name")
-    public ResultBean<Page<NodeBaseDTO>> findByName(@RequestParam(name = "query") String name, @PageableDefault Pageable pageable) {
-        return new ResultBean<>(knowledgeNodeService.findByNameLike("*" + name + "*", pageable).map(NodeBaseDTO::new));
+    public ResultBean<Page<NodeBaseDTO>> findByName(@RequestParam(name = "query") String name, @AuthenticationPrincipal UserPrincipal userPrincipal, @PageableDefault Pageable pageable) {
+        return new ResultBean<>(knowledgeNodeService.findByNameLike("*" + name + "*", userPrincipal.getId(), pageable).map(NodeBaseDTO::new));
     }
 
 }
