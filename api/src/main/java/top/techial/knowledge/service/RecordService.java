@@ -36,8 +36,8 @@ public class RecordService {
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #id + #pageable", unless = "#result == null")
-    public Page<Record> findByNodeId(Long id, Pageable pageable) {
-        return recordRepository.findByNodeId(id, pageable);
+    public Page<Record> findByNodeId(Long id, String userId, Pageable pageable) {
+        return recordRepository.findByNodeIdAndUserId(id, userId, pageable);
     }
 
     @CacheEvict(allEntries = true)

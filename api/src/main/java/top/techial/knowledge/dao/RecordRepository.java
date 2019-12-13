@@ -14,7 +14,7 @@ import java.util.Collection;
 @Repository
 public interface RecordRepository extends MongoRepository<Record, String> {
 
-    Page<Record> findByNodeId(Long id, Pageable pageable);
+    Page<Record> findByNodeIdAndUserId(Long id, String userId, Pageable pageable);
 
     void deleteByNodeId(Long id);
 
