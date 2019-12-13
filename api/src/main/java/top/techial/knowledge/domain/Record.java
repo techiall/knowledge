@@ -30,7 +30,7 @@ public class Record implements Serializable {
     /**
      * user id
      */
-    private String userId;
+    private User user;
 
     /**
      * operator

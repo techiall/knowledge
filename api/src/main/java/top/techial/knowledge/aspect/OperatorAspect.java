@@ -15,8 +15,8 @@ import top.techial.knowledge.domain.Operator;
 import top.techial.knowledge.domain.Record;
 import top.techial.knowledge.dto.NodeInfoDTO;
 import top.techial.knowledge.service.RecordService;
+import top.techial.knowledge.service.UserService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,11 +29,11 @@ import java.util.Map;
 @Log4j2
 public class OperatorAspect {
     private final RecordService recordService;
-    private final HttpServletRequest httpServletRequest;
+    private final UserService userService;
 
-    public OperatorAspect(RecordService recordService, HttpServletRequest httpServletRequest) {
+    public OperatorAspect(RecordService recordService, UserService userService) {
         this.recordService = recordService;
-        this.httpServletRequest = httpServletRequest;
+        this.userService = userService;
     }
 
     @Around("execution(public * top.techial.knowledge.controller.Knowledge*.*(..))")
@@ -64,7 +64,7 @@ public class OperatorAspect {
         }
         NodeInfoDTO data = (NodeInfoDTO) node.getData();
         recordService.save(new Record()
-            .setUserId(data.getUserId())
+            .setUser(userService.findById(data.getUserId()).orElseThrow(NullPointerException::new))
             .setRequests(param)
             .setNodeId(data.getId())
             .setOperator(operator));

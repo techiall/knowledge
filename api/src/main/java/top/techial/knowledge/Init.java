@@ -4,21 +4,25 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import top.techial.knowledge.domain.User;
 import top.techial.knowledge.service.KnowledgeNodeService;
+import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.service.UserService;
 
 @Component
 public class Init implements CommandLineRunner {
     private final UserService userService;
     private final KnowledgeNodeService knowledgeNodeService;
+    private final RecordService recordService;
 
-    public Init(UserService userService, KnowledgeNodeService knowledgeNodeService) {
+    public Init(UserService userService, KnowledgeNodeService knowledgeNodeService, RecordService recordService) {
         this.userService = userService;
         this.knowledgeNodeService = knowledgeNodeService;
+        this.recordService = recordService;
     }
 
     @Override
     public void run(String... args) {
         knowledgeNodeService.deleteAll();
+        recordService.deleteAll();
         userService.deleteAll();
         if (userService.count() == 0L) {
             userService.save(new User().setUserName("root").setPassword("{noop}root"));
