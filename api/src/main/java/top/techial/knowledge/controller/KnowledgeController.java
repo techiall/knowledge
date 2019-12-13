@@ -45,8 +45,8 @@ public class KnowledgeController {
     }
 
     @PostMapping
-    public ResultBean<NodeInfoDTO> save(@RequestBody NodeVO nodeVO) {
-        return new ResultBean<>(new NodeInfoDTO(knowledgeNodeService.save(nodeVO)));
+    public ResultBean<NodeInfoDTO> save(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody NodeVO nodeVO) {
+        return new ResultBean<>(new NodeInfoDTO(knowledgeNodeService.save(userPrincipal.getId(), nodeVO)));
     }
 
     @PutMapping("/{id}")

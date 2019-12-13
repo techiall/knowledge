@@ -30,6 +30,6 @@ spring:
 
 logging:
   level:
-    org.neo4j.ogm: info
+    org.neo4j.ogm: debug
     top.techial: debug
 

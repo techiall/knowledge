@@ -30,7 +30,6 @@ public class KnowledgeNode implements Serializable {
     @Labels
     private Set<String> labels;
 
-    @Index(unique = true)
     private String name;
 
     @Properties(allowCast = true)

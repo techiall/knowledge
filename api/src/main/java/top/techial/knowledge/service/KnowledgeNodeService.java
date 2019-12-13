@@ -47,8 +47,9 @@ public class KnowledgeNodeService {
     }
 
     @CacheEvict(allEntries = true)
-    public KnowledgeNode save(NodeVO nodeVO) {
+    public KnowledgeNode save(String userId, NodeVO nodeVO) {
         KnowledgeNode node = nodeVO.toKnowledgeNode();
+        node.setUserId(userId);
 
         KnowledgeNode findNode = knowledgeNodeRepository.findFirstByName(node.getName()).orElse(null);
         if (findNode != null) {
@@ -180,7 +181,7 @@ public class KnowledgeNodeService {
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #pageable + #depth", unless = "#result == null")
     public Page<NodeDTO> findAll(String userId, Pageable pageable, int depth) {
-        return knowledgeNodeRepository.findAllByUserIdAndParentNodeIdIsNotNull(userId, pageable, depth).map(NodeDTO::new);
+        return knowledgeNodeRepository.findByUserIdAndParentNodeIdIsNull(userId, pageable, depth).map(NodeDTO::new);
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName", unless = "#result == null")
