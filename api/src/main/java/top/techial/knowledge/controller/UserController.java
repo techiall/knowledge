@@ -43,7 +43,9 @@ public class UserController {
         if (object instanceof UserPrincipal) {
             UserPrincipal userPrincipal = (UserPrincipal) object;
             User user = userService.findById(userPrincipal.getId()).orElse(null);
-            log.debug(sessionService.findAll());
+            if (log.isDebugEnabled()) {
+                log.debug(sessionService.findAll());
+            }
             map.put("me", user);
         }
         map.put("_csrf", csrfToken);
@@ -56,7 +58,6 @@ public class UserController {
             User user = userService.findById(id).orElseThrow(NullPointerException::new);
             user.setNickName(nickName);
             userService.save(user);
-            sessionService.flushId(userPrincipal.getId());
             return new ResultBean<>(user);
         }
         return new ResultBean<>(ResultCode.CHECK_FAIL);
