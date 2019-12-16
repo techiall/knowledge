@@ -21,9 +21,9 @@ public class Init implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        knowledgeNodeService.deleteAll();
-        recordService.deleteAll();
-        userService.deleteAll();
+//        knowledgeNodeService.deleteAll();
+//        recordService.deleteAll();
+//        userService.deleteAll();
         if (userService.count() == 0L) {
             userService.save(new User().setUserName("root").setPassword("{noop}root"));
             userService.save(new User().setUserName("admin").setPassword("{noop}admin"));
