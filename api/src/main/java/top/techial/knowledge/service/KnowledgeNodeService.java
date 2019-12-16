@@ -156,10 +156,6 @@ public class KnowledgeNodeService {
         if (!Objects.equals(userId, node.getUserId())) {
             throw new IllegalArgumentException();
         }
-        if (node.getLabels() != null && !node.getLabels().isEmpty()) {
-            node.getLabels().remove(node.getName());
-            node.getLabels().add(name);
-        }
         node.setName(name);
         return knowledgeNodeRepository.save(node);
     }

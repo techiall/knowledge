@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 import top.techial.knowledge.domain.KnowledgeNode;
 
 import java.io.Serializable;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,7 +42,7 @@ public class NodeVO implements Serializable {
     public KnowledgeNode toKnowledgeNode() {
         return new KnowledgeNode()
             .setName(this.name)
-            .setLabels(labels == null || labels.isEmpty() ? Collections.singleton(this.name) : labels)
+            .setLabels(labels == null || labels.isEmpty() ? new HashSet<>() : labels)
             .setProperty(property)
             .setSortId(sortId)
             .setParentNodeId(parentId);
