@@ -30,13 +30,6 @@ public class RecordController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public ResultBean<Page<RecordDTO>> findAll(
-        @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable
-    ) {
-        return new ResultBean<>(recordService.findAll(pageable).map(this::convent));
-    }
-
     @GetMapping("/node/{id}")
     public ResultBean<Page<RecordDTO>> findByNodeId(
         @PathVariable Long id,
