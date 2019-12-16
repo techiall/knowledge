@@ -7,9 +7,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
+import top.techial.beans.ResultCode;
 import top.techial.knowledge.domain.User;
 import top.techial.knowledge.security.SessionService;
 import top.techial.knowledge.security.UserPrincipal;
+import top.techial.knowledge.service.KnowledgeNodeService;
 import top.techial.knowledge.service.UserService;
 
 import java.util.HashMap;
@@ -24,11 +26,13 @@ import java.util.Map;
 @Log4j2
 public class UserController {
     private final UserService userService;
+    private final KnowledgeNodeService knowledgeNodeService;
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final SessionService sessionService;
 
-    public UserController(UserService userService, SessionService sessionService) {
+    public UserController(UserService userService, KnowledgeNodeService knowledgeNodeService, SessionService sessionService) {
         this.userService = userService;
+        this.knowledgeNodeService = knowledgeNodeService;
         this.sessionService = sessionService;
     }
 
@@ -38,17 +42,12 @@ public class UserController {
         map.put("user", object);
         if (object instanceof UserPrincipal) {
             UserPrincipal userPrincipal = (UserPrincipal) object;
-            User user = userService.findById(userPrincipal.getId()).orElseThrow(NullPointerException::new);
+            User user = userService.findById(userPrincipal.getId()).orElse(null);
             log.debug(sessionService.findAll());
             map.put("me", user);
         }
         map.put("_csrf", csrfToken);
         return new ResultBean<>(map);
-    }
-
-    @GetMapping("/{id}")
-    public ResultBean<User> findById(@PathVariable String id) {
-        return new ResultBean<>(userService.findById(id).orElse(new User()));
     }
 
     @PatchMapping("/{id}/password")
@@ -65,15 +64,14 @@ public class UserController {
         return new ResultBean<>(user);
     }
 
-
     @DeleteMapping("/{id}")
     public ResultBean<Object> deleteById(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable String id) {
         sessionService.flushId(id);
         if (userPrincipal.getId().equals(id)) {
             userService.deleteById(userPrincipal.getId());
-            return new ResultBean<>("注销成功");
+            knowledgeNodeService.deleteByUserId(userPrincipal.getId());
+            return new ResultBean<>(true);
         }
-        userService.deleteById(id);
-        return new ResultBean<>("删除成功");
+        return new ResultBean<>(ResultCode.CHECK_FAIL);
     }
 }

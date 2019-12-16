@@ -37,8 +37,6 @@ public class Record implements Serializable {
      */
     private Operator operator;
 
-    private Object requests;
-
     /**
      * time
      */

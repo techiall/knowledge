@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import top.techial.knowledge.domain.KnowledgeNode;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -19,7 +20,9 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NodeVO {
+public class NodeVO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String name;
 

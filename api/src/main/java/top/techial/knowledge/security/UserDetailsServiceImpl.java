@@ -26,7 +26,9 @@ public final class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String s) {
         User user = userService.findByUserName(s)
             .orElseThrow(() -> new UsernameNotFoundException("user not found."));
-        log.debug(user.toString());
+        if (log.isDebugEnabled()) {
+            log.debug(user.getId());
+        }
         return user.toUserPrincipal();
     }
 

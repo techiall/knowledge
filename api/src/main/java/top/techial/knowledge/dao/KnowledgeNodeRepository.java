@@ -7,7 +7,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import top.techial.knowledge.domain.KnowledgeNode;
 
-import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -21,5 +20,5 @@ public interface KnowledgeNodeRepository extends Neo4jRepository<KnowledgeNode, 
 
     Optional<KnowledgeNode> findFirstByName(String name);
 
-    void deleteByIdIn(Collection<Long> ids);
+    void deleteByUserId(String userId);
 }

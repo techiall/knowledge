@@ -212,4 +212,8 @@ public class KnowledgeNodeService {
     public void deleteAll() {
         knowledgeNodeRepository.deleteAll();
     }
+
+    public void deleteByUserId(String id) {
+        knowledgeNodeRepository.deleteByUserId(id);
+    }
 }

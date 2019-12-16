@@ -17,18 +17,14 @@ import java.util.Date;
 public class RecordDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private String id;
     private Long nodeId;
     private User user;
-    private Object requests;
     private Operator operator;
     private Date createTime;
 
     public RecordDTO(Record record) {
-        this.id = record.getId();
         this.nodeId = record.getNodeId();
         this.operator = record.getOperator();
         this.createTime = record.getCreateTime();
-        this.requests = record.getRequests();
     }
 }
