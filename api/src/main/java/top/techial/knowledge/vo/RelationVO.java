@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -16,7 +17,9 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RelationVO {
+public class RelationVO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String startNode;
 

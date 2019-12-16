@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+
 /**
  * @author techial
  */
@@ -14,7 +16,9 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ParentVO {
+public class ParentVO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String srcParentName;
 
