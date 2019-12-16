@@ -50,6 +50,18 @@ public class UserController {
         return new ResultBean<>(map);
     }
 
+    @PatchMapping("/{id}/nickName")
+    public ResultBean<User> updateNickName(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable String id, String nickName) {
+        if (userPrincipal.getId().equals(id)) {
+            User user = userService.findById(id).orElseThrow(NullPointerException::new);
+            user.setNickName(nickName);
+            userService.save(user);
+            sessionService.flushId(userPrincipal.getId());
+            return new ResultBean<>(user);
+        }
+        return new ResultBean<>(ResultCode.CHECK_FAIL);
+    }
+
     @PatchMapping("/{id}/password")
     public ResultBean<User> updatePassword(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable String id, String srcPassword, String password) {
         if (userPrincipal.getId().equals(id)) {

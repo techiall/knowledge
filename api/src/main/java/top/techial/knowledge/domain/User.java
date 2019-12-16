@@ -28,6 +28,8 @@ public class User implements Serializable {
     @Indexed(unique = true)
     private String userName;
 
+    private String nickName;
+
     @JsonIgnore
     private String password;
 

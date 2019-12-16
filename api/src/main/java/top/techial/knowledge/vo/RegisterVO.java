@@ -22,7 +22,7 @@ public class RegisterVO implements Serializable {
     private String password;
 
     public User toUser() {
-        return new User().setUserName(userName).setPassword(this.password);
+        return new User().setUserName(userName).setNickName(userName).setPassword(this.password);
     }
 
 }
