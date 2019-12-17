@@ -28,12 +28,10 @@ import java.util.stream.Collectors;
 public class KnowledgeNodeService {
     private final KnowledgeNodeRepository knowledgeNodeRepository;
     private final NodeRelationRepository nodeRelationRepository;
-    private final KnowledgeNodeMapper knowledgeNodeMapper;
 
-    public KnowledgeNodeService(KnowledgeNodeRepository knowledgeNodeRepository, NodeRelationRepository nodeRelationRepository, KnowledgeNodeMapper knowledgeNodeMapper) {
+    public KnowledgeNodeService(KnowledgeNodeRepository knowledgeNodeRepository, NodeRelationRepository nodeRelationRepository) {
         this.knowledgeNodeRepository = knowledgeNodeRepository;
         this.nodeRelationRepository = nodeRelationRepository;
-        this.knowledgeNodeMapper = knowledgeNodeMapper;
     }
 
     @CacheEvict(allEntries = true)
@@ -56,7 +54,7 @@ public class KnowledgeNodeService {
 
     @CacheEvict(allEntries = true)
     public KnowledgeNode save(String userId, NodeVO nodeVO) {
-        KnowledgeNode node = knowledgeNodeMapper.toKnowledgeNode(nodeVO);
+        KnowledgeNode node = KnowledgeNodeMapper.INSTANCE.toKnowledgeNode(nodeVO);
         node.setUserId(userId);
 
         KnowledgeNode findNode = knowledgeNodeRepository.findFirstByName(node.getName()).orElse(null);
