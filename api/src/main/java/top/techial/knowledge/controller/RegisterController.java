@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
 import top.techial.knowledge.domain.User;
+import top.techial.knowledge.mapper.UserMapper;
 import top.techial.knowledge.service.UserService;
 import top.techial.knowledge.vo.RegisterVO;
 
@@ -31,7 +32,7 @@ public class RegisterController {
 
     @PostMapping
     public ResultBean<User> save(@RequestBody RegisterVO registerVO) {
-        User user = registerVO.toUser();
+        User user = UserMapper.INSTANCE.toUser(registerVO);
         user.setPassword(passwordEncoder.encode(registerVO.getPassword()));
         return new ResultBean<>(userService.save(user));
     }

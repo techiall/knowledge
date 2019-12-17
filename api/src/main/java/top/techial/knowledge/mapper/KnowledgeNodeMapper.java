@@ -2,9 +2,7 @@ package top.techial.knowledge.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
-import org.springframework.stereotype.Component;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.dto.NodeDTO;
@@ -17,12 +15,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper(uses = KnowledgeNodeMapper.KnowledgeNodeTran.class)
+@Mapper
 public interface KnowledgeNodeMapper {
     KnowledgeNodeMapper INSTANCE = Mappers.getMapper(KnowledgeNodeMapper.class);
 
 
-    @Mapping(source = "labels", target = "labels", qualifiedByName = {"KnowledgeNodeTran", "labels"})
+    @Mapping(target = "labels", expression = "java(labels(nodeVO.getLabels()))")
     @Mapping(source = "parentId", target = "parentNodeId")
     KnowledgeNode toKnowledgeNode(NodeVO nodeVO);
 
@@ -39,15 +37,7 @@ public interface KnowledgeNodeMapper {
             .map(this::toNodeDTO).collect(Collectors.toList());
     }
 
-
-    @Named("KnowledgeNodeTran")
-    @Component
-    class KnowledgeNodeTran {
-
-        @Named("labels")
-        public Set<String> labels(Set<String> nodeVO) {
-            return nodeVO == null || nodeVO.isEmpty() ? new HashSet<>() : nodeVO;
-        }
-
+    default Set<String> labels(Set<String> nodeVO) {
+        return nodeVO == null || nodeVO.isEmpty() ? new HashSet<>() : nodeVO;
     }
 }

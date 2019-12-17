@@ -8,6 +8,8 @@ import top.techial.beans.ResultBean;
 import top.techial.knowledge.domain.NodeRelation;
 import top.techial.knowledge.dto.NodeInfoDTO;
 import top.techial.knowledge.dto.RelationDTO;
+import top.techial.knowledge.mapper.KnowledgeNodeMapper;
+import top.techial.knowledge.mapper.NodeRelationMapper;
 import top.techial.knowledge.service.NodeRelationService;
 import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.vo.ParentVO;
@@ -36,7 +38,7 @@ public class KnowledgeRelationController {
 
     @GetMapping("/{id}")
     public ResultBean<RelationDTO> findAll(@PathVariable Long id) {
-        return new ResultBean<>(new RelationDTO(nodeRelationService.findById(id)));
+        return new ResultBean<>(NodeRelationMapper.INSTANCE.toRelationDTO(nodeRelationService.findById(id)));
     }
 
     @GetMapping("/start/name")
@@ -46,17 +48,17 @@ public class KnowledgeRelationController {
 
     @PostMapping
     public ResultBean<RelationDTO> save(@RequestBody RelationVO relationVO) {
-        return new ResultBean<>(new RelationDTO(nodeRelationService.save(relationVO)));
+        return new ResultBean<>(NodeRelationMapper.INSTANCE.toRelationDTO(nodeRelationService.save(relationVO)));
     }
 
     @PutMapping("/{id}")
     public ResultBean<RelationDTO> updateById(@PathVariable Long id, @RequestBody RelationVO relationVO) {
-        return new ResultBean<>(new RelationDTO(nodeRelationService.updateById(id, relationVO)));
+        return new ResultBean<>(NodeRelationMapper.INSTANCE.toRelationDTO(nodeRelationService.updateById(id, relationVO)));
     }
 
     @PatchMapping("/parent")
     public ResultBean<NodeInfoDTO> parent(@RequestBody ParentVO parentVO) {
-        return new ResultBean<>(new NodeInfoDTO(nodeRelationService.updateParent(parentVO)));
+        return new ResultBean<>(KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(nodeRelationService.updateParent(parentVO)));
     }
 
     @DeleteMapping("/{id}")

@@ -37,7 +37,10 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResultBean<Map<String, Object>> me(@AuthenticationPrincipal Object object, CsrfToken csrfToken) {
+    public ResultBean<Map<String, Object>> me(
+        @AuthenticationPrincipal Object object,
+        CsrfToken csrfToken
+    ) {
         Map<String, Object> map = new HashMap<>(16);
         map.put("user", object);
         if (object instanceof UserPrincipal) {
@@ -53,7 +56,11 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/nickName")
-    public ResultBean<User> updateNickName(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable String id, String nickName) {
+    public ResultBean<User> updateNickName(
+        @AuthenticationPrincipal UserPrincipal userPrincipal,
+        @PathVariable String id,
+        String nickName
+    ) {
         if (userPrincipal.getId().equals(id)) {
             User user = userService.findById(id).orElseThrow(NullPointerException::new);
             user.setNickName(nickName);
@@ -64,7 +71,12 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/password")
-    public ResultBean<User> updatePassword(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable String id, String srcPassword, String password) {
+    public ResultBean<User> updatePassword(
+        @AuthenticationPrincipal UserPrincipal userPrincipal,
+        @PathVariable String id,
+        String srcPassword,
+        String password
+    ) {
         if (userPrincipal.getId().equals(id)) {
             User user = userService.findById(id).orElseThrow(NullPointerException::new);
             if (!passwordEncoder.matches(srcPassword, user.getPassword())) {
@@ -78,7 +90,10 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResultBean<Object> deleteById(@AuthenticationPrincipal UserPrincipal userPrincipal, @PathVariable String id) {
+    public ResultBean<Object> deleteById(
+        @AuthenticationPrincipal UserPrincipal userPrincipal,
+        @PathVariable String id
+    ) {
         sessionService.flushId(id);
         if (userPrincipal.getId().equals(id)) {
             userService.deleteById(userPrincipal.getId());
