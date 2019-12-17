@@ -15,14 +15,13 @@ import top.techial.beans.ResultCode;
 @RestController
 @Controller
 public class ErrorPageController implements ErrorController {
-    private static final String ERROR_PATH = "/error";
 
     @Override
     public String getErrorPath() {
-        return ERROR_PATH;
+        return "/" + "error";
     }
 
-    @GetMapping(value = ERROR_PATH)
+    @GetMapping("/error")
     public ResultBean<Object> errorGet() {
         return new ResultBean<>(ResultCode.NOT_FOUND);
     }
