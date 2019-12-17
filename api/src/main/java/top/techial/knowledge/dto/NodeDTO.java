@@ -2,12 +2,9 @@ package top.techial.knowledge.dto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import top.techial.knowledge.domain.KnowledgeNode;
 
 import java.io.Serializable;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author techial
@@ -18,23 +15,14 @@ public class NodeDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final Long parentNodeId;
+    private Long parentNodeId;
 
-    private final Long id;
+    private Long id;
 
-    private final String name;
+    private String name;
 
-    private final String sortId;
+    private String sortId;
 
-    private final List<NodeDTO> childNodes;
+    private List<NodeDTO> childNodes;
 
-    public NodeDTO(KnowledgeNode knowledgeNode) {
-        this.id = knowledgeNode.getId();
-        this.sortId = knowledgeNode.getSortId();
-        this.name = knowledgeNode.getName();
-        this.parentNodeId = knowledgeNode.getParentNodeId();
-        this.childNodes = knowledgeNode.getChildNodes().stream()
-            .sorted(Comparator.comparing(KnowledgeNode::getCreateTime))
-            .map(NodeDTO::new).collect(Collectors.toList());
-    }
 }

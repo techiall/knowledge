@@ -2,7 +2,6 @@ package top.techial.knowledge.dto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import top.techial.knowledge.domain.NodeRelation;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -21,11 +20,5 @@ public class RelationDTO implements Serializable {
     private NodeBaseDTO node;
 
     private Map<String, String> property;
-
-    public RelationDTO(NodeRelation nodeRelation) {
-        this.id = nodeRelation.getId();
-        this.node = new NodeBaseDTO(nodeRelation.getEndNode());
-        this.property = nodeRelation.getProperty();
-    }
 
 }

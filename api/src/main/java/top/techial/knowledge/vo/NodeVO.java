@@ -5,10 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import top.techial.knowledge.domain.KnowledgeNode;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,12 +37,4 @@ public class NodeVO implements Serializable {
      */
     private Long parentId;
 
-    public KnowledgeNode toKnowledgeNode() {
-        return new KnowledgeNode()
-            .setName(this.name)
-            .setLabels(labels == null || labels.isEmpty() ? new HashSet<>() : labels)
-            .setProperty(property)
-            .setSortId(sortId)
-            .setParentNodeId(parentId);
-    }
 }

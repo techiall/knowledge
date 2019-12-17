@@ -13,6 +13,7 @@ import top.techial.knowledge.dao.NodeRelationRepository;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
 import top.techial.knowledge.dto.NodeDTO;
+import top.techial.knowledge.mapper.KnowledgeNodeMapper;
 import top.techial.knowledge.vo.NodeVO;
 
 import java.util.*;
@@ -27,10 +28,12 @@ import java.util.stream.Collectors;
 public class KnowledgeNodeService {
     private final KnowledgeNodeRepository knowledgeNodeRepository;
     private final NodeRelationRepository nodeRelationRepository;
+    private final KnowledgeNodeMapper knowledgeNodeMapper;
 
-    public KnowledgeNodeService(KnowledgeNodeRepository knowledgeNodeRepository, NodeRelationRepository nodeRelationRepository) {
+    public KnowledgeNodeService(KnowledgeNodeRepository knowledgeNodeRepository, NodeRelationRepository nodeRelationRepository, KnowledgeNodeMapper knowledgeNodeMapper) {
         this.knowledgeNodeRepository = knowledgeNodeRepository;
         this.nodeRelationRepository = nodeRelationRepository;
+        this.knowledgeNodeMapper = knowledgeNodeMapper;
     }
 
     @CacheEvict(allEntries = true)
@@ -53,7 +56,7 @@ public class KnowledgeNodeService {
 
     @CacheEvict(allEntries = true)
     public KnowledgeNode save(String userId, NodeVO nodeVO) {
-        KnowledgeNode node = nodeVO.toKnowledgeNode();
+        KnowledgeNode node = knowledgeNodeMapper.toKnowledgeNode(nodeVO);
         node.setUserId(userId);
 
         KnowledgeNode findNode = knowledgeNodeRepository.findFirstByName(node.getName()).orElse(null);
@@ -192,7 +195,7 @@ public class KnowledgeNodeService {
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #pageable + #depth", unless = "#result == null")
     public Page<NodeDTO> findAll(String userId, Pageable pageable, int depth) {
-        return knowledgeNodeRepository.findByUserIdAndParentNodeIdIsNull(userId, pageable, depth).map(NodeDTO::new);
+        return knowledgeNodeRepository.findByUserIdAndParentNodeIdIsNull(userId, pageable, depth).map(KnowledgeNodeMapper.INSTANCE::toNodeDTO);
     }
 
 
@@ -202,7 +205,7 @@ public class KnowledgeNodeService {
         if (!Objects.equals(userPrincipalId, node.getUserId())) {
             throw new IllegalArgumentException();
         }
-        return node.getChildNodes().stream().map(NodeDTO::new).collect(Collectors.toSet());
+        return node.getChildNodes().stream().map(KnowledgeNodeMapper.INSTANCE::toNodeDTO).collect(Collectors.toSet());
     }
 
     public void deleteAll() {
