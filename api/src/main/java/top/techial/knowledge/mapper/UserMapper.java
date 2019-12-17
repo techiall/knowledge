@@ -8,6 +8,7 @@ import top.techial.knowledge.vo.RegisterVO;
 
 @Mapper
 public interface UserMapper {
+
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     @Mapping(source = "userName", target = "nickName")

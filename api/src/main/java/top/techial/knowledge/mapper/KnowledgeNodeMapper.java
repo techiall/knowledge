@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 
 @Mapper
 public interface KnowledgeNodeMapper {
-    KnowledgeNodeMapper INSTANCE = Mappers.getMapper(KnowledgeNodeMapper.class);
 
+    KnowledgeNodeMapper INSTANCE = Mappers.getMapper(KnowledgeNodeMapper.class);
 
     @Mapping(target = "labels", expression = "java(labels(nodeVO.getLabels()))")
     @Mapping(source = "parentId", target = "parentNodeId")

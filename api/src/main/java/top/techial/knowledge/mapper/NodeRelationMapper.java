@@ -9,6 +9,7 @@ import top.techial.knowledge.dto.RelationDTO;
 
 @Mapper
 public interface NodeRelationMapper {
+
     NodeRelationMapper INSTANCE = Mappers.getMapper(NodeRelationMapper.class);
 
     @Mapping(expression = "java(endNode(nodeRelation))", target = "node")
