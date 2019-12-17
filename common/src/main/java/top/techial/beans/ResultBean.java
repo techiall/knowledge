@@ -1,54 +1,51 @@
 package top.techial.beans;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
-
 import java.io.Serializable;
 
 /**
  * @author techial
  */
-@Data
-@Accessors(chain = true)
 public class ResultBean<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer code;
+    private Integer code = ResultCode.SUCCESS.getCode();
 
-    private String msg;
+    private String msg = ResultCode.SUCCESS.getTips();
 
     private T data;
 
+    public ResultBean(Integer code, String msg, T data) {
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
+    }
+
     public ResultBean() {
-        this.msg = ResultCode.SUCCESS.getTips();
-        this.code = ResultCode.SUCCESS.getCode();
-        this.data = null;
     }
 
     public ResultBean(ResultCode code) {
-        this.msg = code.getTips();
-        this.code = code.getCode();
-        this.data = null;
+        this(code.getCode(), code.getTips(), null);
     }
 
     public ResultBean(ResultCode code, T data) {
-        this.msg = code.getTips();
-        this.code = code.getCode();
-        this.data = data;
+        this(code.getCode(), code.getTips(), data);
     }
 
     public ResultBean(T data) {
-        this.msg = ResultCode.SUCCESS.getTips();
-        this.code = ResultCode.SUCCESS.getCode();
-        this.data = data;
+        this(ResultCode.SUCCESS, data);
     }
 
-    public ResultBean(Throwable e) {
-        this.code = ResultCode.UNKNOWN_EXCEPTION.getCode();
-        this.msg = ResultCode.UNKNOWN_EXCEPTION.getTips();
-        this.data = null;
+    public T getData() {
+        return data;
     }
 
+    public Integer getCode() {
+        return code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
 }
 

@@ -1,8 +1,5 @@
 package top.techial.beans;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * 接口返回码
  * 0  : 成功
@@ -67,14 +64,6 @@ public enum ResultCode {
      * 未知异常
      */
     UNKNOWN_EXCEPTION(-99, "Unknown Exception");
-
-    private static final Map<Integer, ResultCode> MAPPINGS = new HashMap<>(16);
-
-    static {
-        for (ResultCode resultCode : values()) {
-            MAPPINGS.put(resultCode.getCode(), resultCode);
-        }
-    }
 
     private final Integer code;
     private final String tips;
