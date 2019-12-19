@@ -190,9 +190,6 @@
                         <from>
                             <image>openjdk:8-jre-alpine</image>
                         </from>
-                        <container>
-                            <jvmFlags>-Dspring.profiles.active=docker</jvmFlags>
-                        </container>
                     </configuration>
                 </plugin>
                 <!-- Docker maven plugin -->
