@@ -188,7 +188,7 @@
                             <image>${project.parent.groupId}/${project.parent.artifactId}/${project.artifactId}</image>
                         </to>
                         <from>
-                            <image>openjdk:8-jdk-alpine</image>
+                            <image>openjdk:8-jre-alpine</image>
                         </from>
                         <container>
                             <jvmFlags>-Dspring.profiles.active=docker</jvmFlags>
