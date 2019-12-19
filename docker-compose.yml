@@ -11,7 +11,7 @@ services:
       - 9090:8080
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./deploy/app:/app/resource:ro
+      - ./deploy/resources:/app/resources:ro
       - knowledge_web_data:/web-logs
     restart: always
 
