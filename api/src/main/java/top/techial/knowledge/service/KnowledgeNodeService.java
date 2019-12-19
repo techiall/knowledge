@@ -76,12 +76,12 @@ public class KnowledgeNodeService {
         return node;
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #id", unless = "#result == null")
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public KnowledgeNode findById(Long id) {
         return knowledgeNodeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #id", unless = "#result == null")
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
     public Object findByIdGraph(Long id, String userId) {
         KnowledgeNode knowledgeNode = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
         if (!Objects.equals(knowledgeNode.getUserId(), userId)) {
@@ -161,7 +161,7 @@ public class KnowledgeNodeService {
         return knowledgeNodeRepository.save(node);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #name + #pageable", unless = "#result == null")
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1 + #p2", unless = "#result == null")
     public Page<KnowledgeNode> findByNameLike(String name, String userId, Pageable pageable) {
         return knowledgeNodeRepository.findByNameLikeAndUserId(name, userId, pageable);
     }
@@ -191,16 +191,16 @@ public class KnowledgeNodeService {
         }
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #pageable + #depth", unless = "#result == null")
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1 + #p2", unless = "#result == null")
     public Page<NodeDTO> findAll(String userId, Pageable pageable, int depth) {
         return knowledgeNodeRepository.findByUserIdAndParentNodeIdIsNull(userId, pageable, depth).map(KnowledgeNodeMapper.INSTANCE::toNodeDTO);
     }
 
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #id + #depth", unless = "#result == null")
-    public Set<NodeDTO> findByChildNode(Long id, String userPrincipalId, int depth) {
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1 + #p2", unless = "#result == null")
+    public Set<NodeDTO> findByChildNode(Long id, String userId, int depth) {
         KnowledgeNode node = knowledgeNodeRepository.findById(id, depth).orElseThrow(NullPointerException::new);
-        if (!Objects.equals(userPrincipalId, node.getUserId())) {
+        if (!Objects.equals(userId, node.getUserId())) {
             throw new IllegalArgumentException();
         }
         return node.getChildNodes().stream().map(KnowledgeNodeMapper.INSTANCE::toNodeDTO).collect(Collectors.toSet());

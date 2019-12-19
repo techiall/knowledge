@@ -57,7 +57,7 @@ public class KnowledgeNodeServiceTest {
         Page<NodeDTO> result = knowledgeNodeService.findAll(USER_ID, PageRequest.of(0, 10), 10);
         Assert.assertNotNull(result.getContent());
         System.out.println(result.getContent());
-        Assert.assertNotEquals(0, result.getContent().size());
+        Assert.assertFalse(result.getContent().isEmpty());
     }
 
 }
