@@ -13,7 +13,7 @@ import top.techial.knowledge.service.UserService;
  */
 @Service
 @Log4j2
-public final class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserService userService;
 
