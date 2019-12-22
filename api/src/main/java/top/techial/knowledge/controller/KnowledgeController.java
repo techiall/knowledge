@@ -116,12 +116,21 @@ public class KnowledgeController {
     }
 
     @GetMapping("/{id}/link")
-    public ResultBean<Map<String, List<NodeBaseDTO>>> findChildNode(
+    public ResultBean<Map<String, List<NodeBaseDTO>>> getChildAndParent(
         @PathVariable Long id,
         @AuthenticationPrincipal UserPrincipal userPrincipal,
         @RequestParam(required = false, defaultValue = "10") int depth
     ) {
         return new ResultBean<>(knowledgeNodeService.getChildAndParent(id, userPrincipal.getId(), depth));
+    }
+
+    @GetMapping("/{id}/child")
+    public ResultBean<List<NodeBaseDTO>> findChildNode(
+        @PathVariable Long id,
+        @AuthenticationPrincipal UserPrincipal userPrincipal,
+        @RequestParam(required = false, defaultValue = "10") int depth
+    ) {
+        return new ResultBean<>(knowledgeNodeService.findByChildNode(id, userPrincipal.getId(), depth));
     }
 
     @GetMapping("/name")

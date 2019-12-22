@@ -198,6 +198,14 @@ public class KnowledgeNodeService {
         return knowledgeNodeRepository.findByUserIdAndParentNodeIdIsNull(userId, pageable, depth).map(KnowledgeNodeMapper.INSTANCE::toNodeDTO);
     }
 
+    public List<NodeBaseDTO> findByChildNode(Long id, String userId, int depth) {
+        KnowledgeNode node = knowledgeNodeRepository.findById(id, depth).orElseThrow(NullPointerException::new);
+        if (!Objects.equals(userId, node.getUserId())) {
+            throw new IllegalArgumentException();
+        }
+        return node.getChildNodes().stream().map(KnowledgeNodeMapper.INSTANCE::toNodeBaseDTO)
+            .collect(Collectors.toList());
+    }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1 + #p2", unless = "#result == null")
     public Map<String, List<NodeBaseDTO>> getChildAndParent(Long id, String userId, int depth) {
@@ -227,4 +235,5 @@ public class KnowledgeNodeService {
     public void deleteByUserId(String id) {
         knowledgeNodeRepository.deleteByUserId(id);
     }
+
 }
