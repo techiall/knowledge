@@ -12,6 +12,7 @@ import top.techial.knowledge.dao.KnowledgeNodeRepository;
 import top.techial.knowledge.dao.NodeRelationRepository;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
+import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.dto.NodeDTO;
 import top.techial.knowledge.mapper.KnowledgeNodeMapper;
 import top.techial.knowledge.vo.NodeVO;
@@ -199,13 +200,13 @@ public class KnowledgeNodeService {
 
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1 + #p2", unless = "#result == null")
-    public Map<String, List<NodeDTO>> getChildAndParent(Long id, String userId, int depth) {
+    public Map<String, List<NodeBaseDTO>> getChildAndParent(Long id, String userId, int depth) {
         KnowledgeNode node = knowledgeNodeRepository.findById(id, depth).orElseThrow(NullPointerException::new);
         if (!Objects.equals(userId, node.getUserId())) {
             throw new IllegalArgumentException();
         }
-        Map<String, List<NodeDTO>> map = new HashMap<>();
-        map.put("child", node.getChildNodes().stream().map(KnowledgeNodeMapper.INSTANCE::toNodeDTO).collect(Collectors.toList()));
+        Map<String, List<NodeBaseDTO>> map = new HashMap<>();
+        map.put("child", node.getChildNodes().stream().map(KnowledgeNodeMapper.INSTANCE::toNodeBaseDTO).collect(Collectors.toList()));
 
         KnowledgeNode tmpNode = node;
         List<KnowledgeNode> list = new ArrayList<>();
@@ -215,7 +216,7 @@ public class KnowledgeNodeService {
             list.add(tmp1);
             tmpNode = tmp1;
         }
-        map.put("parent", list.stream().map(KnowledgeNodeMapper.INSTANCE::toNodeDTO).collect(Collectors.toList()));
+        map.put("parent", list.stream().map(KnowledgeNodeMapper.INSTANCE::toNodeBaseDTO).collect(Collectors.toList()));
         return map;
     }
 
