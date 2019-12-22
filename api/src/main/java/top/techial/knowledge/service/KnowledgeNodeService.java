@@ -48,8 +48,8 @@ public class KnowledgeNodeService {
     }
 
     @CacheEvict(allEntries = true)
-    public KnowledgeNode save(KnowledgeNode node) {
-        return knowledgeNodeRepository.save(node);
+    public void save(KnowledgeNode node) {
+        knowledgeNodeRepository.save(node);
     }
 
     @CacheEvict(allEntries = true)
@@ -136,6 +136,7 @@ public class KnowledgeNodeService {
         return result;
     }
 
+
     private Map<String, Object> buildNodes(Long id, String name) {
         Map<String, Object> map = new HashMap<>(16);
         map.put("id", id);
@@ -198,12 +199,24 @@ public class KnowledgeNodeService {
 
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1 + #p2", unless = "#result == null")
-    public Set<NodeDTO> findByChildNode(Long id, String userId, int depth) {
+    public Map<String, List<NodeDTO>> getChildAndParent(Long id, String userId, int depth) {
         KnowledgeNode node = knowledgeNodeRepository.findById(id, depth).orElseThrow(NullPointerException::new);
         if (!Objects.equals(userId, node.getUserId())) {
             throw new IllegalArgumentException();
         }
-        return node.getChildNodes().stream().map(KnowledgeNodeMapper.INSTANCE::toNodeDTO).collect(Collectors.toSet());
+        Map<String, List<NodeDTO>> map = new HashMap<>();
+        map.put("child", node.getChildNodes().stream().map(KnowledgeNodeMapper.INSTANCE::toNodeDTO).collect(Collectors.toList()));
+
+        KnowledgeNode tmpNode = node;
+        List<KnowledgeNode> list = new ArrayList<>();
+        while (tmpNode.getParentNodeId() != null) {
+            KnowledgeNode tmp1 = knowledgeNodeRepository.findById(tmpNode.getParentNodeId())
+                .orElseThrow(NullPointerException::new);
+            list.add(tmp1);
+            tmpNode = tmp1;
+        }
+        map.put("parent", list.stream().map(KnowledgeNodeMapper.INSTANCE::toNodeDTO).collect(Collectors.toList()));
+        return map;
     }
 
     public void deleteAll() {

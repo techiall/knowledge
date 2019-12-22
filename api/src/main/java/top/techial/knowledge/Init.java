@@ -10,13 +10,9 @@ import top.techial.knowledge.service.UserService;
 @Component
 public class Init implements CommandLineRunner {
     private final UserService userService;
-    private final KnowledgeNodeService knowledgeNodeService;
-    private final RecordService recordService;
 
     public Init(UserService userService, KnowledgeNodeService knowledgeNodeService, RecordService recordService) {
         this.userService = userService;
-        this.knowledgeNodeService = knowledgeNodeService;
-        this.recordService = recordService;
     }
 
     @Override

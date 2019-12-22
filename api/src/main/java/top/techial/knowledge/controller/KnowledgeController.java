@@ -17,6 +17,8 @@ import top.techial.knowledge.service.KnowledgeNodeService;
 import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.vo.NodeVO;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -113,13 +115,13 @@ public class KnowledgeController {
         return new ResultBean<>(knowledgeNodeService.findByIdGraph(id, userPrincipal.getId()));
     }
 
-    @GetMapping("/{id}/child")
-    public ResultBean<Set<NodeDTO>> findChildNode(
+    @GetMapping("/{id}/link")
+    public ResultBean<Map<String, List<NodeDTO>>> findChildNode(
         @PathVariable Long id,
         @AuthenticationPrincipal UserPrincipal userPrincipal,
         @RequestParam(required = false, defaultValue = "10") int depth
     ) {
-        return new ResultBean<>(knowledgeNodeService.findByChildNode(id, userPrincipal.getId(), depth));
+        return new ResultBean<>(knowledgeNodeService.getChildAndParent(id, userPrincipal.getId(), depth));
     }
 
     @GetMapping("/name")
