@@ -125,7 +125,7 @@ public class KnowledgeController {
     }
 
     @GetMapping("/{id}/child")
-    public ResultBean<List<NodeBaseDTO>> findChildNode(
+    public ResultBean<List<NodeDTO>> findChildNode(
         @PathVariable Long id,
         @AuthenticationPrincipal UserPrincipal userPrincipal,
         @RequestParam(required = false, defaultValue = "10") int depth

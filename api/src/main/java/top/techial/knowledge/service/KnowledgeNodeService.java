@@ -198,12 +198,12 @@ public class KnowledgeNodeService {
         return knowledgeNodeRepository.findByUserIdAndParentNodeIdIsNull(userId, pageable, depth).map(KnowledgeNodeMapper.INSTANCE::toNodeDTO);
     }
 
-    public List<NodeBaseDTO> findByChildNode(Long id, String userId, int depth) {
+    public List<NodeDTO> findByChildNode(Long id, String userId, int depth) {
         KnowledgeNode node = knowledgeNodeRepository.findById(id, depth).orElseThrow(NullPointerException::new);
         if (!Objects.equals(userId, node.getUserId())) {
             throw new IllegalArgumentException();
         }
-        return node.getChildNodes().stream().map(KnowledgeNodeMapper.INSTANCE::toNodeBaseDTO)
+        return node.getChildNodes().stream().map(KnowledgeNodeMapper.INSTANCE::toNodeDTO)
             .collect(Collectors.toList());
     }
 
