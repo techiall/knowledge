@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @author techial
  */
 @Service
-@CacheConfig(cacheNames = "node-relation")
+@CacheConfig(cacheNames = {"user", "record", "node-relation", "knowledge-node"})
 public class NodeRelationService {
     private final NodeRelationRepository nodeRelationRepository;
     private final KnowledgeNodeRepository knowledgeNodeRepository;

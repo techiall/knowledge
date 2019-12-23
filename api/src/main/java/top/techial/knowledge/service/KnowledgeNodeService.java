@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Log4j2
-@CacheConfig(cacheNames = "knowledge-node")
+@CacheConfig(cacheNames = {"user", "record", "node-relation", "knowledge-node"})
 public class KnowledgeNodeService {
     private final KnowledgeNodeRepository knowledgeNodeRepository;
     private final NodeRelationRepository nodeRelationRepository;

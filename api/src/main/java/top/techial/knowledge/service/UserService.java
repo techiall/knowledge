@@ -17,7 +17,7 @@ import java.util.Optional;
  */
 @Service
 @Log4j2
-@CacheConfig(cacheNames = "user")
+@CacheConfig(cacheNames = {"user", "record", "node-relation", "knowledge-node"})
 public class UserService {
 
     private final UserRepository userRepository;
