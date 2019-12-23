@@ -27,8 +27,23 @@ spring:
     multipart:
       max-file-size: -1
       max-request-size: -1
+management:
+  server:
+    port: 8080
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    enabled-by-default: true
+    web:
+      base-path: /api/actuator/0z6DX129xRDOsv5dpPrr
+      exposure:
+        include:
+          - loggers
+          - health
+          - info
 logging:
   level:
-    org.neo4j.ogm: debug
-    top.techial: debug
+    org.neo4j.ogm: info
+    top.techial: info
 
