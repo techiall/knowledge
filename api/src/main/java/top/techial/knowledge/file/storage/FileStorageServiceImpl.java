@@ -77,7 +77,7 @@ public class FileStorageServiceImpl implements FileStorageService {
                 Path dest = rootLocation.resolve(sha1);
                 if (dest.toFile().exists()) {
                     Files.delete(temp);
-                    throw new StorageFileExistsException("The file already existed ", originalFilename, sha1);
+                    throw new StorageFileExistsException("The file already existed ", originalFilename);
                 } else {
                     Files.move(temp, dest);
                 }
