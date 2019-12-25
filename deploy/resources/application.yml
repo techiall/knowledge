@@ -13,6 +13,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://mysql/knowledge?useSSL=false&createDatabaseIfNotExist=true
+    username: root
   jpa:
     generate-ddl: true
     show-sql: true
