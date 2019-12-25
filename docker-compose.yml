@@ -6,22 +6,25 @@ services:
       - knowledge
     depends_on:
       - neo4j
-      - mongo
+      - mysql
     ports:
-      - 9090:8080
+      - 8080:8080
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./deploy/resources:/app/resources:ro
-      - knowledge_web_data:/web-logs
+      - web_data:/web-logs
     restart: always
 
-  mongo:
-    image: mongo:latest
+  mysql:
+    image: mysql:5.7
     networks:
-      - knowledge
+      - activity
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - knowledge_mongo_data:/data/db
+      - ./deploy/mysql/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf:ro
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     restart: always
 
   neo4j:
@@ -30,10 +33,10 @@ services:
       - knowledge
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - knowledge_neo4j_logs:/logs
-      - knowledge_neo4j_conf:/var/lib/neo4j/conf
-      - knowledge_neo4j_import:/var/lib/neo4j/import
-      - knowledge_neo4j_plugins:/plugins
+      - neo4j_logs:/logs
+      - neo4j_conf:/var/lib/neo4j/conf
+      - neo4j_import:/var/lib/neo4j/import
+      - neo4j_plugins:/plugins
     environment:
       - NEO4J_AUTH=neo4j/techial
     restart: always
@@ -43,16 +46,16 @@ networks:
     external: true
 
 volumes:
-  knowledge_web_data:
+  web_data:
     external: true
-  knowledge_mongo_data:
+  mysql_data:
     external: true
-  knowledge_neo4j_logs:
+  neo4j_logs:
     external: true
-  knowledge_neo4j_conf:
+  neo4j_conf:
     external: true
-  knowledge_neo4j_import:
+  neo4j_import:
     external: true
-  knowledge_neo4j_plugins:
+  neo4j_plugins:
     external: true
 
