@@ -5,12 +5,11 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author techial
@@ -35,6 +34,10 @@ public class Record implements Serializable {
      * operator
      */
     private Operator operator;
+
+
+    @ManyToMany(mappedBy = "records")
+    private List<User> users = new ArrayList<>();
 
     /**
      * time

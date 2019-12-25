@@ -11,6 +11,7 @@ import top.techial.knowledge.security.UserPrincipal;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,8 +40,8 @@ public class User implements Serializable {
     @UpdateTimestamp
     private Instant updateTime;
 
-    @OneToMany
-    private List<Record> records;
+    @ManyToMany
+    private List<Record> records = new ArrayList<>();
 
     public UserPrincipal toUserPrincipal() {
         return new UserPrincipal(this.id, this.userName, this.password,
