@@ -1,5 +1,7 @@
 package top.techial.knowledge.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -28,10 +30,12 @@ import java.util.List;
 public class KnowledgeRelationController {
     private final NodeRelationService nodeRelationService;
     private final RecordService recordService;
+    private final ObjectMapper objectMapper;
 
-    public KnowledgeRelationController(NodeRelationService nodeRelationService, RecordService recordService) {
+    public KnowledgeRelationController(NodeRelationService nodeRelationService, RecordService recordService, ObjectMapper objectMapper) {
         this.nodeRelationService = nodeRelationService;
         this.recordService = recordService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping
@@ -50,23 +54,23 @@ public class KnowledgeRelationController {
     }
 
     @PostMapping
-    public ResultBean<RelationDTO> save(@RequestBody RelationVO relationVO, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResultBean<RelationDTO> save(@RequestBody RelationVO relationVO, @AuthenticationPrincipal UserPrincipal userPrincipal) throws JsonProcessingException {
         NodeRelation relation = nodeRelationService.save(relationVO);
 
         recordService.save(relation.getStartNode().getId(), userPrincipal.getId(),
             OperatorMessageEnum.ADD_NODE_PROPERTY,
-            String.format(OperatorMessageEnum.ADD_NODE_PROPERTY.getMessage(), relation.getStartNode().getName()));
+            String.format(OperatorMessageEnum.ADD_NODE_PROPERTY.getMessage(), objectMapper.writeValueAsString(relationVO)));
 
         return new ResultBean<>(NodeRelationMapper.INSTANCE.toRelationDTO(relation));
     }
 
     @PutMapping("/{id}")
-    public ResultBean<RelationDTO> updateById(@PathVariable Long id, @RequestBody RelationVO relationVO, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResultBean<RelationDTO> updateById(@PathVariable Long id, @RequestBody RelationVO relationVO, @AuthenticationPrincipal UserPrincipal userPrincipal) throws JsonProcessingException {
         NodeRelation relation = nodeRelationService.updateById(id, relationVO);
 
         recordService.save(relation.getStartNode().getId(), userPrincipal.getId(),
             OperatorMessageEnum.UPDATE_NODE_PROPERTY,
-            String.format(OperatorMessageEnum.UPDATE_NODE_PROPERTY.getMessage(), relation.getStartNode().getName()));
+            String.format(OperatorMessageEnum.UPDATE_NODE_PROPERTY.getMessage(), objectMapper.writeValueAsString(relationVO)));
 
         return new ResultBean<>(NodeRelationMapper.INSTANCE.toRelationDTO(nodeRelationService.updateById(id, relationVO)));
     }

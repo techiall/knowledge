@@ -1,5 +1,7 @@
 package top.techial.knowledge.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,10 +33,12 @@ import java.util.Set;
 public class KnowledgeController {
     private final KnowledgeNodeService knowledgeNodeService;
     private final RecordService recordService;
+    private final ObjectMapper objectMapper;
 
-    public KnowledgeController(KnowledgeNodeService knowledgeNodeService, RecordService recordService) {
+    public KnowledgeController(KnowledgeNodeService knowledgeNodeService, RecordService recordService, ObjectMapper objectMapper) {
         this.knowledgeNodeService = knowledgeNodeService;
         this.recordService = recordService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping
@@ -77,12 +81,12 @@ public class KnowledgeController {
         @AuthenticationPrincipal UserPrincipal userPrincipal,
         @PathVariable Long id,
         @RequestBody NodeVO nodeVO
-    ) {
+    ) throws JsonProcessingException {
         KnowledgeNode node = knowledgeNodeService.update(id, userPrincipal.getId(), nodeVO);
 
         recordService.save(node.getId(), userPrincipal.getId(),
             OperatorMessageEnum.UPDATE_NODE_PROPER,
-            String.format(OperatorMessageEnum.UPDATE_NODE_PROPER.getMessage(), node.getName()));
+            String.format(OperatorMessageEnum.UPDATE_NODE_PROPER.getMessage(), objectMapper.writeValueAsString(nodeVO)));
 
         return new ResultBean<>(KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(node));
     }
