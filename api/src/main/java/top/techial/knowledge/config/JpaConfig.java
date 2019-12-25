@@ -10,5 +10,5 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories(basePackages = "top.techial.knowledge.dao")
 @EnableJpaAuditing
 @Configuration
-public class MongodbConfig {
+public class JpaConfig {
 }

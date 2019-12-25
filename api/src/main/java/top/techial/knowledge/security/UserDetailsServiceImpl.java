@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import top.techial.knowledge.domain.User;
+import top.techial.knowledge.mapper.UserMapper;
 import top.techial.knowledge.service.UserService;
 
 /**
@@ -25,11 +26,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) {
         User user = userService.findByUserName(s)
-            .orElseThrow(() -> new UsernameNotFoundException("user not found."));
-        if (log.isDebugEnabled()) {
-            log.debug(user.getId());
-        }
-        return user.toUserPrincipal();
+            .orElseThrow(() -> new UsernameNotFoundException(
+                String.format("userName:[%s] not found.", s)));
+        return UserMapper.INSTANCE.toUserPrincipal(user);
     }
 
 }
