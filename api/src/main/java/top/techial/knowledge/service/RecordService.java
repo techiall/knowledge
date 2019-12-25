@@ -57,4 +57,8 @@ public class RecordService {
     public void deleteByNodeIds(Set<Long> ids) {
         recordRepository.deleteByNodeIdIn(ids);
     }
+
+    public void deleteByUserId(String id) {
+        recordRepository.deleteByUserId(id);
+    }
 }

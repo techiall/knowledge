@@ -12,6 +12,7 @@ import top.techial.knowledge.domain.User;
 import top.techial.knowledge.security.SessionService;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.KnowledgeNodeService;
+import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.service.UserService;
 
 import java.util.HashMap;
@@ -29,11 +30,13 @@ public class UserController {
     private final KnowledgeNodeService knowledgeNodeService;
     private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     private final SessionService sessionService;
+    private final RecordService recordService;
 
-    public UserController(UserService userService, KnowledgeNodeService knowledgeNodeService, SessionService sessionService) {
+    public UserController(UserService userService, KnowledgeNodeService knowledgeNodeService, SessionService sessionService, RecordService recordService) {
         this.userService = userService;
         this.knowledgeNodeService = knowledgeNodeService;
         this.sessionService = sessionService;
+        this.recordService = recordService;
     }
 
     @GetMapping("/me")
@@ -98,6 +101,7 @@ public class UserController {
         if (userPrincipal.getId().equals(id)) {
             userService.deleteById(userPrincipal.getId());
             knowledgeNodeService.deleteByUserId(userPrincipal.getId());
+            recordService.deleteByUserId(userPrincipal.getId());
             return new ResultBean<>(true);
         }
         return new ResultBean<>(ResultCode.CHECK_FAIL);

@@ -19,4 +19,6 @@ public interface RecordRepository extends MongoRepository<Record, String> {
     void deleteByNodeId(Long id);
 
     void deleteByNodeIdIn(Collection<Long> ids);
+
+    void deleteByUserId(String id);
 }
