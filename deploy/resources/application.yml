@@ -55,6 +55,8 @@ management:
           - loggers
           - health
           - info
+storage:
+  location: /knowledge/storage
 logging:
   level:
     org.neo4j.ogm: info

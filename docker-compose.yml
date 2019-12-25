@@ -13,6 +13,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./deploy/resources:/app/resources:ro
       - web_data:/web-logs
+      - /root/knowledge-storage:/knowledge/storage
     restart: always
 
   mysql:
