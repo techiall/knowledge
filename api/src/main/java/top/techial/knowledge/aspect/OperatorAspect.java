@@ -58,7 +58,6 @@ public class OperatorAspect {
         }
         NodeInfoDTO data = (NodeInfoDTO) node.getData();
         recordService.save(new Record()
-            .setUserId(data.getUserId())
             .setNodeId(data.getId())
             .setOperator(operator));
     }

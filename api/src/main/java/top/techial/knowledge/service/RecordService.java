@@ -37,7 +37,8 @@ public class RecordService {
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #id + #pageable", unless = "#result == null")
     public Page<Record> findByNodeId(Long id, Integer userId, Pageable pageable) {
-        return recordRepository.findByNodeIdAndUserId(id, userId, pageable);
+        return null;
+//        return recordRepository.findByNodeIdAndUserId(id, userId, pageable);
     }
 
     @CacheEvict(allEntries = true)
@@ -59,6 +60,6 @@ public class RecordService {
     }
 
     public void deleteByUserId(Integer id) {
-        recordRepository.deleteByUserId(id);
+//        recordRepository.deleteByUserId(id);
     }
 }

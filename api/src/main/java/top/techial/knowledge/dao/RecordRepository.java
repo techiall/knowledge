@@ -14,11 +14,11 @@ import java.util.Collection;
 @Repository
 public interface RecordRepository extends JpaRepository<Record, Integer> {
 
-    Page<Record> findByNodeIdAndUserId(Long id, Integer userId, Pageable pageable);
+//    Page<Record> findByNodeIdAndUserId(Long id, Integer userId, Pageable pageable);
 
     void deleteByNodeId(Long id);
 
     void deleteByNodeIdIn(Collection<Long> ids);
 
-    void deleteByUserId(Integer id);
+//    void deleteByUserId(Integer id);
 }

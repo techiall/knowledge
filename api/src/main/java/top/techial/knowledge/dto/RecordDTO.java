@@ -7,7 +7,7 @@ import top.techial.knowledge.domain.Record;
 import top.techial.knowledge.domain.User;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.Instant;
 
 /**
  * @author techial
@@ -20,7 +20,7 @@ public class RecordDTO implements Serializable {
     private Long nodeId;
     private User user;
     private Operator operator;
-    private Date createTime;
+    private Instant createTime;
 
     public RecordDTO(Record record) {
         this.nodeId = record.getNodeId();

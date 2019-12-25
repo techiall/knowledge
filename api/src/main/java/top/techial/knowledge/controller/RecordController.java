@@ -41,7 +41,8 @@ public class RecordController {
 
     private RecordDTO convent(Record record) {
         RecordDTO dto = new RecordDTO(record);
-        dto.setUser(userService.findById(record.getUserId()).orElseThrow(NullPointerException::new));
+        // FIXME
+//        dto.setUser(userService.findById(record.getUserId()).orElseThrow(NullPointerException::new));
         return dto;
     }
 }
