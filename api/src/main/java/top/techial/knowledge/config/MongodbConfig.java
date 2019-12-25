@@ -1,14 +1,14 @@
 package top.techial.knowledge.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.config.EnableMongoAuditing;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
  * @author techial
  */
-@EnableMongoRepositories(basePackages = "top.techial.knowledge.dao")
-@EnableMongoAuditing
+@EnableJpaRepositories(basePackages = "top.techial.knowledge.dao")
+@EnableJpaAuditing
 @Configuration
 public class MongodbConfig {
 }

@@ -61,7 +61,7 @@ public class UserController {
     @PatchMapping("/{id}/nickName")
     public ResultBean<User> updateNickName(
         @AuthenticationPrincipal UserPrincipal userPrincipal,
-        @PathVariable String id,
+        @PathVariable Integer id,
         String nickName
     ) {
         if (userPrincipal.getId().equals(id)) {
@@ -76,7 +76,7 @@ public class UserController {
     @PatchMapping("/{id}/password")
     public ResultBean<User> updatePassword(
         @AuthenticationPrincipal UserPrincipal userPrincipal,
-        @PathVariable String id,
+        @PathVariable Integer id,
         String srcPassword,
         String password
     ) {
@@ -95,7 +95,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResultBean<Object> deleteById(
         @AuthenticationPrincipal UserPrincipal userPrincipal,
-        @PathVariable String id
+        @PathVariable Integer id
     ) {
         sessionService.flushId(id);
         if (userPrincipal.getId().equals(id)) {

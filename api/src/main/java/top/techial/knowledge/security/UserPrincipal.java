@@ -16,9 +16,9 @@ import java.util.Collection;
 @Getter
 public final class UserPrincipal extends User {
 
-    private final String id;
+    private final Integer id;
 
-    public UserPrincipal(String id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Integer id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.id = id;
     }

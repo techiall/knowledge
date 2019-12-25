@@ -10,6 +10,24 @@ server:
 spring:
   application:
     name: knowledge-dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost/knowledge?useSSL=false&createDatabaseIfNotExist=true
+    username: root
+    password: root
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
+        dialect: org.hibernate.dialect.MySQL57InnoDBDialect
+    open-in-view: true
   data:
     neo4j:
       username: neo4j
@@ -17,16 +35,13 @@ spring:
       uri: bolt://localhost:7687
       open-in-view: true
       auto-index: assert
-    mongodb:
-      host: localhost
-      port: 27017
-      database: knowledge
   cache:
     type: simple
   servlet:
     multipart:
-      max-file-size: -1
-      max-request-size: -1
+      max-file-size: 60MB
+      max-request-size: 60MB
+      enabled: true
 management:
   server:
     port: 8080

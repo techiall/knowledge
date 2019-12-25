@@ -31,12 +31,12 @@ public class UserService {
         return userRepository.findFirstByUserName(userName);
     }
 
-    public Optional<User> findById(String id) {
+    public Optional<User> findById(Integer id) {
         return userRepository.findById(id);
     }
 
     @CacheEvict(allEntries = true)
-    public User updatePassword(String id, String password) {
+    public User updatePassword(Integer id, String password) {
         if (password == null) {
             throw new IllegalArgumentException();
         }
@@ -46,7 +46,7 @@ public class UserService {
 
     @Transactional(rollbackFor = IllegalArgumentException.class)
     @CacheEvict(allEntries = true)
-    public void deleteById(String id) {
+    public void deleteById(Integer id) {
         userRepository.deleteById(id);
     }
 

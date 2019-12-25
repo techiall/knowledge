@@ -1,7 +1,6 @@
 package top.techial.knowledge.service;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +25,7 @@ public class KnowledgeNodeServiceTest {
 
     private NodeVO nodeVO;
 
-    private static final String USER_ID = ObjectId.get().toString();
+    private static final Integer USER_ID = 1;
 
     @Before
     public void before() {

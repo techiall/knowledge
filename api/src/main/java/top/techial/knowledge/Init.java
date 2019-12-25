@@ -15,10 +15,11 @@ public class Init implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        userService.deleteAll();
         if (userService.count() == 0L) {
-            userService.save(new User().setUserName("root").setPassword("{noop}root"));
-            userService.save(new User().setUserName("admin").setPassword("{noop}admin"));
-            userService.save(new User().setUserName("techial").setPassword("{noop}techial"));
+            userService.save(new User().setNickName("root").setUserName("root").setPassword("{noop}root"));
+            userService.save(new User().setNickName("admin").setUserName("admin").setPassword("{noop}admin"));
+            userService.save(new User().setNickName("techial").setUserName("techial").setPassword("{noop}techial"));
         }
 
     }

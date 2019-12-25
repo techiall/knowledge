@@ -24,7 +24,7 @@ public class SessionService {
         SecurityContextHolder.clearContext();
     }
 
-    public synchronized void flushId(String id) {
+    public synchronized void flushId(Integer id) {
         List<Object> list = sessionRegistry.getAllPrincipals();
         log.debug(list);
         for (Object o : list) {

@@ -2,35 +2,34 @@ package top.techial.knowledge.domain;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.Instant;
 
 /**
  * @author techial
  */
 @Data
-@Document
 @Accessors(chain = true)
+@Entity
 public class Record implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     /**
      * neo4j node id
      */
     private Long nodeId;
-
-    /**
-     * user id
-     */
-    private String userId;
 
     /**
      * operator
@@ -40,7 +39,10 @@ public class Record implements Serializable {
     /**
      * time
      */
-    @CreatedDate
-    private Date createTime;
+    @CreationTimestamp
+    private Instant createTime;
+
+    @UpdateTimestamp
+    private Instant updateTime;
 
 }
