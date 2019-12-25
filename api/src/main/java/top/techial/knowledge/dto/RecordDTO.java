@@ -3,7 +3,6 @@ package top.techial.knowledge.dto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import top.techial.knowledge.domain.Operator;
-import top.techial.knowledge.domain.Record;
 import top.techial.knowledge.domain.User;
 
 import java.io.Serializable;
@@ -21,10 +20,5 @@ public class RecordDTO implements Serializable {
     private User user;
     private Operator operator;
     private Instant createTime;
-
-    public RecordDTO(Record record) {
-        this.nodeId = record.getNodeId();
-        this.operator = record.getOperator();
-        this.createTime = record.getCreateTime();
-    }
+    private Instant updateTime;
 }

@@ -26,7 +26,7 @@ public class RegisterController {
     }
 
     @GetMapping("/query")
-    public ResultBean<Object> existsByUserName(@RequestParam String name) {
+    public ResultBean<Boolean> existsByUserName(@RequestParam String name) {
         return new ResultBean<>(userService.existsByUserName(name));
     }
 

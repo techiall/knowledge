@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import top.techial.beans.ResultBean;
 import top.techial.knowledge.domain.Record;
 import top.techial.knowledge.dto.RecordDTO;
+import top.techial.knowledge.mapper.RecordMapper;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.service.UserService;
@@ -36,13 +37,17 @@ public class RecordController {
         @AuthenticationPrincipal UserPrincipal userPrincipal,
         @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        return new ResultBean<>(recordService.findByNodeId(id, userPrincipal.getId(), pageable).map(this::convent));
+        return new ResultBean<>(recordService
+            .findByNodeId(id, userPrincipal.getId(), pageable)
+            .map(it -> convent(it, userPrincipal)));
     }
 
-    private RecordDTO convent(Record record) {
-        RecordDTO dto = new RecordDTO(record);
-        // FIXME
-//        dto.setUser(userService.findById(record.getUserId()).orElseThrow(NullPointerException::new));
-        return dto;
+    private RecordDTO convent(Record it, UserPrincipal userPrincipal) {
+        RecordDTO result = RecordMapper.INSTANCE.toRecordDTO(it);
+        return result.setUser(userService
+            .findById(userPrincipal.getId())
+            .orElseThrow(() -> new IllegalArgumentException(
+                String.format("userPrincipal id [%s] not found.", userPrincipal.getId()))));
     }
+
 }
