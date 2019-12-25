@@ -40,4 +40,7 @@ public class User implements Serializable {
     @ManyToMany
     private List<Record> records = new ArrayList<>();
 
+    @OneToMany
+    private List<Storage> storageList = new ArrayList<>();
+
 }

@@ -1,4 +1,4 @@
-package top.techial.knowledge.file.storage;
+package top.techial.knowledge.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

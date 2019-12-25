@@ -1,4 +1,4 @@
-package top.techial.knowledge.file.storage;
+package top.techial.knowledge.exception;
 
 public class StorageException extends RuntimeException {
 

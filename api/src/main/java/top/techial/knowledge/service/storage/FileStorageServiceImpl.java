@@ -1,4 +1,4 @@
-package top.techial.knowledge.file.storage;
+package top.techial.knowledge.service.storage;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
@@ -6,6 +6,10 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
+import top.techial.knowledge.exception.StorageException;
+import top.techial.knowledge.exception.StorageFileExistsException;
+import top.techial.knowledge.exception.StorageFileNotFoundException;
+import top.techial.knowledge.config.StorageProperties;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;

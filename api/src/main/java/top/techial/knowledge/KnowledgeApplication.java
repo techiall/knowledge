@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import top.techial.knowledge.file.storage.StorageProperties;
+import top.techial.knowledge.config.StorageProperties;
 
 /**
  * @author techial
