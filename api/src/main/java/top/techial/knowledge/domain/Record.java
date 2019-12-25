@@ -33,6 +33,8 @@ public class Record implements Serializable {
     /**
      * operator
      */
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Operator operator;
 
 

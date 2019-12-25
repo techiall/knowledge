@@ -1,5 +1,7 @@
 package top.techial.knowledge.dao;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
@@ -19,4 +21,5 @@ public interface RecordRepository extends JpaRepository<Record, Integer>, Queryd
 
     void deleteByNodeIdIn(Collection<Long> ids);
 
+    Page<Record> findAllByNodeId(Long nodeId, Pageable pageable);
 }
