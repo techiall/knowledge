@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
 import top.techial.knowledge.domain.KnowledgeNode;
+import top.techial.knowledge.domain.OperatorMessageEnum;
 import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.dto.NodeDTO;
 import top.techial.knowledge.dto.NodeInfoDTO;
@@ -62,8 +63,13 @@ public class KnowledgeController {
         @AuthenticationPrincipal UserPrincipal userPrincipal,
         @RequestBody NodeVO nodeVO
     ) {
-        return new ResultBean<>(KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(
-            knowledgeNodeService.save(userPrincipal.getId(), nodeVO)));
+        KnowledgeNode node = knowledgeNodeService.save(userPrincipal.getId(), nodeVO);
+
+        recordService.save(node.getId(), userPrincipal.getId(),
+            OperatorMessageEnum.ADD_NODE,
+            String.format(OperatorMessageEnum.ADD_NODE.getMessage(), node.getName()));
+
+        return new ResultBean<>(KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(node));
     }
 
     @PutMapping("/{id}")
@@ -72,8 +78,13 @@ public class KnowledgeController {
         @PathVariable Long id,
         @RequestBody NodeVO nodeVO
     ) {
-        return new ResultBean<>(KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(
-            knowledgeNodeService.update(id, userPrincipal.getId(), nodeVO)));
+        KnowledgeNode node = knowledgeNodeService.update(id, userPrincipal.getId(), nodeVO);
+
+        recordService.save(node.getId(), userPrincipal.getId(),
+            OperatorMessageEnum.UPDATE_NODE_PROPER,
+            String.format(OperatorMessageEnum.UPDATE_NODE_PROPER.getMessage(), node.getName()));
+
+        return new ResultBean<>(KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(node));
     }
 
     @PatchMapping("/{id}/name")
@@ -82,8 +93,14 @@ public class KnowledgeController {
         @PathVariable Long id,
         @RequestBody NodeVO nodeVO
     ) {
-        return new ResultBean<>(KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(
-            knowledgeNodeService.updateName(id, userPrincipal.getId(), nodeVO.getName())));
+        KnowledgeNode node = knowledgeNodeService
+            .updateName(id, userPrincipal.getId(), nodeVO.getName());
+
+        recordService.save(node.getId(), userPrincipal.getId(),
+            OperatorMessageEnum.UPDATE_NODE_NAME,
+            String.format(OperatorMessageEnum.UPDATE_NODE_NAME.getMessage(), node.getName()));
+
+        return new ResultBean<>(KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(node));
     }
 
 

@@ -26,6 +26,7 @@ public class Record implements Serializable {
     /**
      * neo4j node id
      */
+    @Column(nullable = false)
     private Long nodeId;
 
     /**
@@ -35,6 +36,7 @@ public class Record implements Serializable {
     @Enumerated(EnumType.STRING)
     private OperatorMessageEnum operator;
 
+    @Column(columnDefinition = "text")
     private String message;
 
     @OneToOne

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import top.techial.knowledge.dao.RecordRepository;
+import top.techial.knowledge.domain.OperatorMessageEnum;
 import top.techial.knowledge.domain.Record;
 
 import java.util.Set;
@@ -19,14 +20,21 @@ import java.util.Set;
 @CacheConfig(cacheNames = {"user", "record", "node-relation", "knowledge-node"})
 public class RecordService {
     private final RecordRepository recordRepository;
+    private final UserService userService;
 
-    public RecordService(RecordRepository recordRepository) {
+    public RecordService(RecordRepository recordRepository, UserService userService) {
         this.recordRepository = recordRepository;
+        this.userService = userService;
     }
 
     @Async
     @CacheEvict(allEntries = true)
-    public Record save(Record record) {
+    public Record save(Long nodeId, Integer userId, OperatorMessageEnum operatorMessageEnum, String message) {
+        Record record = new Record()
+            .setNodeId(nodeId)
+            .setOperator(operatorMessageEnum)
+            .setMessage(message)
+            .setUser(userService.findById(userId).orElseThrow(IllegalAccessError::new));
         return recordRepository.save(record);
     }
 
@@ -61,6 +69,6 @@ public class RecordService {
     @CacheEvict(allEntries = true)
     @Async
     public void deleteByUserId(Integer id) {
-        recordRepository.deleteByUserIn(id);
+        recordRepository.deleteByUserId(id);
     }
 }
