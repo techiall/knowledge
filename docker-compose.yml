@@ -18,7 +18,7 @@ services:
   mysql:
     image: mysql:5.7
     networks:
-      - activity
+      - knowledge
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./deploy/mysql/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf:ro
