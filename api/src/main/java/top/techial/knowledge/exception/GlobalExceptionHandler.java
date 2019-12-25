@@ -1,5 +1,6 @@
 package top.techial.knowledge.exception;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,16 +25,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Object illegalArgumentException(Throwable throwable) {
-        log.warn(throwable.getMessage());
+        if (log.isWarnEnabled()) {
+            log.warn(throwable.getMessage());
+        }
         return new ResultBean<>(ResultCode.CHECK_FAIL);
     }
 
-
     @ExceptionHandler({MethodArgumentNotValidException.class,
-        MissingServletRequestParameterException.class})
+        MissingServletRequestParameterException.class, JsonProcessingException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Object methodArgumentNotValidException(Throwable throwable) {
-        log.warn(throwable.getMessage());
+        if (log.isWarnEnabled()) {
+            log.warn(throwable.getMessage());
+        }
         return new ResultBean<>(ResultCode.CHECK_FAIL);
     }
 
@@ -41,7 +45,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MediaTypeNotSupportedStatusException.class)
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     public Object mediaTypeNotSupportedStatusException(Throwable throwable) {
-        log.warn(throwable.getMessage());
+        if (log.isWarnEnabled()) {
+            log.warn(throwable.getMessage());
+        }
         return new ResultBean<>(ResultCode.NO_PERMISSION);
     }
 }
