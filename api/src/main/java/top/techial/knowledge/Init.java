@@ -15,7 +15,6 @@ public class Init implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        userService.deleteAll();
         if (userService.count() == 0L) {
             userService.save(new User().setNickName("root").setUserName("root").setPassword("{noop}root"));
             userService.save(new User().setNickName("admin").setUserName("admin").setPassword("{noop}admin"));

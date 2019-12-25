@@ -2,7 +2,6 @@ package top.techial.knowledge.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
@@ -28,13 +27,14 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final KnowledgeNodeService knowledgeNodeService;
-    private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
     private final SessionService sessionService;
     private final RecordService recordService;
 
-    public UserController(UserService userService, KnowledgeNodeService knowledgeNodeService, SessionService sessionService, RecordService recordService) {
+    public UserController(UserService userService, KnowledgeNodeService knowledgeNodeService, PasswordEncoder passwordEncoder, SessionService sessionService, RecordService recordService) {
         this.userService = userService;
         this.knowledgeNodeService = knowledgeNodeService;
+        this.passwordEncoder = passwordEncoder;
         this.sessionService = sessionService;
         this.recordService = recordService;
     }

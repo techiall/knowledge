@@ -1,7 +1,6 @@
 package top.techial.knowledge.controller;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
@@ -19,10 +18,11 @@ import top.techial.knowledge.vo.RegisterVO;
 public class RegisterController {
     private final UserService userService;
 
-    private final PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
 
-    public RegisterController(UserService userService) {
+    public RegisterController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/query")
