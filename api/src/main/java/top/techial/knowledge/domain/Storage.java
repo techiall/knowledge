@@ -3,10 +3,7 @@ package top.techial.knowledge.domain;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -28,4 +25,7 @@ public class Storage implements Serializable {
     private String fileName;
 
     private String type;
+
+    @OneToOne
+    private User user;
 }

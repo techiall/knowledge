@@ -2,7 +2,7 @@ package top.techial.knowledge.dto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import top.techial.knowledge.domain.Operator;
+import top.techial.knowledge.domain.OperatorMessageEnum;
 import top.techial.knowledge.domain.User;
 
 import java.io.Serializable;
@@ -18,7 +18,8 @@ public class RecordDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long nodeId;
     private User user;
-    private Operator operator;
+    private OperatorMessageEnum operator;
+    private OperatorMessageEnum message;
     private Instant createTime;
     private Instant updateTime;
 }

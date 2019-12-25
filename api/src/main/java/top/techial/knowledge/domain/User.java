@@ -37,7 +37,7 @@ public class User implements Serializable {
     @UpdateTimestamp
     private Instant updateTime;
 
-    @ManyToMany
+    @OneToMany
     private List<Record> records = new ArrayList<>();
 
     @OneToMany

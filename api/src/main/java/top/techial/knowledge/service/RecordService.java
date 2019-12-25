@@ -61,6 +61,6 @@ public class RecordService {
     @CacheEvict(allEntries = true)
     @Async
     public void deleteByUserId(Integer id) {
-        recordRepository.deleteByUsersIdIn(id);
+        recordRepository.deleteByUserIn(id);
     }
 }

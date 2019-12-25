@@ -8,8 +8,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author techial
@@ -35,11 +33,12 @@ public class Record implements Serializable {
      */
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Operator operator;
+    private OperatorMessageEnum operator;
 
+    private String message;
 
-    @ManyToMany(mappedBy = "records")
-    private List<User> users = new ArrayList<>();
+    @OneToOne
+    private User user;
 
     /**
      * time

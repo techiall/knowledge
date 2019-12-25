@@ -17,7 +17,7 @@ public interface RecordRepository extends JpaRepository<Record, Integer>, Queryd
 
     void deleteByNodeId(Long id);
 
-    void deleteByUsersIdIn(Integer id);
+    void deleteByUserIn(Integer id);
 
     void deleteByNodeIdIn(Collection<Long> ids);
 
