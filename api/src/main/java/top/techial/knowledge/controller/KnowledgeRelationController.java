@@ -82,7 +82,9 @@ public class KnowledgeRelationController {
 
     @DeleteMapping("/{id}")
     public ResultBean<Boolean> deleteById(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        recordService.save(id, userPrincipal.getId(),
+        NodeRelation relation = nodeRelationService.findById(id);
+
+        recordService.save(relation.getStartNode().getId(), userPrincipal.getId(),
             OperatorMessageEnum.DELETE_NODE_RELATION,
             String.format(OperatorMessageEnum.DELETE_NODE_RELATION.getMessage(), id));
 
