@@ -25,5 +25,7 @@ public class Storage implements Serializable {
 
     private String sha1;
 
+    private String fileName;
+
     private String type;
 }

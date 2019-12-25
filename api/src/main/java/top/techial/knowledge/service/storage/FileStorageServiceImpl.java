@@ -6,10 +6,10 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
+import top.techial.knowledge.config.StorageProperties;
 import top.techial.knowledge.exception.StorageException;
 import top.techial.knowledge.exception.StorageFileExistsException;
 import top.techial.knowledge.exception.StorageFileNotFoundException;
-import top.techial.knowledge.config.StorageProperties;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -53,12 +53,13 @@ public class FileStorageServiceImpl implements FileStorageService {
         String originalFilename = file.getOriginalFilename();
 
         if (file.isEmpty()) {
-            throw new StorageException("Failed to store empty file" + originalFilename);
+            throw new StorageException(String.format("Failed to store empty file, %s", originalFilename));
         }
 
         if (originalFilename != null && originalFilename.contains("..")) {
             // This is a security check
-            throw new StorageException("Cannot store file with relative path outside current directory " + originalFilename);
+            throw new StorageException(
+                String.format("Cannot store file with relative path outside current directory, %s", originalFilename));
         }
 
         try {
