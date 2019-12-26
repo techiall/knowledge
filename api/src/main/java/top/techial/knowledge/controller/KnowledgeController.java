@@ -35,7 +35,11 @@ public class KnowledgeController {
     private final RecordService recordService;
     private final ObjectMapper objectMapper;
 
-    public KnowledgeController(KnowledgeNodeService knowledgeNodeService, RecordService recordService, ObjectMapper objectMapper) {
+    public KnowledgeController(
+        KnowledgeNodeService knowledgeNodeService,
+        RecordService recordService,
+        ObjectMapper objectMapper
+    ) {
         this.knowledgeNodeService = knowledgeNodeService;
         this.recordService = recordService;
         this.objectMapper = objectMapper;
@@ -160,7 +164,8 @@ public class KnowledgeController {
         @AuthenticationPrincipal UserPrincipal userPrincipal,
         @PageableDefault Pageable pageable
     ) {
-        return new ResultBean<>(knowledgeNodeService.findByNameLike("*" + name + "*", userPrincipal.getId(), pageable)
+        return new ResultBean<>(knowledgeNodeService
+            .findByNameLike("*" + name + "*", userPrincipal.getId(), pageable)
             .map(KnowledgeNodeMapper.INSTANCE::toNodeBaseDTO));
     }
 

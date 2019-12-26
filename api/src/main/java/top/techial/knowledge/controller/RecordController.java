@@ -19,6 +19,8 @@ import top.techial.knowledge.service.RecordService;
 import java.util.Objects;
 
 /**
+ * 节点操作记录
+ *
  * @author techial
  */
 @RestController
@@ -27,7 +29,10 @@ public class RecordController {
     private final RecordService recordService;
     private final KnowledgeNodeService knowledgeNodeService;
 
-    public RecordController(RecordService recordService, KnowledgeNodeService knowledgeNodeService) {
+    public RecordController(
+        RecordService recordService,
+        KnowledgeNodeService knowledgeNodeService
+    ) {
         this.recordService = recordService;
         this.knowledgeNodeService = knowledgeNodeService;
     }

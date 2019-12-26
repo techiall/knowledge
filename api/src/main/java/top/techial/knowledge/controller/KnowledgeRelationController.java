@@ -32,7 +32,11 @@ public class KnowledgeRelationController {
     private final RecordService recordService;
     private final ObjectMapper objectMapper;
 
-    public KnowledgeRelationController(NodeRelationService nodeRelationService, RecordService recordService, ObjectMapper objectMapper) {
+    public KnowledgeRelationController(
+        NodeRelationService nodeRelationService,
+        RecordService recordService,
+        ObjectMapper objectMapper
+    ) {
         this.nodeRelationService = nodeRelationService;
         this.recordService = recordService;
         this.objectMapper = objectMapper;
