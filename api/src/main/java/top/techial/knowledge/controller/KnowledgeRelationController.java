@@ -43,22 +43,31 @@ public class KnowledgeRelationController {
     }
 
     @GetMapping
-    public ResultBean<Page<NodeRelation>> findAll(@PageableDefault Pageable pageable) {
+    public ResultBean<Page<NodeRelation>> findAll(
+        @PageableDefault Pageable pageable
+    ) {
         return new ResultBean<>(nodeRelationService.findAll(pageable));
     }
 
     @GetMapping("/{id}")
-    public ResultBean<RelationDTO> findAll(@PathVariable Long id) {
+    public ResultBean<RelationDTO> findAll(
+        @PathVariable Long id
+    ) {
         return new ResultBean<>(NodeRelationMapper.INSTANCE.toRelationDTO(nodeRelationService.findById(id)));
     }
 
     @GetMapping("/start/name")
-    public ResultBean<List<RelationDTO>> findByNameRelation(@RequestParam(value = "query") String name) {
+    public ResultBean<List<RelationDTO>> findByNameRelation(
+        @RequestParam(value = "query") String name
+    ) {
         return new ResultBean<>(nodeRelationService.findByStartNodeName(name));
     }
 
     @PostMapping
-    public ResultBean<RelationDTO> save(@RequestBody RelationVO relationVO, @AuthenticationPrincipal UserPrincipal userPrincipal) throws JsonProcessingException {
+    public ResultBean<RelationDTO> save(
+        @RequestBody RelationVO relationVO,
+        @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) throws JsonProcessingException {
         NodeRelation relation = nodeRelationService.save(relationVO);
 
         recordService.save(relation.getStartNode().getId(), userPrincipal.getId(),
@@ -69,7 +78,11 @@ public class KnowledgeRelationController {
     }
 
     @PutMapping("/{id}")
-    public ResultBean<RelationDTO> updateById(@PathVariable Long id, @RequestBody RelationVO relationVO, @AuthenticationPrincipal UserPrincipal userPrincipal) throws JsonProcessingException {
+    public ResultBean<RelationDTO> updateById(
+        @PathVariable Long id,
+        @RequestBody RelationVO relationVO,
+        @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) throws JsonProcessingException {
         NodeRelation relation = nodeRelationService.updateById(id, relationVO);
 
         recordService.save(relation.getStartNode().getId(), userPrincipal.getId(),
@@ -85,7 +98,10 @@ public class KnowledgeRelationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResultBean<Boolean> deleteById(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResultBean<Boolean> deleteById(
+        @PathVariable Long id,
+        @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
         NodeRelation relation = nodeRelationService.findById(id);
 
         recordService.save(relation.getStartNode().getId(), userPrincipal.getId(),
