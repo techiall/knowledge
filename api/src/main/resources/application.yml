@@ -19,7 +19,7 @@ spring:
     generate-ddl: true
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
@@ -60,6 +60,6 @@ storage:
   location: /Users/techial/Downloads/knowledge
 logging:
   level:
-    org.neo4j.ogm: debug
-    top.techial: debug
+    org.neo4j.ogm: info
+    top.techial: info
 

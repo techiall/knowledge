@@ -38,9 +38,9 @@ public class RecordService {
         return recordRepository.save(record);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #pageable", unless = "#result == null")
-    public Page<Record> findAll(Pageable pageable) {
-        return recordRepository.findAll(pageable);
+    @CacheEvict(allEntries = true)
+    public Record save(Record record) {
+        return recordRepository.save(record);
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #nodeId + #pageable", unless = "#result == null")
@@ -52,12 +52,6 @@ public class RecordService {
     @Async
     public void deleteByNodeId(Long id) {
         recordRepository.deleteByNodeId(id);
-    }
-
-    @Async
-    @CacheEvict(allEntries = true)
-    public void deleteAll() {
-        recordRepository.deleteAll();
     }
 
     @CacheEvict(allEntries = true)

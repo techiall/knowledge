@@ -7,10 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.techial.beans.ResultBean;
+import top.techial.knowledge.service.NodeTextService;
 import top.techial.knowledge.service.StorageService;
 import top.techial.knowledge.service.storage.FileStorageService;
 
-import java.io.IOException;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,10 +23,12 @@ import java.util.Map;
 @Log4j2
 public class StorageController {
     private final StorageService storageService;
+    private final NodeTextService nodeTextService;
     private final FileStorageService fileStorageService;
 
-    public StorageController(StorageService storageService, FileStorageService fileStorageService) {
+    public StorageController(StorageService storageService, NodeTextService nodeTextService, FileStorageService fileStorageService) {
         this.storageService = storageService;
+        this.nodeTextService = nodeTextService;
         this.fileStorageService = fileStorageService;
     }
 
@@ -33,16 +36,17 @@ public class StorageController {
      * 文本上传，对应 node 节点
      */
     @PostMapping("/text/{id}")
-    public ResultBean<String> save(@RequestBody String resource, @PathVariable Long id) throws IOException {
-        return new ResultBean<>(storageService.saveNodeStorage(resource, id));
+    public ResultBean<Long> save(@Valid @RequestBody String text, @PathVariable Long id) {
+        nodeTextService.save(text, id);
+        return new ResultBean<>(id);
     }
 
     /**
      * 文本获取，对应 node 节点
      */
     @GetMapping("/text/{id}")
-    public ResultBean<String> findById(@PathVariable Long id) throws IOException {
-        return new ResultBean<>(storageService.findByNodeId(id));
+    public ResultBean<String> findById(@PathVariable Long id) {
+        return new ResultBean<>(nodeTextService.findById(id).getText());
     }
 
     @PostMapping
