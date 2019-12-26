@@ -18,7 +18,6 @@ import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.vo.ParentVO;
 import top.techial.knowledge.vo.RelationVO;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -96,7 +95,7 @@ public class KnowledgeRelationController {
         NodeRelation relation = nodeRelationService.findById(id);
 
         recordService.save(relation.getStartNode().getId(), userPrincipal.getId(),
-            OperatorMessageEnum.DELETE_NODE_RELATION, Collections.singletonMap("id", id));
+            OperatorMessageEnum.DELETE_NODE_RELATION, id);
 
         nodeRelationService.deleteById(id);
         return new ResultBean<>(true);
