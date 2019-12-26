@@ -79,7 +79,16 @@ public class StorageController {
         return ResponseEntity
             .ok()
             .header(HttpHeaders.CONTENT_TYPE, storageService.findBySHA1(id).getContentType())
-            .body(fileStorageService.loadAsResource(storage.getSha1()));
+            .body(fileStorageService.findByHash(storage.getSha1()));
+    }
+
+    @GetMapping(value = "/download/{id}")
+    public ResponseEntity<Resource> download(@PathVariable String id) {
+        Storage storage = storageService.findBySHA1(id);
+        return ResponseEntity.ok().header(
+            HttpHeaders.CONTENT_DISPOSITION,
+            String.format("attachment; filename=\"%s\"", storage.getOriginalFilename())
+        ).body(fileStorageService.findByHash(id));
     }
 
 }

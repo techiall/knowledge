@@ -21,7 +21,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.stream.Stream;
 
 /**
  * @author techial
@@ -90,17 +89,7 @@ public class FileStorageService {
         }
     }
 
-    public Stream<Path> loadAll() {
-        try {
-            return Files.walk(this.rootLocation, 1)
-                .filter(path -> !path.equals(this.rootLocation))
-                .map(this.rootLocation::relativize);
-        } catch (IOException e) {
-            throw new StorageException("Failed to read stored files", e);
-        }
-    }
-
-    public Resource loadAsResource(String hash) {
+    public Resource findByHash(String hash) {
         try {
             Resource resource = new UrlResource(rootLocation.resolve(hash).toUri());
             if (resource.exists() || resource.isReadable()) {
