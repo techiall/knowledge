@@ -98,6 +98,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionRegistry(sessionRegistry())
             .maxSessionsPreventsLogin(false);
 
+        accepts(http);
+    }
+
+    private void accepts(HttpSecurity http) throws Exception {
         if (environment.acceptsProfiles(Profiles.of("dev"))) {
             http.authorizeRequests()
                 .antMatchers("/api/**")
@@ -110,6 +114,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/**").authenticated();
             http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         }
+
     }
 
     @Override
