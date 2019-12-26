@@ -13,7 +13,6 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import top.techial.knowledge.security.handler.AuthenticationEntryPointImpl;
 import top.techial.knowledge.security.handler.LogoutHandler;
@@ -49,10 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
             .antMatchers(
-//                "/api/user/me",
-//                "/api/register/**",
-//                "/api/session/**",
-                "/api/storage/**"
+                "/api/user/me",
+                "/api/register/**",
+                "/api/session/**"
             )
             .permitAll()
             .antMatchers("/api/**", "/actuator/**").authenticated()
