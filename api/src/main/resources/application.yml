@@ -10,6 +10,8 @@ server:
 spring:
   application:
     name: knowledge-dev
+  profiles:
+    active: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost/knowledge?useSSL=false&createDatabaseIfNotExist=true
@@ -49,7 +51,7 @@ management:
   endpoints:
     enabled-by-default: true
     web:
-      base-path: /api/v3/actuator/0z6DX129xRDOsv5dpPrr
+      base-path: /api/actuator/0z6DX129xRDOsv5dpPrr
       exposure:
         include:
           - loggers

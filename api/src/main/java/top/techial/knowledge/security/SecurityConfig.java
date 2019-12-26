@@ -3,6 +3,8 @@ package top.techial.knowledge.security;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,29 +36,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final AuthenticationEntryPointImpl authenticationEntryPoint;
     private final PasswordEncoder passwordEncoder;
+    private final Environment environment;
 
-    public SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsServiceImpl userDetailsService, LogoutHandler logoutHandler, AuthenticationSuccessHandler authenticationSuccessHandler, AuthenticationFailureHandler authenticationFailureHandler, AuthenticationEntryPointImpl authenticationEntryPoint, PasswordEncoder passwordEncoder) {
+    public SecurityConfig(
+        @Qualifier("userDetailsServiceImpl") UserDetailsServiceImpl userDetailsService,
+        LogoutHandler logoutHandler,
+        AuthenticationSuccessHandler authenticationSuccessHandler,
+        AuthenticationFailureHandler authenticationFailureHandler,
+        AuthenticationEntryPointImpl authenticationEntryPoint,
+        PasswordEncoder passwordEncoder,
+        Environment environment
+    ) {
         this.userDetailsService = userDetailsService;
         this.logoutHandler = logoutHandler;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
         this.authenticationFailureHandler = authenticationFailureHandler;
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.passwordEncoder = passwordEncoder;
+        this.environment = environment;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-            .authorizeRequests()
-            .antMatchers(
-                "/api/user/me",
-                "/api/register/**",
-                "/api/session/**"
-            )
-            .permitAll()
-            .antMatchers("/api/**", "/actuator/**").authenticated()
 
-            .and()
+        http
 
             .formLogin()
             .loginPage("/login")
@@ -95,7 +98,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionRegistry(sessionRegistry())
             .maxSessionsPreventsLogin(false);
 
-        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+        if (environment.acceptsProfiles(Profiles.of("dev"))) {
+            http.authorizeRequests()
+                .antMatchers("/api/**")
+                .permitAll();
+            http.csrf().disable();
+        } else {
+            http.authorizeRequests()
+                .antMatchers("/api/user/me", "/api/register/**", "/api/session/**")
+                .permitAll()
+                .antMatchers("/api/**").authenticated();
+            http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+        }
     }
 
     @Override

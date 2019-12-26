@@ -8,6 +8,8 @@ server:
     enabled: true
 
 spring:
+  profiles:
+    active: docker
   application:
     name: knowledge-docker
   datasource:
