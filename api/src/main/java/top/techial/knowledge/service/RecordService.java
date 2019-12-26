@@ -1,5 +1,7 @@
 package top.techial.knowledge.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -22,18 +24,23 @@ import java.util.Set;
 @CacheConfig(cacheNames = {"user", "record", "node-relation", "knowledge-node"})
 public class RecordService {
     private final RecordRepository recordRepository;
+    private final ObjectMapper objectMapper;
 
-    public RecordService(RecordRepository recordRepository) {
+    public RecordService(RecordRepository recordRepository, ObjectMapper objectMapper) {
         this.recordRepository = recordRepository;
+        this.objectMapper = objectMapper;
     }
 
+    @SneakyThrows
     @Async
     @CacheEvict(allEntries = true)
-    public Record save(Long nodeId, Integer userId, OperatorMessageEnum operatorMessageEnum, String message) {
+    @Transactional
+    public Record save(Long nodeId, Integer userId, OperatorMessageEnum operatorMessageEnum, Object message) {
         Record record = new Record()
             .setNodeId(nodeId)
             .setOperator(operatorMessageEnum)
-            .setMessage(message)
+            .setMessage(operatorMessageEnum.getMessage())
+            .setContent(objectMapper.writeValueAsString(message))
             .setUser(new User().setId(userId));
         return recordRepository.save(record);
     }

@@ -38,6 +38,8 @@ public class Record implements Serializable {
     @Lob
     private String message;
 
+    private String content;
+
     @OneToOne
     private User user;
 

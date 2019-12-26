@@ -1,7 +1,5 @@
 package top.techial.knowledge.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -20,6 +18,7 @@ import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.vo.ParentVO;
 import top.techial.knowledge.vo.RelationVO;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,16 +29,10 @@ import java.util.List;
 public class KnowledgeRelationController {
     private final NodeRelationService nodeRelationService;
     private final RecordService recordService;
-    private final ObjectMapper objectMapper;
 
-    public KnowledgeRelationController(
-        NodeRelationService nodeRelationService,
-        RecordService recordService,
-        ObjectMapper objectMapper
-    ) {
+    public KnowledgeRelationController(NodeRelationService nodeRelationService, RecordService recordService) {
         this.nodeRelationService = nodeRelationService;
         this.recordService = recordService;
-        this.objectMapper = objectMapper;
     }
 
     @GetMapping
@@ -67,12 +60,11 @@ public class KnowledgeRelationController {
     public ResultBean<RelationDTO> save(
         @RequestBody RelationVO relationVO,
         @AuthenticationPrincipal UserPrincipal userPrincipal
-    ) throws JsonProcessingException {
+    ) {
         NodeRelation relation = nodeRelationService.save(relationVO);
 
         recordService.save(relation.getStartNode().getId(), userPrincipal.getId(),
-            OperatorMessageEnum.ADD_NODE_PROPERTY,
-            String.format(OperatorMessageEnum.ADD_NODE_PROPERTY.getMessage(), objectMapper.writeValueAsString(relationVO)));
+            OperatorMessageEnum.ADD_NODE_PROPERTY, relationVO);
 
         return new ResultBean<>(NodeRelationMapper.INSTANCE.toRelationDTO(relation));
     }
@@ -82,12 +74,11 @@ public class KnowledgeRelationController {
         @PathVariable Long id,
         @RequestBody RelationVO relationVO,
         @AuthenticationPrincipal UserPrincipal userPrincipal
-    ) throws JsonProcessingException {
+    ) {
         NodeRelation relation = nodeRelationService.updateById(id, relationVO);
 
         recordService.save(relation.getStartNode().getId(), userPrincipal.getId(),
-            OperatorMessageEnum.UPDATE_NODE_PROPERTY,
-            String.format(OperatorMessageEnum.UPDATE_NODE_PROPERTY.getMessage(), objectMapper.writeValueAsString(relationVO)));
+            OperatorMessageEnum.UPDATE_NODE_PROPERTY, relationVO);
 
         return new ResultBean<>(NodeRelationMapper.INSTANCE.toRelationDTO(nodeRelationService.updateById(id, relationVO)));
     }
@@ -105,8 +96,7 @@ public class KnowledgeRelationController {
         NodeRelation relation = nodeRelationService.findById(id);
 
         recordService.save(relation.getStartNode().getId(), userPrincipal.getId(),
-            OperatorMessageEnum.DELETE_NODE_RELATION,
-            String.format(OperatorMessageEnum.DELETE_NODE_RELATION.getMessage(), id));
+            OperatorMessageEnum.DELETE_NODE_RELATION, Collections.singletonMap("id", id));
 
         nodeRelationService.deleteById(id);
         return new ResultBean<>(true);
