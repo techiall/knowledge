@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import top.techial.knowledge.domain.OperatorMessageEnum;
 import top.techial.knowledge.domain.Record;
+import top.techial.knowledge.domain.User;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -19,8 +20,9 @@ public class RecordServiceTest {
     @Test
     public void save() {
         Record record = new Record()
-            .setMessage(RandomStringUtils.randomAlphanumeric(50000))
+            .setMessage(RandomStringUtils.randomAlphanumeric(10))
             .setOperator(OperatorMessageEnum.DELETE_NODE_RELATION)
+            .setUser(new User().setId(1))
             .setNodeId(10L);
 
         Record result = recordService.save(record);

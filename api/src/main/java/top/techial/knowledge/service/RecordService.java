@@ -7,9 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.dao.RecordRepository;
 import top.techial.knowledge.domain.OperatorMessageEnum;
 import top.techial.knowledge.domain.Record;
+import top.techial.knowledge.domain.User;
 
 import java.util.Set;
 
@@ -20,11 +22,9 @@ import java.util.Set;
 @CacheConfig(cacheNames = {"user", "record", "node-relation", "knowledge-node"})
 public class RecordService {
     private final RecordRepository recordRepository;
-    private final UserService userService;
 
-    public RecordService(RecordRepository recordRepository, UserService userService) {
+    public RecordService(RecordRepository recordRepository) {
         this.recordRepository = recordRepository;
-        this.userService = userService;
     }
 
     @Async
@@ -34,11 +34,12 @@ public class RecordService {
             .setNodeId(nodeId)
             .setOperator(operatorMessageEnum)
             .setMessage(message)
-            .setUser(userService.findById(userId).orElseThrow(IllegalAccessError::new));
+            .setUser(new User().setId(userId));
         return recordRepository.save(record);
     }
 
     @CacheEvict(allEntries = true)
+    @Transactional
     public Record save(Record record) {
         return recordRepository.save(record);
     }
@@ -50,18 +51,21 @@ public class RecordService {
 
     @CacheEvict(allEntries = true)
     @Async
+    @Transactional
     public void deleteByNodeId(Long id) {
         recordRepository.deleteByNodeId(id);
     }
 
     @CacheEvict(allEntries = true)
     @Async
+    @Transactional
     public void deleteByNodeIds(Set<Long> ids) {
         recordRepository.deleteByNodeIdIn(ids);
     }
 
     @CacheEvict(allEntries = true)
     @Async
+    @Transactional
     public void deleteByUserId(Integer id) {
         recordRepository.deleteByUserId(id);
     }

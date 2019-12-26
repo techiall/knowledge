@@ -10,6 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.dao.UserRepository;
 import top.techial.knowledge.domain.User;
 
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.criteria.Root;
+import java.time.Instant;
 import java.util.Optional;
 
 /**
@@ -22,10 +27,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EntityManager entityManager;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, EntityManager entityManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.entityManager = entityManager;
     }
 
     public Optional<User> findByUserName(String userName) {
@@ -37,12 +44,18 @@ public class UserService {
     }
 
     @CacheEvict(allEntries = true)
-    public User updatePassword(Integer id, String password) {
+    @Transactional
+    public void updatePassword(Integer id, String password) {
         if (password == null) {
             throw new IllegalArgumentException();
         }
-        return userRepository.save(userRepository.findById(id).orElseThrow(NullPointerException::new)
-            .setPassword(passwordEncoder.encode(password)));
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaUpdate<User> criteria = builder.createCriteriaUpdate(User.class);
+        Root<User> root = criteria.from(User.class);
+        criteria.set(root.get("password"), passwordEncoder.encode(password));
+        criteria.set(root.get("updateTime"), Instant.now());
+        criteria.where(builder.equal(root.get("id"), id));
+        entityManager.createQuery(criteria).executeUpdate();
     }
 
     @Transactional(rollbackFor = IllegalArgumentException.class)
@@ -57,6 +70,7 @@ public class UserService {
     }
 
     @CacheEvict(allEntries = true)
+    @Transactional
     public User save(User user) {
         return userRepository.save(user);
     }

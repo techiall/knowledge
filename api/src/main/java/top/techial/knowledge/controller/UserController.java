@@ -80,14 +80,14 @@ public class UserController {
         String srcPassword,
         String password
     ) {
+        User user = userService.findById(id).orElseThrow(NullPointerException::new);
         if (userPrincipal.getId().equals(id)) {
-            User user = userService.findById(id).orElseThrow(NullPointerException::new);
             if (!passwordEncoder.matches(srcPassword, user.getPassword())) {
                 throw new IllegalArgumentException();
             }
         }
 
-        User user = userService.updatePassword(id, password);
+        userService.updatePassword(id, password);
         sessionService.flushId(userPrincipal.getId());
         return new ResultBean<>(user);
     }

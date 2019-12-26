@@ -6,6 +6,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import top.techial.knowledge.dao.StorageRepository;
 import top.techial.knowledge.domain.Storage;
@@ -24,6 +25,7 @@ public class StorageService {
     }
 
     @CacheEvict(allEntries = true)
+    @Transactional
     public Storage save(String sha1, MultipartFile file) {
         Storage storage = storageRepository.findFirstBySha1(sha1).orElse(new Storage());
         storage = storage
@@ -35,6 +37,7 @@ public class StorageService {
 
     @CacheEvict(allEntries = true)
     @Async
+    @Transactional
     public void deleteBySHA1(String id) {
         storageRepository.deleteBySha1(id);
     }

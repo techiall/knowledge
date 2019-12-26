@@ -9,8 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Entity
@@ -36,11 +34,5 @@ public class User implements Serializable {
 
     @UpdateTimestamp
     private Instant updateTime;
-
-    @OneToMany
-    private List<Record> records = new ArrayList<>();
-
-    @OneToMany
-    private List<Storage> storageList = new ArrayList<>();
 
 }
