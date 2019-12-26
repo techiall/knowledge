@@ -16,6 +16,8 @@ public class RecordDTO {
 
     private String message;
 
+    private String content;
+
     private Instant createTime;
 
     private String nickName;
