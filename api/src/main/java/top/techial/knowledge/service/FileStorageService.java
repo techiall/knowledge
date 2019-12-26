@@ -1,4 +1,4 @@
-package top.techial.knowledge.service.storage;
+package top.techial.knowledge.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
@@ -8,7 +8,6 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import top.techial.knowledge.config.StorageProperties;
 import top.techial.knowledge.exception.StorageException;
-import top.techial.knowledge.exception.StorageFileExistsException;
 import top.techial.knowledge.exception.StorageFileNotFoundException;
 
 import javax.annotation.PostConstruct;
@@ -29,10 +28,10 @@ import java.util.stream.Stream;
  */
 @Service
 @Log4j2
-public class FileStorageServiceImpl implements FileStorageService {
+public class FileStorageService {
     private final Path rootLocation;
 
-    public FileStorageServiceImpl(StorageProperties storageProperties) {
+    public FileStorageService(StorageProperties storageProperties) {
         this.rootLocation = Paths.get(storageProperties.getLocation());
     }
 
@@ -48,10 +47,8 @@ public class FileStorageServiceImpl implements FileStorageService {
         log.info("file storage path = {}", rootLocation.toString());
     }
 
-    @Override
-    public String store(MultipartFile file) {
+    public String upload(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
-
         if (file.isEmpty()) {
             throw new StorageException(String.format("Failed to store empty file, %s", originalFilename));
         }
@@ -81,11 +78,9 @@ public class FileStorageServiceImpl implements FileStorageService {
                 String sha1 = String.format("%032X", new BigInteger(1, digest.digest()));
                 Path dest = rootLocation.resolve(sha1);
                 if (dest.toFile().exists()) {
-                    Files.delete(temp);
-                    throw new StorageFileExistsException("The file already existed ", originalFilename);
-                } else {
-                    Files.move(temp, dest);
+                    return sha1;
                 }
+                Files.move(temp, dest);
                 return sha1;
             } catch (IOException e) {
                 throw new StorageException("Failed to store file " + originalFilename, e);
@@ -95,7 +90,6 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
     }
 
-    @Override
     public Stream<Path> loadAll() {
         try {
             return Files.walk(this.rootLocation, 1)
@@ -106,7 +100,6 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
     }
 
-    @Override
     public Resource loadAsResource(String hash) {
         try {
             Resource resource = new UrlResource(rootLocation.resolve(hash).toUri());
@@ -120,12 +113,10 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
     }
 
-    @Override
     public void deleteAll() {
         FileSystemUtils.deleteRecursively(rootLocation.toFile());
     }
 
-    @Override
     public void delete(String hash) {
         FileSystemUtils.deleteRecursively(rootLocation.resolve(hash).toFile());
     }

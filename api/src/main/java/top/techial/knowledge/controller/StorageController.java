@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.techial.beans.ResultBean;
+import top.techial.knowledge.service.FileStorageService;
 import top.techial.knowledge.service.NodeTextService;
 import top.techial.knowledge.service.StorageService;
-import top.techial.knowledge.service.storage.FileStorageService;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -26,7 +26,11 @@ public class StorageController {
     private final NodeTextService nodeTextService;
     private final FileStorageService fileStorageService;
 
-    public StorageController(StorageService storageService, NodeTextService nodeTextService, FileStorageService fileStorageService) {
+    public StorageController(
+        StorageService storageService,
+        NodeTextService nodeTextService,
+        FileStorageService fileStorageService
+    ) {
         this.storageService = storageService;
         this.nodeTextService = nodeTextService;
         this.fileStorageService = fileStorageService;
@@ -51,17 +55,19 @@ public class StorageController {
 
     @PostMapping
     public Map<String, String> save(@RequestParam MultipartFile file) {
-        String str = fileStorageService.store(file);
+        String sha1 = fileStorageService.upload(file);
+        storageService.save(sha1, file);
         Map<String, String> map = new HashMap<>();
         map.put("code", "0");
         map.put("msg", "Success");
-        map.put("link", "api/storage/preview/" + str);
+        map.put("link", "api/storage/preview/" + sha1);
         return map;
     }
 
     @DeleteMapping("/{id}")
     public ResultBean<Boolean> delete(@PathVariable String id) {
         fileStorageService.delete(id);
+        storageService.deleteById(id);
         return new ResultBean<>(true);
     }
 
@@ -70,7 +76,7 @@ public class StorageController {
     public ResponseEntity<Resource> preview(@PathVariable String id) {
         return ResponseEntity
             .ok()
-            .header(HttpHeaders.CONTENT_TYPE, storageService.findBySha1(id).getType())
+            .header(HttpHeaders.CONTENT_TYPE, storageService.findById(id).getContentType())
             .body(fileStorageService.loadAsResource(id));
     }
 

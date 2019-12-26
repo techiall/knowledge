@@ -2,12 +2,13 @@ package top.techial.knowledge.domain;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.time.Instant;
 
 /**
  * @author techial
@@ -19,14 +20,20 @@ public class Storage implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * SHA-1
+     */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String id;
 
-    private String sha1;
+    private String originalFilename;
 
-    private String fileName;
+    private String contentType;
 
-    private String type;
+    @CreationTimestamp
+    private Instant createTime;
+
+    @UpdateTimestamp
+    private Instant updateTime;
 
 }

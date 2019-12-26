@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.multipart.MultipartFile;
-import top.techial.knowledge.service.storage.FileStorageService;
+import top.techial.knowledge.service.FileStorageService;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class FileStorageServiceImplTest {
 
     @Test
     public void deleteAll() {
-//        fileStorageService.deleteAll();
+        fileStorageService.deleteAll();
     }
 
     @Test
@@ -34,6 +34,6 @@ public class FileStorageServiceImplTest {
     public void store() throws IOException {
         MultipartFile file = new MockMultipartFile("admin.pdf",
             new FileInputStream(Paths.get("/Users/techial/Downloads/admin.pdf").toFile()));
-        fileStorageService.store(file);
+        fileStorageService.upload(file);
     }
 }
