@@ -3,6 +3,7 @@ package top.techial.knowledge.service;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,19 +51,19 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName", unless = "#result == null")
     public long count() {
         return userRepository.count();
     }
 
+    @CacheEvict(allEntries = true)
     public User save(User user) {
         return userRepository.save(user);
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + p0", unless = "#result == null")
     public boolean existsByUserName(String name) {
         return userRepository.existsByUserName(name);
     }
 
-    public void deleteAll() {
-        userRepository.deleteAll();
-    }
 }

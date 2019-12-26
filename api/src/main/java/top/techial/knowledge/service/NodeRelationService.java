@@ -60,11 +60,6 @@ public class NodeRelationService {
         return nodeRelationRepository.findAll(pageable);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName", unless = "#result == null")
-    public long count() {
-        return nodeRelationRepository.count();
-    }
-
     @CacheEvict(allEntries = true)
     public NodeRelation save(RelationVO relationVO) {
         KnowledgeNode startNode = knowledgeNodeRepository.findFirstByName(relationVO.getStartNode())
@@ -89,11 +84,6 @@ public class NodeRelationService {
     @CacheEvict(allEntries = true)
     public void deleteById(Long id) {
         nodeRelationRepository.deleteById(id);
-    }
-
-    @CacheEvict(allEntries = true)
-    public void deleteAll() {
-        nodeRelationRepository.deleteAll();
     }
 
     @CacheEvict(allEntries = true)

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.techial.beans.ResultBean;
+import top.techial.knowledge.domain.Storage;
 import top.techial.knowledge.service.FileStorageService;
 import top.techial.knowledge.service.NodeTextService;
 import top.techial.knowledge.service.StorageService;
@@ -60,24 +61,25 @@ public class StorageController {
         Map<String, String> map = new HashMap<>();
         map.put("code", "0");
         map.put("msg", "Success");
-        map.put("link", "api/storage/preview/" + sha1);
+        map.put("link", String.format("api/storage/preview/%s", sha1));
         return map;
     }
 
     @DeleteMapping("/{id}")
     public ResultBean<Boolean> delete(@PathVariable String id) {
         fileStorageService.delete(id);
-        storageService.deleteById(id);
+        storageService.deleteBySHA1(id);
         return new ResultBean<>(true);
     }
 
 
     @GetMapping(value = "/preview/{id}")
     public ResponseEntity<Resource> preview(@PathVariable String id) {
+        Storage storage = storageService.findBySHA1(id);
         return ResponseEntity
             .ok()
-            .header(HttpHeaders.CONTENT_TYPE, storageService.findById(id).getContentType())
-            .body(fileStorageService.loadAsResource(id));
+            .header(HttpHeaders.CONTENT_TYPE, storageService.findBySHA1(id).getContentType())
+            .body(fileStorageService.loadAsResource(storage.getSha1()));
     }
 
 }

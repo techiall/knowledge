@@ -48,10 +48,9 @@ public class KnowledgeController {
     @GetMapping
     public ResultBean<Page<NodeDTO>> findAll(
         @AuthenticationPrincipal UserPrincipal userPrincipal,
-        @PageableDefault(sort = "createTime", direction = Sort.Direction.ASC) Pageable pageable,
-        @RequestParam(defaultValue = "10", required = false) int depth
+        @PageableDefault(sort = "createTime", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        return new ResultBean<>(knowledgeNodeService.findAll(userPrincipal.getId(), pageable, depth));
+        return new ResultBean<>(knowledgeNodeService.findAll(userPrincipal.getId(), pageable));
     }
 
     @GetMapping("/{id}")

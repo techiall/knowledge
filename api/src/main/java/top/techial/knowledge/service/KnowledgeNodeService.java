@@ -193,11 +193,12 @@ public class KnowledgeNodeService {
         }
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1 + #p2", unless = "#result == null")
-    public Page<NodeDTO> findAll(Integer userId, Pageable pageable, int depth) {
-        return knowledgeNodeRepository.findByUserIdAndParentNodeIdIsNull(userId, pageable, depth).map(KnowledgeNodeMapper.INSTANCE::toNodeDTO);
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
+    public Page<NodeDTO> findAll(Integer userId, Pageable pageable) {
+        return knowledgeNodeRepository.findByUserIdAndParentNodeIdIsNull(userId, pageable).map(KnowledgeNodeMapper.INSTANCE::toNodeDTO);
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1 + #p2", unless = "#result == null")
     public List<NodeDTO> findByChildNode(Long id, Integer userId, int depth) {
         KnowledgeNode node = knowledgeNodeRepository.findById(id, depth).orElseThrow(NullPointerException::new);
         if (!Objects.equals(userId, node.getUserId())) {
@@ -228,10 +229,7 @@ public class KnowledgeNodeService {
         return map;
     }
 
-    public void deleteAll() {
-        knowledgeNodeRepository.deleteAll();
-    }
-
+    @CacheEvict(allEntries = true)
     public void deleteByUserId(Integer id) {
         knowledgeNodeRepository.deleteByUserId(id);
     }

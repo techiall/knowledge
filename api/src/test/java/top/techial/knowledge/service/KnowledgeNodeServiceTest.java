@@ -53,7 +53,7 @@ public class KnowledgeNodeServiceTest {
 
     @Test
     public void findAllTest() {
-        Page<NodeDTO> result = knowledgeNodeService.findAll(USER_ID, PageRequest.of(0, 10), 10);
+        Page<NodeDTO> result = knowledgeNodeService.findAll(USER_ID, PageRequest.of(0, 10));
         Assert.assertNotNull(result.getContent());
         System.out.println(result.getContent());
         Assert.assertFalse(result.getContent().isEmpty());

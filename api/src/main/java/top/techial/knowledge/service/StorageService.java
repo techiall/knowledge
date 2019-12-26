@@ -1,6 +1,10 @@
 package top.techial.knowledge.service;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import top.techial.knowledge.dao.StorageRepository;
@@ -11,6 +15,7 @@ import top.techial.knowledge.domain.Storage;
  */
 @Service
 @Log4j2
+@CacheConfig(cacheNames = {"user", "record", "node-relation", "knowledge-node"})
 public class StorageService {
     private final StorageRepository storageRepository;
 
@@ -18,21 +23,26 @@ public class StorageService {
         this.storageRepository = storageRepository;
     }
 
-    public Storage findById(String id) {
-        return storageRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException(String.format("id(SHA-1): [%s] not found.", id)));
-    }
-
-    public void save(String sha1, MultipartFile file) {
-        Storage storage = storageRepository.findById(sha1).orElse(new Storage());
+    @CacheEvict(allEntries = true)
+    @Async
+    public Storage save(String sha1, MultipartFile file) {
+        Storage storage = storageRepository.findFirstBySha1(sha1).orElse(new Storage());
         storage = storage
-            .setId(sha1)
+            .setSha1(sha1)
             .setContentType(file.getContentType())
             .setOriginalFilename(file.getOriginalFilename());
-        storageRepository.save(storage);
+        return storageRepository.save(storage);
     }
 
-    public void deleteById(String id) {
-        storageRepository.deleteById(id);
+    @CacheEvict(allEntries = true)
+    @Async
+    public void deleteBySHA1(String id) {
+        storageRepository.deleteBySha1(id);
+    }
+
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
+    public Storage findBySHA1(String id) {
+        return storageRepository.findFirstBySha1(id)
+            .orElseThrow(() -> new IllegalArgumentException(String.format("SHA1: [%s] not found.", id)));
     }
 }

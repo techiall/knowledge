@@ -5,8 +5,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -20,11 +19,12 @@ public class Storage implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * SHA-1
-     */
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
+    private String sha1;
 
     private String originalFilename;
 
