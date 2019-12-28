@@ -15,6 +15,8 @@ import java.util.Optional;
 public interface KnowledgeNodeRepository extends Neo4jRepository<KnowledgeNode, Long> {
     Page<KnowledgeNode> findByNameLikeAndUserId(String name, Integer userId, Pageable pageable);
 
+    Page<KnowledgeNode> findAllByNameLike(String name, Pageable pageable);
+
     Page<KnowledgeNode> findByUserIdAndParentNodeIdIsNull(Integer userId, Pageable pageable);
 
     Optional<KnowledgeNode> findFirstByName(String name);

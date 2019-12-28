@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -87,16 +86,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
             .rememberMe().tokenValiditySeconds(Math.toIntExact(TimeUnit.DAYS.toSeconds(7)))
 
-            .and()
+            .and();
 
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-            .sessionAuthenticationFailureHandler(authenticationFailureHandler)
-            .sessionFixation()
-            .newSession()
-            .maximumSessions(1)
-            .sessionRegistry(sessionRegistry())
-            .maxSessionsPreventsLogin(false);
+//            tmp
+//            .sessionManagement()
+//            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+//            .sessionAuthenticationFailureHandler(authenticationFailureHandler)
+//            .sessionFixation()
+//            .newSession()
+//            .maximumSessions(1)
+//            .sessionRegistry(sessionRegistry())
+//            .maxSessionsPreventsLogin(false);
 
         accepts(http);
     }

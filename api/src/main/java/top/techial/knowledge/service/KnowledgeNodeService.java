@@ -168,6 +168,11 @@ public class KnowledgeNodeService {
         return knowledgeNodeRepository.findByNameLikeAndUserId(name, userId, pageable);
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
+    public Page<KnowledgeNode> findAllByNameLike(String name, Pageable pageable) {
+        return knowledgeNodeRepository.findAllByNameLike(name, pageable);
+    }
+
     @CacheEvict(allEntries = true)
     @Async
     public void deleteByIds(Set<Long> ids, Integer userId) {
@@ -214,8 +219,16 @@ public class KnowledgeNodeService {
         if (!Objects.equals(userId, node.getUserId())) {
             throw new IllegalArgumentException();
         }
+        return getChildAndParent(id, depth);
+    }
+
+    public Map<String, List<NodeBaseDTO>> getChildAndParent(Long id, int depth) {
+        KnowledgeNode node = knowledgeNodeRepository.findById(id, depth)
+            .orElseThrow(NullPointerException::new);
+
         Map<String, List<NodeBaseDTO>> map = new HashMap<>();
-        map.put("child", node.getChildNodes().stream().map(KnowledgeNodeMapper.INSTANCE::toNodeBaseDTO).collect(Collectors.toList()));
+        map.put("child", node.getChildNodes().stream().map(KnowledgeNodeMapper.INSTANCE::toNodeBaseDTO)
+            .collect(Collectors.toList()));
 
         KnowledgeNode tmpNode = node;
         List<KnowledgeNode> list = new ArrayList<>();
