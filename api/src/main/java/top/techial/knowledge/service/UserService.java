@@ -35,12 +35,12 @@ public class UserService {
         this.entityManager = entityManager;
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + p0", unless = "#result == null")
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Optional<User> findByUserName(String userName) {
         return userRepository.findFirstByUserName(userName);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + p0", unless = "#result == null")
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Optional<User> findById(Integer id) {
         return userRepository.findById(id);
     }
@@ -77,7 +77,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + p0", unless = "#result == null")
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public boolean existsByUserName(String name) {
         return userRepository.existsByUserName(name);
     }
