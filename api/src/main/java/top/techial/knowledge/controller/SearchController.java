@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import top.techial.beans.ResultBean;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.dto.NodeBaseDTO;
+import top.techial.knowledge.mapper.KnowledgeNodeMapper;
 import top.techial.knowledge.service.KnowledgeNodeService;
 
 import java.util.Collections;
@@ -43,7 +44,7 @@ public class SearchController {
     private Map<Long, Object> convent(KnowledgeNode it) {
         Map<String, List<NodeBaseDTO>> result = knowledgeNodeService.getChildAndParent(it.getId(), 10);
         Map<String, Object> map = new HashMap<>();
-        map.put("node", it);
+        map.put("node", KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(it));
         map.put("info", result);
         return Collections.singletonMap(it.getId(), map);
     }
