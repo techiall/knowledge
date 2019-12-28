@@ -35,10 +35,12 @@ public class UserService {
         this.entityManager = entityManager;
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + p0", unless = "#result == null")
     public Optional<User> findByUserName(String userName) {
         return userRepository.findFirstByUserName(userName);
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + p0", unless = "#result == null")
     public Optional<User> findById(Integer id) {
         return userRepository.findById(id);
     }

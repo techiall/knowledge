@@ -222,6 +222,7 @@ public class KnowledgeNodeService {
         return getChildAndParent(id, depth);
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
     public Map<String, List<NodeBaseDTO>> getChildAndParent(Long id, int depth) {
         KnowledgeNode node = knowledgeNodeRepository.findById(id, depth)
             .orElseThrow(NullPointerException::new);
