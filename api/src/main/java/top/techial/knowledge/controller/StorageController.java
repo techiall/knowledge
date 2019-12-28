@@ -12,7 +12,6 @@ import top.techial.knowledge.service.FileStorageService;
 import top.techial.knowledge.service.NodeTextService;
 import top.techial.knowledge.service.StorageService;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +40,7 @@ public class StorageController {
      * 文本上传，对应 node 节点
      */
     @PostMapping("/text/{id}")
-    public ResultBean<Long> save(@Valid @RequestBody String text, @PathVariable Long id) {
+    public ResultBean<Long> save(@RequestBody(required = false) String text, @PathVariable Long id) {
         nodeTextService.save(text, id);
         return new ResultBean<>(id);
     }
