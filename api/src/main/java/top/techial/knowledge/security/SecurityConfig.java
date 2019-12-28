@@ -109,7 +109,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             http.csrf().disable();
         } else {
             http.authorizeRequests()
-                .antMatchers("/api/user/me", "/api/register/**", "/api/session/**")
+                .antMatchers("/api/user/me", "/api/register/**", "/api/session/**", "/api/search/**")
                 .permitAll()
                 .antMatchers("/api/**").authenticated();
             http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
