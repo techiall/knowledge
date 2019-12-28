@@ -23,7 +23,7 @@ knowledge graph system.
 ## Running
 
 ```shell
-java -jar api/target/api-0.1.0.jars
+java -jar api/target/api-0.1.0.jar
 ```
 
 
@@ -43,6 +43,6 @@ docker run -d top.techial/knowledge/api:latest
 ### jar
 
 ```shell
-java -jar api/target/api-0.1.0.jarss
+java -jar api/target/api-0.1.0.jar
 ```
 
