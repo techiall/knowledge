@@ -13,6 +13,7 @@ import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.service.KnowledgeNodeService;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,19 +30,22 @@ public class SearchController {
     }
 
     @GetMapping
-    public ResultBean<Page<Map<String, Map<String, List<NodeBaseDTO>>>>> search(
+    public ResultBean<Page<Map<Long, Object>>> search(
         @RequestParam(name = "q") String question,
         @PageableDefault Pageable pageable
     ) {
         question = String.format("*%s*", question);
-        Page<Map<String, Map<String, List<NodeBaseDTO>>>> result = knowledgeNodeService.findAllByNameLike(question, pageable)
+        Page<Map<Long, Object>> result = knowledgeNodeService.findAllByNameLike(question, pageable)
             .map(this::convent);
         return new ResultBean<>(result);
     }
 
-    private Map<String, Map<String, List<NodeBaseDTO>>> convent(KnowledgeNode it) {
+    private Map<Long, Object> convent(KnowledgeNode it) {
         Map<String, List<NodeBaseDTO>> result = knowledgeNodeService.getChildAndParent(it.getId(), 10);
-        return Collections.singletonMap(it.getName(), result);
+        Map<String, Object> map = new HashMap<>();
+        map.put("node", it);
+        map.put("info", result);
+        return Collections.singletonMap(it.getId(), map);
     }
 
 }
