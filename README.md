@@ -1,13 +1,14 @@
-# Knowledge-Grpah
+# Knowledge-Graph
 
-knowledge graph system.
+Knowledge graph system.
 
+This my graduation project.
 
 
 ### Prerequisites 
 
-*  [Apache Maven](https://maven.apache.org/)
-* [OpenJDK](https://openjdk.java.net/)
+*  [Apache Maven 3.0+](https://maven.apache.org/)
+* [OpenJDK 1.8+](https://openjdk.java.net/)
 * [Mysql 8.0](https://www.mysql.com/)
 * [Neo4j](https://neo4j.com/)
 
@@ -16,7 +17,7 @@ knowledge graph system.
 ### Installing
 
 1. git clone and enter dir `git clone https://github.com/techial1042/knowledge.git && cd knowledge`
-2. build with maven (`mvn clean package -DskipTests=true`)
+2. build with Maven (`mvn clean package -DskipTests=true`)
 
 
 
