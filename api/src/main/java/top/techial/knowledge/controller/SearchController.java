@@ -31,11 +31,16 @@ public class SearchController {
     }
 
     @GetMapping
-    public ResultBean<Page<Map<Long, Object>>> search(
+    public Object search(
         @RequestParam(name = "q") String question,
+        @RequestParam(required = false, defaultValue = "false") Boolean tips,
         @PageableDefault Pageable pageable
     ) {
         question = String.format("*%s*", question);
+        if (Boolean.TRUE.equals(tips)) {
+            return new ResultBean<>(knowledgeNodeService.findAllByNameLike(question, pageable)
+                .map(KnowledgeNodeMapper.INSTANCE::toNodeBaseDTO));
+        }
         Page<Map<Long, Object>> result = knowledgeNodeService.findAllByNameLike(question, pageable)
             .map(this::convent);
         return new ResultBean<>(result);
