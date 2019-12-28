@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import java.io.Serializable;
 import java.time.Instant;
 
 /**
@@ -18,7 +19,7 @@ import java.time.Instant;
 @Data
 @Accessors(chain = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NodeText {
+public class NodeText implements Serializable {
     @Id
     private Long id;
 

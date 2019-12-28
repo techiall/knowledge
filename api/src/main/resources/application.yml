@@ -38,7 +38,8 @@ spring:
       open-in-view: true
       auto-index: assert
   cache:
-    type: simple
+    jcache:
+      config: classpath:ehcache.xml
   servlet:
     multipart:
       max-file-size: 60MB

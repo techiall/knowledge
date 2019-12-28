@@ -21,7 +21,7 @@ import java.util.Set;
  * @author techial
  */
 @Service
-@CacheConfig(cacheNames = {"user", "record", "node-relation", "knowledge-node"})
+@CacheConfig(cacheNames = "user")
 public class RecordService {
     private final RecordRepository recordRepository;
     private final ObjectMapper objectMapper;

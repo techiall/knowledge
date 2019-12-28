@@ -16,7 +16,7 @@ import top.techial.knowledge.domain.Storage;
  */
 @Service
 @Log4j2
-@CacheConfig(cacheNames = {"user", "record", "node-relation", "knowledge-node"})
+@CacheConfig(cacheNames = "user")
 public class StorageService {
     private final StorageRepository storageRepository;
 
