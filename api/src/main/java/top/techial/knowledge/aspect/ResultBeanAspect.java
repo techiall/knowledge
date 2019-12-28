@@ -5,6 +5,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import top.techial.beans.ResultBean;
@@ -18,6 +19,7 @@ import top.techial.spring.data.PageDTO;
 @Aspect
 @Component
 @Log4j2
+@Order(1)
 public class ResultBeanAspect {
 
     private static ResultBean<PageDTO> convent(Page<?> page) {

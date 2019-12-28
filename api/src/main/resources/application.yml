@@ -64,5 +64,5 @@ storage:
 logging:
   level:
     org.neo4j.ogm: info
-    top.techial: info
+    top.techial: debug
 

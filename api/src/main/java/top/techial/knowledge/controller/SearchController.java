@@ -31,7 +31,7 @@ public class SearchController {
     }
 
     @GetMapping
-    public Object search(
+    public ResultBean<Object> search(
         @RequestParam(name = "q") String question,
         @RequestParam(required = false, defaultValue = "false") Boolean tips,
         @PageableDefault Pageable pageable
