@@ -11,13 +11,12 @@ import top.techial.beans.ResultBean;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.User;
 import top.techial.knowledge.dto.NodeBaseDTO;
+import top.techial.knowledge.dto.SearchDTO;
 import top.techial.knowledge.mapper.KnowledgeNodeMapper;
 import top.techial.knowledge.service.KnowledgeNodeService;
 import top.techial.knowledge.service.NodeTextService;
 import top.techial.knowledge.service.UserService;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,28 +47,26 @@ public class SearchController {
             return new ResultBean<>(knowledgeNodeService.findAllByNameLike(question, pageable)
                 .map(KnowledgeNodeMapper.INSTANCE::toNodeBaseDTO));
         }
-        Page<Map<Long, Object>> result = knowledgeNodeService.findAllByNameLike(question, pageable)
+        Page<SearchDTO> result = knowledgeNodeService.findAllByNameLike(question, pageable)
             .map(this::convent);
         return new ResultBean<>(result);
     }
 
-    private Map<Long, Object> convent(KnowledgeNode it) {
+    private SearchDTO convent(KnowledgeNode it) {
         Map<String, List<NodeBaseDTO>> result = knowledgeNodeService.getChildAndParent(it.getId(), 10);
-        String text = nodeTextService.findById(it.getId()).getText();
 
-        if (text == null) {
-            text = "";
-        }
+        String text = nodeTextService.findById(it.getId()).getText();
+        text = text == null ? "" : text;
         text = text.replaceAll("<[^>]*>", "");
         text = text.substring(0, Math.min(200, text.length()));
 
         String user = userService.findById(it.getUserId()).orElse(new User()).getNickName();
-        Map<String, Object> map = new HashMap<>();
-        map.put("node", KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(it));
-        map.put("info", result);
-        map.put("text", text);
-        map.put("user", user);
-        return Collections.singletonMap(it.getId(), map);
+
+        return new SearchDTO()
+            .setInfo(result)
+            .setText(text)
+            .setUser(user)
+            .setNode(KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(it));
     }
 
 }
