@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.techial.beans.ResultBean;
 import top.techial.knowledge.domain.KnowledgeNode;
+import top.techial.knowledge.domain.User;
 import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.mapper.KnowledgeNodeMapper;
 import top.techial.knowledge.service.KnowledgeNodeService;
@@ -55,11 +56,19 @@ public class SearchController {
     private Map<Long, Object> convent(KnowledgeNode it) {
         Map<String, List<NodeBaseDTO>> result = knowledgeNodeService.getChildAndParent(it.getId(), 10);
         String text = nodeTextService.findById(it.getId()).getText();
+
+        if (text == null) {
+            text = "";
+        }
+        text = text.replaceAll("<[^>]*>", "");
+        text = text.substring(0, Math.min(100, text.length()));
+
+        String user = userService.findById(it.getUserId()).orElse(new User()).getNickName();
         Map<String, Object> map = new HashMap<>();
         map.put("node", KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(it));
         map.put("info", result);
         map.put("text", text);
-        map.put("user", userService.findById(it.getUserId()).orElse(null));
+        map.put("user", user);
         return Collections.singletonMap(it.getId(), map);
     }
 

@@ -66,6 +66,7 @@ public class UserController {
     ) {
         if (userPrincipal.getId().equals(id)) {
             User user = userService.findById(id).orElseThrow(NullPointerException::new);
+            nickName = nickName == null ? "" : nickName;
             user.setNickName(nickName);
             userService.save(user);
             return new ResultBean<>(user);
