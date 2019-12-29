@@ -57,7 +57,7 @@ public class SearchController {
 
         String text = nodeTextService.findById(it.getId()).getText();
         text = text == null ? "" : text;
-        text = text.replaceAll("<[^>]*>", "");
+        text = text.replaceAll("<[^>]*>|&nbsp;", "").trim();
         text = text.substring(0, Math.min(200, text.length()));
 
         String user = userService.findById(it.getUserId()).orElse(new User()).getNickName();
