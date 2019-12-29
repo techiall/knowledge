@@ -12,6 +12,8 @@ import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.mapper.KnowledgeNodeMapper;
 import top.techial.knowledge.service.KnowledgeNodeService;
+import top.techial.knowledge.service.NodeTextService;
+import top.techial.knowledge.service.UserService;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,9 +27,13 @@ import java.util.Map;
 @RequestMapping("/api/search")
 public class SearchController {
     private final KnowledgeNodeService knowledgeNodeService;
+    private final NodeTextService nodeTextService;
+    private final UserService userService;
 
-    public SearchController(KnowledgeNodeService knowledgeNodeService) {
+    public SearchController(KnowledgeNodeService knowledgeNodeService, NodeTextService nodeTextService, UserService userService) {
         this.knowledgeNodeService = knowledgeNodeService;
+        this.nodeTextService = nodeTextService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -48,9 +54,12 @@ public class SearchController {
 
     private Map<Long, Object> convent(KnowledgeNode it) {
         Map<String, List<NodeBaseDTO>> result = knowledgeNodeService.getChildAndParent(it.getId(), 10);
+        String text = nodeTextService.findById(it.getId()).getText();
         Map<String, Object> map = new HashMap<>();
         map.put("node", KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(it));
         map.put("info", result);
+        map.put("text", text.substring(0, Math.min(text.length(), 100)));
+        map.put("user", userService.findById(it.getUserId()).orElse(null));
         return Collections.singletonMap(it.getId(), map);
     }
 
