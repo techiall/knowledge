@@ -61,7 +61,7 @@ public class SearchController {
             text = "";
         }
         text = text.replaceAll("<[^>]*>", "");
-        text = text.substring(0, Math.min(100, text.length()));
+        text = text.substring(0, Math.min(200, text.length()));
 
         String user = userService.findById(it.getUserId()).orElse(new User()).getNickName();
         Map<String, Object> map = new HashMap<>();
