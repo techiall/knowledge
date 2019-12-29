@@ -55,6 +55,9 @@ public class SearchController {
     private Map<Long, Object> convent(KnowledgeNode it) {
         Map<String, List<NodeBaseDTO>> result = knowledgeNodeService.getChildAndParent(it.getId(), 10);
         String text = nodeTextService.findById(it.getId()).getText();
+        if (text == null) {
+            text = "";
+        }
         Map<String, Object> map = new HashMap<>();
         map.put("node", KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(it));
         map.put("info", result);
