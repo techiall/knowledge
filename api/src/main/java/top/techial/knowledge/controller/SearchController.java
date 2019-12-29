@@ -55,13 +55,10 @@ public class SearchController {
     private Map<Long, Object> convent(KnowledgeNode it) {
         Map<String, List<NodeBaseDTO>> result = knowledgeNodeService.getChildAndParent(it.getId(), 10);
         String text = nodeTextService.findById(it.getId()).getText();
-        if (text == null) {
-            text = "";
-        }
         Map<String, Object> map = new HashMap<>();
         map.put("node", KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(it));
         map.put("info", result);
-        map.put("text", text.substring(0, Math.min(text.length(), 100)));
+        map.put("text", text);
         map.put("user", userService.findById(it.getUserId()).orElse(null));
         return Collections.singletonMap(it.getId(), map);
     }
