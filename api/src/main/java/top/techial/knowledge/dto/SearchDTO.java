@@ -3,9 +3,6 @@ package top.techial.knowledge.dto;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * @author techial
  */
@@ -18,7 +15,5 @@ public class SearchDTO {
     private String text;
 
     private NodeInfoDTO node;
-
-    private Map<String, List<NodeBaseDTO>> info;
 
 }
