@@ -32,7 +32,7 @@ public interface KnowledgeNodeMapper {
     NodeInfoDTO toNodeInfoDTO(KnowledgeNode knowledgeNode);
 
     default List<NodeDTO> childNodes(KnowledgeNode knowledgeNode) {
-        return knowledgeNode.getChildNodes().stream()
+        return knowledgeNode.getChildNodes().parallelStream()
             .sorted(Comparator.comparing(KnowledgeNode::getCreateTime))
             .map(this::toNodeDTO).collect(Collectors.toList());
     }

@@ -40,7 +40,7 @@ public class NodeRelationService {
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #name", unless = "#result == null")
     public List<RelationDTO> findByStartNodeName(String name) {
         return nodeRelationRepository.findByStartNodeName(name)
-            .stream()
+            .parallelStream()
             .map(NodeRelationMapper.INSTANCE::toRelationDTO)
             .collect(Collectors.toList());
     }

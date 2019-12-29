@@ -209,7 +209,7 @@ public class KnowledgeNodeService {
         if (!Objects.equals(userId, node.getUserId())) {
             throw new IllegalArgumentException();
         }
-        return node.getChildNodes().stream().map(KnowledgeNodeMapper.INSTANCE::toNodeDTO)
+        return node.getChildNodes().parallelStream().map(KnowledgeNodeMapper.INSTANCE::toNodeDTO)
             .collect(Collectors.toList());
     }
 
@@ -228,7 +228,7 @@ public class KnowledgeNodeService {
             .orElseThrow(NullPointerException::new);
 
         Map<String, List<NodeBaseDTO>> map = new HashMap<>();
-        map.put("child", node.getChildNodes().stream().map(KnowledgeNodeMapper.INSTANCE::toNodeBaseDTO)
+        map.put("child", node.getChildNodes().parallelStream().map(KnowledgeNodeMapper.INSTANCE::toNodeBaseDTO)
             .collect(Collectors.toList()));
 
         KnowledgeNode tmpNode = node;
@@ -239,7 +239,7 @@ public class KnowledgeNodeService {
             list.add(tmp1);
             tmpNode = tmp1;
         }
-        map.put("parent", list.stream().map(KnowledgeNodeMapper.INSTANCE::toNodeBaseDTO).collect(Collectors.toList()));
+        map.put("parent", list.parallelStream().map(KnowledgeNodeMapper.INSTANCE::toNodeBaseDTO).collect(Collectors.toList()));
         return map;
     }
 
