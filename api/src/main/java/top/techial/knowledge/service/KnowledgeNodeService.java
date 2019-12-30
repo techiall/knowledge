@@ -82,12 +82,9 @@ public class KnowledgeNodeService {
         return knowledgeNodeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
-    public Object findByIdGraph(Long id, Integer userId) {
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
+    public Object findByIdGraph(Long id) {
         KnowledgeNode knowledgeNode = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
-        if (!Objects.equals(knowledgeNode.getUserId(), userId)) {
-            throw new IllegalArgumentException();
-        }
         List<NodeRelation> list = nodeRelationRepository.findByStartNodeName(knowledgeNode.getName());
         if (log.isDebugEnabled()) {
             log.debug(list);
@@ -211,15 +208,6 @@ public class KnowledgeNodeService {
         }
         return node.getChildNodes().parallelStream().map(KnowledgeNodeMapper.INSTANCE::toNodeDTO)
             .collect(Collectors.toList());
-    }
-
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1 + #p2", unless = "#result == null")
-    public Map<String, List<NodeBaseDTO>> getChildAndParent(Long id, Integer userId, int depth) {
-        KnowledgeNode node = knowledgeNodeRepository.findById(id, depth).orElseThrow(NullPointerException::new);
-        if (!Objects.equals(userId, node.getUserId())) {
-            throw new IllegalArgumentException();
-        }
-        return getChildAndParent(id, depth);
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")

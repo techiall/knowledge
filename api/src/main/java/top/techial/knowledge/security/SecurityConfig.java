@@ -5,10 +5,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -86,17 +88,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
             .rememberMe().tokenValiditySeconds(Math.toIntExact(TimeUnit.DAYS.toSeconds(7)))
 
-            .and();
+            .and()
 
-//            tmp
-//            .sessionManagement()
-//            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-//            .sessionAuthenticationFailureHandler(authenticationFailureHandler)
-//            .sessionFixation()
-//            .newSession()
-//            .maximumSessions(1)
-//            .sessionRegistry(sessionRegistry())
-//            .maxSessionsPreventsLogin(false);
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+            .sessionAuthenticationFailureHandler(authenticationFailureHandler)
+            .sessionFixation()
+            .newSession()
+            .maximumSessions(1)
+            .sessionRegistry(sessionRegistry())
+            .maxSessionsPreventsLogin(false);
 
         accepts(http);
     }
@@ -108,9 +109,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll();
             http.csrf().disable();
         } else {
-            http.authorizeRequests()
-                .antMatchers("/api/user/me", "/api/register/**", "/api/session/**", "/api/search/**")
-                .permitAll()
+            http
+                .authorizeRequests()
+                .antMatchers("/api/user/me", "/api/register/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/storage/text/**", "/api/node/**/graph", "/api/node/**/link", "/api/search/**").permitAll()
                 .antMatchers("/api/**").authenticated();
             http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         }

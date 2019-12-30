@@ -47,7 +47,7 @@ public class KnowledgeNodeServiceTest {
     public void findByIdGraph() {
         KnowledgeNode k = knowledgeNodeService.findById(1L);
         Assert.assertNotNull(k);
-        Object id = knowledgeNodeService.findByIdGraph(1L, USER_ID);
+        Object id = knowledgeNodeService.findByIdGraph(1L);
         Assert.assertNotNull(id);
     }
 
