@@ -14,6 +14,9 @@ import java.time.Instant;
 @Data
 @Accessors(chain = true)
 @Entity
+@Table(indexes = {
+    @Index(columnList = "nodeId")
+})
 public class Record implements Serializable {
 
     private static final long serialVersionUID = 1L;
