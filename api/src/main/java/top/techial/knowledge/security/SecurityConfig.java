@@ -112,7 +112,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             http
                 .authorizeRequests()
                 .antMatchers("/api/user/me", "/api/register/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/storage/text/**", "/api/node/**/graph", "/api/node/**/link", "/api/search/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/storage/text/**", "/api/storage/preview/**", "/api/node/**/graph", "/api/node/**/link", "/api/search/**").permitAll()
                 .antMatchers("/api/**").authenticated();
             http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         }
