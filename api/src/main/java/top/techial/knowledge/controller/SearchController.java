@@ -1,8 +1,10 @@
 package top.techial.knowledge.controller;
 
+import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +18,8 @@ import top.techial.knowledge.service.KnowledgeNodeService;
 import top.techial.knowledge.service.NodeTextService;
 import top.techial.knowledge.service.UserService;
 
+import java.util.concurrent.Future;
+
 /**
  * @author techial
  */
@@ -25,11 +29,13 @@ public class SearchController {
     private final KnowledgeNodeService knowledgeNodeService;
     private final NodeTextService nodeTextService;
     private final UserService userService;
+    private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
-    public SearchController(KnowledgeNodeService knowledgeNodeService, NodeTextService nodeTextService, UserService userService) {
+    public SearchController(KnowledgeNodeService knowledgeNodeService, NodeTextService nodeTextService, UserService userService, ThreadPoolTaskExecutor threadPoolTaskExecutor) {
         this.knowledgeNodeService = knowledgeNodeService;
         this.nodeTextService = nodeTextService;
         this.userService = userService;
+        this.threadPoolTaskExecutor = threadPoolTaskExecutor;
     }
 
     @GetMapping
@@ -48,18 +54,22 @@ public class SearchController {
         return new ResultBean<>(result);
     }
 
+    @SneakyThrows
     private SearchDTO convent(KnowledgeNode it) {
+        Future<String> text = threadPoolTaskExecutor.submit(() -> getText(it));
+        Future<User> user = threadPoolTaskExecutor.submit(() -> userService.findById(it.getUserId()).orElse(new User()));
+        return new SearchDTO()
+            .setText(text.get())
+            .setUser(user.get().getNickName())
+            .setNode(KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(it));
+    }
+
+    private String getText(KnowledgeNode it) {
         String text = nodeTextService.findById(it.getId()).getText();
         text = text == null ? "" : text;
         text = text.replaceAll("<[^>]*>|&nbsp;", "").trim();
         text = text.substring(0, Math.min(200, text.length()));
-
-        String user = userService.findById(it.getUserId()).orElse(new User()).getNickName();
-
-        return new SearchDTO()
-            .setText(text)
-            .setUser(user)
-            .setNode(KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(it));
+        return text;
     }
 
 }

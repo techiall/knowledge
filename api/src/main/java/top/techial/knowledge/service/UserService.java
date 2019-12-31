@@ -48,9 +48,6 @@ public class UserService {
     @CacheEvict(allEntries = true)
     @Transactional
     public void updatePassword(Integer id, String password) {
-        if (password == null) {
-            throw new IllegalArgumentException("Empty encoded password");
-        }
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaUpdate<User> criteria = builder.createCriteriaUpdate(User.class);
         Root<User> root = criteria.from(User.class);

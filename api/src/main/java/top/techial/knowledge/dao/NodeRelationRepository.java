@@ -14,5 +14,4 @@ public interface NodeRelationRepository extends Neo4jRepository<NodeRelation, Lo
 
     List<NodeRelation> findByStartNodeName(String name);
 
-    List<NodeRelation> findByStartNodeId(Long id);
 }

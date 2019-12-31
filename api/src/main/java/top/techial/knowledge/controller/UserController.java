@@ -83,10 +83,8 @@ public class UserController {
         String password
     ) {
         User user = userService.findById(id).orElseThrow(() -> new UserException(id));
-        if (userPrincipal.getId().equals(id)) {
-            if (!passwordEncoder.matches(srcPassword, user.getPassword())) {
-                throw new IllegalArgumentException("password not match.");
-            }
+        if (userPrincipal.getId().equals(id) && !passwordEncoder.matches(srcPassword, user.getPassword())) {
+            throw new IllegalArgumentException("password not match.");
         }
 
         userService.updatePassword(id, password);
