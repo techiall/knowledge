@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
@@ -88,8 +89,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
             .rememberMe().tokenValiditySeconds(Math.toIntExact(TimeUnit.DAYS.toSeconds(7)))
 
-            .and()
+            .and();
 
+        sessionHandler(http);
+        accepts(http);
+    }
+
+    private SessionManagementConfigurer<HttpSecurity>.ConcurrencyControlConfigurer sessionHandler(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             .sessionAuthenticationFailureHandler(authenticationFailureHandler)
@@ -98,23 +105,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .maximumSessions(1)
             .sessionRegistry(sessionRegistry())
             .maxSessionsPreventsLogin(false);
-
-        accepts(http);
     }
 
-    private void accepts(HttpSecurity http) throws Exception {
+    private void accepts(HttpSecurity httpSecurity) throws Exception {
         if (environment.acceptsProfiles(Profiles.of("dev"))) {
-            http.authorizeRequests()
+            httpSecurity.authorizeRequests()
                 .antMatchers("/api/**")
                 .permitAll();
-            http.csrf().disable();
+            httpSecurity.csrf().disable();
         } else {
-            http
+            httpSecurity
                 .authorizeRequests()
                 .antMatchers("/api/user/me", "/api/register/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/storage/text/**", "/api/storage/preview/**", "/api/node/**/graph", "/api/node/**/link", "/api/search/**").permitAll()
                 .antMatchers("/api/**").authenticated();
-            http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+            httpSecurity.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         }
 
     }
