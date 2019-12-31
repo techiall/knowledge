@@ -33,6 +33,8 @@ java -jar api/target/api-0.1.0.jar
 
 ### docker (recommend)
 
+
+
 ```shell
 cd ./api
 
@@ -40,6 +42,9 @@ mvn clean compile jib:dockerBuild -DskipTests=true
 
 docker run -d top.techial/knowledge/api:latest
 ```
+
+Or enter project dir, running `docker-compose up -d`
+
 
 ### jar
 
