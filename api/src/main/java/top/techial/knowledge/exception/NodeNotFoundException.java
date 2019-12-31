@@ -8,10 +8,6 @@ public class NodeNotFoundException extends RuntimeException {
         super(String.format("nodeId: [%s] not found.", id));
     }
 
-    public NodeNotFoundException() {
-        super();
-    }
-
     public NodeNotFoundException(Object object) {
         super(String.format("params: [%s]", object));
     }

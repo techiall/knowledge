@@ -22,7 +22,15 @@ import top.techial.beans.ResultCode;
 @ResponseBody
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler({
+        IllegalArgumentException.class,
+        UserNotFoundNodeException.class,
+        NodeNotFoundException.class,
+        UserException.class,
+        MethodArgumentNotValidException.class,
+        MissingServletRequestParameterException.class,
+        JsonProcessingException.class
+    })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Object illegalArgumentException(Throwable throwable) {
         if (log.isWarnEnabled()) {
@@ -30,26 +38,6 @@ public class GlobalExceptionHandler {
         }
         return new ResultBean<>(ResultCode.CHECK_FAIL);
     }
-
-    @ExceptionHandler({MethodArgumentNotValidException.class,
-        MissingServletRequestParameterException.class, JsonProcessingException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Object methodArgumentNotValidException(Throwable throwable) {
-        if (log.isWarnEnabled()) {
-            log.warn(throwable.getMessage());
-        }
-        return new ResultBean<>(ResultCode.CHECK_FAIL);
-    }
-
-    @ExceptionHandler({UserNotFoundNodeException.class, NodeNotFoundException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Object nodeNotFoundException(Throwable throwable) {
-        if (log.isWarnEnabled()) {
-            log.warn(throwable.getMessage());
-        }
-        return new ResultBean<>(ResultCode.CHECK_FAIL);
-    }
-
 
     @ExceptionHandler(MediaTypeNotSupportedStatusException.class)
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
