@@ -27,13 +27,14 @@ public class StorageService {
 
     @CacheEvict(allEntries = true)
     @Transactional
-    public Storage save(String sha1, MultipartFile file) {
+    @Async
+    public void save(String sha1, MultipartFile file) {
         Storage storage = storageRepository.findFirstBySha1(sha1).orElse(new Storage());
         storage = storage
             .setSha1(sha1)
             .setContentType(file.getContentType())
             .setOriginalFilename(file.getOriginalFilename());
-        return storageRepository.save(storage);
+        storageRepository.save(storage);
     }
 
     @CacheEvict(allEntries = true)

@@ -35,14 +35,14 @@ public class RecordService {
     @Async
     @CacheEvict(allEntries = true)
     @Transactional
-    public Record save(Long nodeId, Integer userId, OperatorMessageEnum operatorMessageEnum, Object message) {
+    public void save(Long nodeId, Integer userId, OperatorMessageEnum operatorMessageEnum, Object message) {
         Record record = new Record()
             .setNodeId(nodeId)
             .setOperator(operatorMessageEnum)
             .setMessage(operatorMessageEnum.getMessage())
             .setContent(objectMapper.writeValueAsString(message))
             .setUser(new User().setId(userId));
-        return recordRepository.save(record);
+        recordRepository.save(record);
     }
 
     @CacheEvict(allEntries = true)

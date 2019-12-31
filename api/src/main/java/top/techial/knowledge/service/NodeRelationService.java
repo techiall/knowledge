@@ -1,10 +1,12 @@
 package top.techial.knowledge.service;
 
+import lombok.SneakyThrows;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import top.techial.knowledge.dao.KnowledgeNodeRepository;
 import top.techial.knowledge.dao.NodeRelationRepository;
@@ -17,6 +19,7 @@ import top.techial.knowledge.vo.ParentVO;
 import top.techial.knowledge.vo.RelationVO;
 
 import java.util.List;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -27,15 +30,16 @@ import java.util.stream.Collectors;
 public class NodeRelationService {
     private final NodeRelationRepository nodeRelationRepository;
     private final KnowledgeNodeRepository knowledgeNodeRepository;
+    private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
-    public NodeRelationService(NodeRelationRepository nodeRelationRepository, KnowledgeNodeRepository knowledgeNodeRepository) {
+    public NodeRelationService(
+        NodeRelationRepository nodeRelationRepository,
+        KnowledgeNodeRepository knowledgeNodeRepository,
+        ThreadPoolTaskExecutor threadPoolTaskExecutor
+    ) {
         this.nodeRelationRepository = nodeRelationRepository;
         this.knowledgeNodeRepository = knowledgeNodeRepository;
-    }
-
-    @CacheEvict(allEntries = true)
-    public Iterable<NodeRelation> saveAll(Iterable<NodeRelation> buildNodeRelation) {
-        return nodeRelationRepository.saveAll(buildNodeRelation);
+        this.threadPoolTaskExecutor = threadPoolTaskExecutor;
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #name", unless = "#result == null")
@@ -44,11 +48,6 @@ public class NodeRelationService {
             .parallelStream()
             .map(NodeRelationMapper.INSTANCE::toRelationDTO)
             .collect(Collectors.toList());
-    }
-
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #id", unless = "#result == null")
-    public List<NodeRelation> findByStartNodeId(Long id) {
-        return nodeRelationRepository.findByStartNodeId(id);
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #id", unless = "#result == null")
@@ -62,30 +61,33 @@ public class NodeRelationService {
     }
 
     @CacheEvict(allEntries = true)
+    @SneakyThrows
     public NodeRelation save(RelationVO relationVO) {
-        KnowledgeNode startNode = knowledgeNodeRepository.findFirstByName(relationVO.getStartNode())
-            .orElseThrow(() -> new NodeNotFoundException(relationVO));
-        KnowledgeNode endNode = knowledgeNodeRepository.findFirstByName(relationVO.getEndNode())
-            .orElseThrow(() -> new NodeNotFoundException(relationVO));
+        Future<KnowledgeNode> node1Future = threadPoolTaskExecutor.submit(() -> knowledgeNodeRepository
+            .findFirstByName(relationVO.getStartNode()).orElseThrow(() -> new NodeNotFoundException(relationVO)));
+
+        Future<KnowledgeNode> node2Future = threadPoolTaskExecutor.submit(() -> knowledgeNodeRepository
+            .findFirstByName(relationVO.getEndNode()).orElseThrow(() -> new NodeNotFoundException(relationVO)));
 
         return nodeRelationRepository.save(new NodeRelation()
-            .setStartNode(startNode)
-            .setEndNode(endNode)
+            .setStartNode(node1Future.get())
+            .setEndNode(node2Future.get())
             .setProperty(relationVO.getProperty()));
     }
 
     @CacheEvict(allEntries = true)
+    @SneakyThrows
     public NodeRelation updateById(Long id, RelationVO relationVO) {
         NodeRelation relation = nodeRelationRepository.findById(id)
             .orElseThrow(() -> new NodeNotFoundException(id));
 
-        KnowledgeNode node1 = knowledgeNodeRepository.findFirstByName(relationVO.getStartNode())
-            .orElseThrow(() -> new NodeNotFoundException(relationVO));
+        Future<KnowledgeNode> node1Future = threadPoolTaskExecutor.submit(() -> knowledgeNodeRepository
+            .findFirstByName(relationVO.getStartNode()).orElseThrow(() -> new NodeNotFoundException(relationVO)));
 
-        KnowledgeNode node2 = knowledgeNodeRepository.findFirstByName(relationVO.getEndNode())
-            .orElseThrow(() -> new NodeNotFoundException(relationVO));
+        Future<KnowledgeNode> node2Future = threadPoolTaskExecutor.submit(() -> knowledgeNodeRepository
+            .findFirstByName(relationVO.getEndNode()).orElseThrow(() -> new NodeNotFoundException(relationVO)));
 
-        relation.setStartNode(node1).setEndNode(node2).setProperty(relationVO.getProperty());
+        relation.setStartNode(node1Future.get()).setEndNode(node2Future.get()).setProperty(relationVO.getProperty());
         return nodeRelationRepository.save(relation);
     }
 
@@ -102,6 +104,7 @@ public class NodeRelationService {
         if (node.getChildNodes().isEmpty()) {
             throw new IllegalArgumentException();
         }
+
         KnowledgeNode childNode = knowledgeNodeRepository.findFirstByName(parentVO.getChildName())
             .orElseThrow(() -> new NodeNotFoundException(parentVO));
 

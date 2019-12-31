@@ -3,6 +3,7 @@ package top.techial.knowledge.service;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.dao.NodeTextRepository;
@@ -28,6 +29,7 @@ public class NodeTextService {
 
     @CacheEvict(allEntries = true)
     @Transactional
+    @Async
     public void save(String text, Long id) {
         NodeText nodeText = nodeTextRepository.findById(id).orElse(new NodeText());
         nodeText = nodeText.setId(id).setText(text);

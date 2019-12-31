@@ -10,6 +10,14 @@ server:
 spring:
   application:
     name: knowledge-dev
+  task:
+    execution:
+      pool:
+        core-size: 4
+        max-size: 16
+        keep-alive: 180s
+        queue-capacity: 512
+      thread-name-prefix: knowledge-
   profiles:
     active: dev
   datasource:
