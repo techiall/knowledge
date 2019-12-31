@@ -27,7 +27,6 @@ public class StorageService {
 
     @CacheEvict(allEntries = true)
     @Transactional
-    @Async
     public void save(String sha1, MultipartFile file) {
         Storage storage = storageRepository.findFirstBySha1(sha1).orElse(new Storage());
         storage = storage
