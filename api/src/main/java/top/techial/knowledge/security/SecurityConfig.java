@@ -91,7 +91,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
             .and();
 
-        sessionHandler(http);
+        // tmp
+        // sessionHandler(http);
         accepts(http);
     }
 
