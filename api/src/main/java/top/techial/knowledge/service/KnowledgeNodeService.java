@@ -14,6 +14,8 @@ import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
 import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.dto.NodeDTO;
+import top.techial.knowledge.exception.NodeNotFoundException;
+import top.techial.knowledge.exception.UserNotFoundNodeException;
 import top.techial.knowledge.mapper.KnowledgeNodeMapper;
 import top.techial.knowledge.vo.NodeVO;
 
@@ -37,9 +39,11 @@ public class KnowledgeNodeService {
 
     @CacheEvict(allEntries = true)
     public KnowledgeNode update(Long id, Integer userId, NodeVO nodeVO) {
-        KnowledgeNode node = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
+        KnowledgeNode node = knowledgeNodeRepository.findById(id)
+            .orElseThrow(() -> new NodeNotFoundException(id));
+
         if (!Objects.equals(userId, node.getUserId())) {
-            throw new IllegalArgumentException();
+            throw new UserNotFoundNodeException(userId, id);
         }
         node.setName(nodeVO.getName())
             .setLabels(nodeVO.getLabels())
@@ -79,12 +83,13 @@ public class KnowledgeNodeService {
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public KnowledgeNode findById(Long id) {
-        return knowledgeNodeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+        return knowledgeNodeRepository.findById(id).orElseThrow(() -> new NodeNotFoundException(id));
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Object findByIdGraph(Long id) {
-        KnowledgeNode knowledgeNode = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
+        KnowledgeNode knowledgeNode = knowledgeNodeRepository.findById(id)
+            .orElseThrow(() -> new NodeNotFoundException(id));
         List<NodeRelation> list = nodeRelationRepository.findByStartNodeName(knowledgeNode.getName());
         if (log.isDebugEnabled()) {
             log.debug(list);
@@ -108,7 +113,7 @@ public class KnowledgeNodeService {
         while (!queue.isEmpty()) {
             KnowledgeNode node = knowledgeNodeRepository
                 .findById(queue.removeFirst().getId())
-                .orElseThrow(NullPointerException::new);
+                .orElseThrow(() -> new NodeNotFoundException(id));
 
             for (KnowledgeNode childNode : node.getChildNodes()) {
                 nodes.add(buildNodes(childNode.getId(), childNode.getName()));
@@ -122,7 +127,7 @@ public class KnowledgeNodeService {
         KnowledgeNode tmpNode = knowledgeNode;
         while (tmpNode.getParentNodeId() != null) {
             KnowledgeNode node = knowledgeNodeRepository.findById(tmpNode.getParentNodeId())
-                .orElseThrow(NullPointerException::new);
+                .orElseThrow(() -> new NodeNotFoundException(id));
             nodes.add(buildNodes(node.getId(), node.getName()));
             links.add(buildLinks(node.getId(), tmpNode.getId(),
                 Collections.singletonMap("relation", "parent-relation")));
@@ -152,9 +157,10 @@ public class KnowledgeNodeService {
 
     @CacheEvict(allEntries = true)
     public KnowledgeNode updateName(Long id, Integer userId, String name) {
-        KnowledgeNode node = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
+        KnowledgeNode node = knowledgeNodeRepository.findById(id)
+            .orElseThrow(() -> new NodeNotFoundException(id));
         if (!Objects.equals(userId, node.getUserId())) {
-            throw new IllegalArgumentException();
+            throw new UserNotFoundNodeException(userId, id);
         }
         node.setName(name);
         return knowledgeNodeRepository.save(node);
@@ -180,7 +186,7 @@ public class KnowledgeNodeService {
     public void deleteById(Long id, Integer userId) {
         KnowledgeNode node = knowledgeNodeRepository.findById(id).orElseThrow(NullPointerException::new);
         if (!Objects.equals(userId, node.getUserId())) {
-            throw new IllegalArgumentException();
+            throw new UserNotFoundNodeException(userId, id);
         }
         knowledgeNodeRepository.delete(node);
         if (node.getParentNodeId() == null) {
@@ -202,9 +208,10 @@ public class KnowledgeNodeService {
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1 + #p2", unless = "#result == null")
     public List<NodeDTO> findByChildNode(Long id, Integer userId, int depth) {
-        KnowledgeNode node = knowledgeNodeRepository.findById(id, depth).orElseThrow(NullPointerException::new);
+        KnowledgeNode node = knowledgeNodeRepository.findById(id, depth)
+            .orElseThrow(() -> new NodeNotFoundException(id));
         if (!Objects.equals(userId, node.getUserId())) {
-            throw new IllegalArgumentException();
+            throw new UserNotFoundNodeException(userId, id);
         }
         return node.getChildNodes().parallelStream().map(KnowledgeNodeMapper.INSTANCE::toNodeDTO)
             .collect(Collectors.toList());
@@ -213,7 +220,7 @@ public class KnowledgeNodeService {
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
     public Map<String, List<NodeBaseDTO>> getChildAndParent(Long id, int depth) {
         KnowledgeNode node = knowledgeNodeRepository.findById(id, depth)
-            .orElseThrow(NullPointerException::new);
+            .orElseThrow(() -> new NodeNotFoundException(id));
 
         Map<String, List<NodeBaseDTO>> map = new HashMap<>();
         map.put("child", node.getChildNodes().parallelStream().map(KnowledgeNodeMapper.INSTANCE::toNodeBaseDTO)
@@ -223,7 +230,7 @@ public class KnowledgeNodeService {
         List<KnowledgeNode> list = new ArrayList<>();
         while (tmpNode.getParentNodeId() != null) {
             KnowledgeNode tmp1 = knowledgeNodeRepository.findById(tmpNode.getParentNodeId())
-                .orElseThrow(NullPointerException::new);
+                .orElseThrow(() -> new NodeNotFoundException(id));
             list.add(tmp1);
             tmpNode = tmp1;
         }

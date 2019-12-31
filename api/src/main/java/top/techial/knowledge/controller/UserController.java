@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
 import top.techial.beans.ResultCode;
 import top.techial.knowledge.domain.User;
+import top.techial.knowledge.exception.UserException;
 import top.techial.knowledge.security.SessionService;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.KnowledgeNodeService;
@@ -65,7 +66,7 @@ public class UserController {
         String nickName
     ) {
         if (userPrincipal.getId().equals(id)) {
-            User user = userService.findById(id).orElseThrow(NullPointerException::new);
+            User user = userService.findById(id).orElseThrow(() -> new UserException(id));
             nickName = nickName == null ? "" : nickName;
             user.setNickName(nickName);
             userService.save(user);
@@ -81,10 +82,10 @@ public class UserController {
         String srcPassword,
         String password
     ) {
-        User user = userService.findById(id).orElseThrow(NullPointerException::new);
+        User user = userService.findById(id).orElseThrow(() -> new UserException(id));
         if (userPrincipal.getId().equals(id)) {
             if (!passwordEncoder.matches(srcPassword, user.getPassword())) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("password not match.");
             }
         }
 

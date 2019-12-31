@@ -11,6 +11,7 @@ import top.techial.knowledge.dao.NodeRelationRepository;
 import top.techial.knowledge.domain.KnowledgeNode;
 import top.techial.knowledge.domain.NodeRelation;
 import top.techial.knowledge.dto.RelationDTO;
+import top.techial.knowledge.exception.NodeNotFoundException;
 import top.techial.knowledge.mapper.NodeRelationMapper;
 import top.techial.knowledge.vo.ParentVO;
 import top.techial.knowledge.vo.RelationVO;
@@ -63,9 +64,10 @@ public class NodeRelationService {
     @CacheEvict(allEntries = true)
     public NodeRelation save(RelationVO relationVO) {
         KnowledgeNode startNode = knowledgeNodeRepository.findFirstByName(relationVO.getStartNode())
-            .orElseThrow(NullPointerException::new);
+            .orElseThrow(() -> new NodeNotFoundException(relationVO));
         KnowledgeNode endNode = knowledgeNodeRepository.findFirstByName(relationVO.getEndNode())
-            .orElseThrow(NullPointerException::new);
+            .orElseThrow(() -> new NodeNotFoundException(relationVO));
+
         return nodeRelationRepository.save(new NodeRelation()
             .setStartNode(startNode)
             .setEndNode(endNode)
@@ -74,9 +76,15 @@ public class NodeRelationService {
 
     @CacheEvict(allEntries = true)
     public NodeRelation updateById(Long id, RelationVO relationVO) {
-        NodeRelation relation = nodeRelationRepository.findById(id).orElseThrow(NullPointerException::new);
-        KnowledgeNode node1 = knowledgeNodeRepository.findFirstByName(relationVO.getStartNode()).orElseThrow(NullPointerException::new);
-        KnowledgeNode node2 = knowledgeNodeRepository.findFirstByName(relationVO.getEndNode()).orElseThrow(NullPointerException::new);
+        NodeRelation relation = nodeRelationRepository.findById(id)
+            .orElseThrow(() -> new NodeNotFoundException(id));
+
+        KnowledgeNode node1 = knowledgeNodeRepository.findFirstByName(relationVO.getStartNode())
+            .orElseThrow(() -> new NodeNotFoundException(relationVO));
+
+        KnowledgeNode node2 = knowledgeNodeRepository.findFirstByName(relationVO.getEndNode())
+            .orElseThrow(() -> new NodeNotFoundException(relationVO));
+
         relation.setStartNode(node1).setEndNode(node2).setProperty(relationVO.getProperty());
         return nodeRelationRepository.save(relation);
     }
@@ -88,14 +96,21 @@ public class NodeRelationService {
 
     @CacheEvict(allEntries = true)
     public KnowledgeNode updateParent(ParentVO parentVO) {
-        KnowledgeNode node = knowledgeNodeRepository.findFirstByName(parentVO.getSrcParentName()).orElseThrow(NullPointerException::new);
+        KnowledgeNode node = knowledgeNodeRepository.findFirstByName(parentVO.getSrcParentName())
+            .orElseThrow(() -> new NodeNotFoundException(parentVO));
+
         if (node.getChildNodes().isEmpty()) {
             throw new IllegalArgumentException();
         }
-        KnowledgeNode childNode = knowledgeNodeRepository.findFirstByName(parentVO.getChildName()).orElseThrow(NullPointerException::new);
+        KnowledgeNode childNode = knowledgeNodeRepository.findFirstByName(parentVO.getChildName())
+            .orElseThrow(() -> new NodeNotFoundException(parentVO));
+
         node.getChildNodes().remove(childNode);
         knowledgeNodeRepository.save(node);
-        KnowledgeNode node1 = knowledgeNodeRepository.findFirstByName(parentVO.getNewParentName()).orElseThrow(NullPointerException::new);
+
+        KnowledgeNode node1 = knowledgeNodeRepository.findFirstByName(parentVO.getNewParentName())
+            .orElseThrow(() -> new NodeNotFoundException(parentVO));
+
         node1.getChildNodes().add(childNode);
         return knowledgeNodeRepository.save(node1);
     }

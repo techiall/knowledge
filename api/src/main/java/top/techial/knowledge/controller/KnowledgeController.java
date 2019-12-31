@@ -12,6 +12,7 @@ import top.techial.knowledge.domain.OperatorMessageEnum;
 import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.dto.NodeDTO;
 import top.techial.knowledge.dto.NodeInfoDTO;
+import top.techial.knowledge.exception.UserNotFoundNodeException;
 import top.techial.knowledge.mapper.KnowledgeNodeMapper;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.KnowledgeNodeService;
@@ -52,7 +53,7 @@ public class KnowledgeController {
     ) {
         KnowledgeNode node = knowledgeNodeService.findById(id);
         if (!Objects.equals(node.getUserId(), userPrincipal.getId())) {
-            throw new IllegalArgumentException();
+            throw new UserNotFoundNodeException(userPrincipal.getId(), id);
         }
         return new ResultBean<>(KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(knowledgeNodeService.findById(id)));
     }

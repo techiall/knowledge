@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import top.techial.knowledge.dao.StorageRepository;
 import top.techial.knowledge.domain.Storage;
+import top.techial.knowledge.exception.StorageFileNotFoundException;
 
 /**
  * @author techial
@@ -45,6 +46,6 @@ public class StorageService {
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Storage findBySHA1(String id) {
         return storageRepository.findFirstBySha1(id)
-            .orElseThrow(() -> new IllegalArgumentException(String.format("SHA1: [%s] not found.", id)));
+            .orElseThrow(() -> new StorageFileNotFoundException(String.format("SHA1: [%s] not found.", id)));
     }
 }
