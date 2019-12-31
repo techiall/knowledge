@@ -13,10 +13,6 @@
 
     <!-- Default cache template -->
     <cache-template name="default">
-        <expiry>
-            <ttl unit="minutes">1</ttl>
-        </expiry>
-
         <listeners>
             <listener>
                 <class>top.techial.knowledge.config.CacheEventLoggerConfig</class>
