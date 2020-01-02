@@ -10,10 +10,10 @@ import top.techial.knowledge.config.StorageProperties;
  * @author techial
  */
 @SpringBootApplication
-@EntityScan(basePackages = "top.techial.knowledge.domain")
 @EnableConfigurationProperties({
-    StorageProperties.class
+    StorageProperties.class,
 })
+@EntityScan(basePackages = "top.techial.knowledge.domain")
 public class KnowledgeApplication {
 
     public static void main(String[] args) {

@@ -10,10 +10,10 @@ import top.techial.beans.ResultBean;
 import top.techial.beans.ResultCode;
 import top.techial.knowledge.domain.User;
 import top.techial.knowledge.exception.UserException;
-import top.techial.knowledge.security.SessionService;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.KnowledgeNodeService;
 import top.techial.knowledge.service.RecordService;
+import top.techial.knowledge.service.SessionService;
 import top.techial.knowledge.service.UserService;
 
 import java.util.HashMap;
@@ -49,9 +49,6 @@ public class UserController {
         if (object instanceof UserPrincipal) {
             UserPrincipal userPrincipal = (UserPrincipal) object;
             User user = userService.findById(userPrincipal.getId()).orElse(null);
-            if (log.isDebugEnabled()) {
-                log.debug(sessionService.findAll());
-            }
             map.put("me", user);
         }
         map.put("_csrf", csrfToken);
@@ -87,7 +84,7 @@ public class UserController {
         }
 
         userService.updatePassword(id, password);
-        sessionService.flushId(userPrincipal.getId());
+        sessionService.flushId(userPrincipal);
         return new ResultBean<>(user);
     }
 
@@ -96,7 +93,7 @@ public class UserController {
         @AuthenticationPrincipal UserPrincipal userPrincipal,
         @PathVariable Integer id
     ) {
-        sessionService.flushId(id);
+        sessionService.flushId(userPrincipal);
         if (Objects.equals(userPrincipal.getId(), id)) {
             userService.deleteById(userPrincipal.getId());
             knowledgeNodeService.deleteByUserId(userPrincipal.getId());

@@ -239,8 +239,8 @@ public class KnowledgeNodeService {
     }
 
     @CacheEvict(allEntries = true)
-    public void deleteByUserId(Integer id) {
-        knowledgeNodeRepository.deleteByUserId(id);
+    public Long deleteByUserId(Integer id) {
+        return knowledgeNodeRepository.deleteByUserId(id);
     }
 
 }
