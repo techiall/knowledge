@@ -10,6 +10,10 @@ server:
 spring:
   profiles:
     active: docker
+  session:
+    store-type: jdbc
+    jdbc:
+      initialize-schema: always
   task:
     execution:
       pool:
