@@ -21,5 +21,5 @@ public interface KnowledgeNodeRepository extends Neo4jRepository<KnowledgeNode, 
 
     Optional<KnowledgeNode> findFirstByName(String name);
 
-    void deleteByUserId(Integer userId);
+    Long deleteByUserId(Integer userId);
 }

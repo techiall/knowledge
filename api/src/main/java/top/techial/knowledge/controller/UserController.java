@@ -1,6 +1,7 @@
 package top.techial.knowledge.controller;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -17,6 +18,7 @@ import top.techial.knowledge.service.UserService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author techial
@@ -41,10 +43,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResultBean<Map<String, Object>> me(
-        @AuthenticationPrincipal Object object,
-        CsrfToken csrfToken
-    ) {
+    public ResultBean<Map<String, Object>> me(@AuthenticationPrincipal Object object, CsrfToken csrfToken) {
         Map<String, Object> map = new HashMap<>(16);
         map.put("user", object);
         if (object instanceof UserPrincipal) {
@@ -63,7 +62,7 @@ public class UserController {
     public ResultBean<User> updateNickName(
         @AuthenticationPrincipal UserPrincipal userPrincipal,
         @PathVariable Integer id,
-        String nickName
+        @Nullable String nickName
     ) {
         if (userPrincipal.getId().equals(id)) {
             User user = userService.findById(id).orElseThrow(() -> new UserException(id));
@@ -83,7 +82,7 @@ public class UserController {
         String password
     ) {
         User user = userService.findById(id).orElseThrow(() -> new UserException(id));
-        if (userPrincipal.getId().equals(id) && !passwordEncoder.matches(srcPassword, user.getPassword())) {
+        if (Objects.equals(user.getId(), id) && !passwordEncoder.matches(srcPassword, user.getPassword())) {
             throw new IllegalArgumentException("password not match.");
         }
 
@@ -98,7 +97,7 @@ public class UserController {
         @PathVariable Integer id
     ) {
         sessionService.flushId(id);
-        if (userPrincipal.getId().equals(id)) {
+        if (Objects.equals(userPrincipal.getId(), id)) {
             userService.deleteById(userPrincipal.getId());
             knowledgeNodeService.deleteByUserId(userPrincipal.getId());
             recordService.deleteByUserId(userPrincipal.getId());
