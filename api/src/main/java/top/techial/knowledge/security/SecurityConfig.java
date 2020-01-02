@@ -17,6 +17,7 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import top.techial.knowledge.security.handler.AuthenticationEntryPointImpl;
@@ -39,6 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationEntryPointImpl authenticationEntryPoint;
     private final PasswordEncoder passwordEncoder;
     private final Environment environment;
+    private final PersistentTokenRepository persistentTokenRepository;
 
     public SecurityConfig(
         @Qualifier("userDetailsServiceImpl") UserDetailsServiceImpl userDetailsService,
@@ -47,8 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         AuthenticationFailureHandler authenticationFailureHandler,
         AuthenticationEntryPointImpl authenticationEntryPoint,
         PasswordEncoder passwordEncoder,
-        Environment environment
-    ) {
+        Environment environment,
+        PersistentTokenRepository persistentTokenRepository) {
         this.userDetailsService = userDetailsService;
         this.logoutHandler = logoutHandler;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
@@ -56,6 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.passwordEncoder = passwordEncoder;
         this.environment = environment;
+        this.persistentTokenRepository = persistentTokenRepository;
     }
 
     @Override
@@ -87,7 +90,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
             .and()
 
-            .rememberMe().tokenValiditySeconds(Math.toIntExact(TimeUnit.DAYS.toSeconds(7)))
+            .rememberMe()
+            .tokenRepository(persistentTokenRepository)
+            .tokenValiditySeconds(Math.toIntExact(TimeUnit.DAYS.toSeconds(7)))
 
             .and();
 
