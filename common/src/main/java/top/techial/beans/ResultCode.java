@@ -1,11 +1,6 @@
 package top.techial.beans;
 
 /**
- * 接口返回码
- * 0  : 成功
- * >0 : 表示已知的异常
- * <0 : 表示未知的异常
- *
  * @author techial
  */
 public enum ResultCode {

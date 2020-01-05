@@ -35,23 +35,17 @@ public class KnowledgeRelationController {
     }
 
     @GetMapping
-    public ResultBean<Page<NodeRelation>> findAll(
-        @PageableDefault Pageable pageable
-    ) {
+    public ResultBean<Page<NodeRelation>> findAll(@PageableDefault Pageable pageable) {
         return new ResultBean<>(nodeRelationService.findAll(pageable));
     }
 
     @GetMapping("/{id}")
-    public ResultBean<RelationDTO> findAll(
-        @PathVariable Long id
-    ) {
+    public ResultBean<RelationDTO> findAll(@PathVariable Long id) {
         return new ResultBean<>(NodeRelationMapper.INSTANCE.toRelationDTO(nodeRelationService.findById(id)));
     }
 
     @GetMapping("/start/name")
-    public ResultBean<List<RelationDTO>> findByNameRelation(
-        @RequestParam(value = "query") String name
-    ) {
+    public ResultBean<List<RelationDTO>> findByNameRelation(@RequestParam(value = "query") String name) {
         return new ResultBean<>(nodeRelationService.findByStartNodeName(name));
     }
 
@@ -88,10 +82,7 @@ public class KnowledgeRelationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResultBean<Boolean> deleteById(
-        @PathVariable Long id,
-        @AuthenticationPrincipal UserPrincipal userPrincipal
-    ) {
+    public ResultBean<Boolean> deleteById(@PathVariable Long id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         NodeRelation relation = nodeRelationService.findById(id);
 
         recordService.save(relation.getStartNode().getId(), userPrincipal.getId(),

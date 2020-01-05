@@ -30,6 +30,7 @@ public class SearchController {
     private final NodeTextService nodeTextService;
     private final UserService userService;
     private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
+    private static final String REGEX = "<[^>]*>|&nbsp;";
 
     public SearchController(KnowledgeNodeService knowledgeNodeService, NodeTextService nodeTextService, UserService userService, ThreadPoolTaskExecutor threadPoolTaskExecutor) {
         this.knowledgeNodeService = knowledgeNodeService;
@@ -56,18 +57,21 @@ public class SearchController {
 
     @SneakyThrows
     private SearchDTO convent(KnowledgeNode it) {
-        Future<String> text = threadPoolTaskExecutor.submit(() -> getText(it));
-        Future<User> user = threadPoolTaskExecutor.submit(() -> userService.findById(it.getUserId()).orElse(new User()));
+        String text = nodeTextService.findById(it.getId()).getText();
+        Future<String> result = threadPoolTaskExecutor.submit(() -> getText(text));
+
+        Future<User> user = threadPoolTaskExecutor.submit(
+            () -> userService.findById(it.getUserId()).orElse(new User()));
+
         return new SearchDTO()
-            .setText(text.get())
+            .setText(result.get())
             .setUser(user.get().getNickName())
             .setNode(KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(it));
     }
 
-    private String getText(KnowledgeNode it) {
-        String text = nodeTextService.findById(it.getId()).getText();
+    private static String getText(String text) {
         text = text == null ? "" : text;
-        text = text.replaceAll("<[^>]*>|&nbsp;", "").trim();
+        text = text.replaceAll(REGEX, "").trim();
         text = text.substring(0, Math.min(200, text.length()));
         return text;
     }

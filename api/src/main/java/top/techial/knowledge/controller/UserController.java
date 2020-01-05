@@ -34,7 +34,13 @@ public class UserController {
     private final SessionService sessionService;
     private final RecordService recordService;
 
-    public UserController(UserService userService, KnowledgeNodeService knowledgeNodeService, PasswordEncoder passwordEncoder, SessionService sessionService, RecordService recordService) {
+    public UserController(
+        UserService userService,
+        KnowledgeNodeService knowledgeNodeService,
+        PasswordEncoder passwordEncoder,
+        SessionService sessionService,
+        RecordService recordService
+    ) {
         this.userService = userService;
         this.knowledgeNodeService = knowledgeNodeService;
         this.passwordEncoder = passwordEncoder;
