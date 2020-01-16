@@ -39,7 +39,7 @@ public class KnowledgeNode implements Serializable {
     private Long parentNodeId;
 
     @Property
-    private Integer userId;
+    private Integer itemId;
 
     @Relationship(value = "parent-child-relation", direction = Relationship.INCOMING)
     private Set<KnowledgeNode> childNodes = new HashSet<>();

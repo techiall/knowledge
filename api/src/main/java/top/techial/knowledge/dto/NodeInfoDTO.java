@@ -18,6 +18,6 @@ public class NodeInfoDTO implements Serializable {
     private Long id;
     private Set<String> labels;
     private String name;
-    private Integer userId;
+    private Integer itemId;
     private Map<String, String> property;
 }
