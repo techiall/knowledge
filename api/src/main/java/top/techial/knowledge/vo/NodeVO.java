@@ -28,8 +28,6 @@ public class NodeVO implements Serializable {
 
     private Map<String, String> property;
 
-    private String sortId;
-
     /**
      * parentId = null -> parent
      * parentId != null && parentId is exists -> child

@@ -21,8 +21,6 @@ public class NodeDTO implements Serializable {
 
     private String name;
 
-    private String sortId;
-
     private List<NodeDTO> childNodes;
 
 }

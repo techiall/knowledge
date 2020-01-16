@@ -39,9 +39,6 @@ public class KnowledgeNode implements Serializable {
     private Long parentNodeId;
 
     @Property
-    private String sortId;
-
-    @Property
     private Integer userId;
 
     @Relationship(value = "parent-child-relation", direction = Relationship.INCOMING)
