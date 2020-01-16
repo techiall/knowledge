@@ -20,10 +20,12 @@ import java.time.Instant;
 public class Item {
     @Id
     @GeneratedValue
-    private Long id;
+    private Integer id;
 
     @ManyToOne
-    private User user;
+    private User author;
+
+    private boolean share;
 
     private String name;
 

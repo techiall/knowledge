@@ -43,14 +43,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final PersistentTokenRepository persistentTokenRepository;
 
     public SecurityConfig(
-        @Qualifier("userDetailsServiceImpl") UserDetailsServiceImpl userDetailsService,
-        LogoutHandler logoutHandler,
-        AuthenticationSuccessHandler authenticationSuccessHandler,
-        AuthenticationFailureHandler authenticationFailureHandler,
-        AuthenticationEntryPointImpl authenticationEntryPoint,
-        PasswordEncoder passwordEncoder,
-        Environment environment,
-        PersistentTokenRepository persistentTokenRepository) {
+            @Qualifier("userDetailsServiceImpl") UserDetailsServiceImpl userDetailsService,
+            LogoutHandler logoutHandler,
+            AuthenticationSuccessHandler authenticationSuccessHandler,
+            AuthenticationFailureHandler authenticationFailureHandler,
+            AuthenticationEntryPointImpl authenticationEntryPoint,
+            PasswordEncoder passwordEncoder,
+            Environment environment,
+            PersistentTokenRepository persistentTokenRepository) {
         this.userDetailsService = userDetailsService;
         this.logoutHandler = logoutHandler;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
@@ -66,35 +66,35 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
 
-            .formLogin()
-            .loginPage("/login")
-            .loginProcessingUrl("/api/user/login")
-            .permitAll()
-            .usernameParameter("username")
-            .passwordParameter("password")
-            .successHandler(authenticationSuccessHandler)
-            .failureHandler(authenticationFailureHandler)
+                .formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/api/user/login")
+                .permitAll()
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler)
 
-            .and()
+                .and()
 
-            .logout()
-            .logoutUrl("/api/user/logout")
-            .permitAll()
-            .deleteCookies("remember-me", "JSESSIONID")
-            .logoutSuccessHandler(logoutHandler)
+                .logout()
+                .logoutUrl("/api/user/logout")
+                .permitAll()
+                .deleteCookies("remember-me", "JSESSIONID")
+                .logoutSuccessHandler(logoutHandler)
 
-            .and()
+                .and()
 
-            .exceptionHandling()
-            .defaultAuthenticationEntryPointFor(authenticationEntryPoint, new AntPathRequestMatcher("/**"))
+                .exceptionHandling()
+                .defaultAuthenticationEntryPointFor(authenticationEntryPoint, new AntPathRequestMatcher("/**"))
 
-            .and()
+                .and()
 
-            .rememberMe()
-            .tokenRepository(persistentTokenRepository)
-            .tokenValiditySeconds(Math.toIntExact(TimeUnit.DAYS.toSeconds(7)))
+                .rememberMe()
+                .tokenRepository(persistentTokenRepository)
+                .tokenValiditySeconds(Math.toIntExact(TimeUnit.DAYS.toSeconds(7)))
 
-            .and();
+                .and();
 
         // tmp
         // sessionHandler(http);
@@ -103,28 +103,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private SessionManagementConfigurer<HttpSecurity>.ConcurrencyControlConfigurer sessionHandler(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-            .sessionAuthenticationFailureHandler(authenticationFailureHandler)
-            .sessionFixation()
-            .newSession()
-            .maximumSessions(1)
-            .sessionRegistry(sessionRegistry())
-            .maxSessionsPreventsLogin(false);
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .sessionAuthenticationFailureHandler(authenticationFailureHandler)
+                .sessionFixation()
+                .newSession()
+                .maximumSessions(1)
+                .sessionRegistry(sessionRegistry())
+                .maxSessionsPreventsLogin(false);
     }
 
     private void accepts(HttpSecurity httpSecurity) throws Exception {
         if (environment.acceptsProfiles(Profiles.of("dev"))) {
             httpSecurity.authorizeRequests()
-                .antMatchers("/api/**")
-                .permitAll();
+                    .antMatchers("/api/**")
+                    .permitAll();
             httpSecurity.csrf().disable();
         } else {
             httpSecurity
-                .authorizeRequests()
-                .antMatchers("/api/user/me", "/api/register/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/storage/text/**", "/api/storage/preview/**", "/api/node/**/graph", "/api/node/**/link", "/api/search/**").permitAll()
-                .antMatchers("/api/**").authenticated();
+                    .authorizeRequests()
+                    .antMatchers("/api/user/me", "/api/register/**").permitAll()
+                    .antMatchers(
+                            HttpMethod.GET,
+                            "/api/storage/text/**",
+                            "/api/storage/preview/**",
+                            "/api/node/**",
+                            "/api/search/**"
+                    ).permitAll()
+                    .antMatchers("/api/**").authenticated();
             httpSecurity.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         }
 

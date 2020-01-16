@@ -8,15 +8,14 @@ import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
 import top.techial.beans.ResultCode;
+import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.User;
 import top.techial.knowledge.exception.UserException;
 import top.techial.knowledge.security.UserPrincipal;
-import top.techial.knowledge.service.KnowledgeNodeService;
-import top.techial.knowledge.service.RecordService;
-import top.techial.knowledge.service.SessionService;
-import top.techial.knowledge.service.UserService;
+import top.techial.knowledge.service.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -33,19 +32,21 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
     private final SessionService sessionService;
     private final RecordService recordService;
+    private final ItemService itemService;
 
     public UserController(
-        UserService userService,
-        KnowledgeNodeService knowledgeNodeService,
-        PasswordEncoder passwordEncoder,
-        SessionService sessionService,
-        RecordService recordService
-    ) {
+            UserService userService,
+            KnowledgeNodeService knowledgeNodeService,
+            PasswordEncoder passwordEncoder,
+            SessionService sessionService,
+            RecordService recordService,
+            ItemService itemService) {
         this.userService = userService;
         this.knowledgeNodeService = knowledgeNodeService;
         this.passwordEncoder = passwordEncoder;
         this.sessionService = sessionService;
         this.recordService = recordService;
+        this.itemService = itemService;
     }
 
     @GetMapping("/me")
@@ -63,9 +64,9 @@ public class UserController {
 
     @PatchMapping("/{id}/nickName")
     public ResultBean<User> updateNickName(
-        @AuthenticationPrincipal UserPrincipal userPrincipal,
-        @PathVariable Integer id,
-        @Nullable String nickName
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable Integer id,
+            @Nullable String nickName
     ) {
         if (userPrincipal.getId().equals(id)) {
             User user = userService.findById(id).orElseThrow(() -> new UserException(id));
@@ -79,10 +80,10 @@ public class UserController {
 
     @PatchMapping("/{id}/password")
     public ResultBean<User> updatePassword(
-        @AuthenticationPrincipal UserPrincipal userPrincipal,
-        @PathVariable Integer id,
-        String srcPassword,
-        String password
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable Integer id,
+            String srcPassword,
+            String password
     ) {
         User user = userService.findById(id).orElseThrow(() -> new UserException(id));
         if (Objects.equals(user.getId(), id) && !passwordEncoder.matches(srcPassword, user.getPassword())) {
@@ -96,13 +97,15 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResultBean<Object> deleteById(
-        @AuthenticationPrincipal UserPrincipal userPrincipal,
-        @PathVariable Integer id
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PathVariable Integer id
     ) {
         sessionService.flushId(userPrincipal);
         if (Objects.equals(userPrincipal.getId(), id)) {
             userService.deleteById(userPrincipal.getId());
-            knowledgeNodeService.deleteByUserId(userPrincipal.getId());
+            List<Item> item = itemService.findByUserId(userPrincipal.getId());
+            itemService.deleteByUserId(userPrincipal.getId());
+            item.parallelStream().map(Item::getId).forEach(knowledgeNodeService::deleteByItemId);
             recordService.deleteByUserId(userPrincipal.getId());
             return new ResultBean<>(true);
         }

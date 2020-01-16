@@ -13,13 +13,13 @@ import java.util.Optional;
  */
 @Repository
 public interface KnowledgeNodeRepository extends Neo4jRepository<KnowledgeNode, Long> {
-    Page<KnowledgeNode> findByNameLikeAndUserId(String name, Integer userId, Pageable pageable);
+    Page<KnowledgeNode> findByNameLikeAndItemId(String name, Integer itemId, Pageable pageable);
 
     Page<KnowledgeNode> findAllByNameLike(String name, Pageable pageable);
 
-    Page<KnowledgeNode> findByUserIdAndParentNodeIdIsNull(Integer userId, Pageable pageable);
+    Page<KnowledgeNode> findByItemIdAndParentNodeIdIsNull(Integer itemId, Pageable pageable);
 
     Optional<KnowledgeNode> findFirstByName(String name);
 
-    Long deleteByUserId(Integer userId);
+    Long deleteByItemId(Integer itemId);
 }

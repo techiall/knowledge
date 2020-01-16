@@ -13,23 +13,21 @@ import org.springframework.web.server.MediaTypeNotSupportedStatusException;
 import top.techial.beans.ResultBean;
 import top.techial.beans.ResultCode;
 
-/**
- * @author caogaoyang
- */
-
 @Log4j2
 @ControllerAdvice
 @ResponseBody
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({
-        IllegalArgumentException.class,
-        UserNotFoundNodeException.class,
-        NodeNotFoundException.class,
-        UserException.class,
-        MethodArgumentNotValidException.class,
-        MissingServletRequestParameterException.class,
-        JsonProcessingException.class
+            IllegalArgumentException.class,
+            UserNotFoundItemException.class,
+            NodeNotFoundException.class,
+            UserException.class,
+            ItemException.class,
+            ItemNotFoundNodeException.class,
+            MethodArgumentNotValidException.class,
+            MissingServletRequestParameterException.class,
+            JsonProcessingException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Object illegalArgumentException(Throwable throwable) {
