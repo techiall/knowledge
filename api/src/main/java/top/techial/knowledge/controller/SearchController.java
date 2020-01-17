@@ -70,7 +70,7 @@ public class SearchController {
 
         return new SearchDTO()
                 .setText(result.get())
-                .setUser(itemFuture.get().getUser().getNickName())
+                .setUser(itemFuture.get().getAuthor().getNickName())
                 .setNode(KnowledgeNodeMapper.INSTANCE.toNodeInfoDTO(it));
     }
 
