@@ -35,8 +35,7 @@ public class Node implements Serializable {
     @Lob
     private Property property;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Item item;
+    private Integer itemId;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
