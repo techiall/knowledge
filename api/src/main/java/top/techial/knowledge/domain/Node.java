@@ -25,6 +25,8 @@ public class Node implements Serializable {
     @GeneratedValue
     private Long id;
 
+    private String name;
+
     @Convert(converter = LabelsConverter.class)
     @Lob
     private Labels labels;
@@ -33,7 +35,11 @@ public class Node implements Serializable {
     @Lob
     private Property property;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    private Item item;
+
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     private String text;
 
     @CreationTimestamp

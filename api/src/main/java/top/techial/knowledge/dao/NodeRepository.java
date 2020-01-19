@@ -9,4 +9,5 @@ import top.techial.knowledge.domain.Node;
  */
 @Repository
 public interface NodeRepository extends JpaRepository<Node, Long> {
+    void deleteAllByItemId(Integer id);
 }

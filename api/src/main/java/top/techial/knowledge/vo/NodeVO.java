@@ -35,4 +35,6 @@ public class NodeVO implements Serializable {
      */
     private Long parentId;
 
+    private Integer itemId;
+
 }
