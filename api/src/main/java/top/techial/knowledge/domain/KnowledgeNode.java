@@ -2,6 +2,8 @@ package top.techial.knowledge.domain;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.neo4j.ogm.annotation.Labels;
+import org.neo4j.ogm.annotation.Property;
 import org.neo4j.ogm.annotation.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -35,10 +37,10 @@ public class KnowledgeNode implements Serializable {
     @Properties(allowCast = true)
     private Map<String, String> property;
 
-    @Property
+    @org.neo4j.ogm.annotation.Property
     private Long parentNodeId;
 
-    @Property
+    @org.neo4j.ogm.annotation.Property
     private Integer itemId;
 
     @Relationship(value = "parent-child-relation", direction = Relationship.INCOMING)
