@@ -4,11 +4,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.User;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.vo.RegisterVO;
 
-import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper
 public interface UserMapper {
@@ -20,7 +22,12 @@ public interface UserMapper {
 
 
     default UserPrincipal toUserPrincipal(User user) {
-        return new UserPrincipal(user.getId(), user.getUserName(), user.getPassword(),
-            Collections.singleton(new SimpleGrantedAuthority("user")));
+        List<SimpleGrantedAuthority> item = user.getItem()
+                .parallelStream()
+                .map(Item::getId)
+                .map(String::valueOf)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+        return new UserPrincipal(user.getId(), user.getUserName(), user.getPassword(), item);
     }
 }

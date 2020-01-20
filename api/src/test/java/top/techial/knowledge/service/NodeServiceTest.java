@@ -58,4 +58,10 @@ public class NodeServiceTest {
     public void getChildAndParent() {
         System.out.println(nodeService.getChildAndParent(30L, 4));
     }
+
+    @Test
+    public void findText() {
+        String text = nodeService.findText(30L);
+        System.out.println(text);
+    }
 }
