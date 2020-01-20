@@ -10,11 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.dao.UserRepository;
 import top.techial.knowledge.domain.User;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaUpdate;
-import javax.persistence.criteria.Root;
-import java.time.Instant;
 import java.util.Optional;
 
 /**
@@ -27,12 +22,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final EntityManager entityManager;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, EntityManager entityManager) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.entityManager = entityManager;
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
@@ -48,13 +41,7 @@ public class UserService {
     @CacheEvict(allEntries = true)
     @Transactional
     public void updatePassword(Integer id, String password) {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaUpdate<User> criteria = builder.createCriteriaUpdate(User.class);
-        Root<User> root = criteria.from(User.class);
-        criteria.set(root.get("password"), passwordEncoder.encode(password));
-        criteria.set(root.get("updateTime"), Instant.now());
-        criteria.where(builder.equal(root.get("id"), id));
-        entityManager.createQuery(criteria).executeUpdate();
+        userRepository.updatePassword(id, passwordEncoder.encode(password));
     }
 
     @Transactional(rollbackFor = IllegalArgumentException.class)
