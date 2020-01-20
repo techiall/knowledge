@@ -15,7 +15,6 @@ public class ItemTest extends BasicTest<Item> {
     public Item newInstance() {
         return new Item()
                 .setId(RandomUtils.nextInt())
-                .setShare(RandomUtils.nextBoolean())
                 .setName(RandomStringUtils.randomAlphanumeric(10))
                 .setDescription(RandomStringUtils.randomAlphanumeric(100))
                 .setCreateTime(Instant.now())

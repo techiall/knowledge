@@ -14,7 +14,7 @@ import java.util.Collection;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @Getter
-public final class UserPrincipal extends User {
+public class UserPrincipal extends User {
 
     private final Integer id;
 

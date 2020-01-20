@@ -23,11 +23,6 @@ public class ItemService {
         return itemRepository.findById(id);
     }
 
-    public boolean checkByIdAndUserId(Integer id, Integer userId) {
-        return !(itemRepository.existsByIdAndAuthorId(id, userId) ||
-                itemRepository.existsByIdAndShare(id, true));
-    }
-
     public List<Item> findByUserId(Integer id) {
         return itemRepository.findAllByAuthorId(id);
     }

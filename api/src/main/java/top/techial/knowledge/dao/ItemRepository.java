@@ -11,11 +11,9 @@ import java.util.List;
  */
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Integer> {
-    boolean existsByIdAndAuthorId(Integer id, Integer userId);
 
     List<Item> findAllByAuthorId(Integer id);
 
     void deleteByAuthorId(Integer id);
 
-    boolean existsByIdAndShare(Integer id, boolean share);
 }

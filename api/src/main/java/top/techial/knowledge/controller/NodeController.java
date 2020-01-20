@@ -23,11 +23,11 @@ import java.util.Set;
  */
 @RestController
 @RequestMapping("/api/node")
-public class KnowledgeController {
+public class NodeController {
     private final NodeService nodeService;
     private final RecordService recordService;
 
-    public KnowledgeController(NodeService nodeService, RecordService recordService) {
+    public NodeController(NodeService nodeService, RecordService recordService) {
         this.nodeService = nodeService;
         this.recordService = recordService;
     }
@@ -42,7 +42,7 @@ public class KnowledgeController {
     }
 
     @PostMapping
-    @PreAuthorize("userPrincipal.authorities.contains(nodeVO.itemId)")
+    @PreAuthorize("hasAnyAuthority(#nodeVO.itemId.toString())")
     public ResultBean<NodeInfoDTO> save(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody NodeVO nodeVO
