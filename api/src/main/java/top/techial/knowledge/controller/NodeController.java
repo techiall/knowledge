@@ -56,6 +56,7 @@ public class NodeController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(#nodeVO.itemId.toString())")
     public ResultBean<NodeInfoDTO> update(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long id,
@@ -107,7 +108,6 @@ public class NodeController {
     @GetMapping("/{id}/child")
     public ResultBean<List<NodeBaseDTO>> findChildNode(
             @PathVariable Long id,
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestParam(required = false, defaultValue = "10") int depth
     ) {
         return new ResultBean<>(nodeService.findByChildNode(id, depth));
@@ -116,8 +116,7 @@ public class NodeController {
     @GetMapping("/name")
     public ResultBean<List<NodeBaseDTO>> findByName(
             @RequestParam(name = "query") String name,
-            @RequestParam Integer itemId,
-            @AuthenticationPrincipal UserPrincipal userPrincipal
+            @RequestParam Integer itemId
     ) {
         return new ResultBean<>(nodeService.findByNameLike(name, itemId));
     }

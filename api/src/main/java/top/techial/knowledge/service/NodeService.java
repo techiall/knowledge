@@ -33,7 +33,11 @@ public class NodeService {
     private final NodeRelationshipRepository nodeRelationshipRepository;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public NodeService(NodeRepository nodeRepository, NodeRelationshipRepository nodeRelationshipRepository, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public NodeService(
+            NodeRepository nodeRepository,
+            NodeRelationshipRepository nodeRelationshipRepository,
+            NamedParameterJdbcTemplate namedParameterJdbcTemplate
+    ) {
         this.nodeRepository = nodeRepository;
         this.nodeRelationshipRepository = nodeRelationshipRepository;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -82,7 +86,10 @@ public class NodeService {
 
     public List<SearchDTO> findContentByNameLike(String name) {
         // language=sql
-        String value = "select n.id, n.name from node n where n.name like (:name) order by n.update_time desc limit 10;";
+        String value = "select i.name as name, n.name as nodeItemName, u.nick_name as nodeName, n.text as text,\n" +
+                "n.id as nodeId, n.labels as labels, n.property as property\n" +
+                "from node inner join item i on n.item_id = i.id inner join user u on i.author_id = u.id\n" +
+                "where n.name like (:name)";
         BeanPropertyRowMapper<SearchDTO> rowMapper = BeanPropertyRowMapper.newInstance(SearchDTO.class);
 
         Map<String, Object> map = new HashMap<>();
