@@ -9,6 +9,9 @@ import top.techial.beans.ResultBean;
 import top.techial.knowledge.BasicTest;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ItemDTOTest extends BasicTest<ItemDTO> {
 
@@ -31,10 +34,24 @@ public class ItemDTOTest extends BasicTest<ItemDTO> {
     }
 
     @Test
-    public void resultBeanToJson() throws JsonProcessingException {
+    public void resultBeanInstanceToJson() throws JsonProcessingException {
         String result = objectMapper.writeValueAsString(new ResultBean<>(newInstance()));
         System.out.println(result);
         Assert.assertNotNull(result);
     }
 
+    @Test
+    public void resultBeanToJson() throws JsonProcessingException {
+        String result = objectMapper.writeValueAsString(new ResultBean<>());
+        System.out.println(result);
+        Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void resultListBeanToJson() throws JsonProcessingException {
+        List<ItemDTO> list = IntStream.range(0, 10).mapToObj(it -> newInstance()).collect(Collectors.toList());
+        String result = objectMapper.writeValueAsString(new ResultBean<>(list));
+        System.out.println(result);
+        Assert.assertNotNull(result);
+    }
 }

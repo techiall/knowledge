@@ -16,8 +16,8 @@ import java.time.Instant;
  */
 @Entity
 @Data
-@EqualsAndHashCode(exclude = {"author", "share"})
-@ToString(exclude = {"author", "share"})
+@EqualsAndHashCode(exclude = {"author"})
+@ToString(exclude = {"author"})
 @Accessors(chain = true)
 public class Item implements Serializable {
 

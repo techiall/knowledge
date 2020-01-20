@@ -13,7 +13,7 @@ import java.time.Instant;
 public class ItemDTO {
     private Integer id;
 
-    private boolean share;
+    private Boolean share;
 
     private String name;
 

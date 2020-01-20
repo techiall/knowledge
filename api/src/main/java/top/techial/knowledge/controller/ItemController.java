@@ -20,6 +20,7 @@ import top.techial.knowledge.service.ItemService;
 import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.vo.ItemVO;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,9 +40,9 @@ public class ItemController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority(#id)")
-    public ResultBean<Item> findById(@PathVariable Integer id) {
+    public ResultBean<ItemDTO> findById(@PathVariable Integer id) {
         Item item = itemService.findById(id).orElseThrow(() -> new ItemException(id));
-        return new ResultBean<>(item);
+        return new ResultBean<>(ItemMapper.INSTANCE.toItemDTO(item));
     }
 
     @GetMapping
@@ -57,15 +58,16 @@ public class ItemController {
     @PostMapping
     public ResultBean<ItemDTO> save(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestBody ItemVO itemVo
+            @Valid @RequestBody ItemVO itemVo
     ) {
         Item item = ItemMapper.INSTANCE.toItem(itemVo).setAuthor(new User().setId(userPrincipal.getId()));
+        itemService.insert(userPrincipal.getId(), item.getId());
         return new ResultBean<>(ItemMapper.INSTANCE.toItemDTO(itemService.save(item)));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority(#id)")
-    public ResultBean<ItemDTO> update(@RequestBody ItemVO itemVO, @PathVariable Integer id) {
+    public ResultBean<ItemDTO> update(@Valid @RequestBody ItemVO itemVO, @PathVariable Integer id) {
         Item item = itemService.findById(id).orElseThrow(() -> new ItemException(id));
         if (itemVO != null && itemVO.getDescription() != null) {
             item.setDescription(itemVO.getDescription());
@@ -81,7 +83,7 @@ public class ItemController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority(#id)")
-    public void deleteById(@PathVariable Integer id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResultBean<Object> deleteById(@PathVariable Integer id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         List<Item> item = itemService.findByUserId(userPrincipal.getId());
         List<SimpleGrantedAuthority> authority = ItemMapper.INSTANCE.toListSimpleGrantedAuthority(item);
 
@@ -89,9 +91,10 @@ public class ItemController {
 
         itemService.deleteById(id);
         nodeService.deleteByItemId(id);
+        return new ResultBean<>();
     }
 
-    private void reSet(List<SimpleGrantedAuthority> authority) {
+    private static void reSet(List<SimpleGrantedAuthority> authority) {
         SecurityContext context = SecurityContextHolder.getContext();
         UserDetails userDetails = (UserDetails) context.getAuthentication().getPrincipal();
         Authentication auth = new UsernamePasswordAuthenticationToken(

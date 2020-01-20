@@ -38,4 +38,8 @@ public class ItemService {
     public void deleteById(Integer id) {
         itemRepository.deleteById(id);
     }
+
+    public void insert(Integer userId, Integer itemId) {
+        itemRepository.insert(userId, itemId);
+    }
 }

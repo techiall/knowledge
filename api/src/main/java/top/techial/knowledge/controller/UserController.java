@@ -1,24 +1,24 @@
 package top.techial.knowledge.controller;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
-import top.techial.beans.ResultCode;
 import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.User;
+import top.techial.knowledge.dto.UserDTO;
 import top.techial.knowledge.exception.UserException;
 import top.techial.knowledge.mapper.UserMapper;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.*;
+import top.techial.knowledge.vo.UserVO;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author techial
@@ -64,53 +64,49 @@ public class UserController {
         return new ResultBean<>(map);
     }
 
-    @PatchMapping("/{id}/nickName")
-    public ResultBean<User> updateNickName(
+    @PatchMapping("/me")
+    public ResultBean<UserDTO> update(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @PathVariable Integer id,
-            @Nullable String nickName
+            @Valid @RequestBody UserVO userVO
     ) {
-        if (userPrincipal.getId().equals(id)) {
-            User user = userService.findById(id).orElseThrow(() -> new UserException(id));
-            nickName = nickName == null ? "" : nickName;
-            user.setNickName(nickName);
-            userService.save(user);
-            return new ResultBean<>(user);
+        User user = userService.findById(userPrincipal.getId())
+                .orElseThrow(() -> new UserException(userPrincipal.getId()));
+        if (userVO != null && userVO.getImage() != null) {
+            user.setImages(userVO.getImage());
         }
-        return new ResultBean<>(ResultCode.CHECK_FAIL);
+        if (userVO != null && userVO.getNickName() != null) {
+            user.setNickName(userVO.getNickName());
+        }
+        user = userService.save(user);
+        return new ResultBean<>(UserMapper.INSTANCE.toUserDTO(user));
     }
 
-    @PatchMapping("/{id}/password")
+    @PatchMapping("/me/password")
     public ResultBean<User> updatePassword(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @PathVariable Integer id,
             String srcPassword,
             String password
     ) {
-        User user = userService.findById(id).orElseThrow(() -> new UserException(id));
-        if (Objects.equals(user.getId(), id) && !passwordEncoder.matches(srcPassword, user.getPassword())) {
+        User user = userService.findById(userPrincipal.getId())
+                .orElseThrow(() -> new UserException(userPrincipal.getId()));
+
+        if (!passwordEncoder.matches(srcPassword, user.getPassword())) {
             throw new IllegalArgumentException("password not match.");
         }
 
-        userService.updatePassword(id, password);
+        userService.updatePassword(userPrincipal.getId(), password);
         sessionService.flushId(userPrincipal);
         return new ResultBean<>(user);
     }
 
-    @DeleteMapping("/{id}")
-    public ResultBean<Object> deleteById(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @PathVariable Integer id
-    ) {
+    @DeleteMapping("/me")
+    public ResultBean<Object> deleteById(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         sessionService.flushId(userPrincipal);
-        if (Objects.equals(userPrincipal.getId(), id)) {
-            userService.deleteById(userPrincipal.getId());
-            List<Item> item = itemService.findByUserId(userPrincipal.getId());
-            itemService.deleteByUserId(userPrincipal.getId());
-            item.parallelStream().map(Item::getId).forEach(nodeService::deleteByItemId);
-            recordService.deleteByUserId(userPrincipal.getId());
-            return new ResultBean<>(true);
-        }
-        return new ResultBean<>(ResultCode.CHECK_FAIL);
+        userService.deleteById(userPrincipal.getId());
+        List<Item> item = itemService.findByUserId(userPrincipal.getId());
+        itemService.deleteByUserId(userPrincipal.getId());
+        item.parallelStream().map(Item::getId).forEach(nodeService::deleteByItemId);
+        recordService.deleteByUserId(userPrincipal.getId());
+        return new ResultBean<>();
     }
 }
