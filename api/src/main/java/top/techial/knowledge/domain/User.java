@@ -9,7 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -28,7 +28,7 @@ public class User implements Serializable {
     private String nickName;
 
     @OneToMany
-    private List<Item> item;
+    private Set<Item> item;
 
     @JsonIgnore
     private String password;

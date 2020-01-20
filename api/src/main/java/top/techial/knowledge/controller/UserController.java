@@ -53,11 +53,6 @@ public class UserController {
     public ResultBean<Map<String, Object>> me(@AuthenticationPrincipal Object object, CsrfToken csrfToken) {
         Map<String, Object> map = new HashMap<>(16);
         map.put("user", object);
-        if (object instanceof UserPrincipal) {
-            UserPrincipal userPrincipal = (UserPrincipal) object;
-            User user = userService.findById(userPrincipal.getId()).orElse(null);
-            map.put("me", user);
-        }
         map.put("_csrf", csrfToken);
         return new ResultBean<>(map);
     }

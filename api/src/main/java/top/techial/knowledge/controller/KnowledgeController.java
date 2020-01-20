@@ -1,5 +1,6 @@
 package top.techial.knowledge.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
@@ -41,6 +42,7 @@ public class KnowledgeController {
     }
 
     @PostMapping
+    @PreAuthorize("userPrincipal.authorities.contains(nodeVO.itemId)")
     public ResultBean<NodeInfoDTO> save(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody NodeVO nodeVO
