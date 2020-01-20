@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import top.techial.knowledge.domain.User;
+import top.techial.knowledge.dto.UserDTO;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.vo.RegisterVO;
 
@@ -18,6 +19,7 @@ public interface UserMapper {
     @Mapping(source = "userName", target = "nickName")
     User toUser(RegisterVO registerVO);
 
+    UserDTO toUserDTO(User user);
 
     default UserPrincipal toUserPrincipal(User user) {
         List<SimpleGrantedAuthority> item = ItemMapper.INSTANCE.toListSimpleGrantedAuthority(user.getItem());

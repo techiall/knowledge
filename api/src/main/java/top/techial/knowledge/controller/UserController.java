@@ -11,6 +11,7 @@ import top.techial.beans.ResultCode;
 import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.User;
 import top.techial.knowledge.exception.UserException;
+import top.techial.knowledge.mapper.UserMapper;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.*;
 
@@ -52,7 +53,13 @@ public class UserController {
     @GetMapping("/me")
     public ResultBean<Map<String, Object>> me(@AuthenticationPrincipal Object object, CsrfToken csrfToken) {
         Map<String, Object> map = new HashMap<>(16);
-        map.put("user", object);
+        if (object instanceof UserPrincipal) {
+            UserPrincipal userPrincipal = (UserPrincipal) object;
+            User user = userService.findById(userPrincipal.getId()).orElse(new User());
+            map.put("user", UserMapper.INSTANCE.toUserDTO(user));
+        } else {
+            map.put("user", object);
+        }
         map.put("_csrf", csrfToken);
         return new ResultBean<>(map);
     }
