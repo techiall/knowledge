@@ -10,8 +10,6 @@ This my graduation project.
 *  [Apache Maven 3.0+](https://maven.apache.org/)
 * [OpenJDK 1.8+](https://openjdk.java.net/)
 * [Mysql 8.0](https://www.mysql.com/)
-* [Neo4j](https://neo4j.com/)
-
 
 
 ### Installing
