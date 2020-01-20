@@ -22,12 +22,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         this.userService = userService;
     }
 
-
     @Override
     public UserDetails loadUserByUsername(String s) {
         User user = userService.findByUserName(s)
-            .orElseThrow(() -> new UsernameNotFoundException(
-                String.format("userName:[%s] not found.", s)));
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        String.format("userName:[%s] not found.", s)));
         return UserMapper.INSTANCE.toUserPrincipal(user);
     }
 

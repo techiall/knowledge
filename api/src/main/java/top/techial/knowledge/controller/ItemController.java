@@ -1,5 +1,6 @@
 package top.techial.knowledge.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,7 +20,6 @@ import top.techial.knowledge.service.ItemService;
 import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.vo.ItemVO;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +38,8 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public ResultBean<Item> findById(@PathVariable Integer id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    @PreAuthorize("hasAnyAuthority(#id)")
+    public ResultBean<Item> findById(@PathVariable Integer id) {
         Item item = itemService.findById(id).orElseThrow(() -> new ItemException(id));
         return new ResultBean<>(item);
     }
@@ -63,23 +64,38 @@ public class ItemController {
     }
 
     @PutMapping("/{id}")
-    public ResultBean<ItemDTO> update(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestBody ItemVO itemVo,
-            @PathVariable Integer id
-    ) {
-        Item item = ItemMapper.INSTANCE.toItem(itemVo).setAuthor(new User().setId(userPrincipal.getId()));
-        item.setId(id);
+    @PreAuthorize("hasAnyAuthority(#id)")
+    public ResultBean<ItemDTO> update(@RequestBody ItemVO itemVO, @PathVariable Integer id) {
+        Item item = itemService.findById(id).orElseThrow(() -> new ItemException(id));
+        if (itemVO != null && itemVO.getDescription() != null) {
+            item.setDescription(itemVO.getDescription());
+        }
+        if (itemVO != null && itemVO.getShare() != null) {
+            item.setShare(itemVO.getShare());
+        }
+        if (itemVO != null && itemVO.getName() != null) {
+            item.setName(itemVO.getName());
+        }
         return new ResultBean<>(ItemMapper.INSTANCE.toItemDTO(itemService.save(item)));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(#id)")
     public void deleteById(@PathVariable Integer id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        SecurityContext context = SecurityContextHolder.getContext();
-        UserDetails userDetails = (UserDetails) context.getAuthentication().getPrincipal();
-        Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), Collections.singletonList(new SimpleGrantedAuthority("4")));
-        context.setAuthentication(auth);
+        List<Item> item = itemService.findByUserId(userPrincipal.getId());
+        List<SimpleGrantedAuthority> authority = ItemMapper.INSTANCE.toListSimpleGrantedAuthority(item);
+
+        reSet(authority);
+
         itemService.deleteById(id);
         nodeService.deleteByItemId(id);
+    }
+
+    private void reSet(List<SimpleGrantedAuthority> authority) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        UserDetails userDetails = (UserDetails) context.getAuthentication().getPrincipal();
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                userDetails, userDetails.getPassword(), authority);
+        context.setAuthentication(auth);
     }
 }

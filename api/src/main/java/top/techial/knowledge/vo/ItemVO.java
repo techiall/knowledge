@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class ItemVO {
 
-    private boolean share;
+    private Boolean share;
 
     private String name;
 

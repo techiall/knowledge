@@ -27,8 +27,10 @@ public class User implements Serializable {
 
     private String nickName;
 
-    @ManyToMany
+    @OneToMany
     private Set<Item> item;
+
+    private String images;
 
     @JsonIgnore
     private String password;
