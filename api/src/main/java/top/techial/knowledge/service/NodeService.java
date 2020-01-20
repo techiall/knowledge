@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.dao.NodeRelationshipRepository;
 import top.techial.knowledge.dao.NodeRepository;
+import top.techial.knowledge.domain.Labels;
 import top.techial.knowledge.domain.Node;
+import top.techial.knowledge.domain.Property;
 import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.exception.NodeNotFoundException;
 import top.techial.knowledge.mapper.NodeMapper;
@@ -57,14 +59,6 @@ public class NodeService {
                 .orElseThrow(() -> new NodeNotFoundException(id));
     }
 
-    @CacheEvict(allEntries = true)
-    public Node updateName(Long id, String name) {
-        Node node = nodeRepository.findById(id)
-                .orElseThrow(() -> new NodeNotFoundException(id))
-                .setName(name);
-        return nodeRepository.save(node);
-    }
-
     public Node save(NodeVO nodeVO) {
         Node node = NodeMapper.INSTANCE.toNode(nodeVO);
         node = nodeRepository.save(node);
@@ -74,6 +68,45 @@ public class NodeService {
             nodeRelationshipRepository.insertNode(node.getId());
         }
         return node;
+    }
+
+    public List<NodeBaseDTO> findByNameLike(String name, Integer itemId) {
+        // language=sql
+        String value = "select id, name from node where name like (:name) and item_id = (:itemId)" +
+                "order by update_time desc limit 10;";
+        RowMapper<NodeBaseDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeBaseDTO.class);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", '%' + name + '%');
+        map.put("itemId", itemId);
+        return namedParameterJdbcTemplate.query(value, map, rowMapper);
+    }
+
+
+    public List<NodeBaseDTO> findByNameLike(String name) {
+        // language=sql
+        String value = "select id, name from node where name like (:name) order by update_time desc limit 10;";
+        RowMapper<NodeBaseDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeBaseDTO.class);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", '%' + name + '%');
+        return namedParameterJdbcTemplate.query(value, map, rowMapper);
+    }
+
+    public Node update(Long id, NodeVO nodeVO) {
+        Node node = nodeRepository.findById(id)
+                .orElseThrow(() -> new NodeNotFoundException(id));
+
+        if (nodeVO != null && nodeVO.getName() != null) {
+            node.setName(nodeVO.getName());
+        }
+        if (nodeVO != null && nodeVO.getLabels() != null) {
+            node.setLabels(new Labels().setLabels(nodeVO.getLabels()));
+        }
+        if (nodeVO != null && nodeVO.getProperty() != null) {
+            node.setProperty(new Property().setProperty(nodeVO.getProperty()));
+        }
+        return nodeRepository.save(node);
     }
 
 

@@ -21,6 +21,11 @@ public class NodeServiceTest {
     }
 
     @Test
+    public void findByNameLike() {
+        System.out.println(nodeService.findByNameLike("java", null));
+    }
+
+    @Test
     public void save() {
         NodeVO nodeVO = new NodeVO()
                 .setName("Java程序开发基础");
