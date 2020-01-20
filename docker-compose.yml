@@ -28,20 +28,6 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     restart: always
 
-  neo4j:
-    image: neo4j:latest
-    networks:
-      - knowledge
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - neo4j_logs:/logs
-      - neo4j_conf:/var/lib/neo4j/conf
-      - neo4j_import:/var/lib/neo4j/import
-      - neo4j_plugins:/plugins
-    environment:
-      - NEO4J_AUTH=neo4j/techial
-    restart: always
-
 networks:
   knowledge:
     external: true
@@ -51,12 +37,3 @@ volumes:
     external: true
   mysql_data:
     external: true
-  neo4j_logs:
-    external: true
-  neo4j_conf:
-    external: true
-  neo4j_import:
-    external: true
-  neo4j_plugins:
-    external: true
-
