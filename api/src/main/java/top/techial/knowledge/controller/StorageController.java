@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import top.techial.beans.ResultBean;
 import top.techial.knowledge.domain.Storage;
 import top.techial.knowledge.service.FileStorageService;
-import top.techial.knowledge.service.NodeTextService;
+import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.StorageService;
 
 import java.util.HashMap;
@@ -23,16 +23,16 @@ import java.util.Map;
 @Log4j2
 public class StorageController {
     private final StorageService storageService;
-    private final NodeTextService nodeTextService;
+    private final NodeService nodeService;
     private final FileStorageService fileStorageService;
 
     public StorageController(
-        StorageService storageService,
-        NodeTextService nodeTextService,
-        FileStorageService fileStorageService
+            StorageService storageService,
+            NodeService nodeService,
+            FileStorageService fileStorageService
     ) {
         this.storageService = storageService;
-        this.nodeTextService = nodeTextService;
+        this.nodeService = nodeService;
         this.fileStorageService = fileStorageService;
     }
 
@@ -41,7 +41,7 @@ public class StorageController {
      */
     @PostMapping("/text/{id}")
     public ResultBean<Long> save(@RequestBody(required = false) String text, @PathVariable Long id) {
-        nodeTextService.save(text, id);
+        nodeService.saveText(text, id);
         return new ResultBean<>(id);
     }
 
@@ -50,7 +50,7 @@ public class StorageController {
      */
     @GetMapping("/text/{id}")
     public ResultBean<String> findById(@PathVariable Long id) {
-        return new ResultBean<>(nodeTextService.findById(id).getText());
+        return new ResultBean<>(nodeService.findText(id));
     }
 
     @PostMapping
@@ -76,17 +76,17 @@ public class StorageController {
     public ResponseEntity<Resource> preview(@PathVariable String id) {
         Storage storage = storageService.findBySHA1(id);
         return ResponseEntity
-            .ok()
-            .header(HttpHeaders.CONTENT_TYPE, storageService.findBySHA1(id).getContentType())
-            .body(fileStorageService.findByHash(storage.getSha1()));
+                .ok()
+                .header(HttpHeaders.CONTENT_TYPE, storageService.findBySHA1(id).getContentType())
+                .body(fileStorageService.findByHash(storage.getSha1()));
     }
 
     @GetMapping(value = "/download/{id}")
     public ResponseEntity<Resource> download(@PathVariable String id) {
         Storage storage = storageService.findBySHA1(id);
         return ResponseEntity.ok().header(
-            HttpHeaders.CONTENT_DISPOSITION,
-            String.format("attachment; filename=\"%s\"", storage.getOriginalFilename())
+                HttpHeaders.CONTENT_DISPOSITION,
+                String.format("attachment; filename=\"%s\"", storage.getOriginalFilename())
         ).body(fileStorageService.findByHash(id));
     }
 

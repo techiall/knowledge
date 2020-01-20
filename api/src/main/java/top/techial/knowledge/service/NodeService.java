@@ -15,13 +15,12 @@ import top.techial.knowledge.domain.Labels;
 import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.domain.Property;
 import top.techial.knowledge.dto.NodeBaseDTO;
+import top.techial.knowledge.dto.SearchDTO;
 import top.techial.knowledge.exception.NodeNotFoundException;
 import top.techial.knowledge.mapper.NodeMapper;
 import top.techial.knowledge.vo.NodeVO;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author techial
@@ -55,8 +54,7 @@ public class NodeService {
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Node findById(Long id) {
-        return nodeRepository.findById(id)
-                .orElseThrow(() -> new NodeNotFoundException(id));
+        return nodeRepository.findById(id).orElseThrow(() -> new NodeNotFoundException(id));
     }
 
     public Node save(NodeVO nodeVO) {
@@ -82,10 +80,19 @@ public class NodeService {
         return namedParameterJdbcTemplate.query(value, map, rowMapper);
     }
 
+    public List<SearchDTO> findContentByNameLike(String name) {
+        // language=sql
+        String value = "select n.id, n.name from node n where n.name like (:name) order by n.update_time desc limit 10;";
+        BeanPropertyRowMapper<SearchDTO> rowMapper = BeanPropertyRowMapper.newInstance(SearchDTO.class);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", '%' + name + '%');
+        return namedParameterJdbcTemplate.query(value, map, rowMapper);
+    }
 
     public List<NodeBaseDTO> findByNameLike(String name) {
         // language=sql
-        String value = "select id, name from node where name like (:name) order by update_time desc limit 10;";
+        String value = "select n.id, n.name from node n where n.name like (:name) order by n.update_time desc limit 10;";
         RowMapper<NodeBaseDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeBaseDTO.class);
 
         Map<String, Object> map = new HashMap<>();
@@ -133,9 +140,7 @@ public class NodeService {
                 "from `node` node0_ inner join node_relationship noderelati1_ on (node0_.id = noderelati1_.ancestor)\n" +
                 "where noderelati1_.descendant = (:descendant)\n";
         RowMapper<NodeBaseDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeBaseDTO.class);
-        Map<String, Object> map = new HashMap<>();
-        map.put("descendant", id);
-        return namedParameterJdbcTemplate.query(value, map, rowMapper);
+        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("descendant", id), rowMapper);
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
@@ -159,5 +164,24 @@ public class NodeService {
         map.put("target", targetId);
         map.put("property", property);
         return map;
+    }
+
+    public void deleteByIds(Set<Long> ids) {
+        ids.forEach(this::deleteById);
+    }
+
+    @Transactional
+    public void deleteById(Long id) {
+        nodeRepository.deleteById(id);
+        nodeRelationshipRepository.deleteByNodeId(id);
+    }
+
+    public void saveText(String text, Long id) {
+        nodeRepository.saveText(id, text);
+    }
+
+    public String findText(Long id) {
+        String value = "select n.text from node n where n.id = (:id)";
+        return namedParameterJdbcTemplate.queryForObject(value, Collections.singletonMap("id", id), String.class);
     }
 }

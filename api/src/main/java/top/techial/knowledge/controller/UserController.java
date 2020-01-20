@@ -28,7 +28,7 @@ import java.util.Objects;
 @Log4j2
 public class UserController {
     private final UserService userService;
-    private final KnowledgeNodeService knowledgeNodeService;
+    private final NodeService nodeService;
     private final PasswordEncoder passwordEncoder;
     private final SessionService sessionService;
     private final RecordService recordService;
@@ -36,13 +36,13 @@ public class UserController {
 
     public UserController(
             UserService userService,
-            KnowledgeNodeService knowledgeNodeService,
-            PasswordEncoder passwordEncoder,
+            NodeService nodeService, PasswordEncoder passwordEncoder,
             SessionService sessionService,
             RecordService recordService,
-            ItemService itemService) {
+            ItemService itemService
+    ) {
         this.userService = userService;
-        this.knowledgeNodeService = knowledgeNodeService;
+        this.nodeService = nodeService;
         this.passwordEncoder = passwordEncoder;
         this.sessionService = sessionService;
         this.recordService = recordService;
@@ -105,7 +105,7 @@ public class UserController {
             userService.deleteById(userPrincipal.getId());
             List<Item> item = itemService.findByUserId(userPrincipal.getId());
             itemService.deleteByUserId(userPrincipal.getId());
-            item.parallelStream().map(Item::getId).forEach(knowledgeNodeService::deleteByItemId);
+            item.parallelStream().map(Item::getId).forEach(nodeService::deleteByItemId);
             recordService.deleteByUserId(userPrincipal.getId());
             return new ResultBean<>(true);
         }

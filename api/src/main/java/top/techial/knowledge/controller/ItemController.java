@@ -11,7 +11,7 @@ import top.techial.knowledge.exception.UserNotFoundItemException;
 import top.techial.knowledge.mapper.ItemMapper;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.ItemService;
-import top.techial.knowledge.service.KnowledgeNodeService;
+import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.vo.ItemVO;
 
 import java.util.List;
@@ -24,11 +24,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/item")
 public class ItemController {
     private final ItemService itemService;
-    private final KnowledgeNodeService knowledgeNodeService;
+    private final NodeService nodeService;
 
-    public ItemController(ItemService itemService, KnowledgeNodeService knowledgeNodeService) {
+    public ItemController(ItemService itemService, NodeService nodeService) {
         this.itemService = itemService;
-        this.knowledgeNodeService = knowledgeNodeService;
+        this.nodeService = nodeService;
     }
 
     @GetMapping("/{id}")
@@ -84,6 +84,6 @@ public class ItemController {
             throw new UserNotFoundItemException(userPrincipal.getId(), id);
         }
         itemService.deleteById(id);
-        knowledgeNodeService.deleteByItemId(id);
+        nodeService.deleteByItemId(id);
     }
 }

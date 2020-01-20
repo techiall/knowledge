@@ -42,13 +42,6 @@ spring:
         globally_quoted_identifiers: true
         dialect: org.hibernate.dialect.MySQL57InnoDBDialect
     open-in-view: true
-  data:
-    neo4j:
-      username: neo4j
-      password: techial
-      uri: bolt://localhost:7687
-      open-in-view: true
-      auto-index: assert
   cache:
     jcache:
       config: classpath:ehcache.xml
@@ -75,6 +68,5 @@ storage:
   location: /Users/techial/Downloads/knowledge
 logging:
   level:
-    org.neo4j.ogm: info
     top.techial: debug
 

@@ -8,8 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.domain.NodeRelationship;
 import top.techial.knowledge.domain.NodeRelationshipPK;
 
-import java.util.List;
-
 /**
  * @author techial
  */
@@ -44,5 +42,4 @@ public interface NodeRelationshipRepository extends JpaRepository<NodeRelationsh
     @Transactional
     int deleteByNodeId(Long id);
 
-    List<NodeRelationship> findAllByAncestorOrDescendant(Long ancestor, Long descendant);
 }

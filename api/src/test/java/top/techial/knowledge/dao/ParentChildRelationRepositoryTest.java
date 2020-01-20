@@ -14,6 +14,6 @@ public class ParentChildRelationRepositoryTest {
 
     @Test
     public void jsonTest() throws JsonProcessingException {
-        System.out.println(new ObjectMapper().writeValueAsString(Long.valueOf(11L)));
+        System.out.println(new ObjectMapper().writeValueAsString(11L));
     }
 }
