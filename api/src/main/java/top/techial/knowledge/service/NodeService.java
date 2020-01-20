@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.dao.NodeRelationshipRepository;
 import top.techial.knowledge.dao.NodeRepository;
-import top.techial.knowledge.domain.Labels;
 import top.techial.knowledge.domain.Node;
-import top.techial.knowledge.domain.Property;
 import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.dto.SearchDTO;
 import top.techial.knowledge.exception.NodeNotFoundException;
@@ -106,23 +104,6 @@ public class NodeService {
         map.put("name", '%' + name + '%');
         return namedParameterJdbcTemplate.query(value, map, rowMapper);
     }
-
-    public Node update(Long id, NodeVO nodeVO) {
-        Node node = nodeRepository.findById(id)
-                .orElseThrow(() -> new NodeNotFoundException(id));
-
-        if (nodeVO != null && nodeVO.getName() != null) {
-            node.setName(nodeVO.getName());
-        }
-        if (nodeVO != null && nodeVO.getLabels() != null) {
-            node.setLabels(new Labels().setLabels(nodeVO.getLabels()));
-        }
-        if (nodeVO != null && nodeVO.getProperty() != null) {
-            node.setProperty(new Property().setProperty(nodeVO.getProperty()));
-        }
-        return nodeRepository.save(node);
-    }
-
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
     public List<NodeBaseDTO> findByChildNode(Long id, int depth) {
