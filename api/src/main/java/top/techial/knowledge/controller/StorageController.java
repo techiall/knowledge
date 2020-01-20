@@ -67,23 +67,23 @@ public class StorageController {
     @DeleteMapping("/{id}")
     public ResultBean<Boolean> delete(@PathVariable String id) {
         fileStorageService.delete(id);
-        storageService.deleteBySHA1(id);
+        storageService.deleteById(id);
         return new ResultBean<>(true);
     }
 
 
     @GetMapping(value = "/preview/{id}")
     public ResponseEntity<Resource> preview(@PathVariable String id) {
-        Storage storage = storageService.findBySHA1(id);
+        Storage storage = storageService.findById(id);
         return ResponseEntity
                 .ok()
-                .header(HttpHeaders.CONTENT_TYPE, storageService.findBySHA1(id).getContentType())
-                .body(fileStorageService.findByHash(storage.getSha1()));
+                .header(HttpHeaders.CONTENT_TYPE, storageService.findById(id).getContentType())
+                .body(fileStorageService.findByHash(storage.getId()));
     }
 
     @GetMapping(value = "/download/{id}")
     public ResponseEntity<Resource> download(@PathVariable String id) {
-        Storage storage = storageService.findBySHA1(id);
+        Storage storage = storageService.findById(id);
         return ResponseEntity.ok().header(
                 HttpHeaders.CONTENT_DISPOSITION,
                 String.format("attachment; filename=\"%s\"", storage.getOriginalFilename())

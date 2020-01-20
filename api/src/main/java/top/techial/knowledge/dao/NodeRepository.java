@@ -7,8 +7,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.domain.Node;
 
-import java.util.Collection;
-
 /**
  * @author techial
  */
@@ -16,9 +14,6 @@ import java.util.Collection;
 public interface NodeRepository extends JpaRepository<Node, Long> {
     @Transactional
     void deleteAllByItemId(Integer id);
-
-    @Transactional
-    void deleteAllByIdIn(Collection<Long> ids);
 
     @Transactional
     @Modifying

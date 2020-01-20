@@ -28,24 +28,24 @@ public class StorageService {
     @CacheEvict(allEntries = true)
     @Transactional
     public void save(String sha1, MultipartFile file) {
-        Storage storage = storageRepository.findFirstBySha1(sha1).orElse(new Storage());
+        Storage storage = storageRepository.findById(sha1).orElse(new Storage());
         storage = storage
-            .setSha1(sha1)
-            .setContentType(file.getContentType())
-            .setOriginalFilename(file.getOriginalFilename());
+                .setId(sha1)
+                .setContentType(file.getContentType())
+                .setOriginalFilename(file.getOriginalFilename());
         storageRepository.save(storage);
     }
 
     @CacheEvict(allEntries = true)
     @Async
     @Transactional
-    public void deleteBySHA1(String id) {
-        storageRepository.deleteBySha1(id);
+    public void deleteById(String id) {
+        storageRepository.deleteById(id);
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
-    public Storage findBySHA1(String id) {
-        return storageRepository.findFirstBySha1(id)
-            .orElseThrow(() -> new StorageFileNotFoundException(String.format("SHA1: [%s] not found.", id)));
+    public Storage findById(String id) {
+        return storageRepository.findById(id)
+                .orElseThrow(() -> new StorageFileNotFoundException(String.format("SHA1: [%s] not found.", id)));
     }
 }
