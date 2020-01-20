@@ -21,7 +21,7 @@ public class RecordServiceTest {
     public void save() {
         Record record = new Record()
             .setMessage(RandomStringUtils.randomAlphanumeric(10))
-            .setOperator(OperatorMessageEnum.DELETE_NODE_RELATION)
+            .setOperator(OperatorMessageEnum.ADD_NODE)
             .setUser(new User().setId(1))
             .setNodeId(10L);
 

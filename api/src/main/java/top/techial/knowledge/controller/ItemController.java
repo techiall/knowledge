@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import top.techial.beans.ResultBean;
 import top.techial.knowledge.domain.Item;
+import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.domain.User;
 import top.techial.knowledge.dto.ItemDTO;
 import top.techial.knowledge.exception.ItemException;
@@ -60,7 +61,11 @@ public class ItemController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody ItemVO itemVo
     ) {
-        Item item = ItemMapper.INSTANCE.toItem(itemVo).setAuthor(new User().setId(userPrincipal.getId()));
+        Node node = new Node().setName("root");
+        node = nodeService.saveItemRoot(node);
+        Item item = ItemMapper.INSTANCE.toItem(itemVo)
+                .setAuthor(new User().setId(userPrincipal.getId()))
+                .setRootId(node.getId());
         itemService.insert(userPrincipal.getId(), item.getId());
         return new ResultBean<>(ItemMapper.INSTANCE.toItemDTO(itemService.save(item)));
     }

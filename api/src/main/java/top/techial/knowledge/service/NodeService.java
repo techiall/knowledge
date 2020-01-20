@@ -43,20 +43,10 @@ public class NodeService {
 
     @Transactional
     @CacheEvict(allEntries = true)
-    public Node save(Node node) {
-        return nodeRepository.save(node);
-    }
-
-
-    @Transactional
-    @CacheEvict(allEntries = true)
-    public void deleteByItemId(Integer id) {
-        nodeRepository.deleteAllByItemId(id);
-    }
-
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
-    public Node findById(Long id) {
-        return nodeRepository.findById(id).orElseThrow(() -> new NodeNotFoundException(id));
+    public Node saveItemRoot(Node node) {
+        node = nodeRepository.save(node);
+        nodeRelationshipRepository.insertNode(node.getId());
+        return node;
     }
 
     public Node save(NodeVO nodeVO) {
@@ -70,10 +60,21 @@ public class NodeService {
         return node;
     }
 
+    @Transactional
+    @CacheEvict(allEntries = true)
+    public void deleteByItemId(Integer id) {
+        nodeRepository.deleteAllByItemId(id);
+    }
+
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
+    public Node findById(Long id) {
+        return nodeRepository.findById(id).orElseThrow(() -> new NodeNotFoundException(id));
+    }
+
     public List<NodeBaseDTO> findByNameLike(String name, Integer itemId) {
         // language=sql
         String value = "select id, name from node where name like (:name) and item_id = (:itemId)" +
-                "order by update_time desc limit 10;";
+                "order by update_time desc limit 15;";
         RowMapper<NodeBaseDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeBaseDTO.class);
 
         Map<String, Object> map = new HashMap<>();
@@ -171,5 +172,9 @@ public class NodeService {
     public String findText(Long id) {
         String value = "select n.text from node n where n.id = (:id)";
         return namedParameterJdbcTemplate.queryForObject(value, Collections.singletonMap("id", id), String.class);
+    }
+
+    public void findByItemId(Integer itemId) {
+
     }
 }

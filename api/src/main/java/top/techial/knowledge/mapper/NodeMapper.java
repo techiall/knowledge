@@ -4,7 +4,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import top.techial.knowledge.domain.Node;
-import top.techial.knowledge.dto.NodeDTO;
 import top.techial.knowledge.dto.NodeInfoDTO;
 import top.techial.knowledge.vo.NodeVO;
 
@@ -19,9 +18,6 @@ public interface NodeMapper {
     @Mapping(source = "property", target = "property.property")
     @Mapping(source = "itemId", target = "itemId")
     Node toNode(NodeVO nodeVO);
-
-    NodeDTO toNodeDTO(Long parentNodeId, Long id, String name);
-
 
     @Mapping(source = "labels.labels", target = "labels")
     @Mapping(source = "property.property", target = "property")

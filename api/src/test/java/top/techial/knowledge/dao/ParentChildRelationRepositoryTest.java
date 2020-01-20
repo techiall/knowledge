@@ -9,7 +9,7 @@ public class ParentChildRelationRepositoryTest {
 
     @Test
     public void test() {
-        System.out.println(String.format(OperatorMessageEnum.DELETE_NODE_RELATION.getMessage(), 1L));
+        System.out.println(String.format(OperatorMessageEnum.UPDATE_NODE_NAME.getMessage(), 1L));
     }
 
     @Test

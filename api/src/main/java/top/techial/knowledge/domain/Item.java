@@ -32,6 +32,8 @@ public class Item implements Serializable {
 
     private Boolean share;
 
+    private Long rootId;
+
     private String name;
 
     private String description;
