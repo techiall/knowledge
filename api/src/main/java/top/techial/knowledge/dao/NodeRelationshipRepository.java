@@ -44,7 +44,5 @@ public interface NodeRelationshipRepository extends JpaRepository<NodeRelationsh
     @Transactional
     int deleteByNodeId(Long id);
 
-    List<NodeRelationship> findAllByAncestor(Long ancestor);
-
     List<NodeRelationship> findAllByAncestorOrDescendant(Long ancestor, Long descendant);
 }

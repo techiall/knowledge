@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.dao.NodeRelationshipRepository;
 import top.techial.knowledge.dao.NodeRepository;
 import top.techial.knowledge.domain.Node;
-import top.techial.knowledge.domain.NodeRelationship;
 import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.exception.NodeNotFoundException;
 import top.techial.knowledge.mapper.NodeMapper;
@@ -21,7 +20,6 @@ import top.techial.knowledge.vo.NodeVO;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author techial
@@ -80,33 +78,39 @@ public class NodeService {
 
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
-    public List<NodeBaseDTO> findByChildNode(Long id) {
+    public List<NodeBaseDTO> findByChildNode(Long id, int depth) {
         // language=sql
-        String value = "select noderelati1_.`ancestor` as parentNodeId,\n" +
-                "noderelati1_.`descendant` as id,\n" +
+        String value = "select noderelati1_.ancestor as parentNodeId, noderelati1_.descendant as id,\n" +
                 "(select count(*) - 1 from node_relationship k where k.ancestor = noderelati1_.descendant) as child,\n" +
                 "node0_.`name` as name\n" +
-                "from `node` node0_ inner join `node_relationship` noderelati1_ on (node0_.`id` = noderelati1_.`descendant`)\n" +
-                "where noderelati1_.`ancestor` = (:ancestor) and noderelati1_.distance = (:depth)";
+                "from `node` node0_ inner join node_relationship noderelati1_ on (node0_.id = noderelati1_.descendant)\n" +
+                "where noderelati1_.ancestor = (:ancestor) and noderelati1_.distance = (:depth)";
         RowMapper<NodeBaseDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeBaseDTO.class);
 
         Map<String, Object> map = new HashMap<>();
         map.put("ancestor", id);
-        map.put("depth", 1);
-
+        map.put("depth", depth);
         return namedParameterJdbcTemplate.query(value, map, rowMapper);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
-    public Map<String, List<NodeBaseDTO>> getChildAndParent(Long id) {
-        Map<String, List<NodeBaseDTO>> stringListHashMap = new HashMap<>();
-        List<Node> result = nodeRelationshipRepository.findAllByAncestorOrDescendant(id, id)
-                .parallelStream()
-                .map(NodeRelationship::getDescendant)
-                .map(this::findById)
-                .collect(Collectors.toList());
+    private List<NodeBaseDTO> findParent(Long id) {
+        // language=sql
+        String value = "select node0_.id as id, node0_.name as name, true as child,\n" +
+                "(select n.ancestor from node_relationship n where n.descendant = node0_.id and n.distance = 1) as parentNodeId\n" +
+                "from `node` node0_ inner join node_relationship noderelati1_ on (node0_.id = noderelati1_.ancestor)\n" +
+                "where noderelati1_.descendant = (:descendant)\n";
+        RowMapper<NodeBaseDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeBaseDTO.class);
+        Map<String, Object> map = new HashMap<>();
+        map.put("descendant", id);
+        return namedParameterJdbcTemplate.query(value, map, rowMapper);
+    }
 
-        return null;
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
+    public Map<String, List<NodeBaseDTO>> getChildAndParent(Long id, int depth) {
+        Map<String, List<NodeBaseDTO>> map = new HashMap<>();
+        map.put("child", findByChildNode(id, depth));
+        map.put("parent", findParent(id));
+        return map;
     }
 
     private Map<String, Object> buildNodes(Long id, String name) {

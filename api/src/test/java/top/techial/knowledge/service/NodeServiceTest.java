@@ -17,7 +17,7 @@ public class NodeServiceTest {
 
     @Test
     public void test() {
-        nodeService.findByChildNode(28L).forEach(System.out::println);
+        nodeService.findByChildNode(28L, 3).forEach(System.out::println);
     }
 
     @Test
@@ -47,5 +47,10 @@ public class NodeServiceTest {
         nodeService.save(nodeVO3);
 
 
+    }
+
+    @Test
+    public void getChildAndParent() {
+        System.out.println(nodeService.getChildAndParent(30L, 4));
     }
 }
