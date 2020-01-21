@@ -54,11 +54,11 @@ public class StorageController {
     }
 
     @PostMapping
-    public Map<String, String> save(@RequestParam MultipartFile file) {
+    public Map<String, Object> save(@RequestParam MultipartFile file) {
         String sha1 = fileStorageService.upload(file);
         storageService.save(sha1, file);
-        Map<String, String> map = new HashMap<>();
-        map.put("code", "0");
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", 0);
         map.put("msg", "Success");
         map.put("link", String.format("api/storage/preview/%s", sha1));
         return map;

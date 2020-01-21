@@ -22,7 +22,7 @@ services:
       - knowledge
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./deploy/mysql/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf:ro
+      - ./deploy/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
       - mysql_data:/var/lib/mysql
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
