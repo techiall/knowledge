@@ -5,8 +5,8 @@ server:
     enabled: true
 
 spring:
-  profiles:
-    active: docker
+  application:
+    name: knowledge-dev
   session:
     store-type: jdbc
     jdbc:
@@ -19,12 +19,13 @@ spring:
         keep-alive: 180s
         queue-capacity: 512
       thread-name-prefix: knowledge-
-  application:
-    name: knowledge-docker
+  profiles:
+    active: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql/knowledge?useSSL=false&createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost/knowledge?useSSL=false&createDatabaseIfNotExist=true
     username: root
+    password: root
   jpa:
     generate-ddl: true
     show-sql: true
@@ -39,14 +40,14 @@ spring:
         dialect: org.hibernate.dialect.MySQL57InnoDBDialect
     open-in-view: true
   cache:
-    type: simple
+    jcache:
+      config: classpath:ehcache.xml
   servlet:
     multipart:
       max-file-size: 60MB
       max-request-size: 60MB
+      enabled: true
 management:
-  server:
-    port: 8080
   endpoint:
     health:
       show-details: always
@@ -59,9 +60,10 @@ management:
           - loggers
           - health
           - info
+
 storage:
-  location: /knowledge/storage
+  location: /Users/techial/Downloads/knowledge
 logging:
   level:
-    top.techial: info
+    top.techial: debug
 
