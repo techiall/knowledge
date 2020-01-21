@@ -2,6 +2,7 @@ package top.techial.knowledge.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.dto.NodeInfoDTO;
@@ -10,7 +11,7 @@ import top.techial.knowledge.vo.NodeVO;
 /**
  * @author techial
  */
-@Mapper
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface NodeMapper {
     NodeMapper INSTANCE = Mappers.getMapper(NodeMapper.class);
 

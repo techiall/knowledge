@@ -1,6 +1,7 @@
 package top.techial.knowledge.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import top.techial.knowledge.domain.Item;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * @author techial
  */
-@Mapper
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ItemMapper {
     ItemMapper INSTANCE = Mappers.getMapper(ItemMapper.class);
 

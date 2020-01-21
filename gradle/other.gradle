@@ -1,0 +1,10 @@
+clean.doFirst {
+    delete "${rootDir}/cache"
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs = [
+            '-Amapstruct.suppressGeneratorTimestamp=true'
+    ]
+}
+

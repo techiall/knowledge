@@ -1,0 +1,9 @@
+jib {
+    from {
+        image = 'openjdk:12'
+    }
+    to {
+        image = "${project.group}/${project.name}"
+        tags = ['latest']
+    }
+}
