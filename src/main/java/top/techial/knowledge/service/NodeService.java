@@ -49,6 +49,8 @@ public class NodeService {
         return node;
     }
 
+    @Transactional
+    @CacheEvict(allEntries = true)
     public Node save(NodeVO nodeVO) {
         Node node = NodeMapper.INSTANCE.toNode(nodeVO);
         node = nodeRepository.save(node);

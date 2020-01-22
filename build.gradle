@@ -20,7 +20,7 @@ configurations {
 }
 
 apply from: "${rootDir}/gradle/jib.gradle"
-apply from: "${rootDir}/gradle/other.gradle"
+apply from: "${rootDir}/gradle/cache.gradle"
 
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-security'

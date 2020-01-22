@@ -3,7 +3,10 @@ jib {
         image = 'openjdk:12'
     }
     to {
-        image = "${project.group}/${project.name}"
+        image = "techial.top/${project.name}"
         tags = ['latest']
+    }
+    container {
+        labels = ['maintainer': 'techial "me@techial.top"']
     }
 }
