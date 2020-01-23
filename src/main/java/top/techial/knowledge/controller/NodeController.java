@@ -92,8 +92,9 @@ public class NodeController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority(#itemId.toString())")
     public ResultBean<Boolean> deleteById(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestParam Integer itemId,
             @PathVariable Long id
     ) {
         nodeService.deleteById(id);
@@ -102,13 +103,24 @@ public class NodeController {
     }
 
     @DeleteMapping
+    @PreAuthorize("hasAnyAuthority(#itemId.toString())")
     public ResultBean<Boolean> deleteByIds(
             @RequestBody Set<Long> ids,
-            @AuthenticationPrincipal UserPrincipal userPrincipal
+            @RequestParam Integer itemId
     ) {
         nodeService.deleteByIds(ids);
         recordService.deleteByNodeIds(ids);
         return new ResultBean<>(true);
+    }
+
+    @GetMapping
+    public ResultBean<List<NodeBaseDTO>> findByRootNode(
+            @RequestParam Integer itemId,
+            @RequestParam(defaultValue = "1") Integer depth
+    ) {
+        Long rootNodeId = itemService.findRootNodeId(itemId)
+                .orElseThrow(() -> new ItemException(itemId));
+        return new ResultBean<>(nodeService.findByChildNode(rootNodeId, depth));
     }
 
     @GetMapping("/{id}/graph")

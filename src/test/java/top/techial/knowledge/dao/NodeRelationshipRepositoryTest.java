@@ -30,4 +30,9 @@ public class NodeRelationshipRepositoryTest {
         Assert.assertNotEquals(0, t);
     }
 
+    @Test
+    public void insertNode() {
+        nodeRelationshipRepository.insertNode(115L, 39L);
+    }
+
 }
