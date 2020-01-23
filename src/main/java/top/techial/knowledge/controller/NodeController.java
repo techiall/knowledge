@@ -10,8 +10,10 @@ import top.techial.knowledge.domain.OperatorMessageEnum;
 import top.techial.knowledge.domain.Property;
 import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.dto.NodeInfoDTO;
+import top.techial.knowledge.exception.ItemException;
 import top.techial.knowledge.mapper.NodeMapper;
 import top.techial.knowledge.security.UserPrincipal;
+import top.techial.knowledge.service.ItemService;
 import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.vo.NodeVO;
@@ -29,10 +31,12 @@ import java.util.Set;
 public class NodeController {
     private final NodeService nodeService;
     private final RecordService recordService;
+    private final ItemService itemService;
 
-    public NodeController(NodeService nodeService, RecordService recordService) {
+    public NodeController(NodeService nodeService, RecordService recordService, ItemService itemService) {
         this.nodeService = nodeService;
         this.recordService = recordService;
+        this.itemService = itemService;
     }
 
     @GetMapping("/{id}")
@@ -47,7 +51,9 @@ public class NodeController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody NodeVO nodeVO
     ) {
-        Node node = nodeService.save(nodeVO);
+        Long itemId = itemService.findRootNodeId(nodeVO.getItemId())
+                .orElseThrow(() -> new ItemException(nodeVO.getItemId()));
+        Node node = nodeService.save(nodeVO, itemId);
 
         recordService.save(node.getId(), userPrincipal.getId(),
                 OperatorMessageEnum.ADD_NODE, nodeVO);

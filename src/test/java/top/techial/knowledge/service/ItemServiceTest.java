@@ -1,5 +1,6 @@
 package top.techial.knowledge.service;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,6 @@ public class ItemServiceTest {
         itemService.save(new Item().setName("item1").setAuthor(new User().setId(3)));
         itemService.save(new Item().setName("item2").setAuthor(new User().setId(3)));
         itemService.save(new Item().setName("item3").setAuthor(new User().setId(3)));
-    }
-
-    @Test
-    public void save() {
-        User user = userService.findById(3).orElseThrow(NullPointerException::new)
-                .setItem(Collections.singleton(new Item().setId(1)));
-        userService.save(user);
     }
 
 }

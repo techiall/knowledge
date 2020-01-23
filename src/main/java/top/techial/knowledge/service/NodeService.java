@@ -51,13 +51,19 @@ public class NodeService {
 
     @Transactional
     @CacheEvict(allEntries = true)
-    public Node save(NodeVO nodeVO) {
+    public Node save(Node node) {
+        return nodeRepository.save(node);
+    }
+
+    @Transactional
+    @CacheEvict(allEntries = true)
+    public Node save(NodeVO nodeVO, Long itemRootNodeId) {
         Node node = NodeMapper.INSTANCE.toNode(nodeVO);
         node = nodeRepository.save(node);
         if (nodeVO.getParentId() != null) {
             nodeRelationshipRepository.insertNode(node.getId(), nodeVO.getParentId());
         } else {
-            nodeRelationshipRepository.insertNode(node.getId());
+            nodeRelationshipRepository.insertNode(node.getId(), itemRootNodeId);
         }
         return node;
     }

@@ -50,7 +50,6 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName", unless = "#result == null")
     public long count() {
         return userRepository.count();
     }

@@ -19,4 +19,7 @@ public class ItemVO {
 
     @NotBlank
     private String description;
+
+    @NotBlank
+    private String image;
 }

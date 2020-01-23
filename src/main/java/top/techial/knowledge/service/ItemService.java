@@ -23,6 +23,10 @@ public class ItemService {
         return itemRepository.findById(id);
     }
 
+    public Optional<Long> findRootNodeId(Integer id) {
+        return itemRepository.findRootNodeId(id);
+    }
+
     public List<Item> findByUserId(Integer id) {
         return itemRepository.findAllByAuthorId(id);
     }

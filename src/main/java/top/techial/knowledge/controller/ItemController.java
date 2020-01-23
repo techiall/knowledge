@@ -59,16 +59,16 @@ public class ItemController {
     @PostMapping
     public ResultBean<ItemDTO> save(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @Valid @RequestBody ItemVO itemVo
+            @Valid @RequestBody ItemVO itemVO
     ) {
         Node node = new Node().setName("root");
         node = nodeService.saveItemRoot(node);
-        Item item = ItemMapper.INSTANCE.toItem(itemVo)
+        Item item = ItemMapper.INSTANCE.toItem(itemVO)
                 .setAuthor(new User().setId(userPrincipal.getId()))
                 .setRootNode(node);
-
+        item = itemService.save(item);
         itemService.insert(userPrincipal.getId(), item.getId());
-        return new ResultBean<>(ItemMapper.INSTANCE.toItemDTO(itemService.save(item)));
+        return new ResultBean<>(ItemMapper.INSTANCE.toItemDTO(item));
     }
 
     @PutMapping("/{id}")
@@ -83,6 +83,9 @@ public class ItemController {
         }
         if (itemVO != null && itemVO.getName() != null) {
             item.setName(itemVO.getName());
+        }
+        if (itemVO != null && itemVO.getImage() != null) {
+            item.setImage(itemVO.getImage());
         }
         return new ResultBean<>(ItemMapper.INSTANCE.toItemDTO(itemService.save(item)));
     }
