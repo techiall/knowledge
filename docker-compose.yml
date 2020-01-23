@@ -1,11 +1,10 @@
 version: '3.7'
 services:
   web:
-    image: top.techial/knowledge/api:latest
+    image: techial.top/knowledge:latest
     networks:
       - knowledge
     depends_on:
-      - neo4j
       - mysql
     ports:
       - 8080:8080
