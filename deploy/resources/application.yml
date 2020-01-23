@@ -5,8 +5,6 @@ server:
     enabled: true
 
 spring:
-  profiles:
-    active: docker
   session:
     store-type: jdbc
     jdbc:

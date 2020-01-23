@@ -121,7 +121,8 @@ public class NodeService {
                 "(select count(*) - 1 from node_relationship k where k.ancestor = noderelati1_.descendant) as child,\n" +
                 "node0_.`name` as name\n" +
                 "from `node` node0_ inner join node_relationship noderelati1_ on (node0_.id = noderelati1_.descendant)\n" +
-                "where noderelati1_.ancestor = (:ancestor) and noderelati1_.distance <= (:depth)";
+                "where noderelati1_.ancestor = (:ancestor) " +
+                "and noderelati1_.ancestor != noderelati1_.descendant and noderelati1_.distance <= (:depth)";
         RowMapper<NodeBaseDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeBaseDTO.class);
 
         Map<String, Object> map = new HashMap<>();
