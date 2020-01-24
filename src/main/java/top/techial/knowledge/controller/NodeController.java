@@ -66,7 +66,7 @@ public class NodeController {
     public ResultBean<NodeInfoDTO> update(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long id,
-            @RequestBody NodeVO nodeVO
+            @Valid @RequestBody NodeVO nodeVO
     ) {
         Node node = nodeService.findById(id);
 

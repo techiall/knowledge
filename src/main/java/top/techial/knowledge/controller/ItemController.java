@@ -21,7 +21,6 @@ import top.techial.knowledge.service.ItemService;
 import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.vo.ItemVO;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,7 +58,7 @@ public class ItemController {
     @PostMapping
     public ResultBean<ItemDTO> save(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @Valid @RequestBody ItemVO itemVO
+            @RequestBody ItemVO itemVO
     ) {
         Node node = new Node().setName("root");
         node = nodeService.saveItemRoot(node);
@@ -73,7 +72,7 @@ public class ItemController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority(#id)")
-    public ResultBean<ItemDTO> update(@Valid @RequestBody ItemVO itemVO, @PathVariable Integer id) {
+    public ResultBean<ItemDTO> update(@RequestBody ItemVO itemVO, @PathVariable Integer id) {
         Item item = itemService.findById(id).orElseThrow(() -> new ItemException(id));
         if (itemVO != null && itemVO.getDescription() != null) {
             item.setDescription(itemVO.getDescription());

@@ -15,7 +15,6 @@ import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.*;
 import top.techial.knowledge.vo.UserVO;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +66,7 @@ public class UserController {
     @PatchMapping("/me")
     public ResultBean<UserDTO> update(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @Valid @RequestBody UserVO userVO
+            @RequestBody UserVO userVO
     ) {
         User user = userService.findById(userPrincipal.getId())
                 .orElseThrow(() -> new UserException(userPrincipal.getId()));
