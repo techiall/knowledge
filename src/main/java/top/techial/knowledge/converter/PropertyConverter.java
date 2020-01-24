@@ -2,15 +2,15 @@ package top.techial.knowledge.converter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import org.springframework.stereotype.Component;
 import top.techial.knowledge.domain.Property;
 
 import javax.persistence.AttributeConverter;
+import javax.persistence.Convert;
 
 /**
  * @author techial
  */
-@Component
+@Convert
 public class PropertyConverter implements AttributeConverter<Property, String> {
     private final ObjectMapper objectMapper;
 

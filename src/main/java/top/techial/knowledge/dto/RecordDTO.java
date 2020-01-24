@@ -11,6 +11,9 @@ import java.time.Instant;
  */
 @Data
 public class RecordDTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private Long nodeId;
 
     private OperatorMessageEnum operator;

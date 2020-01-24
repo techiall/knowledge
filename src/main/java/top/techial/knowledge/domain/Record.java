@@ -15,7 +15,7 @@ import java.time.Instant;
 @Accessors(chain = true)
 @Entity
 @Table(indexes = {
-    @Index(columnList = "nodeId")
+        @Index(columnList = "nodeId")
 })
 public class Record implements Serializable {
 
@@ -25,9 +25,6 @@ public class Record implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    /**
-     * neo4j node id
-     */
     @Column(nullable = false)
     private Long nodeId;
 
