@@ -24,13 +24,14 @@ apply from: "${rootDir}/gradle/cache.gradle"
 
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-security'
-    compile 'org.springframework.boot:spring-boot-configuration-processor'
     compile 'org.springframework.session:spring-session-jdbc'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-cache'
     compile 'org.springframework.boot:spring-boot-starter-log4j2'
+
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     compile 'javax.cache:cache-api:1.1.1'
     compile 'org.ehcache:ehcache:3.8.1'
