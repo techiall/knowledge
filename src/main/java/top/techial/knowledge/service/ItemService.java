@@ -1,6 +1,9 @@
 package top.techial.knowledge.service;
 
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.dao.ItemRepository;
 import top.techial.knowledge.domain.Item;
 
@@ -10,6 +13,7 @@ import java.util.Optional;
 /**
  * @author techial
  */
+@CacheConfig(cacheNames = "user")
 @Service
 public class ItemService {
 
@@ -31,6 +35,8 @@ public class ItemService {
         return itemRepository.findAllByAuthorId(id);
     }
 
+    @Transactional
+    @CacheEvict(allEntries = true)
     public void deleteByUserId(Integer id) {
         itemRepository.deleteByAuthorId(id);
     }
@@ -45,5 +51,9 @@ public class ItemService {
 
     public void insert(Integer userId, Integer itemId) {
         itemRepository.insert(userId, itemId);
+    }
+
+    public void deleteByUserIdAndItemId(Integer id, List<Item> item) {
+        item.forEach(item1 -> itemRepository.delete(id, item1.getId()));
     }
 }

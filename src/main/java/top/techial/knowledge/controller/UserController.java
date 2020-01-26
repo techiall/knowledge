@@ -57,7 +57,7 @@ public class UserController {
             User user = userService.findById(userPrincipal.getId()).orElse(new User());
             map.put("user", UserMapper.INSTANCE.toUserDTO(user));
         } else {
-            map.put("user", object);
+            map.put("user", new User());
         }
         map.put("_csrf", csrfToken);
         return new ResultBean<>(map);
@@ -81,7 +81,7 @@ public class UserController {
     }
 
     @PatchMapping("/me/password")
-    public ResultBean<User> updatePassword(
+    public ResultBean<UserDTO> updatePassword(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             String srcPassword,
             String password
@@ -95,17 +95,18 @@ public class UserController {
 
         userService.updatePassword(userPrincipal.getId(), password);
         sessionService.flushId(userPrincipal);
-        return new ResultBean<>(user);
+        return new ResultBean<>(UserMapper.INSTANCE.toUserDTO(user));
     }
 
     @DeleteMapping("/me")
     public ResultBean<Object> deleteById(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         sessionService.flushId(userPrincipal);
-        userService.deleteById(userPrincipal.getId());
         List<Item> item = itemService.findByUserId(userPrincipal.getId());
+        itemService.deleteByUserIdAndItemId(userPrincipal.getId(), item);
         itemService.deleteByUserId(userPrincipal.getId());
         item.parallelStream().map(Item::getId).forEach(nodeService::deleteByItemId);
         recordService.deleteByUserId(userPrincipal.getId());
+        userService.deleteById(userPrincipal.getId());
         return new ResultBean<>();
     }
 }

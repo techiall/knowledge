@@ -28,6 +28,14 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     @Transactional
     void insert(Integer userId, Integer itemId);
 
+    @Modifying
+    @Query(
+            nativeQuery = true,
+            value = "delete from user_item where user_id = :userId and item_id = :itemId"
+    )
+    @Transactional
+    void delete(Integer userId, Integer itemId);
+
     @Query("select i.rootNode.id from Item i where i.id = :id")
     Optional<Long> findRootNodeId(Integer id);
 }
