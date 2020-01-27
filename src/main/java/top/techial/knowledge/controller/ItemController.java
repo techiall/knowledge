@@ -14,6 +14,7 @@ import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.domain.User;
 import top.techial.knowledge.dto.ItemDTO;
+import top.techial.knowledge.dto.ItemShareDTO;
 import top.techial.knowledge.exception.ItemException;
 import top.techial.knowledge.mapper.ItemMapper;
 import top.techial.knowledge.security.UserPrincipal;
@@ -39,10 +40,10 @@ public class ItemController {
     }
 
     @GetMapping("share")
-    public ResultBean<List<ItemDTO>> share() {
-        List<ItemDTO> list = itemService.findByShare(true)
+    public ResultBean<List<ItemShareDTO>> share() {
+        List<ItemShareDTO> list = itemService.findByShare(true)
                 .parallelStream()
-                .map(ItemMapper.INSTANCE::toItemDTO)
+                .map(ItemMapper.INSTANCE::toItemShareDTO)
                 .collect(Collectors.toList());
         return new ResultBean<>(list);
     }

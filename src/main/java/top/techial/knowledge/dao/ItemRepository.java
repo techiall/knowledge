@@ -1,5 +1,6 @@
 package top.techial.knowledge.dao;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +19,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 
     List<Item> findAllByAuthorId(Integer id);
 
+    @EntityGraph(attributePaths = "author")
     List<Item> findByShare(Boolean share);
 
     void deleteByAuthorId(Integer id);
