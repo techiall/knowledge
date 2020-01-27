@@ -67,6 +67,9 @@ public class ItemController {
                 .setRootNode(node);
         item = itemService.save(item);
         itemService.insert(userPrincipal.getId(), item.getId());
+        List<Item> list = itemService.findByUserId(userPrincipal.getId());
+        List<SimpleGrantedAuthority> authority = ItemMapper.INSTANCE.toListSimpleGrantedAuthority(list);
+        reSet(authority);
         return new ResultBean<>(ItemMapper.INSTANCE.toItemDTO(item));
     }
 
