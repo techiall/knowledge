@@ -65,4 +65,8 @@ public class ItemService {
     public void deleteByUserIdAndItemId(Integer userId, Integer itemId) {
         itemRepository.delete(userId, itemId);
     }
+
+    public List<Item> findByShare(Boolean share) {
+        return itemRepository.findByShare(share);
+    }
 }

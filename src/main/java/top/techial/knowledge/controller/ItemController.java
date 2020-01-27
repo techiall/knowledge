@@ -38,6 +38,15 @@ public class ItemController {
         this.nodeService = nodeService;
     }
 
+    @GetMapping("/share")
+    public ResultBean<List<ItemDTO>> share() {
+        List<ItemDTO> list = itemService.findByShare(true)
+                .parallelStream()
+                .map(ItemMapper.INSTANCE::toItemDTO)
+                .collect(Collectors.toList());
+        return new ResultBean<>(list);
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority(#id)")
     public ResultBean<ItemDTO> findById(@PathVariable Integer id) {

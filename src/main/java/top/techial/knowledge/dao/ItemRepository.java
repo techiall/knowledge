@@ -18,6 +18,8 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 
     List<Item> findAllByAuthorId(Integer id);
 
+    List<Item> findByShare(Boolean share);
+
     void deleteByAuthorId(Integer id);
 
     @Modifying
