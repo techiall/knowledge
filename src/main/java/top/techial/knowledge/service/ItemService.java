@@ -45,15 +45,24 @@ public class ItemService {
         return itemRepository.save(item);
     }
 
+    @Transactional
+    @CacheEvict(allEntries = true)
     public void deleteById(Integer id) {
         itemRepository.deleteById(id);
     }
 
+    @CacheEvict(allEntries = true)
     public void insert(Integer userId, Integer itemId) {
         itemRepository.insert(userId, itemId);
     }
 
+    @CacheEvict(allEntries = true)
     public void deleteByUserIdAndItemId(Integer id, List<Item> item) {
         item.forEach(item1 -> itemRepository.delete(id, item1.getId()));
+    }
+
+    @CacheEvict(allEntries = true)
+    public void deleteByUserIdAndItemId(Integer userId, Integer itemId) {
+        itemRepository.delete(userId, itemId);
     }
 }

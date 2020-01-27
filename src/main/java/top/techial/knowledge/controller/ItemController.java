@@ -92,13 +92,12 @@ public class ItemController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority(#id)")
     public ResultBean<Object> deleteById(@PathVariable Integer id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        List<Item> item = itemService.findByUserId(userPrincipal.getId());
-        List<SimpleGrantedAuthority> authority = ItemMapper.INSTANCE.toListSimpleGrantedAuthority(item);
-
-        reSet(authority);
-
+        itemService.deleteByUserIdAndItemId(userPrincipal.getId(), id);
         itemService.deleteById(id);
         nodeService.deleteByItemId(id);
+        List<Item> item = itemService.findByUserId(userPrincipal.getId());
+        List<SimpleGrantedAuthority> authority = ItemMapper.INSTANCE.toListSimpleGrantedAuthority(item);
+        reSet(authority);
         return new ResultBean<>();
     }
 
