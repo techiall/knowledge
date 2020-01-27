@@ -7,7 +7,7 @@ This my graduation project.
 
 ### Prerequisites 
 
-*  [Apache Maven 3.0+](https://maven.apache.org/)
+*  [Gradle 5.5](https://gradle.org/)
 * [OpenJDK 1.8+](https://openjdk.java.net/)
 * [Mysql 8.0](https://www.mysql.com/)
 
@@ -15,14 +15,20 @@ This my graduation project.
 ### Installing
 
 1. git clone and enter dir `git clone https://github.com/techial1042/knowledge.git && cd knowledge`
-2. build with Maven (`mvn clean package -DskipTests=true`)
+2. build with gradle (`gradle clean build -x test`)
 
 
 
 ## Running
 
 ```shell
-java -jar api/target/api-0.1.0.jar
+
+chmod +x ./gradlew
+
+./gradlew clean build -x test
+
+java -jar ./build/libs/knolwedge-0.1.0.jar
+
 ```
 
 
@@ -32,13 +38,12 @@ java -jar api/target/api-0.1.0.jar
 ### docker (recommend)
 
 
-
 ```shell
-cd ./api
 
-mvn clean compile jib:dockerBuild -DskipTests=true
+gradle clean jibDockerBuild
 
-docker run -d top.techial/knowledge/api:latest
+docker run -d techial.top/knowledge:latest
+
 ```
 
 Or enter project dir, running `docker-compose up -d`
@@ -47,6 +52,6 @@ Or enter project dir, running `docker-compose up -d`
 ### jar
 
 ```shell
-java -jar api/target/api-0.1.0.jar
+java -jar ./build/libs/knolwedge-0.1.0.jar
 ```
 
