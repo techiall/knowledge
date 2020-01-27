@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,5 +23,5 @@ public class NodeInfoDTO implements Serializable {
     private Set<String> labels;
     private String name;
     private Integer itemId;
-    private Map<String, String> property;
+    private Map<String, List<String>> property;
 }

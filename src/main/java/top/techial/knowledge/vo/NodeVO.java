@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ public class NodeVO implements Serializable {
 
     private Set<String> labels;
 
-    private Map<String, String> property;
+    private Map<String, List<String>> property;
 
     /**
      * parentId = null -> parent

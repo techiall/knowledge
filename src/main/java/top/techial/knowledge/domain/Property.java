@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,5 +16,5 @@ public class Property implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Map<String, String> property;
+    private Map<String, List<String>> property;
 }
