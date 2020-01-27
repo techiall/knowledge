@@ -38,7 +38,7 @@ public class ItemController {
         this.nodeService = nodeService;
     }
 
-    @GetMapping("/share")
+    @GetMapping("share")
     public ResultBean<List<ItemDTO>> share() {
         List<ItemDTO> list = itemService.findByShare(true)
                 .parallelStream()
@@ -48,7 +48,7 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority(#id)")
+    @PreAuthorize("hasAnyAuthority(#id.toString())")
     public ResultBean<ItemDTO> findById(@PathVariable Integer id) {
         Item item = itemService.findById(id).orElseThrow(() -> new ItemException(id));
         return new ResultBean<>(ItemMapper.INSTANCE.toItemDTO(item));
