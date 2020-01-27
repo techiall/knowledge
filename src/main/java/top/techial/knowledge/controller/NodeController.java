@@ -86,7 +86,7 @@ public class NodeController {
                     OperatorMessageEnum.UPDATE_NODE_PROPERTY, nodeVO);
         }
 
-        node = nodeService.saveItemRoot(node);
+        node = nodeService.save(node);
 
         return new ResultBean<>(NodeMapper.INSTANCE.toNodeInfoDTO(node));
     }
