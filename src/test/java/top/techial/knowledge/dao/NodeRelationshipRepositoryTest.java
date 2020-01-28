@@ -24,15 +24,14 @@ public class NodeRelationshipRepositoryTest {
     }
 
     @Test
-    public void delete() {
-        int t = nodeRelationshipRepository.deleteByNodeId(4L);
-        System.out.println(t);
-        Assert.assertNotEquals(0, t);
-    }
-
-    @Test
     public void insertNode() {
         nodeRelationshipRepository.insertNode(115L, 39L);
     }
 
+    @Test
+    public void deleteByNodeId() {
+        int t = nodeRelationshipRepository.deleteByNodeId(126L);
+        System.out.println(t);
+        Assert.assertNotEquals(0, t);
+    }
 }

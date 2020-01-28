@@ -38,4 +38,8 @@ public class NodeServiceTest {
     }
 
 
+    @Test
+    public void deleteIdAndRelationship() {
+        nodeService.deleteIdAndRelationship(129L);
+    }
 }

@@ -36,4 +36,16 @@ public class NodeVO implements Serializable {
     @NotNull
     private Integer itemId;
 
+    private Record record;
+
+    @Data
+    public static class Record implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        private String operator;
+
+        private String message;
+
+    }
 }

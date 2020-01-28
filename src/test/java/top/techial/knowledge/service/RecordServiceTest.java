@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import top.techial.knowledge.domain.OperatorMessageEnum;
 import top.techial.knowledge.domain.Record;
 import top.techial.knowledge.domain.User;
 
@@ -20,10 +19,9 @@ public class RecordServiceTest {
     @Test
     public void save() {
         Record record = new Record()
-            .setMessage(RandomStringUtils.randomAlphanumeric(10))
-            .setOperator(OperatorMessageEnum.ADD_NODE)
-            .setUser(new User().setId(1))
-            .setNodeId(10L);
+                .setMessage(RandomStringUtils.randomAlphanumeric(10))
+                .setUser(new User().setId(1))
+                .setNodeId(10L);
 
         Record result = recordService.save(record);
         Assert.assertNotNull(result);

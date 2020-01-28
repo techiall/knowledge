@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.Labels;
 import top.techial.knowledge.domain.Node;
-import top.techial.knowledge.domain.OperatorMessageEnum;
 import top.techial.knowledge.domain.Property;
 import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.dto.NodeInfoDTO;
@@ -33,7 +32,11 @@ public class NodeController {
     private final RecordService recordService;
     private final ItemService itemService;
 
-    public NodeController(NodeService nodeService, RecordService recordService, ItemService itemService) {
+    public NodeController(
+            NodeService nodeService,
+            RecordService recordService,
+            ItemService itemService
+    ) {
         this.nodeService = nodeService;
         this.recordService = recordService;
         this.itemService = itemService;
@@ -56,7 +59,7 @@ public class NodeController {
         Node node = nodeService.save(nodeVO, itemId);
 
         recordService.save(node.getId(), userPrincipal.getId(),
-                OperatorMessageEnum.ADD_NODE, nodeVO);
+                nodeVO.getRecord().getOperator(), nodeVO.getRecord().getMessage());
 
         return new ResultBean<>(NodeMapper.INSTANCE.toNodeInfoDTO(node));
     }
@@ -73,17 +76,17 @@ public class NodeController {
         if (nodeVO != null && nodeVO.getName() != null) {
             node.setName(nodeVO.getName());
             recordService.save(node.getId(), userPrincipal.getId(),
-                    OperatorMessageEnum.UPDATE_NODE_NAME, nodeVO);
+                    nodeVO.getRecord().getOperator(), nodeVO.getRecord().getMessage());
         }
         if (nodeVO != null && nodeVO.getLabels() != null) {
             node.setLabels(new Labels().setLabels(nodeVO.getLabels()));
             recordService.save(node.getId(), userPrincipal.getId(),
-                    OperatorMessageEnum.UPDATE_NODE_PROPER, nodeVO);
+                    nodeVO.getRecord().getOperator(), nodeVO.getRecord().getMessage());
         }
         if (nodeVO != null && nodeVO.getProperty() != null) {
             node.setProperty(new Property().setProperty(nodeVO.getProperty()));
             recordService.save(node.getId(), userPrincipal.getId(),
-                    OperatorMessageEnum.UPDATE_NODE_PROPERTY, nodeVO);
+                    nodeVO.getRecord().getOperator(), nodeVO.getRecord().getMessage());
         }
 
         node = nodeService.save(node);
@@ -97,7 +100,7 @@ public class NodeController {
             @RequestParam Integer itemId,
             @PathVariable Long id
     ) {
-        nodeService.deleteById(id);
+        nodeService.deleteIdAndRelationship(id);
         recordService.deleteByNodeId(id);
         return new ResultBean<>(true);
     }
@@ -108,7 +111,7 @@ public class NodeController {
             @RequestBody Set<Long> ids,
             @RequestParam Integer itemId
     ) {
-        nodeService.deleteByIds(ids);
+        nodeService.deleteIdsAndRelationship(ids);
         recordService.deleteByNodeIds(ids);
         return new ResultBean<>(true);
     }

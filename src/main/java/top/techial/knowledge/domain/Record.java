@@ -31,11 +31,8 @@ public class Record implements Serializable {
     /**
      * operator
      */
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private OperatorMessageEnum operator;
+    private String operator;
 
-    @Lob
     private String message;
 
     private String content;

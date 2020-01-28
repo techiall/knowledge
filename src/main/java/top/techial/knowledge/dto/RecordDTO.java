@@ -1,7 +1,6 @@
 package top.techial.knowledge.dto;
 
 import lombok.Data;
-import top.techial.knowledge.domain.OperatorMessageEnum;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -16,11 +15,9 @@ public class RecordDTO implements Serializable {
 
     private Long nodeId;
 
-    private OperatorMessageEnum operator;
+    private String operator;
 
     private String message;
-
-    private String content;
 
     private Instant createTime;
 

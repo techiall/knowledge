@@ -11,7 +11,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.dao.RecordRepository;
-import top.techial.knowledge.domain.OperatorMessageEnum;
 import top.techial.knowledge.domain.Record;
 import top.techial.knowledge.domain.User;
 
@@ -35,13 +34,12 @@ public class RecordService {
     @Async
     @CacheEvict(allEntries = true)
     @Transactional
-    public void save(Long nodeId, Integer userId, OperatorMessageEnum operatorMessageEnum, Object message) {
+    public void save(Long nodeId, Integer userId, String operatorMessage, String message) {
         Record record = new Record()
-            .setNodeId(nodeId)
-            .setOperator(operatorMessageEnum)
-            .setMessage(operatorMessageEnum.getMessage())
-            .setContent(objectMapper.writeValueAsString(message))
-            .setUser(new User().setId(userId));
+                .setNodeId(nodeId)
+                .setOperator(operatorMessage)
+                .setMessage(message)
+                .setUser(new User().setId(userId));
         recordRepository.save(record);
     }
 

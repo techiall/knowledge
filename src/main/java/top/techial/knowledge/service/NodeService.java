@@ -164,12 +164,11 @@ public class NodeService {
         return map;
     }
 
-    public void deleteByIds(Set<Long> ids) {
-        ids.forEach(this::deleteById);
+    public void deleteIdsAndRelationship(Set<Long> ids) {
+        ids.forEach(this::deleteIdAndRelationship);
     }
 
-    @Transactional
-    public void deleteById(Long id) {
+    public void deleteIdAndRelationship(Long id) {
         nodeRepository.deleteById(id);
         nodeRelationshipRepository.deleteByNodeId(id);
     }
