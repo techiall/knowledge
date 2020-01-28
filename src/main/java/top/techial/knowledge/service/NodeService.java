@@ -169,7 +169,8 @@ public class NodeService {
 
     @CacheEvict(allEntries = true)
     public void deleteIdsAndRelationship(Set<Long> ids) {
-        ids.forEach(this::deleteIdAndRelationship);
+        nodeRepository.deleteByIdIn(ids);
+        nodeRelationshipRepository.deleteByNodeIdIn(ids);
     }
 
     @CacheEvict(allEntries = true)

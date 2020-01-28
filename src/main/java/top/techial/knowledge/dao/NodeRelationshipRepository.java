@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.domain.NodeRelationship;
 import top.techial.knowledge.domain.NodeRelationshipPK;
 
+import java.util.Collection;
+
 /**
  * @author techial
  */
@@ -41,4 +43,13 @@ public interface NodeRelationshipRepository extends JpaRepository<NodeRelationsh
     @Transactional
     int deleteByNodeId(Long id);
 
+    @Modifying
+    @Query(
+            nativeQuery = true,
+            value = "delete n from node_relationship n\n" +
+                    "join node_relationship m on (n.descendant = m.descendant)\n" +
+                    "where n.ancestor in ?1"
+    )
+    @Transactional
+    int deleteByNodeIdIn(Collection<Long> ids);
 }
