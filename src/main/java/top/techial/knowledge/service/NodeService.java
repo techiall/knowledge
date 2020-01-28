@@ -79,6 +79,7 @@ public class NodeService {
         return nodeRepository.findById(id).orElseThrow(() -> new NodeNotFoundException(id));
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
     public List<NodeBaseDTO> findByNameLike(String name, Integer itemId) {
         // language=sql
         String value = "select id, name from node where name like (:name) and item_id = (:itemId)" +
@@ -91,6 +92,7 @@ public class NodeService {
         return namedParameterJdbcTemplate.query(value, map, rowMapper);
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public List<SearchDTO> findContentByNameLike(String name) {
         // language=sql
         String value = "select i.name as name, n.name as nodeItemName, u.nick_name as nodeName, n.text as text,\n" +
@@ -104,6 +106,7 @@ public class NodeService {
         return namedParameterJdbcTemplate.query(value, map, rowMapper);
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public List<NodeBaseDTO> findByNameLike(String name) {
         // language=sql
         String value = "select n.id, n.name from node n where n.name like (:name) order by n.update_time desc limit 10;";
@@ -164,15 +167,18 @@ public class NodeService {
         return map;
     }
 
+    @CacheEvict(allEntries = true)
     public void deleteIdsAndRelationship(Set<Long> ids) {
         ids.forEach(this::deleteIdAndRelationship);
     }
 
+    @CacheEvict(allEntries = true)
     public void deleteIdAndRelationship(Long id) {
         nodeRepository.deleteById(id);
         nodeRelationshipRepository.deleteByNodeId(id);
     }
 
+    @CacheEvict(allEntries = true)
     public void saveText(String text, Long id) {
         nodeRepository.saveText(id, text);
     }
