@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.techial.knowledge.beans.ResultBean;
@@ -40,6 +41,7 @@ public class StorageController {
      * 文本上传，对应 node 节点
      */
     @PostMapping("/text/{id}")
+    @PreAuthorize("hasAnyAuthority(#id)")
     public ResultBean<Long> save(@RequestBody(required = false) String text, @PathVariable Long id) {
         nodeService.saveText(text, id);
         return new ResultBean<>(id);

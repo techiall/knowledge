@@ -22,8 +22,17 @@ public interface UserMapper {
 
     UserDTO toUserDTO(User user);
 
-    default UserPrincipal toUserPrincipal(User user) {
-        List<SimpleGrantedAuthority> item = ItemMapper.INSTANCE.toListSimpleGrantedAuthority(user.getItem());
-        return new UserPrincipal(user.getId(), user.getUserName(), user.getPassword(), item);
+    default UserPrincipal toUserPrincipal(User user, List<Long> node) {
+        List<SimpleGrantedAuthority> authorities = ItemMapper.INSTANCE
+                .toListSimpleGrantedAuthority(user.getItem());
+
+        List<SimpleGrantedAuthority> nodes = NodeMapper.INSTANCE.toListSimpleGrantedAuthority(node);
+        authorities.addAll(nodes);
+
+        node.parallelStream()
+                .map(String::valueOf)
+                .map(SimpleGrantedAuthority::new)
+                .forEach(authorities::add);
+        return new UserPrincipal(user.getId(), user.getUserName(), user.getPassword(), authorities);
     }
 }

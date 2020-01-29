@@ -15,6 +15,7 @@ import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.ItemService;
 import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.RecordService;
+import top.techial.knowledge.service.UserService;
 import top.techial.knowledge.vo.NodeVO;
 
 import javax.validation.Valid;
@@ -31,15 +32,17 @@ public class NodeController {
     private final NodeService nodeService;
     private final RecordService recordService;
     private final ItemService itemService;
+    private final UserService userService;
 
     public NodeController(
             NodeService nodeService,
             RecordService recordService,
-            ItemService itemService
-    ) {
+            ItemService itemService,
+            UserService userService) {
         this.nodeService = nodeService;
         this.recordService = recordService;
         this.itemService = itemService;
+        this.userService = userService;
     }
 
     @GetMapping("/{id}")
@@ -49,7 +52,7 @@ public class NodeController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority(#nodeVO.itemId.toString())")
+    @PreAuthorize("hasAnyAuthority('ITEM_' + #nodeVO.itemId.toString())")
     public ResultBean<NodeInfoDTO> save(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody NodeVO nodeVO
@@ -61,11 +64,13 @@ public class NodeController {
         recordService.save(node.getId(), userPrincipal.getId(),
                 nodeVO.getRecord().getOperator(), nodeVO.getRecord().getMessage());
 
+        userService.resetAuthority(userPrincipal);
+
         return new ResultBean<>(NodeMapper.INSTANCE.toNodeInfoDTO(node));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority(#nodeVO.itemId.toString())")
+    @PreAuthorize("hasAnyAuthority('ITEM_' + #nodeVO.itemId.toString()) AND hasAnyAuthority(#id)")
     public ResultBean<NodeInfoDTO> update(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long id,
@@ -95,24 +100,32 @@ public class NodeController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority(#itemId.toString())")
+    @PreAuthorize("hasAnyAuthority('ITEM_' + #itemId.toString()) AND hasAnyAuthority(#id)")
     public ResultBean<Boolean> deleteById(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestParam Integer itemId,
             @PathVariable Long id
     ) {
         nodeService.deleteIdAndRelationship(id);
         recordService.deleteByNodeId(id);
+
+        userService.resetAuthority(userPrincipal);
+
         return new ResultBean<>(true);
     }
 
     @DeleteMapping
-    @PreAuthorize("hasAnyAuthority(#itemId.toString())")
+    @PreAuthorize("hasAnyAuthority('ITEM_' + #itemId.toString()) AND hasAnyAuthority(#ids)")
     public ResultBean<Boolean> deleteByIds(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody Set<Long> ids,
             @RequestParam Integer itemId
     ) {
         nodeService.deleteIdsAndRelationship(ids);
         recordService.deleteByNodeIds(ids);
+
+        userService.resetAuthority(userPrincipal);
+
         return new ResultBean<>(true);
     }
 

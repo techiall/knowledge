@@ -5,9 +5,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.User;
 import top.techial.knowledge.mapper.UserMapper;
+import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.UserService;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author techial
@@ -18,8 +23,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserService userService;
 
-    public UserDetailsServiceImpl(UserService userService) {
+    private final NodeService nodeService;
+
+    public UserDetailsServiceImpl(UserService userService, NodeService nodeService) {
         this.userService = userService;
+        this.nodeService = nodeService;
     }
 
     @Override
@@ -27,7 +35,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userService.findByUserName(s)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         String.format("userName:[%s] not found.", s)));
-        return UserMapper.INSTANCE.toUserPrincipal(user);
+        List<Long> nodes = nodeService.findByItemIds(user
+                .getItem()
+                .parallelStream()
+                .map(Item::getId)
+                .collect(Collectors.toList()));
+        return UserMapper.INSTANCE.toUserPrincipal(user, nodes);
     }
 
 }

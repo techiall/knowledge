@@ -34,7 +34,7 @@ public interface ItemMapper {
         return items
                 .parallelStream()
                 .map(Item::getId)
-                .map(String::valueOf)
+                .map(it -> "ITEM_" + it)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }

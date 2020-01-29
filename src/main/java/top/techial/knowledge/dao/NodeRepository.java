@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.domain.Node;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author techial
@@ -24,4 +25,7 @@ public interface NodeRepository extends JpaRepository<Node, Long> {
     @Modifying
     @Query("update Node n set n.text = :text where n.id = :id")
     int saveText(Long id, String text);
+
+    @Query("select n.id from Node n where n.itemId in :ids")
+    List<Long> findByItemIdIn(Collection<Integer> ids);
 }

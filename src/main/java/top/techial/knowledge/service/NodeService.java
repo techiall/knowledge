@@ -183,6 +183,10 @@ public class NodeService {
         nodeRelationshipRepository.deleteByNodeId(id);
     }
 
+    public List<Long> findByItemIds(Collection<Integer> ids) {
+        return nodeRepository.findByItemIdIn(ids);
+    }
+
     @CacheEvict(allEntries = true)
     public void saveText(String text, Long id) {
         nodeRepository.saveText(id, text);
