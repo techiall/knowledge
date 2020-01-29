@@ -19,6 +19,7 @@ import top.techial.knowledge.mapper.NodeMapper;
 import top.techial.knowledge.vo.NodeVO;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author techial
@@ -141,7 +142,10 @@ public class NodeService {
                 "from `node` node0_ inner join node_relationship noderelati1_ on (node0_.id = noderelati1_.ancestor)\n" +
                 "where noderelati1_.descendant = (:descendant)\n";
         RowMapper<NodeBaseDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeBaseDTO.class);
-        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("descendant", id), rowMapper);
+        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("descendant", id), rowMapper)
+                .parallelStream()
+                .filter(it -> it.getParentNodeId() == null)
+                .collect(Collectors.toList());
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
