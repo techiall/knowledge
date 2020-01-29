@@ -93,7 +93,7 @@ public class UserService {
 
 
         SecurityContext context = SecurityContextHolder.getContext();
-        UserDetails userDetails = (UserDetails) context.getAuthentication().getAuthorities();
+        UserDetails userDetails = (UserDetails) context.getAuthentication().getPrincipal();
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 userDetails, userDetails.getPassword(), authority);
         context.setAuthentication(auth);
