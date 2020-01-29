@@ -144,7 +144,7 @@ public class NodeService {
         RowMapper<NodeBaseDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeBaseDTO.class);
         return namedParameterJdbcTemplate.query(value, Collections.singletonMap("descendant", id), rowMapper)
                 .parallelStream()
-                .filter(it -> it.getParentNodeId() == null)
+                .filter(it -> it.getParentNodeId() != null)
                 .collect(Collectors.toList());
     }
 
