@@ -16,6 +16,10 @@ import java.time.Instant;
  */
 @Entity
 @Data
+@Table(name = "node", indexes = {
+        @Index(name = "item_id_index", columnList = "item_id"),
+        @Index(name = "name_index", columnList = "name")
+})
 @Accessors(chain = true)
 public class Node implements Serializable {
 
@@ -25,6 +29,7 @@ public class Node implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @Column(name = "name")
     private String name;
 
     @Convert(converter = LabelsConverter.class)
@@ -35,6 +40,7 @@ public class Node implements Serializable {
     @Lob
     private Property property;
 
+    @Column(name = "item_id")
     private Integer itemId;
 
     @Lob

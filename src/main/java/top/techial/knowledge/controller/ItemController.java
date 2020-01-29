@@ -3,6 +3,7 @@ package top.techial.knowledge.controller;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import top.techial.knowledge.aspect.FlushAuthority;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.Node;
@@ -14,7 +15,6 @@ import top.techial.knowledge.mapper.ItemMapper;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.ItemService;
 import top.techial.knowledge.service.NodeService;
-import top.techial.knowledge.service.UserService;
 import top.techial.knowledge.vo.ItemVO;
 
 import java.util.List;
@@ -28,12 +28,10 @@ import java.util.stream.Collectors;
 public class ItemController {
     private final ItemService itemService;
     private final NodeService nodeService;
-    private final UserService userService;
 
-    public ItemController(ItemService itemService, NodeService nodeService, UserService userService) {
+    public ItemController(ItemService itemService, NodeService nodeService) {
         this.itemService = itemService;
         this.nodeService = nodeService;
-        this.userService = userService;
     }
 
     @GetMapping("share")
@@ -62,6 +60,7 @@ public class ItemController {
     }
 
     @PostMapping
+    @FlushAuthority
     public ResultBean<ItemDTO> save(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody ItemVO itemVO
@@ -73,8 +72,6 @@ public class ItemController {
                 .setRootNode(node);
         item = itemService.save(item);
         itemService.insert(userPrincipal.getId(), item.getId());
-
-        userService.resetAuthority(userPrincipal);
 
         return new ResultBean<>(ItemMapper.INSTANCE.toItemDTO(item));
     }
@@ -100,12 +97,11 @@ public class ItemController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ITEM_' + #id.toString())")
+    @FlushAuthority
     public ResultBean<Object> deleteById(@PathVariable Integer id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         itemService.deleteByUserIdAndItemId(userPrincipal.getId(), id);
         itemService.deleteById(id);
         nodeService.deleteByItemId(id);
-
-        userService.resetAuthority(userPrincipal);
 
         return new ResultBean<>();
     }

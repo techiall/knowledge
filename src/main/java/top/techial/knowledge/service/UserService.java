@@ -9,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,7 +82,10 @@ public class UserService {
     }
 
     @CacheEvict(allEntries = true)
-    public void resetAuthority(UserPrincipal userPrincipal) {
+    public void resetAuthority() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        UserPrincipal userPrincipal = (UserPrincipal) context.getAuthentication().getPrincipal();
+
         List<Item> items = itemRepository.findAllByAuthorId(userPrincipal.getId());
         List<SimpleGrantedAuthority> authority = ItemMapper.INSTANCE.toListSimpleGrantedAuthority(items);
 
@@ -92,10 +94,8 @@ public class UserService {
         authority.addAll(nodes);
 
 
-        SecurityContext context = SecurityContextHolder.getContext();
-        UserDetails userDetails = (UserDetails) context.getAuthentication().getPrincipal();
         Authentication auth = new UsernamePasswordAuthenticationToken(
-                userDetails, userDetails.getPassword(), authority);
+                userPrincipal, userPrincipal.getPassword(), authority);
         context.setAuthentication(auth);
     }
 }

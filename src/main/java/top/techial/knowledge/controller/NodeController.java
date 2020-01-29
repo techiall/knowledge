@@ -3,6 +3,7 @@ package top.techial.knowledge.controller;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import top.techial.knowledge.aspect.FlushAuthority;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.Labels;
 import top.techial.knowledge.domain.Node;
@@ -53,6 +54,7 @@ public class NodeController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ITEM_' + #nodeVO.itemId.toString())")
+    @FlushAuthority
     public ResultBean<NodeInfoDTO> save(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody NodeVO nodeVO
@@ -63,8 +65,6 @@ public class NodeController {
 
         recordService.save(node.getId(), userPrincipal.getId(),
                 nodeVO.getRecord().getOperator(), nodeVO.getRecord().getMessage());
-
-        userService.resetAuthority(userPrincipal);
 
         return new ResultBean<>(NodeMapper.INSTANCE.toNodeInfoDTO(node));
     }
@@ -101,6 +101,7 @@ public class NodeController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ITEM_' + #itemId.toString()) AND hasAnyAuthority(#id)")
+    @FlushAuthority
     public ResultBean<Boolean> deleteById(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestParam Integer itemId,
@@ -109,22 +110,18 @@ public class NodeController {
         nodeService.deleteIdAndRelationship(id);
         recordService.deleteByNodeId(id);
 
-        userService.resetAuthority(userPrincipal);
-
         return new ResultBean<>(true);
     }
 
     @DeleteMapping
     @PreAuthorize("hasAnyAuthority('ITEM_' + #itemId.toString()) AND hasAnyAuthority(#ids)")
+    @FlushAuthority
     public ResultBean<Boolean> deleteByIds(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody Set<Long> ids,
             @RequestParam Integer itemId
     ) {
         nodeService.deleteIdsAndRelationship(ids);
         recordService.deleteByNodeIds(ids);
-
-        userService.resetAuthority(userPrincipal);
 
         return new ResultBean<>(true);
     }

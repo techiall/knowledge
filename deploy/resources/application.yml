@@ -42,21 +42,6 @@ spring:
     multipart:
       max-file-size: 60MB
       max-request-size: 60MB
-management:
-  server:
-    port: 8080
-  endpoint:
-    health:
-      show-details: always
-  endpoints:
-    enabled-by-default: true
-    web:
-      base-path: /api/actuator/0z6DX129xRDOsv5dpPrr
-      exposure:
-        include:
-          - loggers
-          - health
-          - info
 storage:
   location: /knowledge/storage
 logging:
