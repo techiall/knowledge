@@ -16,12 +16,12 @@ import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.ItemService;
 import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.RecordService;
-import top.techial.knowledge.service.UserService;
 import top.techial.knowledge.vo.NodeVO;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -33,17 +33,15 @@ public class NodeController {
     private final NodeService nodeService;
     private final RecordService recordService;
     private final ItemService itemService;
-    private final UserService userService;
 
     public NodeController(
             NodeService nodeService,
             RecordService recordService,
-            ItemService itemService,
-            UserService userService) {
+            ItemService itemService
+    ) {
         this.nodeService = nodeService;
         this.recordService = recordService;
         this.itemService = itemService;
-        this.userService = userService;
     }
 
     @GetMapping("/{id}")
@@ -99,11 +97,18 @@ public class NodeController {
         return new ResultBean<>(NodeMapper.INSTANCE.toNodeInfoDTO(node));
     }
 
+    @PutMapping("/{id}/movement")
+    public void move(@PathVariable Long id, @RequestParam Long target) {
+        if (Objects.equals(id, target)) {
+            throw new IllegalArgumentException(String.format("id: [%s], target: [%s]", id, target));
+        }
+        nodeService.move(id, target);
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ITEM_' + #itemId.toString()) AND hasAnyAuthority(#id)")
     @FlushAuthority
     public ResultBean<Boolean> deleteById(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestParam Integer itemId,
             @PathVariable Long id
     ) {

@@ -1,5 +1,7 @@
 package top.techial.knowledge.service;
 
+import lombok.Data;
+import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -13,6 +15,7 @@ import top.techial.knowledge.dao.NodeRelationshipRepository;
 import top.techial.knowledge.dao.NodeRepository;
 import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.dto.NodeBaseDTO;
+import top.techial.knowledge.dto.NodeTreeDTO;
 import top.techial.knowledge.dto.SearchDTO;
 import top.techial.knowledge.exception.NodeNotFoundException;
 import top.techial.knowledge.mapper.NodeMapper;
@@ -135,6 +138,33 @@ public class NodeService {
         return namedParameterJdbcTemplate.query(value, map, rowMapper);
     }
 
+    @Data
+    @Accessors(chain = true)
+    public static class ParentChildDTO {
+        private Long descendant;
+        private Long ancestor;
+    }
+
+    public List<NodeTreeDTO> buildChildNodeData(Long id) {
+        // language=sql
+        String value = "select n.id, n.name\n" +
+                "from node n inner join node_relationship nr on n.id = nr.descendant\n" +
+                "where nr.ancestor = (:id);";
+        RowMapper<NodeTreeDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeTreeDTO.class);
+        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("id", id), rowMapper);
+    }
+
+    public List<ParentChildDTO> buildChildNode(Long id) {
+        // language=sql
+        String value = "select nr.descendant as descendant, nr.ancestor as ancestor\n" +
+                "from node_relationship as nr inner join (select n_child.id, n_child.name\n" +
+                "from node n_child join node_relationship nr_child on (n_child.id = nr_child.descendant)\n" +
+                "where nr_child.ancestor = (:id)) as node on nr.descendant = node.id\n" +
+                "where nr.distance = 1 and nr.descendant != (:id)";
+        RowMapper<ParentChildDTO> rowMapper = BeanPropertyRowMapper.newInstance(ParentChildDTO.class);
+        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("id", id), rowMapper);
+    }
+
     private List<NodeBaseDTO> findParent(Long id) {
         // language=sql
         String value = "select node0_.id as id, node0_.name as name, true as child,\n" +
@@ -193,8 +223,11 @@ public class NodeService {
     }
 
     public String findText(Long id) {
-        String value = "select n.text from node n where n.id = (:id)";
-        return namedParameterJdbcTemplate.queryForObject(value, Collections.singletonMap("id", id), String.class);
+        return nodeRepository.findTextById(id);
     }
 
+    @CacheEvict(allEntries = true)
+    public void move(Long id, Long target) {
+
+    }
 }

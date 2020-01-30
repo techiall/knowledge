@@ -26,4 +26,6 @@ public class ItemDTO implements Serializable {
     private Instant createTime;
 
     private Instant updateTime;
+
+    private UserDTO author;
 }

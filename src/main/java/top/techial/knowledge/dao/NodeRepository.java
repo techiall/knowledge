@@ -28,4 +28,7 @@ public interface NodeRepository extends JpaRepository<Node, Long> {
 
     @Query("select n.id from Node n where n.itemId in :ids")
     List<Long> findByItemIdIn(Collection<Integer> ids);
+
+    @Query("select n.text from Node n where n.id = ?1")
+    String findTextById(Long id);
 }

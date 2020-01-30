@@ -93,9 +93,10 @@ public class UserService {
                 .findByItemIds(items.parallelStream().map(Item::getId).collect(Collectors.toList())));
         authority.addAll(nodes);
 
+        String password = userRepository.findPasswordById(userPrincipal.getId());
 
         Authentication auth = new UsernamePasswordAuthenticationToken(
-                userPrincipal, userPrincipal.getPassword(), authority);
+                userPrincipal, password, authority);
         context.setAuthentication(auth);
     }
 }

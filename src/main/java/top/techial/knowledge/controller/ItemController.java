@@ -71,6 +71,7 @@ public class ItemController {
                 .setAuthor(new User().setId(userPrincipal.getId()))
                 .setRootNode(node);
         item = itemService.save(item);
+        nodeService.save(node.setItemId(item.getId()));
         itemService.insert(userPrincipal.getId(), item.getId());
 
         return new ResultBean<>(ItemMapper.INSTANCE.toItemDTO(item));

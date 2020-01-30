@@ -5,6 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
+import top.techial.knowledge.aspect.FlushAuthority;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.User;
@@ -12,7 +13,10 @@ import top.techial.knowledge.dto.UserDTO;
 import top.techial.knowledge.exception.UserException;
 import top.techial.knowledge.mapper.UserMapper;
 import top.techial.knowledge.security.UserPrincipal;
-import top.techial.knowledge.service.*;
+import top.techial.knowledge.service.ItemService;
+import top.techial.knowledge.service.NodeService;
+import top.techial.knowledge.service.RecordService;
+import top.techial.knowledge.service.UserService;
 import top.techial.knowledge.vo.UserVO;
 
 import java.util.HashMap;
@@ -30,21 +34,19 @@ public class UserController {
     private final UserService userService;
     private final NodeService nodeService;
     private final PasswordEncoder passwordEncoder;
-    private final SessionService sessionService;
     private final RecordService recordService;
     private final ItemService itemService;
 
     public UserController(
             UserService userService,
-            NodeService nodeService, PasswordEncoder passwordEncoder,
-            SessionService sessionService,
+            NodeService nodeService,
+            PasswordEncoder passwordEncoder,
             RecordService recordService,
             ItemService itemService
     ) {
         this.userService = userService;
         this.nodeService = nodeService;
         this.passwordEncoder = passwordEncoder;
-        this.sessionService = sessionService;
         this.recordService = recordService;
         this.itemService = itemService;
     }
@@ -81,6 +83,7 @@ public class UserController {
     }
 
     @PatchMapping("/me/password")
+    @FlushAuthority
     public ResultBean<UserDTO> updatePassword(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             String srcPassword,
@@ -94,13 +97,12 @@ public class UserController {
         }
 
         userService.updatePassword(userPrincipal.getId(), password);
-        sessionService.flushId(userPrincipal);
         return new ResultBean<>(UserMapper.INSTANCE.toUserDTO(user));
     }
 
     @DeleteMapping("/me")
+    @FlushAuthority
     public ResultBean<Object> deleteById(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        sessionService.flushId(userPrincipal);
         List<Item> item = itemService.findByUserId(userPrincipal.getId());
         itemService.deleteByUserIdAndItemId(userPrincipal.getId(), item);
         itemService.deleteByUserId(userPrincipal.getId());
