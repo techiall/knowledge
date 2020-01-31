@@ -64,6 +64,10 @@ public class ItemController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody ItemVO itemVO
     ) {
+        if (itemVO.getName() == null) {
+            throw new IllegalArgumentException(String
+                    .format("itemVO error. %s", itemVO.toString()));
+        }
         Node node = new Node().setName("root");
         node = nodeService.saveItemRoot(node);
         Item item = ItemMapper.INSTANCE.toItem(itemVO)

@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,10 +17,11 @@ public class Property implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Map<String, List<PropertyDTO>> property;
+    private Map<String, List<PropertyDTO>> property = new HashMap<>();
 
     @Data
-    public class PropertyDTO implements Serializable {
+    @Accessors(chain = true)
+    public static class PropertyDTO implements Serializable {
 
         private static final long serialVersionUID = 1L;
 

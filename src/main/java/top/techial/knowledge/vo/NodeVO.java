@@ -37,6 +37,7 @@ public class NodeVO implements Serializable {
     @NotNull
     private Integer itemId;
 
+    @NotNull
     private Record record;
 
     @Data
