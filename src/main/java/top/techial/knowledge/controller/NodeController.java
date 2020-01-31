@@ -57,6 +57,10 @@ public class NodeController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody NodeVO nodeVO
     ) {
+        if (nodeVO.getName() == null) {
+            throw new IllegalArgumentException(String
+                    .format("nodeVO error. %s", nodeVO.toString()));
+        }
         Long itemId = itemService.findRootNodeId(nodeVO.getItemId())
                 .orElseThrow(() -> new ItemException(nodeVO.getItemId()));
         Node node = nodeService.save(nodeVO, itemId);
