@@ -108,8 +108,8 @@ public class NodeService {
 
         Map<String, Object> map = new HashMap<>();
         map.put("name", '%' + name + '%');
-        map.put("limit", pageable.getPageSize());
-        map.put("page", pageable.getOffset());
+        map.put("limit", pageable.getPageNumber());
+        map.put("page", (pageable.getPageSize() + 1) * pageable.getPageNumber());
         return namedParameterJdbcTemplate.query(value, map, rowMapper);
     }
 

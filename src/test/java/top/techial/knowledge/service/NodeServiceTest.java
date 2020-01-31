@@ -1,15 +1,19 @@
 package top.techial.knowledge.service;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
+import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.exception.ItemException;
 import top.techial.knowledge.vo.NodeVO;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -41,5 +45,18 @@ public class NodeServiceTest {
     @Test
     public void deleteIdAndRelationship() {
         nodeService.deleteIdAndRelationship(129L);
+    }
+
+    @Test
+    public void findByNameLike() {
+        List<NodeBaseDTO> result = nodeService.findByNameLike("%java%");
+        System.out.println(result);
+        Assert.assertNotNull(result);
+    }
+
+    @Test
+    public void findContentByNameLike() {
+        nodeService.findContentByNameLike("%java%", PageRequest.of(2, 10))
+                .forEach(System.out::println);
     }
 }
