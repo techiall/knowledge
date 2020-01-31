@@ -37,4 +37,7 @@ public interface NodeRepository extends JpaRepository<Node, Long> {
 
     @Query("select n from Node n inner join NodeRelationship nr on n.id = nr.ancestor where nr.descendant = ?1")
     List<Node> findParentNode(Long id);
+
+    @Query("select i.rootNode.id from Node n inner join Item i on n.itemId = i.id where n.id = ?1")
+    Long findItemRootNodeId(Long id);
 }

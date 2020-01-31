@@ -1,3 +1,11 @@
 clean.doFirst {
+    cleanCache
+}
+
+build.doLast {
+    jibDockerBuild
+}
+
+task cleanCache(group: 'app') {
     delete "${rootDir}/cache"
 }

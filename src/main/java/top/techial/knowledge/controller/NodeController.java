@@ -90,8 +90,9 @@ public class NodeController {
             recordService.save(node.getId(), userPrincipal.getId(),
                     nodeVO.getRecord().getOperator(), nodeVO.getRecord().getMessage());
         }
+
         if (nodeVO != null && nodeVO.getProperty() != null) {
-            node.setProperty(new Property().setProperty(nodeVO.getProperty()));
+            node.setProperty(new Property().setProperty(nodeService.buildProperty(nodeVO.getProperty())));
             recordService.save(node.getId(), userPrincipal.getId(),
                     nodeVO.getRecord().getOperator(), nodeVO.getRecord().getMessage());
         }

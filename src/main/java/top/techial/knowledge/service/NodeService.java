@@ -65,7 +65,7 @@ public class NodeService {
     @Transactional
     @CacheEvict(allEntries = true)
     public Node save(NodeVO nodeVO, Long itemRootNodeId) {
-        Node node = NodeMapper.INSTANCE.toNode(nodeVO);
+        Node node = NodeMapper.INSTANCE.toNode(nodeVO.setProperty(buildProperty(nodeVO.getProperty())));
         node = nodeRepository.save(node);
         if (nodeVO.getParentId() != null) {
             nodeRelationshipRepository.insertNode(node.getId(), nodeVO.getParentId());
@@ -73,6 +73,29 @@ public class NodeService {
             nodeRelationshipRepository.insertNode(node.getId(), itemRootNodeId);
         }
         return node;
+    }
+
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
+    public Map<String, List<Property.PropertyDTO>> buildProperty(Map<String, List<Property.PropertyDTO>> property) {
+        property.entrySet().forEach(stringListEntry -> {
+            List<Long> list = stringListEntry
+                    .getValue()
+                    .stream()
+                    .map(Property.PropertyDTO::getId)
+                    .collect(Collectors.toList());
+            stringListEntry.setValue(findByIds(list));
+        });
+        return property;
+    }
+
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
+    public List<Property.PropertyDTO> findByIds(List<Long> ids) {
+        // language=sql
+        String value = "select n.id, n.name from node n where id in (:ids)";
+        Map<String, Object> map = new HashMap<>();
+        map.put("ids", ids);
+        BeanPropertyRowMapper<Property.PropertyDTO> rowMapper = BeanPropertyRowMapper.newInstance(Property.PropertyDTO.class);
+        return namedParameterJdbcTemplate.query(value, map, rowMapper);
     }
 
     @Transactional
@@ -83,7 +106,9 @@ public class NodeService {
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Node findById(Long id) {
-        return nodeRepository.findById(id).orElseThrow(() -> new NodeNotFoundException(id));
+        Node node = nodeRepository.findById(id).orElseThrow(() -> new NodeNotFoundException(id));
+        node.getProperty().setProperty(buildProperty(node.getProperty().getProperty()));
+        return node;
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
@@ -233,73 +258,65 @@ public class NodeService {
         return map;
     }
 
-    //    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Map<String, Object> findByIdGraph(Long id) {
 
         LinkedList<Node> queue = new LinkedList<>();
         List<Map<String, Object>> links = new ArrayList<>();
         List<Map<String, Object>> nodes = new ArrayList<>();
 
+        Node node1 = findById(id);
+        nodes.add(buildNodes(node1.getId(), node1.getName()));
+        Long rootNode = nodeRepository.findItemRootNodeId(id);
+
+        // relation
+        node1.getProperty().getProperty().forEach((key, value) -> value.forEach(it -> {
+            links.add(buildLinks(node1.getId(), it.getId(), key));
+            nodes.add(buildNodes(it.getId(), it.getName()));
+        }));
+
+        // child
         Map<Long, List<ParentChildDTO>> childNode = buildChildNode(id);
         Map<Long, Node> childNodeData = buildChildNodeData(id);
         queue.add(childNodeData.get(id));
         while (!queue.isEmpty()) {
             Node first = queue.pollFirst();
-
             nodes.add(buildNodes(first.getId(), first.getName()));
 
-            // child
             List<ParentChildDTO> list = childNode.get(first.getId());
             if (list == null) {
                 continue;
             }
-            list.forEach(it -> {
+            for (ParentChildDTO it : list) {
                 Node child = childNodeData.get(it.getDescendant());
+                if (Objects.equals(rootNode, child.getId())) {
+                    continue;
+                }
                 queue.add(child);
                 links.add(buildLinks(first.getId(), it.getDescendant(), "child"));
                 nodes.add(buildNodes(child.getId(), child.getName()));
-            });
-
-            // relation
-            if (first.getProperty() == null) {
-                continue;
-            }
-
-            Map<String, List<Property.PropertyDTO>> stringListMap = first.getProperty().getProperty();
-
-            if (stringListMap == null) {
-                continue;
-            }
-
-            Set<Map.Entry<String, List<Property.PropertyDTO>>> entrySet = stringListMap.entrySet();
-
-            for (Map.Entry<String, List<Property.PropertyDTO>> entry : entrySet) {
-                for (Property.PropertyDTO it : entry.getValue()) {
-                    if (it.getId() == null) {
-                        continue;
-                    }
-                    links.add(buildLinks(first.getId(), it.getId(), entry.getKey()));
-                    nodes.add(buildNodes(it.getId(), it.getName()));
-                }
             }
         }
 
+        // parent
         Map<Long, Node> parentNodeData = buildParentNodeData(id);
         Map<Long, List<ParentChildDTO>> parentNode = buildParentNode(id);
         queue.add(parentNodeData.get(id));
         while (!queue.isEmpty()) {
-            // parent
             Node node = queue.pollFirst();
             List<ParentChildDTO> list = parentNode.get(node.getId());
             if (list == null) {
                 continue;
             }
-            list.forEach(it -> {
+            for (ParentChildDTO it : list) {
                 Node parent = parentNodeData.get(it.getAncestor());
+                if (Objects.equals(rootNode, parent.getId())) {
+                    continue;
+                }
                 queue.add(parent);
                 links.add(buildLinks(node.getId(), it.getAncestor(), "parent"));
                 nodes.add(buildNodes(parent.getId(), parent.getName()));
-            });
+            }
         }
 
         Map<String, Object> result = new HashMap<>();

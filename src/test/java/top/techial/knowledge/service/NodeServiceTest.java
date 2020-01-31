@@ -14,6 +14,7 @@ import top.techial.knowledge.exception.ItemException;
 import top.techial.knowledge.vo.NodeVO;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -69,5 +70,10 @@ public class NodeServiceTest {
     @SneakyThrows
     public void findByIdGraph() {
         System.out.println(objectMapper.writeValueAsString(nodeService.findByIdGraph(123L)));
+    }
+
+    @Test
+    public void findByIds() {
+        System.out.println(nodeService.findByIds(Collections.singletonList(123L)));
     }
 }
