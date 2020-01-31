@@ -16,15 +16,15 @@ import java.util.List;
 @Repository
 public interface NodeRepository extends JpaRepository<Node, Long> {
     @Transactional
-    int deleteAllByItemId(Integer id);
+    void deleteAllByItemId(Integer id);
 
     @Transactional
-    int deleteByIdIn(Collection<Long> ids);
+    void deleteByIdIn(Collection<Long> ids);
 
     @Transactional
     @Modifying
     @Query("update Node n set n.text = :text where n.id = :id")
-    int saveText(Long id, String text);
+    void saveText(Long id, String text);
 
     @Query("select n.id from Node n where n.itemId in :ids")
     List<Long> findByItemIdIn(Collection<Integer> ids);

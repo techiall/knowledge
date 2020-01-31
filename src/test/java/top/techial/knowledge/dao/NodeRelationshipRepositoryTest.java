@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Collections;
-
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class NodeRelationshipRepositoryTest {
@@ -21,25 +19,6 @@ public class NodeRelationshipRepositoryTest {
         System.out.println(t);
         Assert.assertNotEquals(0, t);
         t = nodeRelationshipRepository.insertNode(6L, 4L);
-        System.out.println(t);
-        Assert.assertNotEquals(0, t);
-    }
-
-    @Test
-    public void insertNode() {
-        nodeRelationshipRepository.insertNode(115L, 39L);
-    }
-
-    @Test
-    public void deleteByNodeId() {
-        int t = nodeRelationshipRepository.deleteByNodeId(126L);
-        System.out.println(t);
-        Assert.assertNotEquals(0, t);
-    }
-
-    @Test
-    public void deleteByNodeIdIn() {
-        int t = nodeRelationshipRepository.deleteByNodeIdIn(Collections.singleton(124L));
         System.out.println(t);
         Assert.assertNotEquals(0, t);
     }

@@ -31,7 +31,7 @@ public interface NodeRelationshipRepository extends JpaRepository<NodeRelationsh
             value = "insert into node_relationship (ancestor, descendant, distance, create_time, update_time)\n" +
                     "value (?1, ?1, 0, now(), now())")
     @Transactional
-    int insertNode(Long id);
+    void insertNode(Long id);
 
     @Modifying
     @Query(
@@ -41,7 +41,7 @@ public interface NodeRelationshipRepository extends JpaRepository<NodeRelationsh
                     "where n.ancestor = ?1"
     )
     @Transactional
-    int deleteByNodeId(Long id);
+    void deleteByNodeId(Long id);
 
     @Modifying
     @Query(
@@ -51,5 +51,5 @@ public interface NodeRelationshipRepository extends JpaRepository<NodeRelationsh
                     "where n.ancestor in ?1"
     )
     @Transactional
-    int deleteByNodeIdIn(Collection<Long> ids);
+    void deleteByNodeIdIn(Collection<Long> ids);
 }

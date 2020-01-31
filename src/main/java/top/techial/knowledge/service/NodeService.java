@@ -265,11 +265,13 @@ public class NodeService {
         List<Map<String, Object>> links = new ArrayList<>();
         List<Map<String, Object>> nodes = new ArrayList<>();
 
-        Node node1 = findById(id);
-        nodes.add(buildNodes(node1.getId(), node1.getName()));
+        // Item root node
         Long rootNode = nodeRepository.findItemRootNodeId(id);
 
+
         // relation
+        Node node1 = findById(id);
+        nodes.add(buildNodes(node1.getId(), node1.getName()));
         node1.getProperty().getProperty().forEach((key, value) -> value.forEach(it -> {
             links.add(buildLinks(node1.getId(), it.getId(), key));
             nodes.add(buildNodes(it.getId(), it.getName()));
@@ -281,7 +283,6 @@ public class NodeService {
         queue.add(childNodeData.get(id));
         while (!queue.isEmpty()) {
             Node first = queue.pollFirst();
-            nodes.add(buildNodes(first.getId(), first.getName()));
 
             List<ParentChildDTO> list = childNode.get(first.getId());
             if (list == null) {
