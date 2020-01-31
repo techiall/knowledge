@@ -29,7 +29,7 @@ public class RecordController {
     }
 
     @GetMapping("/node/{id}")
-    @PreAuthorize("hasAnyAuthority(#id)")
+    @PreAuthorize("hasAnyAuthority(#id.toString())")
     public ResultBean<Page<RecordDTO>> findByNodeId(
             @PathVariable Long id,
             @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable
