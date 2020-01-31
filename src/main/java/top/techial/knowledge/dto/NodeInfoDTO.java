@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import top.techial.knowledge.domain.Property;
 
 import java.io.Serializable;
 import java.util.List;
@@ -23,5 +24,5 @@ public class NodeInfoDTO implements Serializable {
     private Set<String> labels;
     private String name;
     private Integer itemId;
-    private Map<String, List<String>> property;
+    private Map<String, List<Property.PropertyDTO>> property;
 }

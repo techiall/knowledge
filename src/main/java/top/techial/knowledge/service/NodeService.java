@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.dao.NodeRelationshipRepository;
 import top.techial.knowledge.dao.NodeRepository;
 import top.techial.knowledge.domain.Node;
+import top.techial.knowledge.domain.Property;
 import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.dto.NodeTreeDTO;
 import top.techial.knowledge.dto.SearchDTO;
@@ -23,6 +24,7 @@ import top.techial.knowledge.mapper.NodeMapper;
 import top.techial.knowledge.vo.NodeVO;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -149,16 +151,13 @@ public class NodeService {
         private Long ancestor;
     }
 
-    public List<NodeTreeDTO> buildChildNodeData(Long id) {
-        // language=sql
-        String value = "select n.id, n.name\n" +
-                "from node n inner join node_relationship nr on n.id = nr.descendant\n" +
-                "where nr.ancestor = (:id);";
-        RowMapper<NodeTreeDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeTreeDTO.class);
-        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("id", id), rowMapper);
+    public Map<Long, Node> buildChildNodeData(Long id) {
+        return nodeRepository.findChildNode(id)
+                .parallelStream()
+                .collect(Collectors.toMap(Node::getId, Function.identity()));
     }
 
-    public List<ParentChildDTO> buildChildNode(Long id) {
+    public Map<Long, List<ParentChildDTO>> buildChildNode(Long id) {
         // language=sql
         String value = "select nr.descendant as descendant, nr.ancestor as ancestor\n" +
                 "from node_relationship as nr inner join (select n_child.id, n_child.name\n" +
@@ -166,7 +165,9 @@ public class NodeService {
                 "where nr_child.ancestor = (:id)) as node on nr.descendant = node.id\n" +
                 "where nr.distance = 1 and nr.descendant != (:id)";
         RowMapper<ParentChildDTO> rowMapper = BeanPropertyRowMapper.newInstance(ParentChildDTO.class);
-        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("id", id), rowMapper);
+        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("id", id), rowMapper)
+                .parallelStream()
+                .collect(Collectors.groupingBy(ParentChildDTO::getAncestor));
     }
 
     private List<NodeBaseDTO> findParent(Long id) {
@@ -182,6 +183,14 @@ public class NodeService {
                 .collect(Collectors.toList());
     }
 
+    public void depthGetChild(Long id) {
+        Stack<NodeTreeDTO> nodeStack = new Stack<>();
+    }
+
+    private void getChild(Long id) {
+        Map<Long, List<ParentChildDTO>> result = buildChildNode(id);
+    }
+
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Map<String, List<NodeBaseDTO>> getChildAndParent(Long id, int depth) {
         Map<String, List<NodeBaseDTO>> map = new HashMap<>();
@@ -191,18 +200,74 @@ public class NodeService {
     }
 
     private Map<String, Object> buildNodes(Long id, String name) {
-        Map<String, Object> map = new HashMap<>(16);
+        Map<String, Object> map = new HashMap<>(2);
         map.put("id", id);
         map.put("name", name);
         return map;
     }
 
-    private Map<String, Object> buildLinks(Long sourceId, Long targetId, Map<String, String> property) {
-        Map<String, Object> map = new HashMap<>(16);
+    private Map<String, Object> buildLinks(Long sourceId, Long targetId, String relation) {
+        Map<String, Object> map = new HashMap<>(2);
         map.put("source", sourceId);
         map.put("target", targetId);
-        map.put("property", property);
+        map.put("relation", relation);
         return map;
+    }
+
+    public Map<String, Object> findByIdGraph(Long id) {
+        LinkedList<Node> queue = new LinkedList<>();
+
+        Map<Long, List<ParentChildDTO>> childNode = buildChildNode(id);
+        Map<Long, Node> childNodeData = buildChildNodeData(id);
+
+        List<Map<String, Object>> links = new ArrayList<>();
+        List<Map<String, Object>> nodes = new ArrayList<>();
+
+        queue.add(childNodeData.get(id));
+        while (!queue.isEmpty()) {
+            Node first = queue.pollFirst();
+            List<ParentChildDTO> list = childNode.get(first.getId());
+            nodes.add(buildNodes(first.getId(), first.getName()));
+
+            if (list == null) {
+                continue;
+            }
+            // child
+            list.forEach(it -> {
+                Node child = childNodeData.get(it.getDescendant());
+                queue.add(child);
+                links.add(buildLinks(first.getId(), it.getDescendant(), "child"));
+                nodes.add(buildNodes(child.getId(), child.getName()));
+            });
+
+            // relation
+            if (first.getProperty() == null) {
+                continue;
+            }
+
+            Map<String, List<Property.PropertyDTO>> stringListMap = first.getProperty().getProperty();
+
+            if (stringListMap == null) {
+                continue;
+            }
+
+            Set<Map.Entry<String, List<Property.PropertyDTO>>> entrySet = stringListMap.entrySet();
+
+            for (Map.Entry<String, List<Property.PropertyDTO>> entry : entrySet) {
+                for (Property.PropertyDTO it : entry.getValue()) {
+                    if (it.getId() == null) {
+                        continue;
+                    }
+                    links.add(buildLinks(first.getId(), it.getId(), entry.getKey()));
+                    nodes.add(buildNodes(it.getId(), it.getName()));
+                }
+            }
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("nodes", nodes);
+        result.put("links", links);
+        return result;
     }
 
     @CacheEvict(allEntries = true)

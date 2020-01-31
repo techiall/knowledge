@@ -1,5 +1,7 @@
 package top.techial.knowledge.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +26,9 @@ public class NodeServiceTest {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     public void save() {
@@ -58,5 +63,11 @@ public class NodeServiceTest {
     public void findContentByNameLike() {
         nodeService.findContentByNameLike("%java%", PageRequest.of(0, 10))
                 .forEach(System.out::println);
+    }
+
+    @Test
+    @SneakyThrows
+    public void findByIdGraph() {
+        System.out.println(objectMapper.writeValueAsString(nodeService.findByIdGraph(123L)));
     }
 }

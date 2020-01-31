@@ -3,6 +3,7 @@ package top.techial.knowledge.vo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import top.techial.knowledge.domain.Property;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -24,7 +25,7 @@ public class NodeVO implements Serializable {
 
     private Set<String> labels;
 
-    private Map<String, List<String>> property;
+    private Map<String, List<Property.PropertyDTO>> property;
 
     /**
      * parentId = null -> parent

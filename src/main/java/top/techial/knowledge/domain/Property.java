@@ -16,5 +16,14 @@ public class Property implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Map<String, List<String>> property;
+    private Map<String, List<PropertyDTO>> property;
+
+    @Data
+    public class PropertyDTO implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        private Long id;
+        private String name;
+    }
 }

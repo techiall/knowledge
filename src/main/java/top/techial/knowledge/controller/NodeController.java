@@ -142,9 +142,8 @@ public class NodeController {
     }
 
     @GetMapping("/{id}/graph")
-    public ResultBean<Object> findByIdGraph(@PathVariable Long id) {
-//        return new ResultBean<>(knowledgeNodeService.findByIdGraph(id));
-        return null;
+    public ResultBean<Map<String, Object>> findByIdGraph(@PathVariable Long id) {
+        return new ResultBean<>(nodeService.findByIdGraph(id));
     }
 
     @GetMapping("/{id}/link")
