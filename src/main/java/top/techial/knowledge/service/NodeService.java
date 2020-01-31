@@ -103,13 +103,13 @@ public class NodeService {
         String value = "select i.name as itemName, n.name as nodeName, u.nick_name as nodeAuthorNickName, n.text as text,\n" +
                 "n.id as nodeId, n.labels as labels, n.property as property\n" +
                 "from node n inner join item i on n.item_id = i.id inner join user u on i.author_id = u.id\n" +
-                "where n.name like :name and i.share = true order by n.update_time desc limit :limit, :page ;";
+                "where n.name like :name and i.share = true order by n.update_time desc limit :limit offset :page";
         BeanPropertyRowMapper<SearchDTO> rowMapper = BeanPropertyRowMapper.newInstance(SearchDTO.class);
 
         Map<String, Object> map = new HashMap<>();
         map.put("name", '%' + name + '%');
-        map.put("limit", pageable.getPageNumber());
-        map.put("page", (pageable.getPageSize() + 1) * pageable.getPageNumber());
+        map.put("limit", pageable.getPageSize());
+        map.put("page", pageable.getOffset());
         return namedParameterJdbcTemplate.query(value, map, rowMapper);
     }
 

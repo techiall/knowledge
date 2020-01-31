@@ -56,7 +56,7 @@ public class NodeServiceTest {
 
     @Test
     public void findContentByNameLike() {
-        nodeService.findContentByNameLike("%java%", PageRequest.of(2, 10))
+        nodeService.findContentByNameLike("%java%", PageRequest.of(0, 10))
                 .forEach(System.out::println);
     }
 }
