@@ -3,7 +3,6 @@ package top.techial.knowledge.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,12 +36,13 @@ public class SearchController {
     @GetMapping
     public ResultBean<Object> search(
             @RequestParam(name = "q") String question,
-            @RequestParam(required = false, defaultValue = "false") Boolean tips
+            @RequestParam(required = false, defaultValue = "false") Boolean tips,
+            @PageableDefault Pageable pageable
     ) {
         if (Boolean.TRUE.equals(tips)) {
-            return new ResultBean<>(nodeService.findByNameLike('%' + question + '%'));
+            return new ResultBean<>(nodeService.findByNameLike(question));
         }
-        return new ResultBean<>(convent(nodeService.findContentByNameLike(question)));
+        return new ResultBean<>(convent(nodeService.findContentByNameLike(question, pageable)));
     }
 
     private List<SearchJsonDTO> convent(List<SearchDTO> list) {
@@ -58,8 +58,8 @@ public class SearchController {
                 .setLabels(objectMapper.readValue(searchDTO.getLabels(), Labels.class))
                 .setProperty(objectMapper.readValue(searchDTO.getProperty(), Property.class))
                 .setNodeName(searchDTO.getNodeName())
-                .setNodeNickName(searchDTO.getNodeNickName())
-                .setNodeItemName(searchDTO.getNodeItemName())
+                .setNodeNickName(searchDTO.getAuthorNickname())
+                .setNodeItemName(searchDTO.getItemName())
                 .setText(text(searchDTO.getText()));
     }
 

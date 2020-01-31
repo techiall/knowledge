@@ -6,6 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -96,17 +97,19 @@ public class NodeService {
         return namedParameterJdbcTemplate.query(value, map, rowMapper);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
-    public List<SearchDTO> findContentByNameLike(String name) {
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
+    public List<SearchDTO> findContentByNameLike(String name, Pageable pageable) {
         // language=sql
-        String value = "select i.name as name, n.name as nodeItemName, u.nick_name as nodeName, n.text as text,\n" +
+        String value = "select i.name as itemName, n.name as nodeName, u.nick_name as nodeAuthorNickName, n.text as text,\n" +
                 "n.id as nodeId, n.labels as labels, n.property as property\n" +
-                "from node inner join item i on n.item_id = i.id inner join user u on i.author_id = u.id\n" +
-                "where n.name like (:name)";
+                "from node n inner join item i on n.item_id = i.id inner join user u on i.author_id = u.id\n" +
+                "where n.name like :name and i.share = true order by n.update_time desc limit :limit, :page ;";
         BeanPropertyRowMapper<SearchDTO> rowMapper = BeanPropertyRowMapper.newInstance(SearchDTO.class);
 
         Map<String, Object> map = new HashMap<>();
         map.put("name", '%' + name + '%');
+        map.put("limit", pageable.getPageSize());
+        map.put("page", pageable.getOffset());
         return namedParameterJdbcTemplate.query(value, map, rowMapper);
     }
 

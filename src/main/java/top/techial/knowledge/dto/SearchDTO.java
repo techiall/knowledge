@@ -22,9 +22,9 @@ public class SearchDTO implements Serializable {
 
     private String nodeName;
 
-    private String nodeNickName;
+    private String authorNickname;
 
-    private String nodeItemName;
+    private String itemName;
 
     private String text;
 
