@@ -2,6 +2,9 @@ package top.techial.knowledge.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,9 +39,8 @@ public class SearchController {
             @RequestParam(name = "q") String question,
             @RequestParam(required = false, defaultValue = "false") Boolean tips
     ) {
-        question = String.format("*%s*", question);
         if (Boolean.TRUE.equals(tips)) {
-            return new ResultBean<>(nodeService.findByNameLike(question));
+            return new ResultBean<>(nodeService.findByNameLike('%' + question + '%'));
         }
         return new ResultBean<>(convent(nodeService.findContentByNameLike(question)));
     }

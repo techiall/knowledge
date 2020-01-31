@@ -113,7 +113,8 @@ public class NodeService {
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public List<NodeBaseDTO> findByNameLike(String name) {
         // language=sql
-        String value = "select n.id, n.name from node n where n.name like (:name) order by n.update_time desc limit 10;";
+        String value = "select n.id, n.name from node n inner join item i on n.item_id = i.id\n" +
+                "where n.name like (:name) and i.share = true order by n.update_time desc limit 10";
         RowMapper<NodeBaseDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeBaseDTO.class);
 
         Map<String, Object> map = new HashMap<>();
