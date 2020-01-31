@@ -64,7 +64,7 @@ public class ItemController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody ItemVO itemVO
     ) {
-        if (itemVO.getName() == null) {
+        if (itemVO.getName() == null || itemVO.getName().isEmpty()) {
             throw new IllegalArgumentException(String
                     .format("itemVO error. %s", itemVO.toString()));
         }

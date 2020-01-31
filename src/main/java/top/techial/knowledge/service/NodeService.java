@@ -151,16 +151,22 @@ public class NodeService {
         private Long ancestor;
     }
 
-    public Map<Long, Node> buildChildNodeData(Long id) {
+    private Map<Long, Node> buildChildNodeData(Long id) {
         return nodeRepository.findChildNode(id)
                 .parallelStream()
                 .collect(Collectors.toMap(Node::getId, Function.identity()));
     }
 
-    public Map<Long, List<ParentChildDTO>> buildChildNode(Long id) {
+    private Map<Long, Node> buildParentNodeData(Long id) {
+        return nodeRepository.findParentNode(id)
+                .parallelStream()
+                .collect(Collectors.toMap(Node::getId, Function.identity()));
+    }
+
+    private Map<Long, List<ParentChildDTO>> buildChildNode(Long id) {
         // language=sql
         String value = "select nr.descendant as descendant, nr.ancestor as ancestor\n" +
-                "from node_relationship as nr inner join (select n_child.id, n_child.name\n" +
+                "from node_relationship as nr inner join (select n_child.id\n" +
                 "from node n_child join node_relationship nr_child on (n_child.id = nr_child.descendant)\n" +
                 "where nr_child.ancestor = (:id)) as node on nr.descendant = node.id\n" +
                 "where nr.distance = 1 and nr.descendant != (:id)";
@@ -168,6 +174,19 @@ public class NodeService {
         return namedParameterJdbcTemplate.query(value, Collections.singletonMap("id", id), rowMapper)
                 .parallelStream()
                 .collect(Collectors.groupingBy(ParentChildDTO::getAncestor));
+    }
+
+    private Map<Long, List<ParentChildDTO>> buildParentNode(Long id) {
+        // language=sql
+        String value = "select nr.descendant as descendant, nr.ancestor as ancestor\n" +
+                "from node_relationship as nr inner join (select n_child.id\n" +
+                "from node n_child join node_relationship nr_child on (n_child.id = nr_child.ancestor)\n" +
+                "where nr_child.descendant = (:id)) as node on nr.descendant = node.id\n" +
+                "where nr.distance = 1";
+        RowMapper<ParentChildDTO> rowMapper = BeanPropertyRowMapper.newInstance(ParentChildDTO.class);
+        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("id", id), rowMapper)
+                .parallelStream()
+                .collect(Collectors.groupingBy(ParentChildDTO::getDescendant));
     }
 
     private List<NodeBaseDTO> findParent(Long id) {
@@ -214,25 +233,26 @@ public class NodeService {
         return map;
     }
 
+    //    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Map<String, Object> findByIdGraph(Long id) {
+
         LinkedList<Node> queue = new LinkedList<>();
-
-        Map<Long, List<ParentChildDTO>> childNode = buildChildNode(id);
-        Map<Long, Node> childNodeData = buildChildNodeData(id);
-
         List<Map<String, Object>> links = new ArrayList<>();
         List<Map<String, Object>> nodes = new ArrayList<>();
 
+        Map<Long, List<ParentChildDTO>> childNode = buildChildNode(id);
+        Map<Long, Node> childNodeData = buildChildNodeData(id);
         queue.add(childNodeData.get(id));
         while (!queue.isEmpty()) {
             Node first = queue.pollFirst();
-            List<ParentChildDTO> list = childNode.get(first.getId());
+
             nodes.add(buildNodes(first.getId(), first.getName()));
 
+            // child
+            List<ParentChildDTO> list = childNode.get(first.getId());
             if (list == null) {
                 continue;
             }
-            // child
             list.forEach(it -> {
                 Node child = childNodeData.get(it.getDescendant());
                 queue.add(child);
@@ -262,6 +282,24 @@ public class NodeService {
                     nodes.add(buildNodes(it.getId(), it.getName()));
                 }
             }
+        }
+
+        Map<Long, Node> parentNodeData = buildParentNodeData(id);
+        Map<Long, List<ParentChildDTO>> parentNode = buildParentNode(id);
+        queue.add(parentNodeData.get(id));
+        while (!queue.isEmpty()) {
+            // parent
+            Node node = queue.pollFirst();
+            List<ParentChildDTO> list = parentNode.get(node.getId());
+            if (list == null) {
+                continue;
+            }
+            list.forEach(it -> {
+                Node parent = parentNodeData.get(it.getAncestor());
+                queue.add(parent);
+                links.add(buildLinks(node.getId(), it.getAncestor(), "parent"));
+                nodes.add(buildNodes(parent.getId(), parent.getName()));
+            });
         }
 
         Map<String, Object> result = new HashMap<>();

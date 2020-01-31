@@ -57,7 +57,7 @@ public class NodeController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody NodeVO nodeVO
     ) {
-        if (nodeVO.getName() == null) {
+        if (nodeVO.getName() == null || nodeVO.getName().isEmpty()) {
             throw new IllegalArgumentException(String
                     .format("nodeVO error. %s", nodeVO.toString()));
         }

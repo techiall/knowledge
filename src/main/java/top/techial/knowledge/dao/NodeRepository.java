@@ -32,6 +32,9 @@ public interface NodeRepository extends JpaRepository<Node, Long> {
     @Query("select n.text from Node n where n.id = ?1")
     String findTextById(Long id);
 
-    @Query("select n from Node n inner join NodeRelationship  nr on n.id = nr.descendant where nr.ancestor = ?1")
+    @Query("select n from Node n inner join NodeRelationship nr on n.id = nr.descendant where nr.ancestor = ?1")
     List<Node> findChildNode(Long id);
+
+    @Query("select n from Node n inner join NodeRelationship nr on n.id = nr.ancestor where nr.descendant = ?1")
+    List<Node> findParentNode(Long id);
 }
