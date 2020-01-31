@@ -55,14 +55,14 @@ public class NodeServiceTest {
 
     @Test
     public void findByNameLike() {
-        List<NodeBaseDTO> result = nodeService.findByNameLike("%java%");
+        List<NodeBaseDTO> result = nodeService.findByNameLike("java");
         System.out.println(result);
         Assert.assertNotNull(result);
     }
 
     @Test
     public void findContentByNameLike() {
-        nodeService.findContentByNameLike("%java%", PageRequest.of(0, 10))
+        nodeService.findContentByNameLike("java", PageRequest.of(0, 10))
                 .forEach(System.out::println);
     }
 

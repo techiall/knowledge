@@ -2,6 +2,7 @@ package top.techial.knowledge.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,8 +46,8 @@ public class SearchController {
         return new ResultBean<>(convent(nodeService.findContentByNameLike(question, pageable)));
     }
 
-    private List<SearchJsonDTO> convent(List<SearchDTO> list) {
-        return list.parallelStream()
+    private List<SearchJsonDTO> convent(PageImpl<SearchDTO> list) {
+        return list.stream()
                 .map(this::toSearchJson)
                 .collect(Collectors.toList());
     }
