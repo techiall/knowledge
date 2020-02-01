@@ -1,5 +1,6 @@
 package top.techial.knowledge.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.junit.Assert;
@@ -75,5 +76,10 @@ public class NodeServiceTest {
     @Test
     public void findByIds() {
         System.out.println(nodeService.findByIds(Collections.singletonList(123L)));
+    }
+
+    @Test
+    public void depthGetChild() throws JsonProcessingException {
+        System.out.println(objectMapper.writeValueAsString(nodeService.getChildAndParent(153L)));
     }
 }

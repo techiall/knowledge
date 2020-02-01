@@ -7,6 +7,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.dto.NodeInfoDTO;
+import top.techial.knowledge.dto.NodeTreeDTO;
 import top.techial.knowledge.vo.NodeVO;
 
 import java.util.List;
@@ -27,6 +28,8 @@ public interface NodeMapper {
     @Mapping(source = "labels.labels", target = "labels")
     @Mapping(source = "property.property", target = "property")
     NodeInfoDTO toNodeInfoDTO(Node node);
+
+    NodeTreeDTO toNodeTreeDTO(Node node);
 
     default List<SimpleGrantedAuthority> toListSimpleGrantedAuthority(List<Long> nodes) {
         return nodes

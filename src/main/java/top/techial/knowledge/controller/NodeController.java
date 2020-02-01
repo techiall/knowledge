@@ -152,11 +152,8 @@ public class NodeController {
     }
 
     @GetMapping("/{id}/link")
-    public ResultBean<Map<String, List<NodeBaseDTO>>> getChildAndParent(
-            @PathVariable Long id,
-            @RequestParam(required = false, defaultValue = "1") int depth
-    ) {
-        return new ResultBean<>(nodeService.getChildAndParent(id, depth));
+    public ResultBean<Map<String, Object>> getChildAndParent(@PathVariable Long id) {
+        return new ResultBean<>(nodeService.getChildAndParent(id));
     }
 
     @GetMapping("/{id}/child")

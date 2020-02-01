@@ -227,18 +227,41 @@ public class NodeService {
                 .collect(Collectors.toList());
     }
 
-    public void depthGetChild(Long id) {
-        Stack<NodeTreeDTO> nodeStack = new Stack<>();
+    private NodeTreeDTO depthGetChild(Long id) {
+        Map<Long, List<ParentChildDTO>> childNode = buildChildNode(id);
+        Map<Long, Node> childNodeData = buildChildNodeData(id);
+        Set<Long> flag = new HashSet<>();
+
+        NodeTreeDTO nodeTreeDTO = NodeMapper.INSTANCE.toNodeTreeDTO(childNodeData.get(id));
+        List<ParentChildDTO> child = childNode.get(id);
+
+        getChild(nodeTreeDTO, child, flag, childNodeData, childNode);
+
+        return nodeTreeDTO;
     }
 
-    private void getChild(Long id) {
-        Map<Long, List<ParentChildDTO>> result = buildChildNode(id);
+    private void getChild(NodeTreeDTO node, List<ParentChildDTO> list, Set<Long> flag, Map<Long, Node> childNodeData, Map<Long, List<ParentChildDTO>> childNode) {
+        List<NodeTreeDTO> childList = new ArrayList<>();
+
+        if (list == null) {
+            return;
+        }
+        for (ParentChildDTO parentChildDTO : list) {
+            if (flag.contains(parentChildDTO.getDescendant())) {
+                continue;
+            }
+            flag.add(parentChildDTO.getDescendant());
+            NodeTreeDTO n = NodeMapper.INSTANCE.toNodeTreeDTO(childNodeData.get(parentChildDTO.getDescendant()));
+            getChild(n, childNode.get(parentChildDTO.getDescendant()), flag, childNodeData, childNode);
+            childList.add(n);
+        }
+        node.setChild(childList);
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
-    public Map<String, List<NodeBaseDTO>> getChildAndParent(Long id, int depth) {
-        Map<String, List<NodeBaseDTO>> map = new HashMap<>();
-        map.put("child", findByChildNode(id, depth));
+    public Map<String, Object> getChildAndParent(Long id) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("child", depthGetChild(id));
         map.put("parent", findParent(id));
         return map;
     }
