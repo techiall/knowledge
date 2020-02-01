@@ -1,7 +1,5 @@
 package top.techial.knowledge.service;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -19,6 +17,7 @@ import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.domain.Property;
 import top.techial.knowledge.dto.NodeBaseDTO;
 import top.techial.knowledge.dto.NodeTreeDTO;
+import top.techial.knowledge.dto.ParentChildDTO;
 import top.techial.knowledge.dto.SearchDTO;
 import top.techial.knowledge.exception.NodeNotFoundException;
 import top.techial.knowledge.mapper.NodeMapper;
@@ -175,13 +174,6 @@ public class NodeService {
         map.put("ancestor", id);
         map.put("depth", depth);
         return namedParameterJdbcTemplate.query(value, map, rowMapper);
-    }
-
-    @Data
-    @Accessors(chain = true)
-    public static class ParentChildDTO {
-        private Long descendant;
-        private Long ancestor;
     }
 
     private Map<Long, Node> buildChildNodeData(Long id) {
