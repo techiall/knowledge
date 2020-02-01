@@ -94,8 +94,7 @@ public class NodeService {
         String value = "select n.id, n.name from node n where id in (:ids)";
         Map<String, Object> map = new HashMap<>();
         map.put("ids", ids);
-        BeanPropertyRowMapper<Property.PropertyDTO> rowMapper = BeanPropertyRowMapper.newInstance(Property.PropertyDTO.class);
-        return namedParameterJdbcTemplate.query(value, map, rowMapper);
+        return namedParameterJdbcTemplate.queryForList(value, map, Property.PropertyDTO.class);
     }
 
     @Transactional
@@ -131,13 +130,12 @@ public class NodeService {
                 "n.id as nodeId, n.labels as labels, n.property as property\n" +
                 "from node n inner join item i on n.item_id = i.id inner join user u on i.author_id = u.id\n" +
                 "where n.name like :name and i.share = true order by n.update_time desc limit :limit offset :page";
-        BeanPropertyRowMapper<SearchDTO> rowMapper = BeanPropertyRowMapper.newInstance(SearchDTO.class);
 
         Map<String, Object> map = new HashMap<>();
         map.put("name", '%' + name + '%');
         map.put("limit", pageable.getPageSize());
         map.put("page", pageable.getOffset());
-        List<SearchDTO> content = namedParameterJdbcTemplate.query(value, map, rowMapper);
+        List<SearchDTO> content = namedParameterJdbcTemplate.queryForList(value, map, SearchDTO.class);
 
         // language=sql
         value = "select count(*) from node n inner join item i on n.item_id = i.id\n" +
@@ -152,11 +150,9 @@ public class NodeService {
         // language=sql
         String value = "select n.id, n.name from node n inner join item i on n.item_id = i.id\n" +
                 "where n.name like (:name) and i.share = true order by n.update_time desc limit 10";
-        RowMapper<NodeBaseDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeBaseDTO.class);
-
         Map<String, Object> map = new HashMap<>();
         map.put("name", '%' + name + '%');
-        return namedParameterJdbcTemplate.query(value, map, rowMapper);
+        return namedParameterJdbcTemplate.queryForList(value, map, NodeBaseDTO.class);
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
@@ -168,12 +164,11 @@ public class NodeService {
                 "from `node` node0_ inner join node_relationship noderelati1_ on (node0_.id = noderelati1_.descendant)\n" +
                 "where noderelati1_.ancestor = (:ancestor) " +
                 "and noderelati1_.ancestor != noderelati1_.descendant and noderelati1_.distance <= (:depth)";
-        RowMapper<NodeBaseDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeBaseDTO.class);
 
         Map<String, Object> map = new HashMap<>();
         map.put("ancestor", id);
         map.put("depth", depth);
-        return namedParameterJdbcTemplate.query(value, map, rowMapper);
+        return namedParameterJdbcTemplate.queryForList(value, map, NodeBaseDTO.class);
     }
 
     private Map<Long, Node> buildChildNodeData(Long id) {
@@ -195,8 +190,7 @@ public class NodeService {
                 "from node n_child join node_relationship nr_child on (n_child.id = nr_child.descendant)\n" +
                 "where nr_child.ancestor = (:id)) as node on nr.descendant = node.id\n" +
                 "where nr.distance = 1 and nr.descendant != (:id)";
-        RowMapper<ParentChildDTO> rowMapper = BeanPropertyRowMapper.newInstance(ParentChildDTO.class);
-        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("id", id), rowMapper)
+        return namedParameterJdbcTemplate.queryForList(value, Collections.singletonMap("id", id), ParentChildDTO.class)
                 .parallelStream()
                 .collect(Collectors.groupingBy(ParentChildDTO::getAncestor));
     }
@@ -208,8 +202,7 @@ public class NodeService {
                 "from node n_child join node_relationship nr_child on (n_child.id = nr_child.ancestor)\n" +
                 "where nr_child.descendant = (:id)) as node on nr.descendant = node.id\n" +
                 "where nr.distance = 1";
-        RowMapper<ParentChildDTO> rowMapper = BeanPropertyRowMapper.newInstance(ParentChildDTO.class);
-        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("id", id), rowMapper)
+        return namedParameterJdbcTemplate.queryForList(value, Collections.singletonMap("id", id), ParentChildDTO.class)
                 .parallelStream()
                 .collect(Collectors.groupingBy(ParentChildDTO::getDescendant));
     }
@@ -220,8 +213,7 @@ public class NodeService {
                 "(select n.ancestor from node_relationship n where n.descendant = node0_.id and n.distance = 1) as parentNodeId\n" +
                 "from `node` node0_ inner join node_relationship noderelati1_ on (node0_.id = noderelati1_.ancestor)\n" +
                 "where noderelati1_.descendant = (:descendant)\n";
-        RowMapper<NodeBaseDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeBaseDTO.class);
-        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("descendant", id), rowMapper)
+        return namedParameterJdbcTemplate.queryForList(value, Collections.singletonMap("descendant", id), NodeBaseDTO.class)
                 .parallelStream()
                 .filter(it -> it.getParentNodeId() != null)
                 .collect(Collectors.toList());
@@ -376,6 +368,20 @@ public class NodeService {
 
     @CacheEvict(allEntries = true)
     public void move(Long id, Long target) {
+        Map<String, Long> result = new HashMap<>();
+        result.put("id", id);
+        result.put("target", target);
+        // language=sql
+        String value = "DELETE FROM node_relationship\n" +
+                "WHERE descendant IN (SELECT d.descendant FROM node_relationship d WHERE d.ancestor = :id)\n" +
+                "AND ancestor IN (SELECT a.ancestor FROM node_relationship a WHERE a.descendant = :id AND a.ancestor != a.descendant)\n";
+        namedParameterJdbcTemplate.update(value, result);
 
+        // language=sql
+        value = "INSERT INTO node_relationship(ancestor, descendant, distance) SELECT super.ancestor, sub.descendant,\n" +
+                "CASE WHEN super.ancestor = :target AND sub.descendant = :id THEN :target ELSE 0 END pc\n" +
+                "FROM node_relationship super CROSS JOIN node_relationship sub\n" +
+                "WHERE super.descendant = :target AND sub.ancestor = :id\n";
+        namedParameterJdbcTemplate.update(value, result);
     }
 }
