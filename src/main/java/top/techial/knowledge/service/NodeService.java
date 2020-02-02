@@ -94,7 +94,7 @@ public class NodeService {
         String value = "select n.id, n.name from node n where id in (:ids)";
         Map<String, Object> map = new HashMap<>();
         map.put("ids", ids);
-        return namedParameterJdbcTemplate.queryForList(value, map, Property.PropertyDTO.class);
+        return namedParameterJdbcTemplate.query(value, map, new BeanPropertyRowMapper<>(Property.PropertyDTO.class));
     }
 
     @Transactional
@@ -135,7 +135,7 @@ public class NodeService {
         map.put("name", '%' + name + '%');
         map.put("limit", pageable.getPageSize());
         map.put("page", pageable.getOffset());
-        List<SearchDTO> content = namedParameterJdbcTemplate.queryForList(value, map, SearchDTO.class);
+        List<SearchDTO> content = namedParameterJdbcTemplate.query(value, map, new BeanPropertyRowMapper<>(SearchDTO.class));
 
         // language=sql
         value = "select count(*) from node n inner join item i on n.item_id = i.id\n" +
@@ -152,7 +152,7 @@ public class NodeService {
                 "where n.name like (:name) and i.share = true order by n.update_time desc limit 10";
         Map<String, Object> map = new HashMap<>();
         map.put("name", '%' + name + '%');
-        return namedParameterJdbcTemplate.queryForList(value, map, NodeBaseDTO.class);
+        return namedParameterJdbcTemplate.query(value, map, new BeanPropertyRowMapper<>(NodeBaseDTO.class));
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
@@ -168,7 +168,7 @@ public class NodeService {
         Map<String, Object> map = new HashMap<>();
         map.put("ancestor", id);
         map.put("depth", depth);
-        return namedParameterJdbcTemplate.queryForList(value, map, NodeBaseDTO.class);
+        return namedParameterJdbcTemplate.query(value, map, new BeanPropertyRowMapper<>(NodeBaseDTO.class));
     }
 
     private Map<Long, Node> buildChildNodeData(Long id) {
@@ -190,7 +190,7 @@ public class NodeService {
                 "from node n_child join node_relationship nr_child on (n_child.id = nr_child.descendant)\n" +
                 "where nr_child.ancestor = (:id)) as node on nr.descendant = node.id\n" +
                 "where nr.distance = 1 and nr.descendant != (:id)";
-        return namedParameterJdbcTemplate.queryForList(value, Collections.singletonMap("id", id), ParentChildDTO.class)
+        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("id", id), new BeanPropertyRowMapper<>(ParentChildDTO.class))
                 .parallelStream()
                 .collect(Collectors.groupingBy(ParentChildDTO::getAncestor));
     }
@@ -202,7 +202,7 @@ public class NodeService {
                 "from node n_child join node_relationship nr_child on (n_child.id = nr_child.ancestor)\n" +
                 "where nr_child.descendant = (:id)) as node on nr.descendant = node.id\n" +
                 "where nr.distance = 1";
-        return namedParameterJdbcTemplate.queryForList(value, Collections.singletonMap("id", id), ParentChildDTO.class)
+        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("id", id), new BeanPropertyRowMapper<>(ParentChildDTO.class))
                 .parallelStream()
                 .collect(Collectors.groupingBy(ParentChildDTO::getDescendant));
     }
@@ -213,7 +213,7 @@ public class NodeService {
                 "(select n.ancestor from node_relationship n where n.descendant = node0_.id and n.distance = 1) as parentNodeId\n" +
                 "from `node` node0_ inner join node_relationship noderelati1_ on (node0_.id = noderelati1_.ancestor)\n" +
                 "where noderelati1_.descendant = (:descendant)\n";
-        return namedParameterJdbcTemplate.queryForList(value, Collections.singletonMap("descendant", id), NodeBaseDTO.class)
+        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("descendant", id), new BeanPropertyRowMapper<>(NodeBaseDTO.class))
                 .parallelStream()
                 .filter(it -> it.getParentNodeId() != null)
                 .collect(Collectors.toList());
