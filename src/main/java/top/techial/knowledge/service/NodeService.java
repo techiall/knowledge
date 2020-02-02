@@ -77,6 +77,9 @@ public class NodeService {
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Map<String, List<Property.PropertyDTO>> buildProperty(Map<String, List<Property.PropertyDTO>> property) {
+        if (property == null) {
+            return Collections.emptyMap();
+        }
         property.entrySet().forEach(stringListEntry -> {
             List<Long> list = stringListEntry
                     .getValue()
