@@ -9,6 +9,7 @@ import top.techial.knowledge.domain.Node;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author techial
@@ -17,6 +18,10 @@ import java.util.List;
 public interface NodeRepository extends JpaRepository<Node, Long> {
     @Transactional
     void deleteAllByItemId(Integer id);
+
+
+    @Query("select n from Node n inner join Item i on n.itemId = ?2 where n.name = ?1")
+    Optional<Node> findByItemIdAndName(String name, Integer itemId);
 
     @Transactional
     void deleteByIdIn(Collection<Long> ids);

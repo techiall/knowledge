@@ -63,11 +63,13 @@ public class NodeController {
         }
         Long itemId = itemService.findRootNodeId(nodeVO.getItemId())
                 .orElseThrow(() -> new ItemException(nodeVO.getItemId()));
-        Node node = nodeService.save(nodeVO, itemId);
-
-        recordService.save(node.getId(), userPrincipal.getId(),
-                nodeVO.getRecord().getOperator(), nodeVO.getRecord().getMessage());
-
+        Node node = nodeService.findByItemIdAndName(nodeVO.getName().trim(), nodeVO.getItemId())
+                .orElse(null);
+        if (node == null) {
+            node = nodeService.save(nodeVO, itemId);
+            recordService.save(node.getId(), userPrincipal.getId(),
+                    nodeVO.getRecord().getOperator(), nodeVO.getRecord().getMessage());
+        }
         return new ResultBean<>(NodeMapper.INSTANCE.toNodeInfoDTO(node));
     }
 

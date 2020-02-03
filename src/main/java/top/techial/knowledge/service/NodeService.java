@@ -56,6 +56,11 @@ public class NodeService {
         return node;
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
+    public Optional<Node> findByItemIdAndName(String name, Integer itemId) {
+        return nodeRepository.findByItemIdAndName(name, itemId);
+    }
+
     @Transactional
     @CacheEvict(allEntries = true)
     public Node save(Node node) {
