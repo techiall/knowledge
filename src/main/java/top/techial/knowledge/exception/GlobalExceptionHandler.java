@@ -27,7 +27,8 @@ public class GlobalExceptionHandler {
             ItemNotFoundNodeException.class,
             MethodArgumentNotValidException.class,
             MissingServletRequestParameterException.class,
-            JsonProcessingException.class
+            JsonProcessingException.class,
+            UsernameIsRegisterException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Object illegalArgumentException(Throwable throwable) {

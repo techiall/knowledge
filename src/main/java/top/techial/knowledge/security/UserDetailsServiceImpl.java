@@ -11,6 +11,7 @@ import top.techial.knowledge.mapper.UserMapper;
 import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.UserService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,11 +36,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userService.findByUserName(s)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         String.format("userName:[%s] not found.", s)));
-        List<Long> nodes = nodeService.findByItemIds(user
-                .getItem()
-                .parallelStream()
-                .map(Item::getId)
-                .collect(Collectors.toList()));
+        List<Long> nodes;
+        if (user.getItem() == null || user.getItem().isEmpty()) {
+            nodes = Collections.emptyList();
+        } else {
+            nodes = nodeService.findByItemIds(user
+                    .getItem()
+                    .parallelStream()
+                    .map(Item::getId)
+                    .collect(Collectors.toList()));
+        }
         return UserMapper.INSTANCE.toUserPrincipal(user, nodes);
     }
 
