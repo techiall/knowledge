@@ -2,6 +2,7 @@ package top.techial.knowledge.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.User;
@@ -32,7 +33,7 @@ public class RegisterController {
     }
 
     @PostMapping
-    public ResultBean<User> save(@RequestBody RegisterVO registerVO) {
+    public ResultBean<User> save(@Validated @RequestBody RegisterVO registerVO) {
         if (userService.existsByUserName(registerVO.getUserName())) {
             throw new UsernameIsRegisterException(registerVO.getUserName());
         }

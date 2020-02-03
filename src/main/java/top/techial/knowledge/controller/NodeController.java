@@ -2,6 +2,7 @@ package top.techial.knowledge.controller;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.techial.knowledge.aspect.FlushAuthority;
 import top.techial.knowledge.beans.ResultBean;
@@ -16,9 +17,10 @@ import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.ItemService;
 import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.RecordService;
+import top.techial.knowledge.valid.Insert;
+import top.techial.knowledge.valid.Update;
 import top.techial.knowledge.vo.NodeVO;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -55,12 +57,8 @@ public class NodeController {
     @FlushAuthority
     public ResultBean<NodeInfoDTO> save(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @Valid @RequestBody NodeVO nodeVO
+            @Validated(value = Insert.class) @RequestBody NodeVO nodeVO
     ) {
-        if (nodeVO.getName() == null || nodeVO.getName().isEmpty()) {
-            throw new IllegalArgumentException(String
-                    .format("nodeVO error. %s", nodeVO.toString()));
-        }
         Long itemId = itemService.findRootNodeId(nodeVO.getItemId())
                 .orElseThrow(() -> new ItemException(nodeVO.getItemId()));
         Node node = nodeService.findByItemIdAndName(nodeVO.getName().trim(), nodeVO.getItemId())
@@ -78,22 +76,22 @@ public class NodeController {
     public ResultBean<NodeInfoDTO> update(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long id,
-            @Valid @RequestBody NodeVO nodeVO
+            @Validated(value = Update.class) @RequestBody NodeVO nodeVO
     ) {
         Node node = nodeService.findById(id);
 
-        if (nodeVO != null && nodeVO.getName() != null) {
+        if (nodeVO != null && nodeVO.getName() != null && !nodeVO.getName().isEmpty()) {
             node.setName(nodeVO.getName());
             recordService.save(node.getId(), userPrincipal.getId(),
                     nodeVO.getRecord().getOperator(), nodeVO.getRecord().getMessage());
         }
-        if (nodeVO != null && nodeVO.getLabels() != null) {
+        if (nodeVO != null && nodeVO.getLabels() != null && !nodeVO.getName().isEmpty()) {
             node.setLabels(new Labels().setLabels(nodeVO.getLabels()));
             recordService.save(node.getId(), userPrincipal.getId(),
                     nodeVO.getRecord().getOperator(), nodeVO.getRecord().getMessage());
         }
 
-        if (nodeVO != null && nodeVO.getProperty() != null) {
+        if (nodeVO != null && nodeVO.getProperty() != null && !nodeVO.getName().isEmpty()) {
             node.setProperty(new Property().setProperty(nodeService.buildProperty(nodeVO.getProperty())));
             recordService.save(node.getId(), userPrincipal.getId(),
                     nodeVO.getRecord().getOperator(), nodeVO.getRecord().getMessage());

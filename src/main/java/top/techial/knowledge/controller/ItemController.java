@@ -2,6 +2,7 @@ package top.techial.knowledge.controller;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.techial.knowledge.aspect.FlushAuthority;
 import top.techial.knowledge.beans.ResultBean;
@@ -14,6 +15,7 @@ import top.techial.knowledge.mapper.ItemMapper;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.ItemService;
 import top.techial.knowledge.service.NodeService;
+import top.techial.knowledge.valid.Insert;
 import top.techial.knowledge.vo.ItemVO;
 
 import java.util.List;
@@ -62,7 +64,7 @@ public class ItemController {
     @FlushAuthority
     public ResultBean<ItemDTO> save(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestBody ItemVO itemVO
+            @Validated(value = Insert.class) @RequestBody ItemVO itemVO
     ) {
         if (itemVO.getName() == null || itemVO.getName().isEmpty()) {
             throw new IllegalArgumentException(String

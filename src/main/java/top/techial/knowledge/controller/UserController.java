@@ -72,10 +72,10 @@ public class UserController {
     ) {
         User user = userService.findById(userPrincipal.getId())
                 .orElseThrow(() -> new UserException(userPrincipal.getId()));
-        if (userVO != null && userVO.getImage() != null) {
+        if (userVO != null && userVO.getImage() != null && !userVO.getImage().isEmpty()) {
             user.setImages(userVO.getImage());
         }
-        if (userVO != null && userVO.getNickName() != null) {
+        if (userVO != null && userVO.getNickName() != null && !userVO.getNickName().isEmpty()) {
             user.setNickName(userVO.getNickName());
         }
         user = userService.save(user);

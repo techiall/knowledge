@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import top.techial.knowledge.domain.Property;
+import top.techial.knowledge.valid.Insert;
+import top.techial.knowledge.valid.Update;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -21,6 +24,8 @@ public class NodeVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @NotNull(groups = Insert.class)
+    @NotEmpty(groups = Insert.class)
     private String name;
 
     private Set<String> labels;
@@ -34,10 +39,10 @@ public class NodeVO implements Serializable {
      */
     private Long parentId;
 
-    @NotNull
+    @NotNull(groups = {Insert.class, Update.class})
     private Integer itemId;
 
-    @NotNull
+    @NotNull(groups = {Insert.class, Update.class})
     private Record record;
 
     @Data
