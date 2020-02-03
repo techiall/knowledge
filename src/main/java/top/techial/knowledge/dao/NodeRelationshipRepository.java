@@ -38,7 +38,7 @@ public interface NodeRelationshipRepository extends JpaRepository<NodeRelationsh
             nativeQuery = true,
             value = "delete n from node_relationship n\n" +
                     "join node_relationship m on (n.descendant = m.descendant)\n" +
-                    "where n.ancestor = ?1"
+                    "where n.ancestor = ?1 or n.descendant = ?1"
     )
     @Transactional
     void deleteByNodeId(Long id);
