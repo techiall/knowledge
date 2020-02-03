@@ -103,6 +103,7 @@ public class NodeController {
     }
 
     @PutMapping("/{id}/movement")
+    @PreAuthorize("hasAnyAuthority(#target) AND hasAnyAuthority(#id)")
     public void move(@PathVariable Long id, @RequestParam Long target) {
         if (Objects.equals(id, target)) {
             throw new IllegalArgumentException(String.format("id: [%s], target: [%s]", id, target));
