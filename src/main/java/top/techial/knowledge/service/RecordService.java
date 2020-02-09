@@ -1,6 +1,5 @@
 package top.techial.knowledge.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -20,14 +19,12 @@ import java.util.Set;
  * @author techial
  */
 @Service
-@CacheConfig(cacheNames = "user")
+@CacheConfig(cacheNames = "common")
 public class RecordService {
     private final RecordRepository recordRepository;
-    private final ObjectMapper objectMapper;
 
-    public RecordService(RecordRepository recordRepository, ObjectMapper objectMapper) {
+    public RecordService(RecordRepository recordRepository) {
         this.recordRepository = recordRepository;
-        this.objectMapper = objectMapper;
     }
 
     @SneakyThrows

@@ -2,6 +2,7 @@ package top.techial.knowledge.service;
 
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.dao.ItemRepository;
@@ -13,7 +14,7 @@ import java.util.Optional;
 /**
  * @author techial
  */
-@CacheConfig(cacheNames = "user")
+@CacheConfig(cacheNames = "common")
 @Service
 public class ItemService {
 
@@ -23,14 +24,17 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Optional<Item> findById(Integer id) {
         return itemRepository.findById(id);
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Optional<Long> findRootNodeId(Integer id) {
         return itemRepository.findRootNodeId(id);
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public List<Item> findByUserId(Integer id) {
         return itemRepository.findAllByAuthorId(id);
     }
@@ -41,6 +45,8 @@ public class ItemService {
         itemRepository.deleteByAuthorId(id);
     }
 
+    @Transactional
+    @CacheEvict(allEntries = true)
     public Item save(Item item) {
         return itemRepository.save(item);
     }
@@ -66,6 +72,7 @@ public class ItemService {
         itemRepository.delete(userId, itemId);
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public List<Item> findByShare(Boolean share) {
         return itemRepository.findByShare(share);
     }

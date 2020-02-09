@@ -17,7 +17,7 @@ import top.techial.knowledge.exception.StorageFileNotFoundException;
  */
 @Service
 @Log4j2
-@CacheConfig(cacheNames = "user")
+@CacheConfig(cacheNames = "common")
 public class StorageService {
     private final StorageRepository storageRepository;
 

@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Log4j2
-@CacheConfig(cacheNames = "user")
+@CacheConfig(cacheNames = "common")
 public class UserService {
 
     private final UserRepository userRepository;

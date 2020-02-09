@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Log4j2
-@CacheConfig(cacheNames = "node")
+@CacheConfig(cacheNames = "common")
 public class NodeService {
     private final NodeRepository nodeRepository;
     private final NodeRelationshipRepository nodeRelationshipRepository;
@@ -361,6 +361,7 @@ public class NodeService {
         nodeRelationshipRepository.deleteByNodeId(id);
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public List<Long> findByItemIds(Collection<Integer> ids) {
         return nodeRepository.findByItemIdIn(ids);
     }

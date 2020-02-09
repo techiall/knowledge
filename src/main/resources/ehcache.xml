@@ -5,11 +5,8 @@
             http://www.ehcache.org/v3
             http://www.ehcache.org/schema/ehcache-core-3.7.xsd">
 
-    <!-- Persistent cache directory -->
     <persistence directory="./cache"/>
-    <cache alias="user" uses-template="default">
-    </cache>
-    <cache alias="node" uses-template="default">
+    <cache alias="common" uses-template="default">
     </cache>
 
 

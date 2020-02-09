@@ -7,9 +7,7 @@
 
     <!-- Persistent cache directory -->
     <persistence directory="./cache"/>
-    <cache alias="user" uses-template="default">
-    </cache>
-    <cache alias="node" uses-template="default">
+    <cache alias="common" uses-template="default">
     </cache>
 
 
