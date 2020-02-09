@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.domain.Item;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -19,6 +20,8 @@ import java.util.Optional;
 public interface ItemRepository extends JpaRepository<Item, Integer> {
 
     Page<Item> findAllByAuthorId(Integer id, Pageable pageable);
+
+    List<Item> findAllByAuthorId(Integer id);
 
     @EntityGraph(attributePaths = "author")
     Page<Item> findByShare(Boolean share, Pageable pageable);

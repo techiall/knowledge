@@ -41,6 +41,11 @@ public class ItemService {
         return itemRepository.findAllByAuthorId(id, pageable);
     }
 
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
+    public List<Item> findByUserId(Integer id) {
+        return itemRepository.findAllByAuthorId(id);
+    }
+
     @Transactional
     @CacheEvict(allEntries = true)
     public void deleteByUserId(Integer id) {
