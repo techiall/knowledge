@@ -85,13 +85,13 @@ public class NodeController {
             recordService.save(node.getId(), userPrincipal.getId(),
                     nodeVO.getRecord().getOperator(), nodeVO.getRecord().getMessage());
         }
-        if (nodeVO != null && nodeVO.getLabels() != null && !nodeVO.getName().isEmpty()) {
+        if (nodeVO != null && nodeVO.getLabels() != null && !nodeVO.getLabels().isEmpty()) {
             node.setLabels(new Labels().setLabels(nodeVO.getLabels()));
             recordService.save(node.getId(), userPrincipal.getId(),
                     nodeVO.getRecord().getOperator(), nodeVO.getRecord().getMessage());
         }
 
-        if (nodeVO != null && nodeVO.getProperty() != null && !nodeVO.getName().isEmpty()) {
+        if (nodeVO != null && nodeVO.getProperty() != null && !nodeVO.getProperty().isEmpty()) {
             node.setProperty(new Property().setProperty(nodeService.buildProperty(nodeVO.getProperty())));
             recordService.save(node.getId(), userPrincipal.getId(),
                     nodeVO.getRecord().getOperator(), nodeVO.getRecord().getMessage());
