@@ -8,13 +8,14 @@ import top.techial.knowledge.aspect.FlushAuthority;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.Node;
-import top.techial.knowledge.domain.User;
 import top.techial.knowledge.dto.ItemDTO;
 import top.techial.knowledge.exception.ItemException;
+import top.techial.knowledge.exception.UserException;
 import top.techial.knowledge.mapper.ItemMapper;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.ItemService;
 import top.techial.knowledge.service.NodeService;
+import top.techial.knowledge.service.UserService;
 import top.techial.knowledge.valid.Insert;
 import top.techial.knowledge.vo.ItemVO;
 
@@ -29,10 +30,12 @@ import java.util.stream.Collectors;
 public class ItemController {
     private final ItemService itemService;
     private final NodeService nodeService;
+    private final UserService userService;
 
-    public ItemController(ItemService itemService, NodeService nodeService) {
+    public ItemController(ItemService itemService, NodeService nodeService, UserService userService) {
         this.itemService = itemService;
         this.nodeService = nodeService;
+        this.userService = userService;
     }
 
     @GetMapping("share")
@@ -73,7 +76,7 @@ public class ItemController {
         Node node = new Node().setName("root");
         node = nodeService.saveItemRoot(node);
         Item item = ItemMapper.INSTANCE.toItem(itemVO)
-                .setAuthor(new User().setId(userPrincipal.getId()))
+                .setAuthor(userService.findById(userPrincipal.getId()).orElseThrow(UserException::new))
                 .setRootNode(node);
         item = itemService.save(item);
         nodeService.save(node.setItemId(item.getId()));
