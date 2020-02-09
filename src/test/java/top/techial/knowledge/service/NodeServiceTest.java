@@ -87,4 +87,9 @@ public class NodeServiceTest {
     public void testFindByNameLike() {
         nodeService.findByNameLike("java", 2);
     }
+
+    @Test
+    public void move() {
+        nodeService.move(28L, 123L);
+    }
 }

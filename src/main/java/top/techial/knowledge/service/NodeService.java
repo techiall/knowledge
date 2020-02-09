@@ -381,9 +381,9 @@ public class NodeService {
         result.put("id", id);
         result.put("target", target);
         // language=sql
-        String value = "DELETE FROM node_relationship\n" +
-                "WHERE descendant IN (SELECT d.descendant FROM node_relationship d WHERE d.ancestor = :id)\n" +
-                "AND ancestor IN (SELECT a.ancestor FROM node_relationship a WHERE a.descendant = :id AND a.ancestor != a.descendant)\n";
+        String value = "delete from node_relationship\n" +
+                "WHERE descendant IN (select tmp1.descendant from (SELECT d.descendant FROM node_relationship d WHERE d.ancestor = :id) as tmp1)\n" +
+                "  and ancestor IN (select tmp2.ancestor from (SELECT a.ancestor FROM node_relationship a WHERE a.descendant = :id AND a.ancestor != a.descendant) as tmp2)\n";
         namedParameterJdbcTemplate.update(value, result);
 
         // language=sql
