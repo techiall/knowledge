@@ -10,6 +10,7 @@ import top.techial.knowledge.dto.NodeInfoDTO;
 import top.techial.knowledge.dto.NodeTreeDTO;
 import top.techial.knowledge.vo.NodeVO;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,9 @@ public interface NodeMapper {
     NodeTreeDTO toNodeTreeDTO(Node node);
 
     default List<SimpleGrantedAuthority> toListSimpleGrantedAuthority(List<Long> nodes) {
+        if (nodes == null) {
+            return Collections.emptyList();
+        }
         return nodes
                 .parallelStream()
                 .map(String::valueOf)

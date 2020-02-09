@@ -95,17 +95,18 @@ public class UserService {
         }
         List<SimpleGrantedAuthority> authority = ItemMapper.INSTANCE.toListSimpleGrantedAuthority(items);
 
-        List<SimpleGrantedAuthority> nodes = NodeMapper.INSTANCE.toListSimpleGrantedAuthority(nodeService
-                .findByItemIds(items.parallelStream().map(Item::getId).collect(Collectors.toList())));
-        if (nodes == null) {
-            return;
-        }
-        authority.addAll(nodes);
+        List<Integer> ids = items.parallelStream().map(Item::getId).collect(Collectors.toList());
 
         String password = userRepository.findPasswordById(userPrincipal.getId());
-
-        Authentication auth = new UsernamePasswordAuthenticationToken(
-                userPrincipal, password, authority);
+        if (ids == null || ids.isEmpty()) {
+            Authentication auth = new UsernamePasswordAuthenticationToken(userPrincipal, password, authority);
+            context.setAuthentication(auth);
+            return;
+        }
+        List<Long> node = nodeService.findByItemIds(ids);
+        List<SimpleGrantedAuthority> nodes = NodeMapper.INSTANCE.toListSimpleGrantedAuthority(node);
+        authority.addAll(nodes);
+        Authentication auth = new UsernamePasswordAuthenticationToken(userPrincipal, password, authority);
         context.setAuthentication(auth);
     }
 }
