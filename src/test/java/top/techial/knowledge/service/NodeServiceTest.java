@@ -82,4 +82,9 @@ public class NodeServiceTest {
     public void depthGetChild() throws JsonProcessingException {
         System.out.println(objectMapper.writeValueAsString(nodeService.getChildAndParent(153L)));
     }
+
+    @Test
+    public void testFindByNameLike() {
+        nodeService.findByNameLike("java", 2);
+    }
 }

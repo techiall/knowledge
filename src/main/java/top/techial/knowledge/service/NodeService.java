@@ -121,7 +121,7 @@ public class NodeService {
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
     public List<NodeBaseDTO> findByNameLike(String name, Integer itemId) {
         // language=sql
-        String value = "select id, name from node where name like :name and item_id = :itemId" +
+        String value = "select id, name from node where name like :name and item_id = :itemId\n" +
                 "order by update_time desc limit 15;";
         RowMapper<NodeBaseDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeBaseDTO.class);
 
