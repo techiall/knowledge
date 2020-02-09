@@ -1,5 +1,8 @@
 package top.techial.knowledge.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -19,9 +22,6 @@ import top.techial.knowledge.service.UserService;
 import top.techial.knowledge.valid.Insert;
 import top.techial.knowledge.vo.ItemVO;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * @author techial
  */
@@ -39,11 +39,9 @@ public class ItemController {
     }
 
     @GetMapping("share")
-    public ResultBean<List<ItemDTO>> share() {
-        List<ItemDTO> list = itemService.findByShare(true)
-                .parallelStream()
-                .map(ItemMapper.INSTANCE::toItemDTO)
-                .collect(Collectors.toList());
+    public ResultBean<Page<ItemDTO>> share(@PageableDefault Pageable pageable) {
+        Page<ItemDTO> list = itemService.findByShare(true, pageable)
+                .map(ItemMapper.INSTANCE::toItemDTO);
         return new ResultBean<>(list);
     }
 
@@ -54,13 +52,12 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResultBean<List<ItemDTO>> findByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        return new ResultBean<>(itemService
-                .findByUserId(userPrincipal.getId())
-                .parallelStream()
-                .map(ItemMapper.INSTANCE::toItemDTO)
-                .collect(Collectors.toList())
-        );
+    public ResultBean<Page<ItemDTO>> findByUserId(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @PageableDefault Pageable pageable
+    ) {
+        return new ResultBean<>(itemService.findByUserId(userPrincipal.getId(), pageable)
+                .map(ItemMapper.INSTANCE::toItemDTO));
     }
 
     @PostMapping

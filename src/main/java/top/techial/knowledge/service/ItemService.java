@@ -3,6 +3,8 @@ package top.techial.knowledge.service;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.dao.ItemRepository;
@@ -34,9 +36,9 @@ public class ItemService {
         return itemRepository.findRootNodeId(id);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
-    public List<Item> findByUserId(Integer id) {
-        return itemRepository.findAllByAuthorId(id);
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
+    public Page<Item> findByUserId(Integer id, Pageable pageable) {
+        return itemRepository.findAllByAuthorId(id, pageable);
     }
 
     @Transactional
@@ -72,8 +74,8 @@ public class ItemService {
         itemRepository.delete(userId, itemId);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
-    public List<Item> findByShare(Boolean share) {
-        return itemRepository.findByShare(share);
+    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
+    public Page<Item> findByShare(Boolean share, Pageable pageable) {
+        return itemRepository.findByShare(share, pageable);
     }
 }
