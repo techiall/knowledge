@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
@@ -18,7 +18,7 @@ public class NodeRepositoryTest {
 
     @Test
     public void findByItemIdIn() {
-        List<Long> result = nodeRepository.findByItemIdIn(Collections.singletonList(1));
+        List<Long> result = nodeRepository.findByItemIdIn(Arrays.asList(1, 2));
         System.out.println(result);
         Assert.assertNotNull(result);
     }

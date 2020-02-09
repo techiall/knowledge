@@ -84,13 +84,22 @@ public class UserService {
     @CacheEvict(allEntries = true)
     public void resetAuthority() {
         SecurityContext context = SecurityContextHolder.getContext();
+        if (context == null || context.getAuthentication() == null || context.getAuthentication().getPrincipal() == null) {
+            return;
+        }
         UserPrincipal userPrincipal = (UserPrincipal) context.getAuthentication().getPrincipal();
 
         List<Item> items = itemRepository.findAllByAuthorId(userPrincipal.getId());
+        if (items == null) {
+            return;
+        }
         List<SimpleGrantedAuthority> authority = ItemMapper.INSTANCE.toListSimpleGrantedAuthority(items);
 
         List<SimpleGrantedAuthority> nodes = NodeMapper.INSTANCE.toListSimpleGrantedAuthority(nodeService
                 .findByItemIds(items.parallelStream().map(Item::getId).collect(Collectors.toList())));
+        if (nodes == null) {
+            return;
+        }
         authority.addAll(nodes);
 
         String password = userRepository.findPasswordById(userPrincipal.getId());
