@@ -1,2 +1,2 @@
-package top.techial.beans;
+package top.techial.knowledge.beans;
 
