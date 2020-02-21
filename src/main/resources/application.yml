@@ -30,6 +30,7 @@ spring:
   jpa:
     generate-ddl: true
     show-sql: true
+    database: mysql
     hibernate:
       ddl-auto: update
       naming:
@@ -38,7 +39,7 @@ spring:
     properties:
       hibernate:
         globally_quoted_identifiers: true
-        dialect: org.hibernate.dialect.MySQL57InnoDBDialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
     open-in-view: true
   cache:
     jcache:
