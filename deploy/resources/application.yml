@@ -17,15 +17,15 @@ spring:
         keep-alive: 180s
         queue-capacity: 512
       thread-name-prefix: knowledge-
-  application:
-    name: knowledge-docker
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql/knowledge?useSSL=false&createDatabaseIfNotExist=true
+    driverClassName: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://mysql:3306/knowledge?useSSL=false&createDatabaseIfNotExist=true
     username: root
   jpa:
     generate-ddl: true
-    show-sql: false
+    show-sql: true
+    database: mysql
     hibernate:
       ddl-auto: update
       naming:
@@ -34,17 +34,19 @@ spring:
     properties:
       hibernate:
         globally_quoted_identifiers: true
-        dialect: org.hibernate.dialect.MySQL57InnoDBDialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
     open-in-view: true
   cache:
-    type: simple
+    jcache:
+      config: classpath:ehcache.xml
   servlet:
     multipart:
       max-file-size: 60MB
       max-request-size: 60MB
+      enabled: true
 storage:
-  location: /knowledge/storage
+  location: /Users/techial/Downloads/knowledge
 logging:
   level:
-    top.techial: info
+    top.techial: debug
 
