@@ -99,6 +99,9 @@ public class NodeService {
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public List<Property.PropertyDTO> findByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return Collections.emptyList();
+        }
         // language=sql
         String value = "select n.id, n.name from node n where id in (:ids)";
         Map<String, Object> map = new HashMap<>();
