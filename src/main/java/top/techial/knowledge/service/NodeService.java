@@ -89,6 +89,7 @@ public class NodeService {
             List<Long> list = stringListEntry
                     .getValue()
                     .stream()
+                    .filter(propertyDTO -> propertyDTO != null && propertyDTO.getId() != null)
                     .map(Property.PropertyDTO::getId)
                     .collect(Collectors.toList());
             stringListEntry.setValue(findByIds(list));

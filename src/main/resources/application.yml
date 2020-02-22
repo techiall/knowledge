@@ -40,8 +40,7 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
     open-in-view: true
   cache:
-    jcache:
-      config: classpath:ehcache.xml
+    type: simple
   servlet:
     multipart:
       max-file-size: 60MB

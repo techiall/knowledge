@@ -46,7 +46,4 @@ spring:
       enabled: true
 storage:
   location: /Users/techial/Downloads/knowledge
-logging:
-  level:
-    top.techial: debug
 
