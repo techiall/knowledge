@@ -44,7 +44,7 @@ public class StorageController {
     @PreAuthorize("hasAnyAuthority(#id)")
     public ResultBean<Long> save(@RequestBody(required = false) String text, @PathVariable Long id) {
         nodeService.saveText(text, id);
-        return new ResultBean<>(id);
+        return ResultBean.ok(id);
     }
 
     /**
@@ -52,7 +52,7 @@ public class StorageController {
      */
     @GetMapping("/text/{id}")
     public ResultBean<String> findById(@PathVariable Long id) {
-        return new ResultBean<>(nodeService.findText(id));
+        return ResultBean.ok(nodeService.findText(id));
     }
 
     @PostMapping
@@ -70,7 +70,7 @@ public class StorageController {
     public ResultBean<Boolean> delete(@PathVariable String id) {
         fileStorageService.delete(id);
         storageService.deleteById(id);
-        return new ResultBean<>(true);
+        return ResultBean.ok(true);
     }
 
 

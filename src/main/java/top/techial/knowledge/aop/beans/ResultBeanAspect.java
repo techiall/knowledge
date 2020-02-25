@@ -23,7 +23,7 @@ import top.techial.knowledge.service.dto.PageDTO;
 public class ResultBeanAspect {
 
     private static ResultBean<PageDTO> convent(Page<?> page) {
-        return new ResultBean<>(new PageDTO()
+        return ResultBean.ok(new PageDTO()
                 .setContent(page.getContent())
                 .setTotalElements(page.getTotalElements())
                 .setPageSize(page.getPageable().getPageSize())

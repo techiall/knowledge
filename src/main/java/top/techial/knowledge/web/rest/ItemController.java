@@ -42,13 +42,13 @@ public class ItemController {
     public ResultBean<Page<ItemDTO>> share(@PageableDefault Pageable pageable) {
         Page<ItemDTO> list = itemService.findByShare(true, pageable)
                 .map(ItemMapper.INSTANCE::toItemDTO);
-        return new ResultBean<>(list);
+        return ResultBean.ok(list);
     }
 
     @GetMapping("/{id}")
     public ResultBean<ItemDTO> findById(@PathVariable Integer id) {
         Item item = itemService.findById(id).orElseThrow(ItemNotFoundException::new);
-        return new ResultBean<>(ItemMapper.INSTANCE.toItemDTO(item));
+        return ResultBean.ok(ItemMapper.INSTANCE.toItemDTO(item));
     }
 
     @GetMapping
@@ -56,7 +56,7 @@ public class ItemController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PageableDefault Pageable pageable
     ) {
-        return new ResultBean<>(itemService.findByUserId(userPrincipal.getId(), pageable)
+        return ResultBean.ok(itemService.findByUserId(userPrincipal.getId(), pageable)
                 .map(ItemMapper.INSTANCE::toItemDTO));
     }
 
@@ -79,7 +79,7 @@ public class ItemController {
         nodeService.save(node.setItemId(item.getId()));
         itemService.insert(userPrincipal.getId(), item.getId());
 
-        return new ResultBean<>(ItemMapper.INSTANCE.toItemDTO(item));
+        return ResultBean.ok(ItemMapper.INSTANCE.toItemDTO(item));
     }
 
     @PutMapping("/{id}")
@@ -98,7 +98,7 @@ public class ItemController {
         if (itemVM != null && itemVM.getImage() != null) {
             item.setImage(itemVM.getImage());
         }
-        return new ResultBean<>(ItemMapper.INSTANCE.toItemDTO(itemService.save(item)));
+        return ResultBean.ok(ItemMapper.INSTANCE.toItemDTO(itemService.save(item)));
     }
 
     @DeleteMapping("/{id}")
@@ -109,7 +109,7 @@ public class ItemController {
         itemService.deleteById(id);
         nodeService.deleteByItemId(id);
 
-        return new ResultBean<>();
+        return ResultBean.ok();
     }
 
 }

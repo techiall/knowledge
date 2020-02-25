@@ -34,7 +34,7 @@ public class RecordController {
             @PathVariable Long id,
             @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        return new ResultBean<>(recordService.findByNodeId(id, pageable).map(RecordMapper.INSTANCE::toRecordDTO));
+        return ResultBean.ok(recordService.findByNodeId(id, pageable).map(RecordMapper.INSTANCE::toRecordDTO));
     }
 
 }

@@ -29,7 +29,7 @@ public class RegisterController {
 
     @GetMapping("/query")
     public ResultBean<Boolean> existsByUserName(@RequestParam String name) {
-        return new ResultBean<>(userService.existsByUserName(name));
+        return ResultBean.ok(userService.existsByUserName(name));
     }
 
     @PostMapping
@@ -39,7 +39,7 @@ public class RegisterController {
         }
         User user = UserMapper.INSTANCE.toUser(registerVM);
         user.setPassword(passwordEncoder.encode(registerVM.getPassword()));
-        return new ResultBean<>(userService.save(user));
+        return ResultBean.ok(userService.save(user));
     }
 
 }

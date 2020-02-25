@@ -21,7 +21,7 @@ public class NodeBaseDTOTest extends BasicTest<NodeBaseDTO> {
 
     @Test
     public void toJson() throws JsonProcessingException {
-        String result = objectMapper.writeValueAsString(new ResultBean<>(new NodeBaseDTO()
+        String result = objectMapper.writeValueAsString(ResultBean.ok(new NodeBaseDTO()
                 .setId(RandomUtils.nextLong())
                 .setName(RandomStringUtils.randomAlphanumeric(20))
         ));

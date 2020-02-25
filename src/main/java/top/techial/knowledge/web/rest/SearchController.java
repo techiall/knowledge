@@ -46,9 +46,9 @@ public class SearchController {
             @PageableDefault Pageable pageable
     ) {
         if (Boolean.TRUE.equals(tips)) {
-            return new ResultBean<>(nodeService.findByNameLike(question));
+            return ResultBean.ok(nodeService.findByNameLike(question));
         }
-        return new ResultBean<>(convent(nodeService.findContentByNameLike(question, pageable)));
+        return ResultBean.ok(convent(nodeService.findContentByNameLike(question, pageable)));
     }
 
     private Page<SearchJsonDTO> convent(PageImpl<SearchDTO> list) {

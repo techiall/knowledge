@@ -62,7 +62,7 @@ public class UserController {
             map.put("user", new User());
         }
         map.put("_csrf", csrfToken);
-        return new ResultBean<>(map);
+        return ResultBean.ok(map);
     }
 
     @PatchMapping("/me")
@@ -79,7 +79,7 @@ public class UserController {
             user.setNickName(userVM.getNickName());
         }
         user = userService.save(user);
-        return new ResultBean<>(UserMapper.INSTANCE.toUserDTO(user));
+        return ResultBean.ok(UserMapper.INSTANCE.toUserDTO(user));
     }
 
     @PatchMapping("/me/password")
@@ -96,7 +96,7 @@ public class UserController {
         }
 
         userService.updatePassword(userPrincipal.getId(), password);
-        return new ResultBean<>(UserMapper.INSTANCE.toUserDTO(user));
+        return ResultBean.ok(UserMapper.INSTANCE.toUserDTO(user));
     }
 
     @DeleteMapping("/me")
@@ -108,6 +108,6 @@ public class UserController {
         item.parallelStream().map(Item::getId).forEach(nodeService::deleteByItemId);
         recordService.deleteByUserId(userPrincipal.getId());
         userService.deleteById(userPrincipal.getId());
-        return new ResultBean<>();
+        return ResultBean.ok();
     }
 }

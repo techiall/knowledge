@@ -49,7 +49,7 @@ public class NodeController {
     @GetMapping("/{id}")
     public ResultBean<NodeInfoDTO> findById(@PathVariable Long id) {
         Node node = nodeService.findById(id);
-        return new ResultBean<>(NodeMapper.INSTANCE.toNodeInfoDTO(node));
+        return ResultBean.ok(NodeMapper.INSTANCE.toNodeInfoDTO(node));
     }
 
     @PostMapping
@@ -68,7 +68,7 @@ public class NodeController {
             recordService.save(node.getId(), userPrincipal.getId(),
                     nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
         }
-        return new ResultBean<>(NodeMapper.INSTANCE.toNodeInfoDTO(node));
+        return ResultBean.ok(NodeMapper.INSTANCE.toNodeInfoDTO(node));
     }
 
     @PutMapping("/{id}")
@@ -99,7 +99,7 @@ public class NodeController {
 
         node = nodeService.save(node);
 
-        return new ResultBean<>(NodeMapper.INSTANCE.toNodeInfoDTO(node));
+        return ResultBean.ok(NodeMapper.INSTANCE.toNodeInfoDTO(node));
     }
 
     @PutMapping("/{id}/movement")
@@ -109,7 +109,7 @@ public class NodeController {
             throw new IllegalArgumentException(String.format("id: [%s], target: [%s]", id, target));
         }
         nodeService.move(id, target);
-        return new ResultBean<>(true);
+        return ResultBean.ok(true);
     }
 
     @DeleteMapping("/{id}")
@@ -122,7 +122,7 @@ public class NodeController {
         nodeService.deleteIdAndRelationship(id);
         recordService.deleteByNodeId(id);
 
-        return new ResultBean<>(true);
+        return ResultBean.ok(true);
     }
 
     @DeleteMapping
@@ -135,7 +135,7 @@ public class NodeController {
         nodeService.deleteIdsAndRelationship(ids);
         recordService.deleteByNodeIds(ids);
 
-        return new ResultBean<>(true);
+        return ResultBean.ok(true);
     }
 
     @GetMapping
@@ -145,17 +145,17 @@ public class NodeController {
     ) {
         Long rootNodeId = itemService.findRootNodeId(itemId)
                 .orElseThrow(ItemNotFoundException::new);
-        return new ResultBean<>(nodeService.findByChildNode(rootNodeId, depth));
+        return ResultBean.ok(nodeService.findByChildNode(rootNodeId, depth));
     }
 
     @GetMapping("/{id}/graph")
     public ResultBean<Map<String, Object>> findByIdGraph(@PathVariable Long id) {
-        return new ResultBean<>(nodeService.findByIdGraph(id));
+        return ResultBean.ok(nodeService.findByIdGraph(id));
     }
 
     @GetMapping("/{id}/link")
     public ResultBean<Map<String, Object>> getChildAndParent(@PathVariable Long id) {
-        return new ResultBean<>(nodeService.getChildAndParent(id));
+        return ResultBean.ok(nodeService.getChildAndParent(id));
     }
 
     @GetMapping("/{id}/child")
@@ -163,7 +163,7 @@ public class NodeController {
             @PathVariable Long id,
             @RequestParam(required = false, defaultValue = "1") int depth
     ) {
-        return new ResultBean<>(nodeService.findByChildNode(id, depth));
+        return ResultBean.ok(nodeService.findByChildNode(id, depth));
     }
 
     @GetMapping("/name")
@@ -171,7 +171,7 @@ public class NodeController {
             @RequestParam(name = "query") String name,
             @RequestParam Integer itemId
     ) {
-        return new ResultBean<>(nodeService.findByNameLike(name, itemId));
+        return ResultBean.ok(nodeService.findByNameLike(name, itemId));
     }
 
 }

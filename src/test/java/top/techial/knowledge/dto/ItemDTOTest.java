@@ -36,14 +36,14 @@ public class ItemDTOTest extends BasicTest<ItemDTO> {
 
     @Test
     public void resultBeanInstanceToJson() throws JsonProcessingException {
-        String result = objectMapper.writeValueAsString(new ResultBean<>(newInstance()));
+        String result = objectMapper.writeValueAsString(ResultBean.ok(newInstance()));
         System.out.println(result);
         Assert.assertNotNull(result);
     }
 
     @Test
     public void resultBeanToJson() throws JsonProcessingException {
-        String result = objectMapper.writeValueAsString(new ResultBean<>());
+        String result = objectMapper.writeValueAsString(ResultBean.ok());
         System.out.println(result);
         Assert.assertNotNull(result);
     }
@@ -51,7 +51,7 @@ public class ItemDTOTest extends BasicTest<ItemDTO> {
     @Test
     public void resultListBeanToJson() throws JsonProcessingException {
         List<ItemDTO> list = IntStream.range(0, 10).mapToObj(it -> newInstance()).collect(Collectors.toList());
-        String result = objectMapper.writeValueAsString(new ResultBean<>(list));
+        String result = objectMapper.writeValueAsString(ResultBean.ok(list));
         System.out.println(result);
         Assert.assertNotNull(result);
     }
