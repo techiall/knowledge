@@ -5,7 +5,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import top.techial.knowledge.dao.UserRepository;
+import top.techial.knowledge.repository.UserRepository;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)

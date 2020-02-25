@@ -8,9 +8,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import top.techial.knowledge.dao.StorageRepository;
 import top.techial.knowledge.domain.Storage;
-import top.techial.knowledge.exception.StorageFileNotFoundException;
+import top.techial.knowledge.repository.StorageRepository;
+import top.techial.knowledge.web.rest.errors.StorageFileNotFoundException;
 
 /**
  * @author techial
@@ -45,7 +45,6 @@ public class StorageService {
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Storage findById(String id) {
-        return storageRepository.findById(id)
-                .orElseThrow(() -> new StorageFileNotFoundException(String.format("SHA1: [%s] not found.", id)));
+        return storageRepository.findById(id).orElseThrow(StorageFileNotFoundException::new);
     }
 }

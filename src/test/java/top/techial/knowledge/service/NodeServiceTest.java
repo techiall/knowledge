@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
-import top.techial.knowledge.dto.NodeBaseDTO;
-import top.techial.knowledge.exception.ItemException;
-import top.techial.knowledge.vo.NodeVO;
+import top.techial.knowledge.service.dto.NodeBaseDTO;
+import top.techial.knowledge.web.rest.errors.ItemNotFoundException;
+import top.techial.knowledge.web.rest.vm.NodeVM;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,7 +34,7 @@ public class NodeServiceTest {
 
     @Test
     public void save() {
-        NodeVO nodeVO = new NodeVO()
+        NodeVM nodeVM = new NodeVM()
                 .setName("Java程序开发基础")
                 .setLabels(new HashSet<>(Arrays.asList(
                         "Java开发的实用基础知识",
@@ -43,9 +43,9 @@ public class NodeServiceTest {
                         "大量的编程练习"
                 )))
                 .setItemId(2);
-        Long itemId = itemService.findRootNodeId(nodeVO.getItemId())
-                .orElseThrow(() -> new ItemException(nodeVO.getItemId()));
-        nodeService.save(nodeVO, itemId);
+        Long itemId = itemService.findRootNodeId(nodeVM.getItemId())
+                .orElseThrow(ItemNotFoundException::new);
+        nodeService.save(nodeVM, itemId);
     }
 
 

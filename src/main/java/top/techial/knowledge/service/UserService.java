@@ -12,13 +12,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.techial.knowledge.dao.ItemRepository;
-import top.techial.knowledge.dao.UserRepository;
 import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.User;
-import top.techial.knowledge.mapper.ItemMapper;
-import top.techial.knowledge.mapper.NodeMapper;
+import top.techial.knowledge.repository.ItemRepository;
+import top.techial.knowledge.repository.UserRepository;
 import top.techial.knowledge.security.UserPrincipal;
+import top.techial.knowledge.service.mapper.ItemMapper;
+import top.techial.knowledge.service.mapper.NodeMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +37,12 @@ public class UserService {
     private final ItemRepository itemRepository;
     private final NodeService nodeService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ItemRepository itemRepository, NodeService nodeService) {
+    public UserService(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            ItemRepository itemRepository,
+            NodeService nodeService
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.itemRepository = itemRepository;

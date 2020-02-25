@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 /**
  * @author techial
  */
-@EnableJpaRepositories(basePackages = "top.techial.knowledge.dao")
+@EnableJpaRepositories(basePackages = "top.techial.knowledge.repository")
 @EnableJpaAuditing
 @Configuration
 @EnableTransactionManagement

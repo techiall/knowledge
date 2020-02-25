@@ -2,22 +2,17 @@ package top.techial.knowledge.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.session.SessionAuthenticationException;
-import top.techial.knowledge.beans.ResultBean;
-import top.techial.knowledge.beans.ResultCode;
+import top.techial.knowledge.web.rest.errors.ClientErrorException;
+import top.techial.knowledge.web.rest.errors.UnauthorizedException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * 验证失败 处理
- *
  * @author techial
  */
 @Configuration
@@ -30,16 +25,13 @@ public class AuthFailureHandler implements AuthenticationFailureHandler {
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
-        if (exception instanceof DisabledException) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.getWriter().write(objectMapper.writeValueAsString(new ResultBean<>(ResultCode.ACCOUNT_DISABLE)));
-        } else if (exception instanceof SessionAuthenticationException) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.getWriter().write(objectMapper.writeValueAsString(new ResultBean<>(ResultCode.MAXIMUM_SESSION)));
+        ClientErrorException clientErrorException;
+        if (exception instanceof InternalAuthenticationServiceException && exception.getCause() instanceof ClientErrorException) {
+            clientErrorException = (ClientErrorException) exception.getCause();
         } else {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.getWriter().write(objectMapper.writeValueAsString(new ResultBean<>(ResultCode.UNAUTHORIZED)));
+            clientErrorException = new UnauthorizedException();
         }
-        response.setContentType(MediaType.APPLICATION_JSON_UTF8.toString());
+        response.setStatus(clientErrorException.getCode());
+        response.getWriter().write(objectMapper.writeValueAsString(clientErrorException.getResultBean()));
     }
 }

@@ -1,7 +1,7 @@
 package top.techial.knowledge.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,13 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * 退出登录
- * 成功处理
- *
  * @author techial
  */
 @Configuration
-@Log4j2
+@Slf4j
 public class LogoutHandler implements LogoutSuccessHandler {
     private final ObjectMapper objectMapper;
 
@@ -30,9 +27,8 @@ public class LogoutHandler implements LogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        response.getWriter().write(objectMapper.writeValueAsString(new ResultBean<>()));
-        response.setContentType(MediaType.APPLICATION_JSON_UTF8.toString());
+        response.getWriter().write(objectMapper.writeValueAsString(ResultBean.ok()));
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
         response.setStatus(HttpStatus.OK.value());
-        log.debug("logout success.");
     }
 }

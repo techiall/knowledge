@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import top.techial.knowledge.BasicTest;
 import top.techial.knowledge.beans.ResultBean;
+import top.techial.knowledge.service.dto.ItemDTO;
 
 import java.time.Instant;
 import java.util.List;

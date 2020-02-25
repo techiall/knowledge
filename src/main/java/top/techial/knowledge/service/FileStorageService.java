@@ -7,8 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import top.techial.knowledge.config.StorageProperties;
-import top.techial.knowledge.exception.StorageException;
-import top.techial.knowledge.exception.StorageFileNotFoundException;
+import top.techial.knowledge.web.rest.errors.StorageFileNotFoundException;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -49,13 +48,12 @@ public class FileStorageService {
     public String upload(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
         if (file.isEmpty()) {
-            throw new StorageException(String.format("Failed to store empty file, %s", originalFilename));
+            throw new StorageFileNotFoundException();
         }
 
         if (originalFilename != null && originalFilename.contains("..")) {
             // This is a security check
-            throw new StorageException(
-                String.format("Cannot store file with relative path outside current directory, %s", originalFilename));
+            throw new StorageFileNotFoundException();
         }
 
         try {
@@ -65,8 +63,8 @@ public class FileStorageService {
             }
             Path temp = Files.createTempFile("temp-", null);
             try (
-                InputStream in = file.getInputStream();
-                OutputStream out = Files.newOutputStream(temp)
+                    InputStream in = file.getInputStream();
+                    OutputStream out = Files.newOutputStream(temp)
             ) {
                 byte[] buf = new byte[8192];
                 int n;
@@ -82,10 +80,10 @@ public class FileStorageService {
                 Files.move(temp, dest);
                 return sha1;
             } catch (IOException e) {
-                throw new StorageException("Failed to store file " + originalFilename, e);
+                throw new StorageFileNotFoundException();
             }
         } catch (IOException | NoSuchAlgorithmException e) {
-            throw new StorageException("Failed to create temp file ", e);
+            throw new StorageFileNotFoundException();
         }
     }
 
@@ -95,10 +93,10 @@ public class FileStorageService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new StorageFileNotFoundException("Could not read file: " + hash);
+                throw new StorageFileNotFoundException();
             }
         } catch (MalformedURLException e) {
-            throw new StorageFileNotFoundException("Could not read file: " + hash, e);
+            throw new StorageFileNotFoundException();
         }
     }
 

@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * 验证成功 处理
- *
  * @author techial
  */
 @Configuration
@@ -27,8 +25,8 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        response.getWriter().write(objectMapper.writeValueAsString(new ResultBean<>()));
-        response.setContentType(MediaType.APPLICATION_JSON_UTF8.toString());
+        response.getWriter().write(objectMapper.writeValueAsString(ResultBean.ok()));
+        response.setContentType(MediaType.APPLICATION_JSON.toString());
         response.setStatus(HttpStatus.OK.value());
     }
 }

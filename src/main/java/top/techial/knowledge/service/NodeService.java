@@ -11,17 +11,17 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.techial.knowledge.dao.NodeRelationshipRepository;
-import top.techial.knowledge.dao.NodeRepository;
 import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.domain.Property;
-import top.techial.knowledge.dto.NodeBaseDTO;
-import top.techial.knowledge.dto.NodeTreeDTO;
-import top.techial.knowledge.dto.ParentChildDTO;
-import top.techial.knowledge.dto.SearchDTO;
-import top.techial.knowledge.exception.NodeNotFoundException;
-import top.techial.knowledge.mapper.NodeMapper;
-import top.techial.knowledge.vo.NodeVO;
+import top.techial.knowledge.repository.NodeRelationshipRepository;
+import top.techial.knowledge.repository.NodeRepository;
+import top.techial.knowledge.service.dto.NodeBaseDTO;
+import top.techial.knowledge.service.dto.NodeTreeDTO;
+import top.techial.knowledge.service.dto.ParentChildDTO;
+import top.techial.knowledge.service.dto.SearchDTO;
+import top.techial.knowledge.service.mapper.NodeMapper;
+import top.techial.knowledge.web.rest.errors.NodeNotFoundException;
+import top.techial.knowledge.web.rest.vm.NodeVM;
 
 import java.util.*;
 import java.util.function.Function;
@@ -69,11 +69,11 @@ public class NodeService {
 
     @Transactional
     @CacheEvict(allEntries = true)
-    public Node save(NodeVO nodeVO, Long itemRootNodeId) {
-        Node node = NodeMapper.INSTANCE.toNode(nodeVO.setProperty(buildProperty(nodeVO.getProperty())));
+    public Node save(NodeVM nodeVM, Long itemRootNodeId) {
+        Node node = NodeMapper.INSTANCE.toNode(nodeVM.setProperty(buildProperty(nodeVM.getProperty())));
         node = nodeRepository.save(node);
-        if (nodeVO.getParentId() != null) {
-            nodeRelationshipRepository.insertNode(node.getId(), nodeVO.getParentId());
+        if (nodeVM.getParentId() != null) {
+            nodeRelationshipRepository.insertNode(node.getId(), nodeVM.getParentId());
         } else {
             nodeRelationshipRepository.insertNode(node.getId(), itemRootNodeId);
         }
@@ -117,7 +117,7 @@ public class NodeService {
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Node findById(Long id) {
-        Node node = nodeRepository.findById(id).orElseThrow(() -> new NodeNotFoundException(id));
+        Node node = nodeRepository.findById(id).orElseThrow(NodeNotFoundException::new);
         node.getProperty().setProperty(buildProperty(node.getProperty().getProperty()));
         return node;
     }

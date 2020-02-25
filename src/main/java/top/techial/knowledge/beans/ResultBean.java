@@ -9,11 +9,30 @@ public class ResultBean<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Integer code = ResultCode.SUCCESS.getCode();
+    private static final Integer DEFAULT_CODE = 200;
+    private static final String DEFAULT_MSG = "OK";
 
-    private String msg = ResultCode.SUCCESS.getTips();
+    private final Integer code;
 
-    private T data;
+    private final String msg;
+
+    private final T data;
+
+    public static <T> ResultBean<T> ok(T data) {
+        return new ResultBean<>(data);
+    }
+
+    public static <T> ResultBean<T> ok() {
+        return new ResultBean<>();
+    }
+
+    public static <T> ResultBean<T> of(Integer code, String msg) {
+        return new ResultBean<>(code, msg);
+    }
+
+    public static <T> ResultBean<T> of(Integer code, String msg, T data) {
+        return new ResultBean<>(code, msg, data);
+    }
 
     public ResultBean(Integer code, String msg, T data) {
         this.code = code;
@@ -22,22 +41,15 @@ public class ResultBean<T> implements Serializable {
     }
 
     public ResultBean() {
+        this(DEFAULT_CODE, DEFAULT_MSG, null);
     }
 
-    public ResultBean(ResultCode code) {
-        this(code.getCode(), code.getTips(), null);
-    }
-
-    public ResultBean(ResultCode code, T data) {
-        this(code.getCode(), code.getTips(), data);
+    public ResultBean(Integer code, String msg) {
+        this(code, msg, null);
     }
 
     public ResultBean(T data) {
-        this(ResultCode.SUCCESS, data);
-    }
-
-    public T getData() {
-        return data;
+        this(DEFAULT_CODE, DEFAULT_MSG, data);
     }
 
     public Integer getCode() {
@@ -46,6 +58,10 @@ public class ResultBean<T> implements Serializable {
 
     public String getMsg() {
         return msg;
+    }
+
+    public T getData() {
+        return data;
     }
 }
 

@@ -2,14 +2,10 @@ package top.techial.knowledge.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import top.techial.knowledge.beans.ResultBean;
-import top.techial.knowledge.beans.ResultCode;
+import top.techial.knowledge.web.rest.errors.UnauthorizedException;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -26,9 +22,9 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
     }
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        response.setStatus(HttpStatus.NOT_FOUND.value());
-        response.getWriter().write(objectMapper.writeValueAsString(new ResultBean<>(ResultCode.CHECK_FAIL)));
-        response.setContentType(MediaType.APPLICATION_JSON_UTF8.toString());
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
+        UnauthorizedException e = new UnauthorizedException();
+        response.setStatus(e.getCode());
+        response.getWriter().write(objectMapper.writeValueAsString(e.getResultBean()));
     }
 }
