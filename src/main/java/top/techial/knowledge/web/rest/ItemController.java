@@ -17,7 +17,7 @@ import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.UserService;
 import top.techial.knowledge.service.dto.ItemDTO;
 import top.techial.knowledge.service.mapper.ItemMapper;
-import top.techial.knowledge.valid.Insert;
+import top.techial.knowledge.service.valid.Insert;
 import top.techial.knowledge.web.rest.errors.ItemNotFoundException;
 import top.techial.knowledge.web.rest.errors.UserNotFoundException;
 import top.techial.knowledge.web.rest.vm.ItemVM;

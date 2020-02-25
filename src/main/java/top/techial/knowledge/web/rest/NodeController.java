@@ -16,8 +16,8 @@ import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.service.dto.NodeBaseDTO;
 import top.techial.knowledge.service.dto.NodeInfoDTO;
 import top.techial.knowledge.service.mapper.NodeMapper;
-import top.techial.knowledge.valid.Insert;
-import top.techial.knowledge.valid.Update;
+import top.techial.knowledge.service.valid.Insert;
+import top.techial.knowledge.service.valid.Update;
 import top.techial.knowledge.web.rest.errors.ItemNotFoundException;
 import top.techial.knowledge.web.rest.vm.NodeVM;
 

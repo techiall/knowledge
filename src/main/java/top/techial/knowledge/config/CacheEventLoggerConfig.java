@@ -18,10 +18,10 @@ public class CacheEventLoggerConfig implements CacheEventListener<Object, Object
     public void onEvent(CacheEvent<?, ?> event) {
         if (log.isDebugEnabled()) {
             log.debug("Event: [{}]\n" +
-                    "Key: [{}]\n" +
-                    "old value: [{}]\n" +
-                    "new value: [{}]",
-                event.getType(), event.getKey(), event.getOldValue(), event.getNewValue());
+                            "Key: [{}]\n" +
+                            "old value: [{}]\n" +
+                            "new value: [{}]",
+                    event.getType(), event.getKey(), event.getOldValue(), event.getNewValue());
         }
 
     }

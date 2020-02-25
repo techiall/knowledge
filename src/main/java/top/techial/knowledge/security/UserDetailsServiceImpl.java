@@ -7,9 +7,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.User;
-import top.techial.knowledge.service.mapper.UserMapper;
 import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.UserService;
+import top.techial.knowledge.service.mapper.UserMapper;
 
 import java.util.Collections;
 import java.util.List;

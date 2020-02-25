@@ -2,7 +2,7 @@ package top.techial.knowledge.web.rest.vm;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import top.techial.knowledge.valid.Insert;
+import top.techial.knowledge.service.valid.Insert;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

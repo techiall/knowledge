@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import top.techial.knowledge.domain.Property;
-import top.techial.knowledge.valid.Insert;
-import top.techial.knowledge.valid.Update;
+import top.techial.knowledge.service.valid.Insert;
+import top.techial.knowledge.service.valid.Update;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

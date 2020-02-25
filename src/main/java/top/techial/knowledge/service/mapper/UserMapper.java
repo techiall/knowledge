@@ -6,8 +6,8 @@ import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import top.techial.knowledge.domain.User;
-import top.techial.knowledge.service.dto.UserDTO;
 import top.techial.knowledge.security.UserPrincipal;
+import top.techial.knowledge.service.dto.UserDTO;
 import top.techial.knowledge.web.rest.vm.RegisterVM;
 
 import java.util.List;

@@ -33,7 +33,7 @@ public class FileStorageServiceImplTest {
     @Test
     public void store() throws IOException {
         MultipartFile file = new MockMultipartFile("admin.pdf",
-            new FileInputStream(Paths.get("/Users/techial/Downloads/admin.pdf").toFile()));
+                new FileInputStream(Paths.get("/Users/techial/Downloads/admin.pdf").toFile()));
         fileStorageService.upload(file);
     }
 }

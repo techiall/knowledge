@@ -1,4 +1,4 @@
-package top.techial.knowledge.valid;
+package top.techial.knowledge.service.valid;
 
 /**
  * @author techial

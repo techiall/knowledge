@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.techial.knowledge.beans.ResultBean;
+import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.service.dto.RecordDTO;
 import top.techial.knowledge.service.mapper.RecordMapper;
-import top.techial.knowledge.service.RecordService;
 
 /**
  * 节点操作记录

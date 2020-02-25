@@ -14,9 +14,9 @@ import java.util.List;
  */
 @Configuration
 public class RememberMeConfig {
+    private static final String SQL = "show tables like 'persistent_logins'";
     private final DataSource dataSource;
     private final JdbcTemplate jdbcTemplate;
-    private static final String SQL = "show tables like 'persistent_logins'";
 
     public RememberMeConfig(DataSource dataSource, JdbcTemplate jdbcTemplate) {
         this.dataSource = dataSource;

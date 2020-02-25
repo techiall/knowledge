@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN" monitorInterval="500">
     <!--定义日志储存文件目录-->
+    <!-- @formatter:off -->
     <properties>
         <property name="LOG_HOME">web-logs</property>
         <Property name="PID">????</Property>
@@ -10,6 +11,7 @@
         <Property name="CONSOLE_LOG_PATTERN">%clr{%d{${LOG_DATEFORMAT_PATTERN}}}{faint} %clr{${LOG_LEVEL_PATTERN}} %clr{${sys:PID}}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
         <Property name="FILE_LOG_PATTERN">%d{${LOG_DATEFORMAT_PATTERN}} ${LOG_LEVEL_PATTERN} ${sys:PID} --- [%t] %-40.40c{1.} : %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
     </properties>
+    <!-- @formatter:on -->
     <Appenders>
         <!--控制台输出所有日志-->
         <Console name="Console" target="SYSTEM_OUT">

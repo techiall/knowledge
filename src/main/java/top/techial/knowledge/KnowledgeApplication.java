@@ -11,7 +11,7 @@ import top.techial.knowledge.config.StorageProperties;
  */
 @SpringBootApplication
 @EnableConfigurationProperties({
-    StorageProperties.class,
+        StorageProperties.class,
 })
 @EntityScan(basePackages = "top.techial.knowledge.domain")
 public class KnowledgeApplication {

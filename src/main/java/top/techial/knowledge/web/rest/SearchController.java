@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.Labels;
 import top.techial.knowledge.domain.Property;
+import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.dto.SearchDTO;
 import top.techial.knowledge.service.dto.SearchJsonDTO;
-import top.techial.knowledge.service.NodeService;
 
 /**
  * @author techial
@@ -23,13 +23,20 @@ import top.techial.knowledge.service.NodeService;
 @RestController
 @RequestMapping("/api/search")
 public class SearchController {
+    private static final String REGEX = "<[^>]*>|&nbsp;";
     private final NodeService nodeService;
     private final ObjectMapper objectMapper;
-    private static final String REGEX = "<[^>]*>|&nbsp;";
 
     public SearchController(NodeService nodeService, ObjectMapper objectMapper) {
         this.nodeService = nodeService;
         this.objectMapper = objectMapper;
+    }
+
+    private static String text(String text) {
+        text = text == null ? "" : text;
+        text = text.replaceAll(REGEX, "").trim();
+        text = text.substring(0, Math.min(200, text.length()));
+        return text;
     }
 
     @GetMapping
@@ -58,13 +65,6 @@ public class SearchController {
                 .setNodeNickName(searchDTO.getAuthorNickname())
                 .setNodeItemName(searchDTO.getItemName())
                 .setText(text(searchDTO.getText()));
-    }
-
-    private static String text(String text) {
-        text = text == null ? "" : text;
-        text = text.replaceAll(REGEX, "").trim();
-        text = text.substring(0, Math.min(200, text.length()));
-        return text;
     }
 
 }

@@ -9,9 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.techial.knowledge.repository.RecordRepository;
 import top.techial.knowledge.domain.Record;
 import top.techial.knowledge.domain.User;
+import top.techial.knowledge.repository.RecordRepository;
 
 import java.util.Set;
 
