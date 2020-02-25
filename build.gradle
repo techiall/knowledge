@@ -39,8 +39,8 @@ description = 'knowledge'
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-apply from: "${rootDir}/gradle/jib.gradle"
-apply from: "${rootDir}/gradle/cache.gradle"
+apply from: "gradle/docker.gradle"
+apply from: "gradle/cache.gradle"
 
 
 dependencies {
