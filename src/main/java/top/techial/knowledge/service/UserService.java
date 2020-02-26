@@ -92,6 +92,9 @@ public class UserService {
         if (context == null || context.getAuthentication() == null || context.getAuthentication().getPrincipal() == null) {
             return;
         }
+        if (!(context.getAuthentication().getPrincipal() instanceof UserPrincipal)) {
+            return;
+        }
         UserPrincipal userPrincipal = (UserPrincipal) context.getAuthentication().getPrincipal();
 
         List<Item> items = itemRepository.findAllByAuthorId(userPrincipal.getId());

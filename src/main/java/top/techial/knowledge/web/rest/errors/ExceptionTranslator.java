@@ -10,11 +10,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.MediaTypeNotSupportedStatusException;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import top.techial.knowledge.beans.ResultBean;
 
 @ControllerAdvice
-@EnableWebMvc
 public class ExceptionTranslator {
 
     private static ResponseEntity<ResultBean<Object>> handleException(ClientErrorException exception) {
