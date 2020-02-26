@@ -8,12 +8,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import top.techial.knowledge.security.handler.AuthenticationEntryPointImpl;
 import top.techial.knowledge.security.handler.LogoutHandler;
 
 
@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final LogoutHandler logoutHandler;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
     private final AuthenticationFailureHandler authenticationFailureHandler;
-    private final AuthenticationEntryPointImpl authenticationEntryPoint;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
     private final Environment environment;
     private final PersistentTokenRepository persistentTokenRepository;
 
@@ -35,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             LogoutHandler logoutHandler,
             AuthenticationSuccessHandler authenticationSuccessHandler,
             AuthenticationFailureHandler authenticationFailureHandler,
-            AuthenticationEntryPointImpl authenticationEntryPoint,
+            AuthenticationEntryPoint authenticationEntryPoint,
             Environment environment,
             PersistentTokenRepository persistentTokenRepository
     ) {

@@ -7,6 +7,10 @@ server:
 spring:
   application:
     name: knowledge-dev
+  profiles:
+    active: dev
+  mvc:
+    throw-exception-if-no-handler-found: true
   session:
     store-type: jdbc
     jdbc:

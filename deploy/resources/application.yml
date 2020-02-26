@@ -5,6 +5,10 @@ server:
     enabled: true
 
 spring:
+  application:
+    name: knowledge-docker
+  mvc:
+    throw-exception-if-no-handler-found: true
   session:
     store-type: jdbc
     jdbc:
@@ -45,5 +49,5 @@ spring:
       max-request-size: 60MB
       enabled: true
 storage:
-  location: /Users/techial/Downloads/knowledge
+  location: /knowledge/storage
 

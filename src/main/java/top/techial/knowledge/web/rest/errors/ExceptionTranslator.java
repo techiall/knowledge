@@ -9,9 +9,12 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.MediaTypeNotSupportedStatusException;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import top.techial.knowledge.beans.ResultBean;
 
 @ControllerAdvice
+@EnableWebMvc
 public class ExceptionTranslator {
 
     private static ResponseEntity<ResultBean<Object>> handleException(ClientErrorException exception) {
@@ -22,6 +25,11 @@ public class ExceptionTranslator {
     private static ResponseEntity<ResultBean<String>> handleException(ResultBean<String> resultBean) {
         return ResponseEntity.status(resultBean.getCode())
                 .body(resultBean);
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ResultBean<String>> noHandlerFoundException() {
+        return handleException(ResultBean.of(404, "Not Found"));
     }
 
     @ExceptionHandler(ClientErrorException.class)
