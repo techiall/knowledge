@@ -15,12 +15,15 @@ spring:
       initialize-schema: always
   task:
     execution:
+      thread-name-prefix: knowledge-task-
       pool:
-        core-size: 4
-        max-size: 16
-        keep-alive: 180s
-        queue-capacity: 512
-      thread-name-prefix: knowledge-
+        core-size: 1
+        max-size: 50
+        queue-capacity: 10000
+    scheduling:
+      thread-name-prefix: knowledge-scheduling-
+      pool:
+        size: 1
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource

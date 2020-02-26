@@ -3,6 +3,7 @@ package top.techial.knowledge.security;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -81,10 +82,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     private void accepts(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.authorizeRequests().antMatchers("/api/**").authenticated();
+
         if (environment.acceptsProfiles(Profiles.of("dev"))) {
             httpSecurity.csrf().disable();
         } else {
-            httpSecurity.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+            // @formatter:off
+            httpSecurity
+                .authorizeRequests()
+                .antMatchers("/api/user/me", "/api/register/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/storage/text/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/storage/preview/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/node/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/search/**").permitAll()
+            .and()
+                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+            // @formatter:on
         }
     }
 
