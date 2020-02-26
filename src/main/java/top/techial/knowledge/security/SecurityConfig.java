@@ -82,12 +82,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     private void accepts(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeRequests().antMatchers("/api/**").authenticated();
-
+        // @formatter:off
         if (environment.acceptsProfiles(Profiles.of("dev"))) {
-            httpSecurity.csrf().disable();
+            httpSecurity.authorizeRequests()
+                .antMatchers("/api/**").authenticated()
+            .and()
+                .csrf().disable();
         } else {
-            // @formatter:off
             httpSecurity
                 .authorizeRequests()
                 .antMatchers("/api/user/me", "/api/register/**").permitAll()
@@ -95,10 +96,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/storage/preview/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/node/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/search/**").permitAll()
+                .antMatchers("/api/**").authenticated()
             .and()
                 .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-            // @formatter:on
         }
+        // @formatter:on
     }
 
 }

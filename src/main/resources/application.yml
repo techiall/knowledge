@@ -7,10 +7,13 @@ server:
 spring:
   application:
     name: knowledge-dev
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
   profiles:
     active: dev
-  mvc:
-    throw-exception-if-no-handler-found: true
   session:
     store-type: jdbc
     jdbc:
@@ -32,6 +35,10 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/knowledge?useSSL=false&createDatabaseIfNotExist=true
     username: root
     password: root
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: deferred
   jpa:
     generate-ddl: true
     show-sql: true
@@ -45,7 +52,7 @@ spring:
       hibernate:
         globally_quoted_identifiers: true
         dialect: org.hibernate.dialect.MySQL8Dialect
-    open-in-view: true
+    open-in-view: false
   cache:
     type: simple
   servlet:
