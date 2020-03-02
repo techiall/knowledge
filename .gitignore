@@ -31,3 +31,5 @@ build/
 .vscode/
 /cache/
 /.gradle/
+/node_modules/
+/yarn.lock
