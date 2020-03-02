@@ -1,0 +1,7 @@
+jar.doFirst { npmBuild }
+jibDockerBuild.doFirst { npmBuild }
+
+task npmBuild(type: NpmTask, dependsOn: npmInstall) {
+    group = 'node'
+    args = ['run', 'build']
+}
