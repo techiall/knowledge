@@ -1,5 +1,3 @@
-build.doLast { jibDockerBuild }
-
 jib {
     from {
         image = 'openjdk:12'
