@@ -10,5 +10,3 @@ task yarnBuild(type: YarnTask, dependsOn: yarn) {
     args = ["run", "build"]
 }
 
-build.doFirst { yarnBuild }
-jibDockerBuild.doFirst { yarnBuild }
