@@ -12,4 +12,3 @@ task yarnBuild(type: YarnTask, dependsOn: yarn) {
 
 build.doFirst { yarnBuild }
 jibDockerBuild.doFirst { yarnBuild }
-
