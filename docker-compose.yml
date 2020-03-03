@@ -11,7 +11,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./deploy/resources/application.yml:/app/resources/application.yml:ro
-      - ./deploy/resources/ehcache.yml:/app/resources/ehcache.yml:ro
+      - ./deploy/resources/ehcache.xml:/app/resources/ehcache.xml:ro
       - ./deploy/resources/log4j2-spring.xml:/app/resources/log4j2-spring.xml:ro
       - web_data:/web-logs
       - /root/knowledge-storage:/knowledge/storage
