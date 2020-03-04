@@ -7,13 +7,11 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
 @Aspect
 @Log4j2
-@Component
 public class LoggingAspect {
 
     @Pointcut("within(@org.springframework.stereotype.Repository *)" +

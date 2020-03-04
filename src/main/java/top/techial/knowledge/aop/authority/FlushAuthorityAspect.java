@@ -4,14 +4,12 @@ import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.stereotype.Component;
 import top.techial.knowledge.service.UserService;
 
 /**
  * @author techial
  */
 @Aspect
-@Component
 @Log4j2
 public class FlushAuthorityAspect {
 
