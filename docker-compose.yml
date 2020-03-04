@@ -34,6 +34,8 @@ services:
 
   redis:
     image: redis:alpine
+    networks:
+      - knowledge
     volumes:
       - redis_data:/data
 
