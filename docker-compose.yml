@@ -6,6 +6,7 @@ services:
       - knowledge
     depends_on:
       - mysql
+      - redis
     ports:
       - 8080:8080
     volumes:
@@ -31,12 +32,20 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     restart: always
 
+  redis:
+    image: redis:alpine
+    volumes:
+      - redis_data:/data
+
+
 networks:
   knowledge:
     external: true
 
 volumes:
   web_data:
+    external: true
+  redis_data:
     external: true
   mysql_data:
     external: true
