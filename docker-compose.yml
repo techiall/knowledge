@@ -17,7 +17,7 @@ services:
       - web_data:/web-logs
       - /root/knowledge-storage:/knowledge/storage
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/api/user/me", "||", "exit", "1"]
+      test: "curl -f http://localhost:8080/api/user/me || exit 1"
       retries: 3
       interval: 30s
       timeout: 30s
