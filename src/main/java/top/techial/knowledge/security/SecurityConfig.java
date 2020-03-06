@@ -8,9 +8,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import top.techial.knowledge.security.handler.LogoutHandler;
 
 
@@ -24,17 +26,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final LogoutHandler logoutHandler;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
     private final AuthenticationFailureHandler authenticationFailureHandler;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
     private final Environment environment;
 
     public SecurityConfig(
             LogoutHandler logoutHandler,
             AuthenticationSuccessHandler authenticationSuccessHandler,
             AuthenticationFailureHandler authenticationFailureHandler,
+            AuthenticationEntryPoint authenticationEntryPoint,
             Environment environment
     ) {
         this.logoutHandler = logoutHandler;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
         this.authenticationFailureHandler = authenticationFailureHandler;
+        this.authenticationEntryPoint = authenticationEntryPoint;
         this.environment = environment;
     }
 
@@ -53,6 +58,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .logoutUrl("/api/user/logout")
             .permitAll()
             .logoutSuccessHandler(logoutHandler)
+        .and()
+            .exceptionHandling()
+            .defaultAuthenticationEntryPointFor(authenticationEntryPoint, new AntPathRequestMatcher("/api/**"))
         .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
