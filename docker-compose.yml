@@ -16,6 +16,11 @@ services:
       - ./deploy/resources/log4j2-spring.xml:/app/resources/log4j2-spring.xml:ro
       - web_data:/web-logs
       - /root/knowledge-storage:/knowledge/storage
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/user/me", "||", "exit", "1"]
+      retries: 3
+      interval: 30s
+      timeout: 30s
     restart: always
 
   mysql:
