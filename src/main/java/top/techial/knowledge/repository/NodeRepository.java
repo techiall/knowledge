@@ -19,7 +19,6 @@ public interface NodeRepository extends JpaRepository<Node, Long> {
     @Transactional
     void deleteAllByItemId(Integer id);
 
-
     @Query("select n from Node n inner join Item i on n.itemId = ?2 where n.name = ?1")
     Optional<Node> findByItemIdAndName(String name, Integer itemId);
 
@@ -45,4 +44,5 @@ public interface NodeRepository extends JpaRepository<Node, Long> {
 
     @Query("select i.rootNode.id from Node n inner join Item i on n.itemId = i.id where n.id = ?1")
     Long findItemRootNodeId(Long id);
+
 }

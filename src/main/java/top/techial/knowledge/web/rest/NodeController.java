@@ -21,10 +21,7 @@ import top.techial.knowledge.service.valid.Update;
 import top.techial.knowledge.web.rest.errors.ItemNotFoundException;
 import top.techial.knowledge.web.rest.vm.NodeVM;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author techial
@@ -55,7 +52,7 @@ public class NodeController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ITEM_' + #nodeVM.itemId.toString())")
     @FlushAuthority
-    public ResultBean<NodeInfoDTO> save(
+    public ResultBean<Map<String, Object>> save(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Validated(value = Insert.class) @RequestBody NodeVM nodeVM
     ) {
@@ -63,12 +60,17 @@ public class NodeController {
                 .orElseThrow(ItemNotFoundException::new);
         Node node = nodeService.findByItemIdAndName(nodeVM.getName().trim(), nodeVM.getItemId())
                 .orElse(null);
+        boolean flag = false;
         if (node == null) {
             node = nodeService.save(nodeVM, itemId);
             recordService.save(node.getId(), userPrincipal.getId(),
                     nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
+            flag = true;
         }
-        return ResultBean.ok(NodeMapper.INSTANCE.toNodeInfoDTO(node));
+        Map<String, Object> map = new HashMap<>();
+        map.put("node", NodeMapper.INSTANCE.toNodeInfoDTO(node));
+        map.put("new", flag);
+        return ResultBean.ok(map);
     }
 
     @PutMapping("/{id}")
