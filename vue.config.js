@@ -5,6 +5,9 @@ const resolve = dir => {
 }
 
 module.exports = {
+    chainWebpack: config => {
+        config.plugins.delete('prefetch');
+    },
     outputDir: './build/resources/main/static',
     devServer: {
         proxy: {
