@@ -46,4 +46,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 
     @Query("select i.rootNode.id from Item i where i.id = :id")
     Optional<Long> findRootNodeId(Integer id);
+
+    @Query("select i.id from Item i where i.rootNode.id = :id")
+    Optional<Integer> findItemIdByRootId(Long id);
 }

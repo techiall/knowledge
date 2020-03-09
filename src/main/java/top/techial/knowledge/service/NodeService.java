@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.domain.Property;
+import top.techial.knowledge.repository.ItemRepository;
 import top.techial.knowledge.repository.NodeRelationshipRepository;
 import top.techial.knowledge.repository.NodeRepository;
 import top.techial.knowledge.service.dto.NodeBaseDTO;
@@ -21,6 +22,7 @@ import top.techial.knowledge.service.dto.ParentChildDTO;
 import top.techial.knowledge.service.dto.SearchDTO;
 import top.techial.knowledge.service.mapper.NodeMapper;
 import top.techial.knowledge.web.rest.errors.NodeNotFoundException;
+import top.techial.knowledge.web.rest.errors.RootNodeException;
 import top.techial.knowledge.web.rest.vm.NodeVM;
 
 import java.util.*;
@@ -37,15 +39,18 @@ public class NodeService {
     private final NodeRepository nodeRepository;
     private final NodeRelationshipRepository nodeRelationshipRepository;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final ItemRepository itemRepository;
 
     public NodeService(
             NodeRepository nodeRepository,
             NodeRelationshipRepository nodeRelationshipRepository,
-            NamedParameterJdbcTemplate namedParameterJdbcTemplate
+            NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+            ItemRepository itemRepository
     ) {
         this.nodeRepository = nodeRepository;
         this.nodeRelationshipRepository = nodeRelationshipRepository;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.itemRepository = itemRepository;
     }
 
     @Transactional
@@ -117,8 +122,11 @@ public class NodeService {
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Node findById(Long id) {
+        this.checkItemRoot(id);
         Node node = nodeRepository.findById(id).orElseThrow(NodeNotFoundException::new);
-        node.getProperty().setProperty(buildProperty(node.getProperty().getProperty()));
+        if (node.getProperty() != null) {
+            node.getProperty().setProperty(buildProperty(node.getProperty().getProperty()));
+        }
         return node;
     }
 
@@ -361,6 +369,7 @@ public class NodeService {
 
     @CacheEvict(allEntries = true)
     public void deleteIdAndRelationship(Long id) {
+        this.checkItemRoot(id);
         nodeRepository.deleteById(id);
         nodeRelationshipRepository.deleteByNodeId(id);
     }
@@ -368,6 +377,10 @@ public class NodeService {
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public List<Long> findByItemIds(Collection<Integer> ids) {
         return nodeRepository.findByItemIdIn(ids);
+    }
+
+    private void checkItemRoot(Long id) {
+        itemRepository.findItemIdByRootId(id).ifPresent(RootNodeException::new);
     }
 
     @CacheEvict(allEntries = true)
@@ -397,4 +410,5 @@ public class NodeService {
                 "WHERE super.descendant = :target AND sub.ancestor = :id\n";
         namedParameterJdbcTemplate.update(value, result);
     }
+
 }
