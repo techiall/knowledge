@@ -80,7 +80,7 @@ export default {
     getServerData(Pageval) {
       if (this.requestFlag) return;
       this.requestFlag = true;
-      let url = 'record/node/' + this.treeNode.id;
+      let url = '/record/node/' + this.treeNode.id;
       let obj = {
         size: this.dataSize,
         page: Pageval,

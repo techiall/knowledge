@@ -28,7 +28,7 @@ export default {
     getforceData() {
       if (this.getDataFlag) return;
       this.getDataFlag = true;
-      let url = "node/" + this.treeNode.id + "/graph";
+      let url = "/node/" + this.treeNode.id + "/graph";
       this.get(url)
         .then(res => {
           this.spinShow = true;

@@ -169,7 +169,7 @@ export default {
       this.$emit('update:spinShow', true);
       this.getDataFlag = true;
       this.NodeName = this.treeNode.name;
-      let url = 'node/' + this.treeNode.id;
+      let url = '/node/' + this.treeNode.id;
       this.get(url)
         .then((res) => {
           this.$emit('update:spinShow', false);
@@ -282,7 +282,7 @@ export default {
     },
     // 向 服务器发送 改变的名称
     putServerName(name) {
-      let url = 'node/' + this.treeNode.id;
+      let url = '/node/' + this.treeNode.id;
       let message =
         '[' + this.treeNode.name + '] 节点名称修改为 [' + name + ']';
       let obj = {
@@ -305,7 +305,7 @@ export default {
     },
     // 添加 属性
     addLabels() {
-      let url = 'node/' + this.treeNode.id;
+      let url = '/node/' + this.treeNode.id;
       let obj = this.ObjDataA();
       let message = '添加新的节点属性，属性名称为 [' + this.labelsInput + ']';
       let name = this.treeNode.name;
@@ -331,7 +331,7 @@ export default {
     },
     //改变属性名称
     changExit(inputVal, index, target) {
-      let url = 'node/' + this.treeNode.id;
+      let url = '/node/' + this.treeNode.id;
       let obj = this.ObjDataA();
       let message =
         '[' + obj['labels'][index] + '] 属性名称修改为 [' + inputVal + ']';
@@ -358,7 +358,7 @@ export default {
     },
     // 删除属性数据
     delAttrData(attr, attrIndx) {
-      let url = 'node/' + this.treeNode.id;
+      let url = '/node/' + this.treeNode.id;
       let obj = this.ObjDataA();
       let message = '[' + attr + '] 属性被删除';
       let name = this.treeNode.name;
@@ -389,7 +389,7 @@ export default {
     },
     // 向服务器发送 添加关系的数据
     pushServeR(name, title, nodeId) {
-      let url = 'node/' + this.treeNode.id;
+      let url = '/node/' + this.treeNode.id;
       let obj = this.objDataR();
       let Nodename = this.treeNode.name;
       let message =
@@ -527,7 +527,7 @@ export default {
     },
     // 向服务器发送 关系数据
     poshServerR(inputVal, inputIndex, obj, updataKey) {
-      const url = 'node/' + this.treeNode.id;
+      const url = '/node/' + this.treeNode.id;
       this.put_json(url, obj)
         .then((res) => {
           const property = res.data.property;
@@ -562,7 +562,7 @@ export default {
     },
     // 根据节点 name 模糊匹配返回节点列表
     getVagueName(val) {
-      let url = 'node/name';
+      let url = '/node/name';
       let obj = {
         query: val,
         itemId: this.itemId,
@@ -588,7 +588,7 @@ export default {
     },
     // 查询该节点是否存在
     queryNode(NodeName, callback, value) {
-      let url = 'node/name';
+      let url = '/node/name';
       let obj = {
         query: NodeName,
         itemId: this.itemId,

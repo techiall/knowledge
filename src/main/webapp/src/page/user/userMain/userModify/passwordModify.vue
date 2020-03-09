@@ -120,7 +120,7 @@ export default {
       if (!flag) {
         return;
       }
-      let url = "user/me/password";
+      let url = "/user/me/password";
       let obj = {
         srcPassword: this.fromCPass.oldPass,
         password: this.fromCPass.newPass

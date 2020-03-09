@@ -83,7 +83,7 @@ export default {
     },
     // 获取  user信息
     getUser() {
-      const url = 'user/me';
+      const url = '/user/me';
       this.get(url)
         .then((res) => {
           if (res.data.user.id) {
@@ -107,7 +107,7 @@ export default {
         return;
       }
       const q = this.searchDataAsyn;
-      const URL = 'search';
+      const URL = '/search';
       const OBJ = {
         q,
         tips: true,

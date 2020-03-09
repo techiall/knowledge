@@ -66,7 +66,7 @@ export default {
   methods: {
     // 获取服务器里面分享的项目
     getShareItem() {
-      const url = 'item/share';
+      const url = '/item/share';
       const OBJ = {
         size: 50,
       };

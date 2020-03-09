@@ -57,7 +57,7 @@ export default {
           operator: "ADD_NODE"
         }
       };
-      this.post_json("node", obj)
+      this.post_json("/node", obj)
         .then(res => {
           this.$emit("addNameS", 7, res.data);
         })

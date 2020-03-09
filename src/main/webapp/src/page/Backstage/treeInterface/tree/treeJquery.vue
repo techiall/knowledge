@@ -62,7 +62,7 @@ export default {
   methods: {
     //获取服务器数据
     getTreeData() {
-      const url = 'node';
+      const url = '/node';
       const obj = {
         itemId: this.itemId,
       };
@@ -120,7 +120,7 @@ export default {
       if (!treeNode.isParent || treeNode.asyncParent) return 1;
       //异步加载 防止重复加载
       treeNode.asyncParent = true;
-      let url = 'node/' + treeNode.id + '/child';
+      let url = '/node/' + treeNode.id + '/child';
       this.get(url)
         .then((res) => {
           let data = res.data;
@@ -194,7 +194,7 @@ export default {
     },
     // 向服务器发送拖拽的
     pushServeDrop(treeNode, targetNode) {
-      const URL = `node/${treeNode.id}/movement?target=${targetNode.id}`;
+      const URL = `/node/${treeNode.id}/movement?target=${targetNode.id}`;
       this.put_json(URL)
         .then(() => {
           this.zTree.moveNode(targetNode, treeNode, true);

@@ -80,7 +80,7 @@ export default {
   methods: {
     // 获取服务器里面的项目
     getServeItem() {
-      const url = 'item';
+      const url = '/item';
       const OBJ = {
         size: 4,
       };
@@ -93,7 +93,7 @@ export default {
     },
     // 获取服务器里面分享的项目
     getServeShareItem() {
-      const url = 'item/share';
+      const url = '/item/share';
       const OBJ = {
         size: 4,
       };

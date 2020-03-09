@@ -99,7 +99,7 @@ export default {
     },
     // 向服务器发送数据
     pushServer() {
-      const url = "item";
+      const url = "/item";
       const obj = {
         share: this.submitMsg.share === "true" ? true : false,
         name: this.submitMsg.name,

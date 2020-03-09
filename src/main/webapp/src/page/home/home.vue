@@ -115,7 +115,12 @@ export default {
     this.MonitoringlAddInput();
   },
   methods: {
-    ...mapMutations(['setUserData', 'setSearchHistory', 'delSearchHistory']),
+    ...mapMutations([
+      'setUserData',
+      'setSearchHistory',
+      'delSearchHistory',
+      'setToken',
+    ]),
     // 通过路由赋值
     routerAssignment() {
       const queryName = this.$route.query[this.routerKey];
@@ -125,7 +130,7 @@ export default {
     },
     // 获取  user信息
     getUser() {
-      const url = 'user/me';
+      const url = '/user/me';
       this.get(url)
         .then((res) => {
           if (res.data.user.id) {
@@ -134,6 +139,7 @@ export default {
             this.setUserData(data);
           } else {
             this.userStatusFlag = -1;
+            this.setToken(res.data._csrf.token);
           }
         })
         .catch(() => {});
@@ -149,7 +155,7 @@ export default {
         return;
       }
       const q = this.searchDataAsyn;
-      const URL = 'search';
+      const URL = '/search';
       const OBJ = {
         q,
         tips: true,
@@ -199,7 +205,7 @@ export default {
         },
       });
     },
-    // 散出历史纪录
+    // 清出历史纪录
     delhistory(index) {
       this.delSearchHistory(index);
     },

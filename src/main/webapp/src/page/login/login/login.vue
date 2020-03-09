@@ -130,13 +130,13 @@ export default {
         password: this.formlogin.password,
         'remember-me': this.formlogin.remeberMe ? 'on' : 'off',
       };
-      let url = 'user/login';
+      let url = '/user/login';
       this.post_string(url, register)
         .then(() => {
           return Promise.resolve();
         })
         .then(() => {
-          this.get('user/me').then((res) => {
+          this.get('/user/me').then((res) => {
             let data = res.data;
             this.setUserData(data);
             this.$router.push({ path: '/project' });

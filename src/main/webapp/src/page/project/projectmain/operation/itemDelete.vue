@@ -46,7 +46,7 @@ export default {
     },
     // 删除项目
     delItem() {
-      const url = 'item/' + this.ItemId;
+      const url = '/item/' + this.ItemId;
       this.serveLoadFlag = true;
       this.delete_string(url)
         .then(() => {

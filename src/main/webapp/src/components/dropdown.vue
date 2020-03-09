@@ -101,7 +101,7 @@ export default {
           if (this.logoutLoad) {
             return;
           }
-          const url = 'user/logout';
+          const url = '/user/logout';
           this.logoutLoad = true;
           this.post_json(url)
             .then(() => {

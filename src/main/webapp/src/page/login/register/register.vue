@@ -185,7 +185,7 @@ export default {
       if (this.submitFlag) return;
       this.submitFlag = true;
 
-      this.post_json('register', {
+      this.post_json('/register', {
         userName: this.formRegister.username,
         password: this.formRegister.password,
       })
@@ -208,7 +208,7 @@ export default {
       this.registeruserFlag = true;
       this.registerUserIcon = 'md-refresh';
       this.registeruserClass = 'register-wait';
-      let url = 'register/query';
+      let url = '/register/query';
       let obj = {
         name: userName,
       };

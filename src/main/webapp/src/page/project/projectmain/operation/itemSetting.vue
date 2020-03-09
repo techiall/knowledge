@@ -173,7 +173,7 @@ export default {
     },
     // 保存设置 并向服务器发送数据
     keepSetting() {
-      const url = 'item/' + this.submitMsg.id;
+      const url = '/item/' + this.submitMsg.id;
       const obj = {
         share: this.submitMsg.share === 'true' ? true : false,
         name: this.submitMsg.name,

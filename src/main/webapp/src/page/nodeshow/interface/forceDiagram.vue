@@ -42,7 +42,7 @@ export default {
         return;
       }
       this.getDataFlag = true;
-      let url = 'node/' + this.nodeId + '/graph';
+      let url = '/node/' + this.nodeId + '/graph';
       this.get(url)
         .then((res) => {
           if (this.showSelectType === 'force') {
