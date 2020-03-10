@@ -97,7 +97,7 @@ export default {
         this.$refs.FullName.classList.add('Editmodal-error');
         return;
       }
-      const url = 'user/me';
+      const url = '/user/me';
       const obj = {
         nickName,
       };

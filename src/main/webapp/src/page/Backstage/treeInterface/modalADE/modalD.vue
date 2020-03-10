@@ -91,7 +91,7 @@ export default {
     userDelfun() {
       this.modalFlag = false;
       if (this.selectNodesFlag) {
-        let url = 'node/' + this.treeNodeId;
+        let url = '/node/' + this.treeNodeId;
         let obj = {
           itemId: this.itemId,
         };
@@ -105,7 +105,7 @@ export default {
           })
           .catch(() => {});
       } else {
-        let url = 'node?itemId=' + this.itemId;
+        let url = '/node?itemId=' + this.itemId;
         let obj = this.NodeId;
         this.delete_json(url, obj)
           .then(() => {

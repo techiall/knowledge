@@ -30,36 +30,43 @@
 
 <script>
 export default {
-  props: ["AddModalFlag", "treeNode", "itemId"],
+  props: ['AddModalFlag', 'treeNode', 'itemId'],
   data() {
     return {
       // modal标志位
       modalFlag: false,
       // input 输入的名称
-      inputName: ""
+      inputName: '',
     };
   },
   methods: {
     // 点击 添加 节点
     userAddfun() {
       this.modalFlag = false;
-      let name = this.inputName.replace(/^\s+|\s+$/g, "");
-      if (name === "") {
+      let name = this.inputName.replace(/^\s+|\s+$/g, '');
+      if (name === '') {
         return;
       }
-      let message = "添加节点，节点名称为 [" + name + "]";
+      let message = '添加节点，节点名称为 [' + name + ']';
       let obj = {
         name,
-        parentId: this.treeNode === "" ? null : this.treeNode.id,
+        parentId: this.treeNode === '' ? null : this.treeNode.id,
         itemId: this.itemId,
         record: {
           message: JSON.stringify({ message, name }),
-          operator: "ADD_NODE"
-        }
+          operator: 'ADD_NODE',
+        },
       };
-      this.post_json("node", obj)
-        .then(res => {
-          this.$emit("addNameS", 7, res.data);
+      this.post_json('/node', obj)
+        .then((res) => {
+          if (res.data.new) {
+            this.$emit('addNameS', 7, res.data.node);
+          } else {
+            this.$Message.warning({
+              content: '您添加的节点已经存在,请不要重复添加',
+              duration: 5,
+            });
+          }
         })
         .catch(() => {});
     },
@@ -68,13 +75,13 @@ export default {
       if (e.ctrlKey && e.keyCode == 13) {
         this.userAddfun();
       }
-    }
+    },
   },
   watch: {
     // 监听 treelist 事件
     AddModalFlag() {
       this.modalFlag = true;
-      this.inputName = "";
+      this.inputName = '';
       this.$nextTick(() => {
         this.$refs.modalAddInput.focus();
       });
@@ -82,12 +89,12 @@ export default {
     // 监听 modalflag = true
     modalFlag(val) {
       if (val) {
-        document.addEventListener("keyup", this.upCtrlEnter);
+        document.addEventListener('keyup', this.upCtrlEnter);
       } else {
-        document.removeEventListener("keyup", this.upCtrlEnter);
+        document.removeEventListener('keyup', this.upCtrlEnter);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

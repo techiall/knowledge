@@ -111,7 +111,7 @@ export default {
           this.ImagesName = file.name;
           this.uploadStatus = 2;
           let data = new FormData();
-          let url = 'storage';
+          let url = '/storage';
           data.append('file', file);
           this.post_progress(url, data, (res) => {
             let loaded = res.loaded;
@@ -134,7 +134,7 @@ export default {
         },
         // 设置上传个人照片
         6: () => {
-          const url = 'user/me';
+          const url = '/user/me';
           const obj = {
             image: this.srcImage,
           };

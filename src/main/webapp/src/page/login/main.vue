@@ -89,7 +89,7 @@ export default {
     },
     // 获取  token
     getuserToken() {
-      this.get('user/me')
+      this.get('/user/me')
         .then((res) => {
           this.spinShow = false;
           if (res.data.user.id) {

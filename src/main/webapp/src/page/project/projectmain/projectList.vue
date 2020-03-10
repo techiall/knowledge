@@ -81,7 +81,7 @@ export default {
   methods: {
     // 获取项目列表
     getItemList() {
-      const URL = 'item';
+      const URL = '/item';
       const OBJ = {
         size: 50,
       };

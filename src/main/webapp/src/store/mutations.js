@@ -10,8 +10,6 @@ export default {
   },
   setUser(state, data) {
     state.user = data;
-    state.nickName = JSON.parse(state.user).nickName;
-    state.updateTime = JSON.parse(state.user).updateTime;
   },
   setShowType(state, type) {
     state.userShowType = type;

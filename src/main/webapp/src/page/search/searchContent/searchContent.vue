@@ -56,7 +56,7 @@ export default {
     // 请求 服务器数据
     getServerData() {
       this.InOldSearchMeg = this.InSearchMeg;
-      let url = 'search';
+      let url = '/search';
       let obj = {
         size: this.pageSize,
         q: this.InSearchMeg,

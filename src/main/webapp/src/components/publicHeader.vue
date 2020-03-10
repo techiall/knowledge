@@ -69,7 +69,7 @@ export default {
     ...mapMutations(['setUserData','delToken']),
     // 获取token 判断用户登录
     getUser() {
-      const url = 'user/me';
+      const url = '/user/me';
       this.get(url)
         .then((res) => {
           this.userStatusLoadFlag = true;

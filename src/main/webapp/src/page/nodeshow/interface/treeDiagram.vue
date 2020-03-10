@@ -42,7 +42,7 @@ export default {
         return;
       }
       this.getDataFlag = true;
-      let url = 'node/' + this.nodeId + '/link';
+      let url = '/node/' + this.nodeId + '/link';
       this.get(url)
         .then((res) => {
           if (this.showSelectType === 'tree') {

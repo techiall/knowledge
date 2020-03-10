@@ -59,7 +59,7 @@ export default {
         this.$Message.info('请勾选注销');
         return;
       }
-      const url = 'user/me';
+      const url = '/user/me';
       this.delete_string(url)
         .then(() => {
           this.delToken();

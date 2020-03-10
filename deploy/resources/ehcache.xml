@@ -10,7 +10,6 @@
     <cache alias="common" uses-template="default">
     </cache>
 
-
     <!-- Default cache template -->
     <cache-template name="default">
         <listeners>

@@ -257,7 +257,7 @@ export default {
           ) {
             return;
           }
-          let url = 'storage/text/' + this.treeNode.id;
+          let url = '/storage/text/' + this.treeNode.id;
           let getHtmlEdit = this.editor.html.get();
           let Reg = /(<p\s?data-f-id="pbf".+<\/p>)/g;
           getHtmlEdit = getHtmlEdit.replace(Reg, '');
@@ -271,7 +271,7 @@ export default {
     },
     //获取服务器数据
     getExitTextData() {
-      let url = 'storage/text/' + this.treeNode.id;
+      let url = '/storage/text/' + this.treeNode.id;
       this.get(url)
         .then((res) => {
           this.spinShow = true;

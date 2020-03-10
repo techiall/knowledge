@@ -31,7 +31,7 @@ export default {
         return;
       }
       this.getDataFlag = true;
-      let url = 'storage/text/' + this.nodeId;
+      let url = '/storage/text/' + this.nodeId;
       this.get(url)
         .then((res) => {
           if (this.showSelectType === 'text') {

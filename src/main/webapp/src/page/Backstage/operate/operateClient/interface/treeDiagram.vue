@@ -29,7 +29,7 @@ export default {
     getTreeData() {
       if (this.getDataFlag) return;
       this.getDataFlag = true;
-      let url = 'node/' + this.treeNode.id + '/link';
+      let url = '/node/' + this.treeNode.id + '/link';
       this.get(url)
         .then((res) => {
           this.spinShow = true;

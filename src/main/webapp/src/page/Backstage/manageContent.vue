@@ -128,7 +128,7 @@ export default {
     },
     // 获取项目
     getItem() {
-      const url = 'item/' + this.itemId;
+      const url = '/item/' + this.itemId;
       this.get(url)
         .then((res) => {
           this.loadingFlag = false;
