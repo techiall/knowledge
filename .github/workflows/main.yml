@@ -6,8 +6,16 @@ on:
       - master
 
 jobs:
-  build-and-deploy:
-    name: Build and deploy
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        name: build
+        run: |
+          docker login docker.pkg.github.com --username=${{ secrets.GITHUB }} --password=${{ secrets.TOKEN }}
+          chmod +x ./deploy/build.sh && ./deploy/build.sh
+
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Executing remote ssh commands
@@ -18,5 +26,4 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd /root/knowledge
-            ./deploy/deploy.sh
+            cd /root/knowledge && chmod +x ./deploy/deploy.sh && ./deploy/deploy.sh
