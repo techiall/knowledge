@@ -1,4 +1,4 @@
-name: Knowledge project build and deploy
+name: Knowledge CI
 
 on:
   push:
@@ -7,15 +7,6 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-        name: build
-        run: |
-          docker login docker.pkg.github.com --username=${{ secrets.GITHUB }} --password=${{ secrets.TOKEN }}
-          chmod +x ./deploy/build.sh && ./deploy/build.sh
-
-  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Executing remote ssh commands
