@@ -27,13 +27,6 @@ repositories {
     mavenLocal()
 }
 
-configurations {
-    mapstruct
-    all {
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-    }
-}
-
 group = 'top.techial'
 version = '0.0.1'
 description = 'knowledge'
@@ -55,16 +48,15 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-aop'
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-cache'
-    compile 'org.springframework.boot:spring-boot-starter-log4j2'
+    compile 'org.springframework.boot:spring-boot-starter-aop'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     compile 'javax.cache:cache-api:1.1.1'
     compile 'org.ehcache:ehcache:3.8.1'
     compile 'org.apache.commons:commons-lang3:3.8.1'
-    compile 'org.springframework.boot:spring-boot-starter-aop'
 
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
 
     runtime 'mysql:mysql-connector-java:8.0.18'
     runtime 'org.springframework.boot:spring-boot-devtools'
@@ -78,5 +70,4 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
-
 }
