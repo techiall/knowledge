@@ -30,7 +30,7 @@ spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://mysql:3306/knowledge?useSSL=false&createDatabaseIfNotExist=true
+    url: jdbc:mysql://mysql:3306/knowledge?useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
     username: root
   data:
     jpa:

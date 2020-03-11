@@ -2,7 +2,7 @@ node {
     version = "12.14.0"
     npmVersion = "6.13.7"
     yarnVersion = "1.22.0"
-    download = true
+    download = false
 }
 
 task yarnBuild(type: YarnTask, dependsOn: yarn) {
