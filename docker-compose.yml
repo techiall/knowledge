@@ -41,14 +41,26 @@ services:
     networks:
       - knowledge
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - redis_data:/data
 
+  elastic:
+    image: elasticsearch:latest
+    ports:
+      - 9200:9200
+    networks:
+      - knowledge
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - elastic_data:/usr/share/elasticsearch/data
 
 networks:
   knowledge:
     external: true
 
 volumes:
+  elastic_data:
+    external: true
   redis_data:
     external: true
   mysql_data:
