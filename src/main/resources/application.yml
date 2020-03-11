@@ -11,11 +11,9 @@ spring:
     name: knowledge-dev
   devtools:
     restart:
-      enabled: false
+      enabled: true
     livereload:
-      enabled: false
-  profiles:
-    active: dev
+      enabled: true
   session:
     store-type: redis
   task:
@@ -31,23 +29,18 @@ spring:
         size: 1
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://127.0.0.1:3306/knowledge?useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
     username: root
     password: root
   data:
-    jpa:
-      repositories:
-        bootstrap-mode: deferred
     jest:
-      uris: http://localhost:9200
+      uris: http://knowledge.pchelper666.com:6001/
   redis:
     database: 0
     host: localhost
   jpa:
     generate-ddl: true
     show-sql: true
-    database: mysql
     hibernate:
       ddl-auto: update
       naming:

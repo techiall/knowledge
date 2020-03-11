@@ -14,8 +14,6 @@ spring:
       enabled: false
     livereload:
       enabled: false
-  profiles:
-    active: docker
   session:
     store-type: redis
   task:
@@ -30,19 +28,15 @@ spring:
       pool:
         size: 1
   datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://mysql:3306/knowledge?useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
     username: root
   data:
-    jpa:
-      repositories:
-        bootstrap-mode: deferred
+    jest:
+      uris: http://elastic:9200
   redis:
     database: 0
     host: redis
-    jest:
-      uris: http://elastic:9200
   jpa:
     generate-ddl: true
     show-sql: true
