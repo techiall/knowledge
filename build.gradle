@@ -57,6 +57,7 @@ dependencies {
     compile 'org.ehcache:ehcache:3.8.1'
     compile 'org.apache.commons:commons-lang3:3.8.1'
 
+    compile 'com.github.vanroy:spring-boot-starter-data-jest:3.3.0.RELEASE'
 
     runtime 'mysql:mysql-connector-java:8.0.18'
     runtime 'org.springframework.boot:spring-boot-devtools'
