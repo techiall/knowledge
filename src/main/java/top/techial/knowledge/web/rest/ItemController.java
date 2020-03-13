@@ -31,24 +31,26 @@ public class ItemController {
     private final ItemService itemService;
     private final NodeService nodeService;
     private final UserService userService;
+    private final ItemMapper itemMapper;
 
-    public ItemController(ItemService itemService, NodeService nodeService, UserService userService) {
+    public ItemController(ItemService itemService, NodeService nodeService, UserService userService, ItemMapper itemMapper) {
         this.itemService = itemService;
         this.nodeService = nodeService;
         this.userService = userService;
+        this.itemMapper = itemMapper;
     }
 
     @GetMapping("share")
     public ResultBean<Page<ItemDTO>> share(@PageableDefault Pageable pageable) {
         Page<ItemDTO> list = itemService.findByShare(true, pageable)
-                .map(ItemMapper.INSTANCE::toItemDTO);
+                .map(itemMapper::toItemDTO);
         return ResultBean.ok(list);
     }
 
     @GetMapping("/{id}")
     public ResultBean<ItemDTO> findById(@PathVariable Integer id) {
         Item item = itemService.findById(id).orElseThrow(ItemNotFoundException::new);
-        return ResultBean.ok(ItemMapper.INSTANCE.toItemDTO(item));
+        return ResultBean.ok(itemMapper.toItemDTO(item));
     }
 
     @GetMapping
@@ -57,7 +59,7 @@ public class ItemController {
             @PageableDefault Pageable pageable
     ) {
         return ResultBean.ok(itemService.findByUserId(userPrincipal.getId(), pageable)
-                .map(ItemMapper.INSTANCE::toItemDTO));
+                .map(itemMapper::toItemDTO));
     }
 
     @PostMapping
@@ -72,14 +74,14 @@ public class ItemController {
         }
         Node node = new Node().setName("root");
         node = nodeService.saveItemRoot(node);
-        Item item = ItemMapper.INSTANCE.toItem(itemVM)
+        Item item = itemMapper.toItem(itemVM)
                 .setAuthor(userService.findById(userPrincipal.getId()).orElseThrow(UserNotFoundException::new))
                 .setRootNode(node);
         item = itemService.save(item);
         nodeService.save(node.setItemId(item.getId()));
         itemService.insert(userPrincipal.getId(), item.getId());
 
-        return ResultBean.ok(ItemMapper.INSTANCE.toItemDTO(item));
+        return ResultBean.ok(itemMapper.toItemDTO(item));
     }
 
     @PutMapping("/{id}")
@@ -98,7 +100,7 @@ public class ItemController {
         if (itemVM != null && itemVM.getImage() != null) {
             item.setImage(itemVM.getImage());
         }
-        return ResultBean.ok(ItemMapper.INSTANCE.toItemDTO(itemService.save(item)));
+        return ResultBean.ok(itemMapper.toItemDTO(itemService.save(item)));
     }
 
     @DeleteMapping("/{id}")

@@ -32,21 +32,24 @@ public class NodeController {
     private final NodeService nodeService;
     private final RecordService recordService;
     private final ItemService itemService;
+    private final NodeMapper nodeMapper;
 
     public NodeController(
             NodeService nodeService,
             RecordService recordService,
-            ItemService itemService
+            ItemService itemService,
+            NodeMapper nodeMapper
     ) {
         this.nodeService = nodeService;
         this.recordService = recordService;
         this.itemService = itemService;
+        this.nodeMapper = nodeMapper;
     }
 
     @GetMapping("/{id}")
     public ResultBean<NodeInfoDTO> findById(@PathVariable Long id) {
         Node node = nodeService.findById(id);
-        return ResultBean.ok(NodeMapper.INSTANCE.toNodeInfoDTO(node));
+        return ResultBean.ok(nodeMapper.toNodeInfoDTO(node));
     }
 
     @PostMapping
@@ -68,7 +71,7 @@ public class NodeController {
             flag = true;
         }
         Map<String, Object> map = new HashMap<>();
-        map.put("node", NodeMapper.INSTANCE.toNodeInfoDTO(node));
+        map.put("node", nodeMapper.toNodeInfoDTO(node));
         map.put("new", flag);
         return ResultBean.ok(map);
     }
@@ -101,7 +104,7 @@ public class NodeController {
 
         node = nodeService.save(node);
 
-        return ResultBean.ok(NodeMapper.INSTANCE.toNodeInfoDTO(node));
+        return ResultBean.ok(nodeMapper.toNodeInfoDTO(node));
     }
 
     @PutMapping("/{id}/movement")

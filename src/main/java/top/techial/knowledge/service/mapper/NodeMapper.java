@@ -3,7 +3,6 @@ package top.techial.knowledge.service.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
-import org.mapstruct.factory.Mappers;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.service.dto.NodeInfoDTO;
@@ -17,9 +16,8 @@ import java.util.stream.Collectors;
 /**
  * @author techial
  */
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface NodeMapper {
-    NodeMapper INSTANCE = Mappers.getMapper(NodeMapper.class);
 
     @Mapping(source = "labels", target = "labels.labels")
     @Mapping(source = "property", target = "property.property")

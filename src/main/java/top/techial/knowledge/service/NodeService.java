@@ -40,17 +40,20 @@ public class NodeService {
     private final NodeRelationshipRepository nodeRelationshipRepository;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final ItemRepository itemRepository;
+    private final NodeMapper nodeMapper;
 
     public NodeService(
             NodeRepository nodeRepository,
             NodeRelationshipRepository nodeRelationshipRepository,
             NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-            ItemRepository itemRepository
+            ItemRepository itemRepository,
+            NodeMapper nodeMapper
     ) {
         this.nodeRepository = nodeRepository;
         this.nodeRelationshipRepository = nodeRelationshipRepository;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.itemRepository = itemRepository;
+        this.nodeMapper = nodeMapper;
     }
 
     @Transactional
@@ -75,7 +78,7 @@ public class NodeService {
     @Transactional
     @CacheEvict(allEntries = true)
     public Node save(NodeVM nodeVM, Long itemRootNodeId) {
-        Node node = NodeMapper.INSTANCE.toNode(nodeVM.setProperty(buildProperty(nodeVM.getProperty())));
+        Node node = nodeMapper.toNode(nodeVM.setProperty(buildProperty(nodeVM.getProperty())));
         node = nodeRepository.save(node);
         if (nodeVM.getParentId() != null) {
             nodeRelationshipRepository.insertNode(node.getId(), nodeVM.getParentId());
@@ -244,7 +247,7 @@ public class NodeService {
         Map<Long, Node> childNodeData = buildChildNodeData(id);
         Set<Long> flag = new HashSet<>();
 
-        NodeTreeDTO nodeTreeDTO = NodeMapper.INSTANCE.toNodeTreeDTO(childNodeData.get(id));
+        NodeTreeDTO nodeTreeDTO = nodeMapper.toNodeTreeDTO(childNodeData.get(id));
         List<ParentChildDTO> child = childNode.get(id);
 
         getChild(nodeTreeDTO, child, flag, childNodeData, childNode);
@@ -263,7 +266,7 @@ public class NodeService {
                 continue;
             }
             flag.add(parentChildDTO.getDescendant());
-            NodeTreeDTO n = NodeMapper.INSTANCE.toNodeTreeDTO(childNodeData.get(parentChildDTO.getDescendant()));
+            NodeTreeDTO n = nodeMapper.toNodeTreeDTO(childNodeData.get(parentChildDTO.getDescendant()));
             getChild(n, childNode.get(parentChildDTO.getDescendant()), flag, childNodeData, childNode);
             childList.add(n);
         }

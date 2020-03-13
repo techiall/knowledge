@@ -23,9 +23,11 @@ import top.techial.knowledge.service.mapper.RecordMapper;
 @RequestMapping("/api/record")
 public class RecordController {
     private final RecordService recordService;
+    private final RecordMapper recordMapper;
 
-    public RecordController(RecordService recordService) {
+    public RecordController(RecordService recordService, RecordMapper recordMapper) {
         this.recordService = recordService;
+        this.recordMapper = recordMapper;
     }
 
     @GetMapping("/node/{id}")
@@ -34,7 +36,7 @@ public class RecordController {
             @PathVariable Long id,
             @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        return ResultBean.ok(recordService.findByNodeId(id, pageable).map(RecordMapper.INSTANCE::toRecordDTO));
+        return ResultBean.ok(recordService.findByNodeId(id, pageable).map(recordMapper::toRecordDTO));
     }
 
 }

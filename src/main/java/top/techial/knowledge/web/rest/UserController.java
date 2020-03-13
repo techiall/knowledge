@@ -35,6 +35,7 @@ public class UserController {
     private final NodeService nodeService;
     private final PasswordEncoder passwordEncoder;
     private final RecordService recordService;
+    private final UserMapper userMapper;
     private final ItemService itemService;
 
     public UserController(
@@ -42,12 +43,14 @@ public class UserController {
             NodeService nodeService,
             PasswordEncoder passwordEncoder,
             RecordService recordService,
+            UserMapper userMapper,
             ItemService itemService
     ) {
         this.userService = userService;
         this.nodeService = nodeService;
         this.passwordEncoder = passwordEncoder;
         this.recordService = recordService;
+        this.userMapper = userMapper;
         this.itemService = itemService;
     }
 
@@ -57,7 +60,7 @@ public class UserController {
         if (object instanceof UserPrincipal) {
             UserPrincipal userPrincipal = (UserPrincipal) object;
             User user = userService.findById(userPrincipal.getId()).orElse(new User());
-            map.put("user", UserMapper.INSTANCE.toUserDTO(user));
+            map.put("user", userMapper.toUserDTO(user));
         } else {
             map.put("user", new User());
         }
@@ -79,7 +82,7 @@ public class UserController {
             user.setNickName(userVM.getNickName());
         }
         user = userService.save(user);
-        return ResultBean.ok(UserMapper.INSTANCE.toUserDTO(user));
+        return ResultBean.ok(userMapper.toUserDTO(user));
     }
 
     @PatchMapping("/me/password")
@@ -96,7 +99,7 @@ public class UserController {
         }
 
         userService.updatePassword(userPrincipal.getId(), password);
-        return ResultBean.ok(UserMapper.INSTANCE.toUserDTO(user));
+        return ResultBean.ok(userMapper.toUserDTO(user));
     }
 
     @DeleteMapping("/me")

@@ -36,17 +36,23 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final ItemRepository itemRepository;
     private final NodeService nodeService;
+    private final NodeMapper nodeMapper;
+    private final ItemMapper itemMapper;
 
     public UserService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             ItemRepository itemRepository,
-            NodeService nodeService
+            NodeService nodeService,
+            NodeMapper nodeMapper,
+            ItemMapper itemMapper
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.itemRepository = itemRepository;
         this.nodeService = nodeService;
+        this.nodeMapper = nodeMapper;
+        this.itemMapper = itemMapper;
     }
 
     @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
@@ -101,7 +107,7 @@ public class UserService {
         if (items == null) {
             return;
         }
-        List<SimpleGrantedAuthority> authority = ItemMapper.INSTANCE.toListSimpleGrantedAuthority(items);
+        List<SimpleGrantedAuthority> authority = itemMapper.toListSimpleGrantedAuthority(items);
 
         List<Integer> ids = items.parallelStream().map(Item::getId).collect(Collectors.toList());
 
@@ -112,7 +118,7 @@ public class UserService {
             return;
         }
         List<Long> node = nodeService.findByItemIds(ids);
-        List<SimpleGrantedAuthority> nodes = NodeMapper.INSTANCE.toListSimpleGrantedAuthority(node);
+        List<SimpleGrantedAuthority> nodes = nodeMapper.toListSimpleGrantedAuthority(node);
         authority.addAll(nodes);
         Authentication auth = new UsernamePasswordAuthenticationToken(userPrincipal, password, authority);
         context.setAuthentication(auth);
