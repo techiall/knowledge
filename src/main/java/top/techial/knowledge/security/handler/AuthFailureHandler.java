@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import top.techial.knowledge.utils.JsonUtils;
 import top.techial.knowledge.web.rest.errors.ClientErrorException;
 import top.techial.knowledge.web.rest.errors.UnauthorizedException;
 
@@ -32,6 +33,6 @@ public class AuthFailureHandler implements AuthenticationFailureHandler {
             clientErrorException = new UnauthorizedException();
         }
         response.setStatus(clientErrorException.getCode());
-        response.getWriter().write(objectMapper.writeValueAsString(clientErrorException.getResultBean()));
+        response.getWriter().write(JsonUtils.writeValueAsString(objectMapper, clientErrorException.getResultBean()));
     }
 }

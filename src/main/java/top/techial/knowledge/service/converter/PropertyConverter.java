@@ -1,8 +1,8 @@
 package top.techial.knowledge.service.converter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import top.techial.knowledge.domain.Property;
+import top.techial.knowledge.utils.JsonUtils;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Convert;
@@ -18,15 +18,13 @@ public class PropertyConverter implements AttributeConverter<Property, String> {
         this.objectMapper = objectMapper;
     }
 
-    @SneakyThrows
     @Override
     public String convertToDatabaseColumn(Property attribute) {
-        return objectMapper.writeValueAsString(attribute);
+        return JsonUtils.writeValueAsString(objectMapper, attribute);
     }
 
     @Override
-    @SneakyThrows
     public Property convertToEntityAttribute(String dbData) {
-        return objectMapper.readValue(dbData, Property.class);
+        return JsonUtils.readValue(objectMapper, dbData, Property.class);
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import top.techial.knowledge.utils.JsonUtils;
 import top.techial.knowledge.web.rest.errors.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +26,6 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         NotFoundException e = new NotFoundException();
         response.setStatus(e.getCode());
-        response.getWriter().write(objectMapper.writeValueAsString(e.getResultBean()));
+        response.getWriter().write(JsonUtils.writeValueAsString(objectMapper, e.getResultBean()));
     }
 }

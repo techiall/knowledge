@@ -1,8 +1,8 @@
 package top.techial.knowledge.service.converter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import top.techial.knowledge.domain.Labels;
+import top.techial.knowledge.utils.JsonUtils;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Convert;
@@ -18,15 +18,13 @@ public class LabelsConverter implements AttributeConverter<Labels, String> {
         this.objectMapper = objectMapper;
     }
 
-    @SneakyThrows
     @Override
     public String convertToDatabaseColumn(Labels attribute) {
-        return objectMapper.writeValueAsString(attribute);
+        return JsonUtils.writeValueAsString(objectMapper, attribute);
     }
 
     @Override
-    @SneakyThrows
     public Labels convertToEntityAttribute(String dbData) {
-        return objectMapper.readValue(dbData, Labels.class);
+        return JsonUtils.readValue(objectMapper, dbData, Labels.class);
     }
 }

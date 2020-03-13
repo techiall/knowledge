@@ -1,7 +1,6 @@
 package top.techial.knowledge.web.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +15,7 @@ import top.techial.knowledge.domain.Property;
 import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.dto.SearchDTO;
 import top.techial.knowledge.service.dto.SearchJsonDTO;
+import top.techial.knowledge.utils.JsonUtils;
 
 /**
  * @author techial
@@ -55,12 +55,11 @@ public class SearchController {
         return list.map(this::toSearchJson);
     }
 
-    @SneakyThrows
     private SearchJsonDTO toSearchJson(SearchDTO searchDTO) {
         return new SearchJsonDTO()
                 .setNodeId(searchDTO.getNodeId())
-                .setLabels(objectMapper.readValue(searchDTO.getLabels(), Labels.class))
-                .setProperty(objectMapper.readValue(searchDTO.getProperty(), Property.class))
+                .setLabels(JsonUtils.readValue(objectMapper, searchDTO.getLabels(), Labels.class))
+                .setProperty(JsonUtils.readValue(objectMapper, searchDTO.getProperty(), Property.class))
                 .setNodeName(searchDTO.getNodeName())
                 .setNodeNickName(searchDTO.getAuthorNickname())
                 .setNodeItemName(searchDTO.getItemName())

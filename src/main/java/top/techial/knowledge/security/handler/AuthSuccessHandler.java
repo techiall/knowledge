@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import top.techial.knowledge.beans.ResultBean;
+import top.techial.knowledge.utils.JsonUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +26,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        response.getWriter().write(objectMapper.writeValueAsString(ResultBean.ok()));
+        response.getWriter().write(JsonUtils.writeValueAsString(objectMapper, ResultBean.ok()));
         response.setContentType(MediaType.APPLICATION_JSON.toString());
         response.setStatus(HttpStatus.OK.value());
     }

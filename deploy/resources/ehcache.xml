@@ -12,6 +12,9 @@
 
     <!-- Default cache template -->
     <cache-template name="default">
+        <expiry>
+            <ttl unit="minutes">1</ttl>
+        </expiry>
         <listeners>
             <listener>
                 <class>top.techial.knowledge.config.CacheEventLoggerConfig</class>
@@ -25,8 +28,8 @@
 
         <resources>
             <heap>2000</heap>
-            <offheap unit="MB">10</offheap>
-            <disk persistent="true" unit="MB">20</disk>
+            <offheap unit="MB">100</offheap>
+            <disk persistent="true" unit="MB">200</disk>
         </resources>
     </cache-template>
 
