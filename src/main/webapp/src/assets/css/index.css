@@ -1,66 +1,76 @@
 @import url('./font.css');
 
-.scroll::-webkit-scrollbar-thumb ,textarea::-webkit-scrollbar-thumb{
-  background-color: #c5c8ce;
-  border-radius: 5px;
+.scroll::-webkit-scrollbar-thumb, textarea::-webkit-scrollbar-thumb {
+    background-color: #c5c8ce;
+    border-radius: 5px;
 }
-.scroll::-webkit-scrollbar,textarea::-webkit-scrollbar{
-  width: 8px;
-  height: 8px;
+
+.scroll::-webkit-scrollbar, textarea::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
 }
+
 .center {
-  text-align: center;
+    text-align: center;
 }
+
 .dis-fix {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 }
-.dis-fixc{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+
+.dis-fixc {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
-.df{
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+.df {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.cup{
-  cursor: pointer;
+
+.cup {
+    cursor: pointer;
 }
+
 .Noimg {
-  font-family: Georgia;
-  display: inline-block;
-  width: 25px;
-  border-radius: 50%;
-  text-align: center;
-  line-height: 25px;
-  font-size: 15px;
-  user-select: none;
-  color: #dff6f0;
-  background: #4d80e4;
-  cursor: pointer;
+    font-family: Georgia;
+    display: inline-block;
+    width: 25px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 25px;
+    font-size: 15px;
+    user-select: none;
+    color: #dff6f0;
+    background: #4d80e4;
+    cursor: pointer;
 }
+
 .b-auto-complete i {
-  right: inherit;
+    right: inherit;
 }
+
 @keyframes ani-demo-load {
-  from {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(180deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
+
 @keyframes showModal {
-  0% {
-    transform: scale(0);
-  }
-  100% {
-    transform: scale(1);
-  }
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
 }

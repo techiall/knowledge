@@ -51,9 +51,6 @@ spring:
         globally_quoted_identifiers: true
         dialect: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
-  cache:
-    jcache:
-      config: classpath:ehcache.xml
   servlet:
     multipart:
       max-file-size: 60MB

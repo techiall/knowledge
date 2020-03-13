@@ -1,8 +1,5 @@
 package top.techial.knowledge.service;
 
-import lombok.SneakyThrows;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +11,6 @@ import top.techial.knowledge.repository.RecordRepository;
  * @author techial
  */
 @Service
-@CacheConfig(cacheNames = "common")
 public class RecordService {
     private final RecordRepository recordRepository;
 
@@ -22,9 +18,7 @@ public class RecordService {
         this.recordRepository = recordRepository;
     }
 
-    @SneakyThrows
     @Async
-    @CacheEvict(allEntries = true)
     @Transactional
     public void save(Long nodeId, Integer userId, String operatorMessage, String message) {
         Record record = new Record()

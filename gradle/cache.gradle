@@ -1,5 +1,0 @@
-clean.doFirst { cleanCache }
-
-task cleanCache(group: 'app') {
-    delete "${rootDir}/cache"
-}

@@ -1,9 +1,6 @@
 package top.techial.knowledge.service;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -34,7 +31,6 @@ import java.util.stream.Collectors;
  */
 @Service
 @Log4j2
-@CacheConfig(cacheNames = "common")
 public class NodeService {
     private final NodeRepository nodeRepository;
     private final NodeRelationshipRepository nodeRelationshipRepository;
@@ -57,20 +53,17 @@ public class NodeService {
     }
 
     @Transactional
-    @CacheEvict(allEntries = true)
     public Node saveItemRoot(Node node) {
         node = nodeRepository.save(node);
         nodeRelationshipRepository.insertNode(node.getId());
         return node;
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
     public Optional<Node> findByItemIdAndName(String name, Integer itemId) {
         return nodeRepository.findByItemIdAndName(name, itemId);
     }
 
     @Transactional
-    @CacheEvict(allEntries = true)
     public Node save(NodeVM nodeVM, Long itemRootNodeId) {
         Node node = nodeMapper.toNode(nodeVM.setProperty(buildProperty(nodeVM.getProperty())));
         node = nodeRepository.save(node);
@@ -82,7 +75,6 @@ public class NodeService {
         return node;
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Map<String, List<Property.PropertyDTO>> buildProperty(Map<String, List<Property.PropertyDTO>> property) {
         if (property == null || property.values() == null || property.values().isEmpty()) {
             return Collections.emptyMap();
@@ -99,7 +91,6 @@ public class NodeService {
         return property;
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public List<Property.PropertyDTO> findByIds(List<Long> ids) {
         if (ids == null || ids.isEmpty()) {
             return Collections.emptyList();
@@ -112,12 +103,10 @@ public class NodeService {
     }
 
     @Transactional
-    @CacheEvict(allEntries = true)
     public void deleteByItemId(Integer id) {
         nodeRepository.deleteAllByItemId(id);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Node findById(Long id) {
         this.checkItemRoot(id);
         Node node = nodeRepository.findById(id).orElseThrow(NodeNotFoundException::new);
@@ -127,7 +116,6 @@ public class NodeService {
         return node;
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
     public List<NodeBaseDTO> findByNameLike(String name, Integer itemId) {
         // language=sql
         String value = "select id, name from node where name like :name and item_id = :itemId\n" +
@@ -140,7 +128,6 @@ public class NodeService {
         return namedParameterJdbcTemplate.query(value, map, rowMapper);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
     public PageImpl<SearchDTO> findContentByNameLike(String name, Pageable pageable) {
         // language=sql
         String value = "select i.name as itemName, n.name as nodeName, u.nick_name as nodeAuthorNickName, n.text as text,\n" +
@@ -162,7 +149,6 @@ public class NodeService {
         return new PageImpl<>(content, pageable, count == null ? 0 : count);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public List<NodeBaseDTO> findByNameLike(String name) {
         // language=sql
         String value = "select n.id, n.name from node n inner join item i on n.item_id = i.id\n" +
@@ -172,7 +158,6 @@ public class NodeService {
         return namedParameterJdbcTemplate.query(value, map, new BeanPropertyRowMapper<>(NodeBaseDTO.class));
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0 + #p1", unless = "#result == null")
     public List<NodeBaseDTO> findByChildNode(Long id, int depth) {
         // language=sql
         String value = "select noderelati1_.ancestor as parentNodeId, noderelati1_.descendant as id,\n" +
@@ -267,7 +252,6 @@ public class NodeService {
         node.setChild(childList);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Map<String, Object> getChildAndParent(Long id) {
         Map<String, Object> map = new HashMap<>();
         map.put("child", depthGetChild(id));
@@ -290,7 +274,6 @@ public class NodeService {
         return map;
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public Map<String, Object> findByIdGraph(Long id) {
 
         LinkedList<Node> queue = new LinkedList<>();
@@ -358,20 +341,17 @@ public class NodeService {
         return result;
     }
 
-    @CacheEvict(allEntries = true)
     public void deleteIdsAndRelationship(Set<Long> ids) {
         nodeRepository.deleteByIdIn(ids);
         nodeRelationshipRepository.deleteByNodeIdIn(ids);
     }
 
-    @CacheEvict(allEntries = true)
     public void deleteIdAndRelationship(Long id) {
         this.checkItemRoot(id);
         nodeRepository.deleteById(id);
         nodeRelationshipRepository.deleteByNodeId(id);
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
     public List<Long> findByItemIds(Collection<Integer> ids) {
         return nodeRepository.findByItemIdIn(ids);
     }
@@ -380,7 +360,6 @@ public class NodeService {
         itemRepository.findItemIdByRootId(id).ifPresent(RootNodeException::new);
     }
 
-    @CacheEvict(allEntries = true)
     public void move(Long id, Long target) {
         Map<String, Long> result = new HashMap<>();
         result.put("id", id);

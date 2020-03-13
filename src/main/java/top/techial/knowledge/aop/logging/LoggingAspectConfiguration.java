@@ -3,7 +3,7 @@ package top.techial.knowledge.aop.logging;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import top.techial.knowledge.config.ConstantsProfile;
+import top.techial.knowledge.config.ProfileConstants;
 
 /**
  * @author techial
@@ -12,7 +12,7 @@ import top.techial.knowledge.config.ConstantsProfile;
 public class LoggingAspectConfiguration {
 
     @Bean
-    @Profile({ConstantsProfile.DEV, ConstantsProfile.TEST})
+    @Profile({ProfileConstants.DEV, ProfileConstants.TEST})
     public LoggingAspect loggingAspect() {
         return new LoggingAspect();
     }

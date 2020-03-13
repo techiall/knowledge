@@ -1,8 +1,6 @@
 package top.techial.knowledge.service;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,7 +24,6 @@ import java.util.stream.Collectors;
  */
 @Service
 @Log4j2
-@CacheConfig(cacheNames = "common")
 public class UserService {
 
     private final UserRepository userRepository;
@@ -52,13 +49,11 @@ public class UserService {
         this.itemMapper = itemMapper;
     }
 
-    @CacheEvict(allEntries = true)
     @Transactional
     public void updatePassword(Integer id, String password) {
         userRepository.updatePassword(id, passwordEncoder.encode(password));
     }
 
-    @CacheEvict(allEntries = true)
     public void resetAuthority() {
         SecurityContext context = SecurityContextHolder.getContext();
         if (context == null || context.getAuthentication() == null || context.getAuthentication().getPrincipal() == null) {
