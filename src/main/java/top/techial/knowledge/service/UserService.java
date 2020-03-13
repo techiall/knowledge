@@ -3,7 +3,6 @@ package top.techial.knowledge.service;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.domain.Item;
-import top.techial.knowledge.domain.User;
 import top.techial.knowledge.repository.ItemRepository;
 import top.techial.knowledge.repository.UserRepository;
 import top.techial.knowledge.security.UserPrincipal;
@@ -21,7 +19,6 @@ import top.techial.knowledge.service.mapper.ItemMapper;
 import top.techial.knowledge.service.mapper.NodeMapper;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -55,41 +52,10 @@ public class UserService {
         this.itemMapper = itemMapper;
     }
 
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
-    public Optional<User> findByUserName(String userName) {
-        return userRepository.findFirstByUserName(userName);
-    }
-
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
-    public Optional<User> findById(Integer id) {
-        return userRepository.findById(id);
-    }
-
     @CacheEvict(allEntries = true)
     @Transactional
     public void updatePassword(Integer id, String password) {
         userRepository.updatePassword(id, passwordEncoder.encode(password));
-    }
-
-    @Transactional(rollbackFor = IllegalArgumentException.class)
-    @CacheEvict(allEntries = true)
-    public void deleteById(Integer id) {
-        userRepository.deleteById(id);
-    }
-
-    public long count() {
-        return userRepository.count();
-    }
-
-    @CacheEvict(allEntries = true)
-    @Transactional
-    public User save(User user) {
-        return userRepository.save(user);
-    }
-
-    @Cacheable(key = "#root.targetClass.simpleName + #root.methodName + #p0", unless = "#result == null")
-    public boolean existsByUserName(String name) {
-        return userRepository.existsByUserName(name);
     }
 
     @CacheEvict(allEntries = true)

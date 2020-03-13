@@ -8,8 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.User;
+import top.techial.knowledge.repository.UserRepository;
 import top.techial.knowledge.service.NodeService;
-import top.techial.knowledge.service.UserService;
 import top.techial.knowledge.service.mapper.ItemMapper;
 import top.techial.knowledge.service.mapper.NodeMapper;
 
@@ -24,26 +24,26 @@ import java.util.stream.Collectors;
 @Log4j2
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserService userService;
     private final NodeService nodeService;
     private final ItemMapper itemMapper;
     private final NodeMapper nodeMapper;
+    private final UserRepository userRepository;
 
     public UserDetailsServiceImpl(
-            UserService userService,
             NodeService nodeService,
             ItemMapper itemMapper,
-            NodeMapper nodeMapper
+            NodeMapper nodeMapper,
+            UserRepository userRepository
     ) {
-        this.userService = userService;
         this.nodeService = nodeService;
         this.itemMapper = itemMapper;
         this.nodeMapper = nodeMapper;
+        this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String s) {
-        User user = userService.findByUserName(s)
+        User user = userRepository.findFirstByUserName(s)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         String.format("userName:[%s] not found.", s)));
         List<Long> nodes;

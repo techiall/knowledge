@@ -11,6 +11,9 @@ import top.techial.knowledge.aop.authority.FlushAuthority;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.Node;
+import top.techial.knowledge.repository.ItemRepository;
+import top.techial.knowledge.repository.NodeRepository;
+import top.techial.knowledge.repository.UserRepository;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.ItemService;
 import top.techial.knowledge.service.NodeService;
@@ -29,27 +32,41 @@ import top.techial.knowledge.web.rest.vm.ItemVM;
 @RequestMapping("/api/item")
 public class ItemController {
     private final ItemService itemService;
+    private final ItemRepository itemRepository;
     private final NodeService nodeService;
     private final UserService userService;
+    private final NodeRepository nodeRepository;
     private final ItemMapper itemMapper;
+    private final UserRepository userRepository;
 
-    public ItemController(ItemService itemService, NodeService nodeService, UserService userService, ItemMapper itemMapper) {
+    public ItemController(
+            ItemService itemService,
+            ItemRepository itemRepository,
+            NodeService nodeService,
+            UserService userService,
+            NodeRepository nodeRepository,
+            ItemMapper itemMapper,
+            UserRepository userRepository
+    ) {
         this.itemService = itemService;
+        this.itemRepository = itemRepository;
         this.nodeService = nodeService;
         this.userService = userService;
+        this.nodeRepository = nodeRepository;
         this.itemMapper = itemMapper;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("share")
     public ResultBean<Page<ItemDTO>> share(@PageableDefault Pageable pageable) {
-        Page<ItemDTO> list = itemService.findByShare(true, pageable)
+        Page<ItemDTO> list = itemRepository.findByShare(true, pageable)
                 .map(itemMapper::toItemDTO);
         return ResultBean.ok(list);
     }
 
     @GetMapping("/{id}")
     public ResultBean<ItemDTO> findById(@PathVariable Integer id) {
-        Item item = itemService.findById(id).orElseThrow(ItemNotFoundException::new);
+        Item item = itemRepository.findById(id).orElseThrow(ItemNotFoundException::new);
         return ResultBean.ok(itemMapper.toItemDTO(item));
     }
 
@@ -58,7 +75,7 @@ public class ItemController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PageableDefault Pageable pageable
     ) {
-        return ResultBean.ok(itemService.findByUserId(userPrincipal.getId(), pageable)
+        return ResultBean.ok(itemRepository.findAllByAuthorId(userPrincipal.getId(), pageable)
                 .map(itemMapper::toItemDTO));
     }
 
@@ -75,11 +92,11 @@ public class ItemController {
         Node node = new Node().setName("root");
         node = nodeService.saveItemRoot(node);
         Item item = itemMapper.toItem(itemVM)
-                .setAuthor(userService.findById(userPrincipal.getId()).orElseThrow(UserNotFoundException::new))
+                .setAuthor(userRepository.findById(userPrincipal.getId()).orElseThrow(UserNotFoundException::new))
                 .setRootNode(node);
-        item = itemService.save(item);
-        nodeService.save(node.setItemId(item.getId()));
-        itemService.insert(userPrincipal.getId(), item.getId());
+        item = itemRepository.save(item);
+        nodeRepository.save(node.setItemId(item.getId()));
+        itemRepository.insert(userPrincipal.getId(), item.getId());
 
         return ResultBean.ok(itemMapper.toItemDTO(item));
     }
@@ -87,7 +104,7 @@ public class ItemController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ITEM_' + #id.toString())")
     public ResultBean<ItemDTO> update(@RequestBody ItemVM itemVM, @PathVariable Integer id) {
-        Item item = itemService.findById(id).orElseThrow(ItemNotFoundException::new);
+        Item item = itemRepository.findById(id).orElseThrow(ItemNotFoundException::new);
         if (itemVM != null && itemVM.getDescription() != null) {
             item.setDescription(itemVM.getDescription());
         }
@@ -100,15 +117,15 @@ public class ItemController {
         if (itemVM != null && itemVM.getImage() != null) {
             item.setImage(itemVM.getImage());
         }
-        return ResultBean.ok(itemMapper.toItemDTO(itemService.save(item)));
+        return ResultBean.ok(itemMapper.toItemDTO(itemRepository.save(item)));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ITEM_' + #id.toString())")
     @FlushAuthority
     public ResultBean<Object> deleteById(@PathVariable Integer id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        itemService.deleteByUserIdAndItemId(userPrincipal.getId(), id);
-        itemService.deleteById(id);
+        itemRepository.deleteTmpByUserIdAndItemId(userPrincipal.getId(), id);
+        itemRepository.deleteById(id);
         nodeService.deleteByItemId(id);
 
         return ResultBean.ok();

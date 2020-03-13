@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.Storage;
+import top.techial.knowledge.repository.NodeRepository;
+import top.techial.knowledge.repository.StorageRepository;
 import top.techial.knowledge.service.FileStorageService;
-import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.StorageService;
 
 import java.util.HashMap;
@@ -24,17 +25,20 @@ import java.util.Map;
 @Log4j2
 public class StorageController {
     private final StorageService storageService;
-    private final NodeService nodeService;
+    private final NodeRepository nodeRepository;
     private final FileStorageService fileStorageService;
+    private final StorageRepository storageRepository;
 
     public StorageController(
             StorageService storageService,
-            NodeService nodeService,
-            FileStorageService fileStorageService
+            NodeRepository nodeRepository,
+            FileStorageService fileStorageService,
+            StorageRepository storageRepository
     ) {
         this.storageService = storageService;
-        this.nodeService = nodeService;
+        this.nodeRepository = nodeRepository;
         this.fileStorageService = fileStorageService;
+        this.storageRepository = storageRepository;
     }
 
     /**
@@ -43,7 +47,7 @@ public class StorageController {
     @PostMapping("/text/{id}")
     @PreAuthorize("hasAnyAuthority(#id)")
     public ResultBean<Long> save(@RequestBody(required = false) String text, @PathVariable Long id) {
-        nodeService.saveText(text, id);
+        nodeRepository.saveText(id, text);
         return ResultBean.ok(id);
     }
 
@@ -52,7 +56,7 @@ public class StorageController {
      */
     @GetMapping("/text/{id}")
     public ResultBean<String> findById(@PathVariable Long id) {
-        return ResultBean.ok(nodeService.findText(id));
+        return ResultBean.ok(nodeRepository.findTextById(id));
     }
 
     @PostMapping
@@ -69,7 +73,7 @@ public class StorageController {
     @DeleteMapping("/{id}")
     public ResultBean<Boolean> delete(@PathVariable String id) {
         fileStorageService.delete(id);
-        storageService.deleteById(id);
+        storageRepository.deleteById(id);
         return ResultBean.ok(true);
     }
 

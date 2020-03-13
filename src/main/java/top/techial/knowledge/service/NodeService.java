@@ -71,12 +71,6 @@ public class NodeService {
 
     @Transactional
     @CacheEvict(allEntries = true)
-    public Node save(Node node) {
-        return nodeRepository.save(node);
-    }
-
-    @Transactional
-    @CacheEvict(allEntries = true)
     public Node save(NodeVM nodeVM, Long itemRootNodeId) {
         Node node = nodeMapper.toNode(nodeVM.setProperty(buildProperty(nodeVM.getProperty())));
         node = nodeRepository.save(node);
@@ -384,15 +378,6 @@ public class NodeService {
 
     private void checkItemRoot(Long id) {
         itemRepository.findItemIdByRootId(id).ifPresent(RootNodeException::new);
-    }
-
-    @CacheEvict(allEntries = true)
-    public void saveText(String text, Long id) {
-        nodeRepository.saveText(id, text);
-    }
-
-    public String findText(Long id) {
-        return nodeRepository.findTextById(id);
     }
 
     @CacheEvict(allEntries = true)

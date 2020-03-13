@@ -9,10 +9,12 @@ import top.techial.knowledge.aop.authority.FlushAuthority;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.User;
+import top.techial.knowledge.repository.ItemRepository;
+import top.techial.knowledge.repository.RecordRepository;
+import top.techial.knowledge.repository.UserRepository;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.ItemService;
 import top.techial.knowledge.service.NodeService;
-import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.service.UserService;
 import top.techial.knowledge.service.dto.UserDTO;
 import top.techial.knowledge.service.mapper.UserMapper;
@@ -32,24 +34,30 @@ import java.util.Map;
 @Log4j2
 public class UserController {
     private final UserService userService;
+    private final UserRepository userRepository;
     private final NodeService nodeService;
+    private final ItemRepository itemRepository;
     private final PasswordEncoder passwordEncoder;
-    private final RecordService recordService;
+    private final RecordRepository recordRepository;
     private final UserMapper userMapper;
     private final ItemService itemService;
 
     public UserController(
             UserService userService,
+            UserRepository userRepository,
             NodeService nodeService,
+            ItemRepository itemRepository,
             PasswordEncoder passwordEncoder,
-            RecordService recordService,
+            RecordRepository recordRepository,
             UserMapper userMapper,
             ItemService itemService
     ) {
         this.userService = userService;
+        this.userRepository = userRepository;
         this.nodeService = nodeService;
+        this.itemRepository = itemRepository;
         this.passwordEncoder = passwordEncoder;
-        this.recordService = recordService;
+        this.recordRepository = recordRepository;
         this.userMapper = userMapper;
         this.itemService = itemService;
     }
@@ -59,7 +67,7 @@ public class UserController {
         Map<String, Object> map = new HashMap<>(16);
         if (object instanceof UserPrincipal) {
             UserPrincipal userPrincipal = (UserPrincipal) object;
-            User user = userService.findById(userPrincipal.getId()).orElse(new User());
+            User user = userRepository.findById(userPrincipal.getId()).orElse(new User());
             map.put("user", userMapper.toUserDTO(user));
         } else {
             map.put("user", new User());
@@ -73,7 +81,7 @@ public class UserController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody UserVM userVM
     ) {
-        User user = userService.findById(userPrincipal.getId())
+        User user = userRepository.findById(userPrincipal.getId())
                 .orElseThrow(UserNotFoundException::new);
         if (userVM != null && userVM.getImage() != null && !userVM.getImage().isEmpty()) {
             user.setImages(userVM.getImage());
@@ -81,7 +89,7 @@ public class UserController {
         if (userVM != null && userVM.getNickName() != null && !userVM.getNickName().isEmpty()) {
             user.setNickName(userVM.getNickName());
         }
-        user = userService.save(user);
+        user = userRepository.save(user);
         return ResultBean.ok(userMapper.toUserDTO(user));
     }
 
@@ -92,7 +100,7 @@ public class UserController {
             String srcPassword,
             String password
     ) {
-        User user = userService.findById(userPrincipal.getId()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(UserNotFoundException::new);
 
         if (!passwordEncoder.matches(srcPassword, user.getPassword())) {
             throw new IllegalArgumentException("password not match.");
@@ -105,12 +113,12 @@ public class UserController {
     @DeleteMapping("/me")
     @FlushAuthority
     public ResultBean<Object> deleteById(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        List<Item> item = itemService.findByUserId(userPrincipal.getId());
+        List<Item> item = itemRepository.findAllByAuthorId(userPrincipal.getId());
         itemService.deleteByUserIdAndItemId(userPrincipal.getId(), item);
-        itemService.deleteByUserId(userPrincipal.getId());
+        itemRepository.deleteByAuthorId(userPrincipal.getId());
         item.parallelStream().map(Item::getId).forEach(nodeService::deleteByItemId);
-        recordService.deleteByUserId(userPrincipal.getId());
-        userService.deleteById(userPrincipal.getId());
+        recordRepository.deleteByUserId(userPrincipal.getId());
+        userRepository.deleteById(userPrincipal.getId());
         return ResultBean.ok();
     }
 }

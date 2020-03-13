@@ -9,8 +9,10 @@ import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.Labels;
 import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.domain.Property;
+import top.techial.knowledge.repository.ItemRepository;
+import top.techial.knowledge.repository.NodeRepository;
+import top.techial.knowledge.repository.RecordRepository;
 import top.techial.knowledge.security.UserPrincipal;
-import top.techial.knowledge.service.ItemService;
 import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.service.dto.NodeBaseDTO;
@@ -30,20 +32,26 @@ import java.util.*;
 @RequestMapping("/api/node")
 public class NodeController {
     private final NodeService nodeService;
+    private final NodeRepository nodeRepository;
     private final RecordService recordService;
-    private final ItemService itemService;
+    private final ItemRepository itemRepository;
     private final NodeMapper nodeMapper;
+    private final RecordRepository recordRepository;
 
     public NodeController(
             NodeService nodeService,
+            NodeRepository nodeRepository,
             RecordService recordService,
-            ItemService itemService,
-            NodeMapper nodeMapper
+            ItemRepository itemRepository,
+            NodeMapper nodeMapper,
+            RecordRepository recordRepository
     ) {
         this.nodeService = nodeService;
+        this.nodeRepository = nodeRepository;
         this.recordService = recordService;
-        this.itemService = itemService;
+        this.itemRepository = itemRepository;
         this.nodeMapper = nodeMapper;
+        this.recordRepository = recordRepository;
     }
 
     @GetMapping("/{id}")
@@ -59,7 +67,7 @@ public class NodeController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Validated(value = Insert.class) @RequestBody NodeVM nodeVM
     ) {
-        Long itemId = itemService.findRootNodeId(nodeVM.getItemId())
+        Long itemId = itemRepository.findRootNodeId(nodeVM.getItemId())
                 .orElseThrow(ItemNotFoundException::new);
         Node node = nodeService.findByItemIdAndName(nodeVM.getName().trim(), nodeVM.getItemId())
                 .orElse(null);
@@ -102,9 +110,7 @@ public class NodeController {
                     nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
         }
 
-        node = nodeService.save(node);
-
-        return ResultBean.ok(nodeMapper.toNodeInfoDTO(node));
+        return ResultBean.ok(nodeMapper.toNodeInfoDTO(nodeRepository.save(node)));
     }
 
     @PutMapping("/{id}/movement")
@@ -125,7 +131,7 @@ public class NodeController {
             @PathVariable Long id
     ) {
         nodeService.deleteIdAndRelationship(id);
-        recordService.deleteByNodeId(id);
+        recordRepository.deleteByNodeId(id);
 
         return ResultBean.ok(true);
     }
@@ -138,7 +144,7 @@ public class NodeController {
             @RequestParam Integer itemId
     ) {
         nodeService.deleteIdsAndRelationship(ids);
-        recordService.deleteByNodeIds(ids);
+        recordRepository.deleteByNodeIdIn(ids);
 
         return ResultBean.ok(true);
     }
@@ -148,7 +154,7 @@ public class NodeController {
             @RequestParam Integer itemId,
             @RequestParam(defaultValue = "1") Integer depth
     ) {
-        Long rootNodeId = itemService.findRootNodeId(itemId)
+        Long rootNodeId = itemRepository.findRootNodeId(itemId)
                 .orElseThrow(ItemNotFoundException::new);
         return ResultBean.ok(nodeService.findByChildNode(rootNodeId, depth));
     }

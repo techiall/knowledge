@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.techial.knowledge.beans.ResultBean;
-import top.techial.knowledge.service.RecordService;
+import top.techial.knowledge.repository.RecordRepository;
 import top.techial.knowledge.service.dto.RecordDTO;
 import top.techial.knowledge.service.mapper.RecordMapper;
 
@@ -22,11 +22,11 @@ import top.techial.knowledge.service.mapper.RecordMapper;
 @RestController
 @RequestMapping("/api/record")
 public class RecordController {
-    private final RecordService recordService;
+    private final RecordRepository recordRepository;
     private final RecordMapper recordMapper;
 
-    public RecordController(RecordService recordService, RecordMapper recordMapper) {
-        this.recordService = recordService;
+    public RecordController(RecordRepository recordRepository, RecordMapper recordMapper) {
+        this.recordRepository = recordRepository;
         this.recordMapper = recordMapper;
     }
 
@@ -36,7 +36,7 @@ public class RecordController {
             @PathVariable Long id,
             @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        return ResultBean.ok(recordService.findByNodeId(id, pageable).map(recordMapper::toRecordDTO));
+        return ResultBean.ok(recordRepository.findAllByNodeId(id, pageable).map(recordMapper::toRecordDTO));
     }
 
 }
