@@ -1,5 +1,6 @@
 package top.techial.knowledge.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
+    @EntityGraph(attributePaths = "item")
     Optional<User> findFirstByUserName(String name);
 
     boolean existsByUserName(String name);
