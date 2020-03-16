@@ -83,12 +83,6 @@ export default {
         password: '',
         remeberMe: false,
       },
-      //防止 多次登陆错误信息
-      repeatFrom: {
-        username: '',
-        password: '',
-        remeberMe: false,
-      },
       //感叹号
       information: 'ios-information-circle',
     };
@@ -107,24 +101,7 @@ export default {
         // 同一时间只能提交一次
         return;
       }
-      if (
-        this.repeatFrom.username === this.formlogin.username &&
-        this.repeatFrom.password === this.formlogin.password &&
-        this.repeatFrom.remeberMe === this.formlogin.remeberMe
-      ) {
-        //防止提交多次重复数据
-        this.$Message.warning({
-          content: '请不要重复提交！',
-          duration: 2,
-        });
-        return;
-      }
       this.formloginFlag = true;
-      this.repeatFrom = {
-        username: this.formlogin.username,
-        password: this.formlogin.password,
-        remeberMe: this.formlogin.remeberMe,
-      };
       let register = {
         username: this.formlogin.username,
         password: this.formlogin.password,
@@ -139,7 +116,8 @@ export default {
           this.get('/user/me').then((res) => {
             let data = res.data;
             this.setUserData(data);
-            this.$router.push({ path: '/project' });
+            window.console.log(this.$route);
+            this.$router.push(this.$route.query.redirect || '/project');
           });
         })
         .catch(() => {
@@ -180,11 +158,6 @@ export default {
       this.showuserwarn = false;
       this.showpasswordwarn = false;
       this.formlogin = {
-        username: '',
-        password: '',
-        remeberMe: false,
-      };
-      this.repeatFrom = {
         username: '',
         password: '',
         remeberMe: false,

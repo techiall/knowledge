@@ -12,14 +12,13 @@
         <router-link to="/project" class="g-link-keypad">
           <Icon type="ios-keypad" class="g-link-icon cup" />
         </router-link>
-        <router-link to="/login" v-if="userStatusFlag === -1">
-          <span class="g-link-login cup">登录</span>
-        </router-link>
-        <drop-down v-else-if="userStatusFlag === 1">
+        <drop-down v-if="userName">
           <img v-if="images" :src="images" class="g-login-img cup" />
           <div v-else class="Noimg">{{nickName.charAt(0).toUpperCase()}}</div>
         </drop-down>
-        <Icon type="md-refresh" class="g-loading" v-else-if="userStatusFlag === 0" />
+        <router-link to="/login" v-else>
+          <span class="g-link-login cup">登录</span>
+        </router-link>
       </div>
     </div>
     <div class="g-search-wrap" ref="knowSearchBox">
@@ -86,8 +85,6 @@ export default {
   props: ['routerKey'],
   data() {
     return {
-      // 判断用户状态
-      userStatusFlag: 0,
       // 联想 请求的数据
       searchData: [],
       // 联系请求异步
@@ -104,11 +101,11 @@ export default {
     ...mapGetters({
       images: 'getImageSrc',
       nickName: 'getnickName',
+      userName: 'getuserName',
       searcHistory: 'getSearcHistory',
     }),
   },
   created() {
-    this.getUser();
     this.routerAssignment();
   },
   mounted() {
@@ -127,22 +124,6 @@ export default {
       if (queryName) {
         this.InSearchMeg = queryName;
       }
-    },
-    // 获取  user信息
-    getUser() {
-      const url = '/user/me';
-      this.get(url)
-        .then((res) => {
-          if (res.data.user.id) {
-            let data = res.data;
-            this.userStatusFlag = 1;
-            this.setUserData(data);
-          } else {
-            this.userStatusFlag = -1;
-            this.setToken(res.data._csrf.token);
-          }
-        })
-        .catch(() => {});
     },
     // change 事件触发的函数
     changeEvent() {

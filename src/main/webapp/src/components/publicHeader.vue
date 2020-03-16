@@ -28,14 +28,13 @@
     <div class="know-public-header-right df">
       <router-link :to="routerTO?routerTO:'/project'" class="know-public-header-icon cup ivu-icon ivu-icon-ios-keypad">
       </router-link>
-      <router-link to="/login" v-if="!userStatusFlag&&userStatusLoadFlag">
-        <span class="know-public-header-login cup">登录</span>
-      </router-link>
-      <drop-down v-else-if="userStatusFlag&&userStatusLoadFlag">
+      <drop-down v-if="userName">
         <img :src="images" class="know-public-header-user-logo cup" v-if="images" />
         <div v-else class="Noimg">{{nickName.charAt(0).toUpperCase()}}</div>
       </drop-down>
-      <Icon type="md-refresh" class="know-header-user-load" v-else-if="!userStatusLoadFlag" />
+      <router-link to="/login" v-else>
+        <span class="know-public-header-login cup">登录</span>
+      </router-link>
     </div>
   </header>
 </template>
@@ -50,43 +49,17 @@ export default {
   props: ['routerTO', 'RouterFlag', 'itemName', 'TitleShow', 'title'],
   data() {
     return {
-      // 判断用户是否登录 标志位
-      userStatusFlag: false,
-      // 判断 用户 登录 加载标志位
-      userStatusLoadFlag: false,
     };
   },
   computed: {
     ...mapGetters({
       images: 'getImageSrc',
       nickName: 'getnickName',
+      userName: 'getuserName',
     }),
-  },
-  mounted() {
-    this.getUser();
   },
   methods: {
     ...mapMutations(['setUserData','delToken']),
-    // 获取token 判断用户登录
-    getUser() {
-      const url = '/user/me';
-      this.get(url)
-        .then((res) => {
-          this.userStatusLoadFlag = true;
-          if (res.data.user.id) {
-            let data = res.data;
-            this.userStatusFlag = true;
-            this.setUserData(data);
-          } else {
-            this.userStatusFlag = false;
-            this.delToken();
-            if (this.RouterFlag) {
-              this.$router.push({ path: '/login' });
-            }
-          }
-        })
-        .catch(() => {});
-    },
   },
 };
 </script>

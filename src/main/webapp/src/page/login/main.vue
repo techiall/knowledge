@@ -6,8 +6,8 @@
 
 
 <template>
-  <div id="loginBox" v-title='知识图谱构建平台'>
-    <Spin size="large" fix v-if="spinShow"></Spin>
+  <div id="loginBox" v-title="知识图谱构建平台">
+    <Spin size="large" fix v-if="spinFlag"></Spin>
     <div class="know-login-icon">
       <router-link to="/">
         <Icon type="ios-keypad" />
@@ -59,11 +59,14 @@ export default {
   components: { loginContent, registerContent },
   data() {
     return {
-      //设置免密登录加载
-      spinShow: true,
       // 登陆 和 注册 之间 跳转
       showLoginRegister: true,
+      // 加载标志位
+      spinFlag: true,
     };
+  },
+  created() {
+    this.getServerUser();
   },
   methods: {
     ...mapMutations(['setUserData', 'setToken']),
@@ -87,24 +90,22 @@ export default {
       };
       statusMap[type]();
     },
-    // 获取  token
-    getuserToken() {
-      this.get('/user/me')
+    // 判断用户是否登录
+    getServerUser() {
+      const url = '/user/me';
+      this.get(url)
         .then((res) => {
-          this.spinShow = false;
+          this.spinFlag = false;
           if (res.data.user.id) {
-            let data = res.data;
+            let { data } = res;
             this.setUserData(data);
-            this.$router.push({ path: '/project' });
+            this.$router.push(this.$route.query.redirect || '/project');
           } else {
             this.setToken(res.data._csrf.token);
           }
         })
         .catch(() => {});
     },
-  },
-  mounted() {
-    this.getuserToken();
   },
 };
 </script>
