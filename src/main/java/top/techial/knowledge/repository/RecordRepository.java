@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.domain.Record;
 
 import java.util.Collection;
@@ -14,10 +15,13 @@ import java.util.Collection;
 @Repository
 public interface RecordRepository extends JpaRepository<Record, Integer> {
 
+    @Transactional
     void deleteByNodeId(Long id);
 
+    @Transactional
     void deleteByUserId(Integer id);
 
+    @Transactional
     void deleteByNodeIdIn(Collection<Long> ids);
 
     Page<Record> findAllByNodeId(Long nodeId, Pageable pageable);
