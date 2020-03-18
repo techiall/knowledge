@@ -54,7 +54,10 @@ public class SearchController {
                     .map(nodeMapper::toNodeInfoDTO)
                     .getContent());
         }
-        return ResultBean.ok(nodeService.findContentByNameLike(question, pageable).map(this::convent));
+        int page = Math.min(50, pageable.getPageNumber());
+        int size = Math.min(20, pageable.getPageSize());
+        return ResultBean.ok(nodeService.findContentByNameLike(
+                question, PageRequest.of(page, size, pageable.getSort())).map(this::convent));
     }
 
     private SearchDTO convent(Node node) {
