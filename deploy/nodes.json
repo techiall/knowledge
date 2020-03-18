@@ -1,0 +1,64 @@
+{
+  "settings": {
+    "number_of_shards": 5,
+    "number_of_replicas": 1,
+    "analysis": {
+      "analyzer": {
+        "ik_pinyin_analyzer": {
+          "type": "custom",
+          "tokenizer": "ik_max_word",
+          "filter": [
+            "my_pinyin",
+            "word_delimiter"
+          ]
+        }
+      },
+      "filter": {
+        "my_pinyin": {
+          "type": "pinyin"
+        }
+      },
+      "tokenizer": {
+        "pinyin": {
+          "keep_joined_full_pinyin": "true",
+          "keep_first_letter": "true",
+          "keep_separate_first_letter": "false",
+          "lowercase": "true",
+          "type": "pinyin",
+          "limit_first_letter_length": "16",
+          "keep_original": "true",
+          "keep_full_pinyin": "true"
+        }
+      }
+    }
+  },
+  "mappings": {
+    "_doc": {
+      "properties": {
+        "name": {
+          "type": "text",
+          "analyzer": "ik_pinyin_analyzer"
+        },
+        "labels": {
+          "type": "object"
+        },
+        "property": {
+          "type": "object"
+        },
+        "itemId": {
+          "type": "long"
+        },
+        "text": {
+          "type": "text",
+          "analyzer": "ik_max_word"
+        },
+        "createTime": {
+          "type": "date"
+        },
+        "updateTime": {
+          "type": "date"
+        }
+      }
+    }
+  }
+}

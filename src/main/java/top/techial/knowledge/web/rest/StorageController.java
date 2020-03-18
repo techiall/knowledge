@@ -1,6 +1,9 @@
 package top.techial.knowledge.web.rest;
 
 import lombok.extern.log4j.Log4j2;
+import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,8 @@ import top.techial.knowledge.repository.StorageRepository;
 import top.techial.knowledge.service.FileStorageService;
 import top.techial.knowledge.service.StorageService;
 
+import java.io.IOException;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,17 +33,20 @@ public class StorageController {
     private final NodeRepository nodeRepository;
     private final FileStorageService fileStorageService;
     private final StorageRepository storageRepository;
+    private final RestHighLevelClient restHighLevelClient;
 
     public StorageController(
             StorageService storageService,
             NodeRepository nodeRepository,
             FileStorageService fileStorageService,
-            StorageRepository storageRepository
+            StorageRepository storageRepository,
+            RestHighLevelClient restHighLevelClient
     ) {
         this.storageService = storageService;
         this.nodeRepository = nodeRepository;
         this.fileStorageService = fileStorageService;
         this.storageRepository = storageRepository;
+        this.restHighLevelClient = restHighLevelClient;
     }
 
     /**
@@ -46,8 +54,15 @@ public class StorageController {
      */
     @PostMapping("/text/{id}")
     @PreAuthorize("hasAnyAuthority(#id)")
-    public ResultBean<Long> save(@RequestBody(required = false) String text, @PathVariable Long id) {
+    public ResultBean<Long> save(@RequestBody(required = false) String text, @PathVariable Long id) throws IOException {
         nodeRepository.saveText(id, text);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("updateTime", Instant.now());
+        map.put("text", text);
+        UpdateRequest updateRequest = new UpdateRequest("nodes", "_doc", id.toString())
+                .doc(map);
+        restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
         return ResultBean.ok(id);
     }
 
