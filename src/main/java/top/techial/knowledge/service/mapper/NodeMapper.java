@@ -4,9 +4,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.service.dto.NodeInfoDTO;
 import top.techial.knowledge.service.dto.NodeTreeDTO;
+import top.techial.knowledge.service.dto.SearchDTO;
 import top.techial.knowledge.web.rest.vm.NodeVM;
 
 import java.util.Collections;
@@ -29,6 +31,11 @@ public interface NodeMapper {
     NodeInfoDTO toNodeInfoDTO(Node node);
 
     NodeTreeDTO toNodeTreeDTO(Node node);
+
+    @Mapping(source = "item.name", target = "nodeItemName")
+    @Mapping(source = "nodeInfoDTO.name", target = "nodeName")
+    @Mapping(source = "nodeInfoDTO.id", target = "nodeId")
+    SearchDTO toSearchDTO(NodeInfoDTO nodeInfoDTO, Item item);
 
     default List<SimpleGrantedAuthority> toListSimpleGrantedAuthority(List<Long> nodes) {
         if (nodes == null) {

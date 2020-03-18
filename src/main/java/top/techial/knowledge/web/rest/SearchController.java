@@ -1,21 +1,21 @@
 package top.techial.knowledge.web.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.techial.knowledge.beans.ResultBean;
-import top.techial.knowledge.domain.Labels;
-import top.techial.knowledge.domain.Property;
+import top.techial.knowledge.domain.Item;
+import top.techial.knowledge.repository.ItemRepository;
 import top.techial.knowledge.service.NodeService;
+import top.techial.knowledge.service.dto.NodeInfoDTO;
 import top.techial.knowledge.service.dto.SearchDTO;
-import top.techial.knowledge.service.dto.SearchJsonDTO;
-import top.techial.knowledge.utils.JsonUtils;
+import top.techial.knowledge.service.mapper.NodeMapper;
+import top.techial.knowledge.web.rest.errors.ItemNotFoundException;
 
 /**
  * @author techial
@@ -24,12 +24,14 @@ import top.techial.knowledge.utils.JsonUtils;
 @RequestMapping("/api/search")
 public class SearchController {
     private static final String REGEX = "<[^>]*>|&nbsp;";
+    private final NodeMapper nodeMapper;
     private final NodeService nodeService;
-    private final ObjectMapper objectMapper;
+    private final ItemRepository itemRepository;
 
-    public SearchController(NodeService nodeService, ObjectMapper objectMapper) {
+    public SearchController(NodeMapper nodeMapper, NodeService nodeService, ItemRepository itemRepository) {
+        this.nodeMapper = nodeMapper;
         this.nodeService = nodeService;
-        this.objectMapper = objectMapper;
+        this.itemRepository = itemRepository;
     }
 
     private static String text(String text) {
@@ -47,24 +49,19 @@ public class SearchController {
     ) {
         question = question.substring(0, Math.min(32, question.length()));
         if (Boolean.TRUE.equals(tips)) {
-            return ResultBean.ok(nodeService.findByNameLike(question));
+            return ResultBean.ok(nodeService
+                    .findContentByNameLike(question, PageRequest.of(0, 10, Sort.by("updateTime").descending()))
+                    .getContent());
         }
-        return ResultBean.ok(convent(nodeService.findContentByNameLike(question, pageable)));
+        return ResultBean.ok(nodeService.findContentByNameLike(question, pageable)
+                .map(this::convent)
+        );
     }
 
-    private Page<SearchJsonDTO> convent(PageImpl<SearchDTO> list) {
-        return list.map(this::toSearchJson);
-    }
-
-    private SearchJsonDTO toSearchJson(SearchDTO searchDTO) {
-        return new SearchJsonDTO()
-                .setNodeId(searchDTO.getNodeId())
-                .setLabels(JsonUtils.readValue(objectMapper, searchDTO.getLabels(), Labels.class))
-                .setProperty(JsonUtils.readValue(objectMapper, searchDTO.getProperty(), Property.class))
-                .setNodeName(searchDTO.getNodeName())
-                .setNodeNickName(searchDTO.getAuthorNickname())
-                .setNodeItemName(searchDTO.getItemName())
-                .setText(text(searchDTO.getText()));
+    private SearchDTO convent(NodeInfoDTO nodeInfoDTO) {
+        Item item = itemRepository.findById(nodeInfoDTO.getItemId()).orElseThrow(ItemNotFoundException::new);
+        SearchDTO result = nodeMapper.toSearchDTO(nodeInfoDTO, item);
+        return result.setText(text(result.getText()));
     }
 
 }

@@ -2,12 +2,10 @@ package top.techial.knowledge.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -20,7 +18,10 @@ import top.techial.knowledge.repository.ItemRepository;
 import top.techial.knowledge.repository.NodeRelationshipRepository;
 import top.techial.knowledge.repository.NodeRepository;
 import top.techial.knowledge.repository.search.NodeSearchRepository;
-import top.techial.knowledge.service.dto.*;
+import top.techial.knowledge.service.dto.NodeBaseDTO;
+import top.techial.knowledge.service.dto.NodeInfoDTO;
+import top.techial.knowledge.service.dto.NodeTreeDTO;
+import top.techial.knowledge.service.dto.ParentChildDTO;
 import top.techial.knowledge.service.mapper.NodeMapper;
 import top.techial.knowledge.web.rest.errors.NodeNotFoundException;
 import top.techial.knowledge.web.rest.errors.RootNodeException;
@@ -135,42 +136,22 @@ public class NodeService {
         return namedParameterJdbcTemplate.query(value, map, rowMapper);
     }
 
-    public PageImpl<SearchDTO> findContentByNameLike(String name, Pageable pageable) {
-        // language=sql
-        String value = "select i.name as itemName, n.name as nodeName, u.nick_name as nodeAuthorNickName, n.text as text,\n" +
-                "n.id as nodeId, n.labels as labels, n.property as property\n" +
-                "from node n inner join item i on n.item_id = i.id inner join user u on i.author_id = u.id\n" +
-                "where n.name like :name and i.share = true order by n.update_time desc limit :limit offset :page";
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", '%' + name + '%');
-        map.put("limit", pageable.getPageSize());
-        map.put("page", pageable.getOffset());
-        List<SearchDTO> content = namedParameterJdbcTemplate.query(value, map, new BeanPropertyRowMapper<>(SearchDTO.class));
-
-        // language=sql
-        value = "select count(*) from node n inner join item i on n.item_id = i.id\n" +
-                "inner join user u on i.author_id = u.id\n" +
-                "where n.name like :name and i.share = true";
-        Long count = namedParameterJdbcTemplate.queryForObject(value, map, Long.class);
-        return new PageImpl<>(content, pageable, count == null ? 0 : count);
-    }
-
-    public List<NodeInfoDTO> findByNameLike(String name) {
+    public Page<NodeInfoDTO> findContentByNameLike(String name, Pageable pageable) {
         List<Integer> itemIds = itemRepository.findByShare(true)
                 .parallelStream()
                 .map(Item::getId)
                 .collect(Collectors.toList());
 
-        SearchQuery searchQuery = new NativeSearchQueryBuilder()
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withIndices("nodes")
                 .withQuery(QueryBuilders.boolQuery()
                         .must(QueryBuilders.matchQuery("name", name))
                         .must(QueryBuilders.termsQuery("itemId", itemIds))
                 )
-                .withPageable(PageRequest.of(0, 10, Sort.by("updateTime").descending()))
+                .withPageable(pageable)
                 .build();
-        return nodeSearchRepository.search(searchQuery).map(nodeMapper::toNodeInfoDTO).getContent();
+        return nodeSearchRepository.search(searchQuery)
+                .map(nodeMapper::toNodeInfoDTO);
     }
 
     public List<NodeBaseDTO> findByChildNode(Long id, int depth) {

@@ -2,8 +2,12 @@ package top.techial.knowledge.service.dto;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import top.techial.knowledge.domain.Property;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author techial
@@ -16,15 +20,13 @@ public class SearchDTO implements Serializable {
 
     private Long nodeId;
 
-    private String labels;
+    private Set<String> labels;
 
-    private String property;
+    private Map<String, List<Property.PropertyDTO>> property;
 
     private String nodeName;
 
-    private String authorNickname;
-
-    private String itemName;
+    private String nodeItemName;
 
     private String text;
 
