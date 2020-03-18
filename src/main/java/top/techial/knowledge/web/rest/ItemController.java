@@ -14,6 +14,7 @@ import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.repository.ItemRepository;
 import top.techial.knowledge.repository.NodeRepository;
 import top.techial.knowledge.repository.UserRepository;
+import top.techial.knowledge.repository.search.NodeSearchRepository;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.dto.ItemDTO;
@@ -31,6 +32,7 @@ import top.techial.knowledge.web.rest.vm.ItemVM;
 public class ItemController {
     private final ItemRepository itemRepository;
     private final NodeService nodeService;
+    private final NodeSearchRepository nodeSearchRepository;
     private final NodeRepository nodeRepository;
     private final ItemMapper itemMapper;
     private final UserRepository userRepository;
@@ -38,12 +40,14 @@ public class ItemController {
     public ItemController(
             ItemRepository itemRepository,
             NodeService nodeService,
+            NodeSearchRepository nodeSearchRepository,
             NodeRepository nodeRepository,
             ItemMapper itemMapper,
             UserRepository userRepository
     ) {
         this.itemRepository = itemRepository;
         this.nodeService = nodeService;
+        this.nodeSearchRepository = nodeSearchRepository;
         this.nodeRepository = nodeRepository;
         this.itemMapper = itemMapper;
         this.userRepository = userRepository;
@@ -118,6 +122,7 @@ public class ItemController {
     public ResultBean<Object> deleteById(@PathVariable Integer id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         itemRepository.deleteTmpByUserIdAndItemId(userPrincipal.getId(), id);
         itemRepository.deleteById(id);
+        nodeSearchRepository.deleteByItemId(id);
         nodeService.deleteByItemId(id);
 
         return ResultBean.ok();

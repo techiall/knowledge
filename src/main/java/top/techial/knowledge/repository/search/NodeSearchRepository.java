@@ -12,6 +12,8 @@ import java.util.Collection;
  */
 @Repository
 public interface NodeSearchRepository extends ElasticsearchRepository<Node, Long> {
+    @Transactional
+    void deleteByItemId(Integer itemId);
 
     @Transactional
     void deleteByIdIn(Collection<Long> ids);
