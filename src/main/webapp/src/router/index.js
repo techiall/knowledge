@@ -64,11 +64,10 @@ let router = new vueRouter({
   {
     path: '/project',
     name: 'project',
-    redirect: '/project/item',
     component: () => import('@/page/project/project.vue'),
     children: [
       {
-        path: 'item',
+        path: '/',
         name: 'home',
         component: () => import('@/page/project/projectmain/projectHome.vue'),
       },

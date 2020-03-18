@@ -116,7 +116,6 @@ export default {
           this.get('/user/me').then((res) => {
             let data = res.data;
             this.setUserData(data);
-            window.console.log(this.$route);
             this.$router.push(this.$route.query.redirect || '/project');
           });
         })
