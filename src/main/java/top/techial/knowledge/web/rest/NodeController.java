@@ -115,8 +115,9 @@ public class NodeController {
                     nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
         }
 
+        node = nodeRepository.save(node);
         nodeSearchRepository.index(node);
-        return ResultBean.ok(nodeMapper.toNodeInfoDTO(nodeRepository.save(node)));
+        return ResultBean.ok(nodeMapper.toNodeInfoDTO(node));
     }
 
     @PutMapping("/{id}/movement")
