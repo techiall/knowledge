@@ -45,6 +45,7 @@ public class SearchController {
             @RequestParam(required = false, defaultValue = "false") Boolean tips,
             @PageableDefault Pageable pageable
     ) {
+        question = question.substring(0, Math.min(32, question.length()));
         if (Boolean.TRUE.equals(tips)) {
             return ResultBean.ok(nodeService.findByNameLike(question));
         }

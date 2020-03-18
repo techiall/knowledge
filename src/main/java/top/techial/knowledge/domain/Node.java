@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.elasticsearch.annotations.Document;
 import top.techial.knowledge.service.converter.LabelsConverter;
 import top.techial.knowledge.service.converter.PropertyConverter;
 
@@ -21,6 +22,7 @@ import java.time.Instant;
         @Index(name = "name_index", columnList = "name")
 })
 @Accessors(chain = true)
+@Document(indexName = "nodes", type = "_doc")
 public class Node implements Serializable {
 
     private static final long serialVersionUID = 1L;

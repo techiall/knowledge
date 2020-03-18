@@ -1,22 +1,23 @@
 package top.techial.knowledge.service;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.springframework.data.domain.*;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.domain.Property;
 import top.techial.knowledge.repository.ItemRepository;
 import top.techial.knowledge.repository.NodeRelationshipRepository;
 import top.techial.knowledge.repository.NodeRepository;
-import top.techial.knowledge.service.dto.NodeBaseDTO;
-import top.techial.knowledge.service.dto.NodeTreeDTO;
-import top.techial.knowledge.service.dto.ParentChildDTO;
-import top.techial.knowledge.service.dto.SearchDTO;
+import top.techial.knowledge.repository.search.NodeSearchRepository;
+import top.techial.knowledge.service.dto.*;
 import top.techial.knowledge.service.mapper.NodeMapper;
 import top.techial.knowledge.web.rest.errors.NodeNotFoundException;
 import top.techial.knowledge.web.rest.errors.RootNodeException;
@@ -35,6 +36,7 @@ public class NodeService {
     private final NodeRepository nodeRepository;
     private final NodeRelationshipRepository nodeRelationshipRepository;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final NodeSearchRepository nodeSearchRepository;
     private final ItemRepository itemRepository;
     private final NodeMapper nodeMapper;
 
@@ -42,12 +44,14 @@ public class NodeService {
             NodeRepository nodeRepository,
             NodeRelationshipRepository nodeRelationshipRepository,
             NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+            NodeSearchRepository nodeSearchRepository,
             ItemRepository itemRepository,
             NodeMapper nodeMapper
     ) {
         this.nodeRepository = nodeRepository;
         this.nodeRelationshipRepository = nodeRelationshipRepository;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.nodeSearchRepository = nodeSearchRepository;
         this.itemRepository = itemRepository;
         this.nodeMapper = nodeMapper;
     }
@@ -149,13 +153,21 @@ public class NodeService {
         return new PageImpl<>(content, pageable, count == null ? 0 : count);
     }
 
-    public List<NodeBaseDTO> findByNameLike(String name) {
-        // language=sql
-        String value = "select n.id, n.name from node n inner join item i on n.item_id = i.id\n" +
-                "where n.name like (:name) and i.share = true order by n.update_time desc limit 10";
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", '%' + name + '%');
-        return namedParameterJdbcTemplate.query(value, map, new BeanPropertyRowMapper<>(NodeBaseDTO.class));
+    public Page<NodeInfoDTO> findByNameLike(String name) {
+        List<Integer> itemIds = itemRepository.findByShare(true)
+                .parallelStream()
+                .map(Item::getId)
+                .collect(Collectors.toList());
+
+        SearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withIndices("nodes")
+                .withQuery(QueryBuilders.boolQuery()
+                        .must(QueryBuilders.matchQuery("name", name))
+                        .must(QueryBuilders.termsQuery("itemId", itemIds))
+                )
+                .withPageable(PageRequest.of(0, 10, Sort.by("updateTime").descending()))
+                .build();
+        return nodeSearchRepository.search(searchQuery).map(nodeMapper::toNodeInfoDTO);
     }
 
     public List<NodeBaseDTO> findByChildNode(Long id, int depth) {

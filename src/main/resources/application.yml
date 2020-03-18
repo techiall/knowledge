@@ -9,6 +9,8 @@ spring:
     include: elastic
   application:
     name: knowledge-dev
+  main:
+    allow-bean-definition-overriding: true
   devtools:
     restart:
       enabled: true

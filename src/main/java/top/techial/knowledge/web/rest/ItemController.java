@@ -15,9 +15,7 @@ import top.techial.knowledge.repository.ItemRepository;
 import top.techial.knowledge.repository.NodeRepository;
 import top.techial.knowledge.repository.UserRepository;
 import top.techial.knowledge.security.UserPrincipal;
-import top.techial.knowledge.service.ItemService;
 import top.techial.knowledge.service.NodeService;
-import top.techial.knowledge.service.UserService;
 import top.techial.knowledge.service.dto.ItemDTO;
 import top.techial.knowledge.service.mapper.ItemMapper;
 import top.techial.knowledge.service.valid.Insert;
@@ -31,27 +29,21 @@ import top.techial.knowledge.web.rest.vm.ItemVM;
 @RestController
 @RequestMapping("/api/item")
 public class ItemController {
-    private final ItemService itemService;
     private final ItemRepository itemRepository;
     private final NodeService nodeService;
-    private final UserService userService;
     private final NodeRepository nodeRepository;
     private final ItemMapper itemMapper;
     private final UserRepository userRepository;
 
     public ItemController(
-            ItemService itemService,
             ItemRepository itemRepository,
             NodeService nodeService,
-            UserService userService,
             NodeRepository nodeRepository,
             ItemMapper itemMapper,
             UserRepository userRepository
     ) {
-        this.itemService = itemService;
         this.itemRepository = itemRepository;
         this.nodeService = nodeService;
-        this.userService = userService;
         this.nodeRepository = nodeRepository;
         this.itemMapper = itemMapper;
         this.userRepository = userRepository;

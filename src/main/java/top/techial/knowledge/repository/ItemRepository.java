@@ -26,6 +26,8 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     @EntityGraph(attributePaths = "author")
     Page<Item> findByShare(Boolean share, Pageable pageable);
 
+    List<Item> findByShare(Boolean share);
+
     void deleteByAuthorId(Integer id);
 
     @Modifying

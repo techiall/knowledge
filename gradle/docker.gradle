@@ -1,6 +1,6 @@
 jib {
     from {
-        image = 'openjdk:12'
+        image = 'openjdk:13'
     }
     to {
         image = "techial.top/${project.name}"

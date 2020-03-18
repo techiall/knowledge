@@ -12,6 +12,7 @@ import top.techial.knowledge.domain.Property;
 import top.techial.knowledge.repository.ItemRepository;
 import top.techial.knowledge.repository.NodeRepository;
 import top.techial.knowledge.repository.RecordRepository;
+import top.techial.knowledge.repository.search.NodeSearchRepository;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.RecordService;
@@ -37,6 +38,7 @@ public class NodeController {
     private final ItemRepository itemRepository;
     private final NodeMapper nodeMapper;
     private final RecordRepository recordRepository;
+    private final NodeSearchRepository nodeSearchRepository;
 
     public NodeController(
             NodeService nodeService,
@@ -44,7 +46,8 @@ public class NodeController {
             RecordService recordService,
             ItemRepository itemRepository,
             NodeMapper nodeMapper,
-            RecordRepository recordRepository
+            RecordRepository recordRepository,
+            NodeSearchRepository nodeSearchRepository
     ) {
         this.nodeService = nodeService;
         this.nodeRepository = nodeRepository;
@@ -52,6 +55,7 @@ public class NodeController {
         this.itemRepository = itemRepository;
         this.nodeMapper = nodeMapper;
         this.recordRepository = recordRepository;
+        this.nodeSearchRepository = nodeSearchRepository;
     }
 
     @GetMapping("/{id}")
@@ -74,6 +78,7 @@ public class NodeController {
         boolean flag = false;
         if (node == null) {
             node = nodeService.save(nodeVM, itemId);
+            nodeSearchRepository.index(node);
             recordService.save(node.getId(), userPrincipal.getId(),
                     nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
             flag = true;
@@ -110,6 +115,7 @@ public class NodeController {
                     nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
         }
 
+        nodeSearchRepository.index(node);
         return ResultBean.ok(nodeMapper.toNodeInfoDTO(nodeRepository.save(node)));
     }
 
@@ -131,6 +137,7 @@ public class NodeController {
             @PathVariable Long id
     ) {
         nodeService.deleteIdAndRelationship(id);
+        nodeSearchRepository.deleteById(id);
         recordRepository.deleteByNodeId(id);
 
         return ResultBean.ok(true);
@@ -144,6 +151,7 @@ public class NodeController {
             @RequestParam Integer itemId
     ) {
         nodeService.deleteIdsAndRelationship(ids);
+        nodeSearchRepository.deleteByIdIn(ids);
         recordRepository.deleteByNodeIdIn(ids);
 
         return ResultBean.ok(true);

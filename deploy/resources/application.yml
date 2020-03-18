@@ -9,6 +9,8 @@ spring:
     include: elastic
   application:
     name: knowledge-docker
+  main:
+    allow-bean-definition-overriding: true
   devtools:
     restart:
       enabled: false
