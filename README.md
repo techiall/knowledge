@@ -14,8 +14,7 @@ This my graduation project.
 
 ### Installing
 
-1. git clone and enter dir `git clone https://github.com/techial1042/knowledge.git && cd knowledge`
-2. build with gradle (`gradle clean build -x test`)
+* git clone and enter dir `git clone https://github.com/techial1042/knowledge.git && cd knowledge`
 
 
 
@@ -25,12 +24,11 @@ This my graduation project.
 
 chmod +x ./gradlew
 
-./gradlew clean build -x test
+./gradlew clean yarnBuild build -x test
 
 java -jar ./build/libs/knolwedge-0.1.0.jar
 
 ```
-
 
 
 ## Deployment
@@ -40,7 +38,7 @@ java -jar ./build/libs/knolwedge-0.1.0.jar
 
 ```shell
 
-gradle clean jibDockerBuild
+gradle clean yarnBuild jibDockerBuild
 
 docker run -d techial.top/knowledge:latest
 
