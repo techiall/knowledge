@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.Item;
+import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.repository.ItemRepository;
 import top.techial.knowledge.service.NodeService;
-import top.techial.knowledge.service.dto.NodeInfoDTO;
 import top.techial.knowledge.service.dto.SearchDTO;
 import top.techial.knowledge.service.mapper.NodeMapper;
 import top.techial.knowledge.web.rest.errors.ItemNotFoundException;
@@ -51,16 +51,16 @@ public class SearchController {
         if (Boolean.TRUE.equals(tips)) {
             return ResultBean.ok(nodeService
                     .findContentByNameLike(question, PageRequest.of(0, 10, Sort.by("updateTime").descending()))
+                    .map(nodeMapper::toNodeInfoDTO)
                     .getContent());
         }
-        return ResultBean.ok(nodeService.findContentByNameLike(question, pageable)
-                .map(this::convent)
-        );
+        return ResultBean.ok(nodeService.findContentByNameLike(question, pageable).map(this::convent));
     }
 
-    private SearchDTO convent(NodeInfoDTO nodeInfoDTO) {
-        Item item = itemRepository.findById(nodeInfoDTO.getItemId()).orElseThrow(ItemNotFoundException::new);
-        SearchDTO result = nodeMapper.toSearchDTO(nodeInfoDTO, item);
+    private SearchDTO convent(Node node) {
+        Item item = itemRepository.findById(node.getItemId())
+                .orElseThrow(ItemNotFoundException::new);
+        SearchDTO result = nodeMapper.toSearchDTO(node, item);
         return result.setText(text(result.getText()));
     }
 

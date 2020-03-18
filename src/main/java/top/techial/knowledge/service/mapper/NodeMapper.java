@@ -33,9 +33,9 @@ public interface NodeMapper {
     NodeTreeDTO toNodeTreeDTO(Node node);
 
     @Mapping(source = "item.name", target = "nodeItemName")
-    @Mapping(source = "nodeInfoDTO.name", target = "nodeName")
-    @Mapping(source = "nodeInfoDTO.id", target = "nodeId")
-    SearchDTO toSearchDTO(NodeInfoDTO nodeInfoDTO, Item item);
+    @Mapping(source = "node.name", target = "nodeName")
+    @Mapping(source = "node.id", target = "nodeId")
+    SearchDTO toSearchDTO(Node node, Item item);
 
     default List<SimpleGrantedAuthority> toListSimpleGrantedAuthority(List<Long> nodes) {
         if (nodes == null) {

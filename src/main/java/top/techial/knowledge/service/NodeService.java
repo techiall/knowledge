@@ -19,7 +19,6 @@ import top.techial.knowledge.repository.NodeRelationshipRepository;
 import top.techial.knowledge.repository.NodeRepository;
 import top.techial.knowledge.repository.search.NodeSearchRepository;
 import top.techial.knowledge.service.dto.NodeBaseDTO;
-import top.techial.knowledge.service.dto.NodeInfoDTO;
 import top.techial.knowledge.service.dto.NodeTreeDTO;
 import top.techial.knowledge.service.dto.ParentChildDTO;
 import top.techial.knowledge.service.mapper.NodeMapper;
@@ -136,7 +135,7 @@ public class NodeService {
         return namedParameterJdbcTemplate.query(value, map, rowMapper);
     }
 
-    public Page<NodeInfoDTO> findContentByNameLike(String name, Pageable pageable) {
+    public Page<Node> findContentByNameLike(String name, Pageable pageable) {
         List<Integer> itemIds = itemRepository.findByShare(true)
                 .parallelStream()
                 .map(Item::getId)
@@ -150,8 +149,7 @@ public class NodeService {
                 )
                 .withPageable(pageable)
                 .build();
-        return nodeSearchRepository.search(searchQuery)
-                .map(nodeMapper::toNodeInfoDTO);
+        return nodeSearchRepository.search(searchQuery);
     }
 
     public List<NodeBaseDTO> findByChildNode(Long id, int depth) {
