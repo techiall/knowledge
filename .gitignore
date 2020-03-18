@@ -32,3 +32,6 @@ build/
 /cache/
 /.gradle/
 /node_modules/
+
+# secret
+/src/main/resources/application-elastic.yml

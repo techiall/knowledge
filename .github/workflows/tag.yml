@@ -1,5 +1,4 @@
-name: Knowledge Docker
-
+name: Docker images
 
 on:
   push:

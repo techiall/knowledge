@@ -5,8 +5,8 @@ server:
     enabled: true
 
 spring:
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchAutoConfiguration, org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration
+  profiles:
+    include: elastic
   application:
     name: knowledge-dev
   devtools:
@@ -32,9 +32,6 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/knowledge?useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
     username: root
     password: root
-  data:
-    jest:
-      uris: http://knowledge.pchelper666.com:6001/
   redis:
     database: 0
     host: localhost

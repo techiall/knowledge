@@ -1,4 +1,4 @@
-name: Knowledge CI
+name: CI
 
 on:
   push:
