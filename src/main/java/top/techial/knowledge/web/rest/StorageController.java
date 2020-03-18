@@ -1,9 +1,6 @@
 package top.techial.knowledge.web.rest;
 
 import lombok.extern.log4j.Log4j2;
-import org.elasticsearch.action.update.UpdateRequest;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -11,14 +8,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.techial.knowledge.beans.ResultBean;
+import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.domain.Storage;
-import top.techial.knowledge.repository.NodeRepository;
 import top.techial.knowledge.repository.StorageRepository;
+import top.techial.knowledge.repository.search.NodeSearchRepository;
 import top.techial.knowledge.service.FileStorageService;
 import top.techial.knowledge.service.StorageService;
+import top.techial.knowledge.web.rest.errors.NodeNotFoundException;
 
-import java.io.IOException;
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,23 +27,20 @@ import java.util.Map;
 @Log4j2
 public class StorageController {
     private final StorageService storageService;
-    private final NodeRepository nodeRepository;
     private final FileStorageService fileStorageService;
     private final StorageRepository storageRepository;
-    private final RestHighLevelClient restHighLevelClient;
+    private final NodeSearchRepository nodeSearchRepository;
 
     public StorageController(
             StorageService storageService,
-            NodeRepository nodeRepository,
             FileStorageService fileStorageService,
             StorageRepository storageRepository,
-            RestHighLevelClient restHighLevelClient
+            NodeSearchRepository nodeSearchRepository
     ) {
         this.storageService = storageService;
-        this.nodeRepository = nodeRepository;
         this.fileStorageService = fileStorageService;
         this.storageRepository = storageRepository;
-        this.restHighLevelClient = restHighLevelClient;
+        this.nodeSearchRepository = nodeSearchRepository;
     }
 
     /**
@@ -54,15 +48,9 @@ public class StorageController {
      */
     @PostMapping("/text/{id}")
     @PreAuthorize("hasAnyAuthority(#id)")
-    public ResultBean<Long> save(@RequestBody(required = false) String text, @PathVariable Long id) throws IOException {
-        nodeRepository.saveText(id, text);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("updateTime", Instant.now());
-        map.put("text", text);
-        UpdateRequest updateRequest = new UpdateRequest("nodes", "_doc", id.toString())
-                .doc(map);
-        restHighLevelClient.update(updateRequest, RequestOptions.DEFAULT);
+    public ResultBean<Long> save(@RequestBody(required = false) String text, @PathVariable Long id) {
+        Node node = nodeSearchRepository.findById(id).orElseThrow(NodeNotFoundException::new);
+        nodeSearchRepository.index(node.setText(text));
         return ResultBean.ok(id);
     }
 
@@ -71,7 +59,8 @@ public class StorageController {
      */
     @GetMapping("/text/{id}")
     public ResultBean<String> findById(@PathVariable Long id) {
-        return ResultBean.ok(nodeRepository.findTextById(id));
+        Node node = nodeSearchRepository.findById(id).orElse(new Node());
+        return ResultBean.ok(node.getText());
     }
 
     @PostMapping

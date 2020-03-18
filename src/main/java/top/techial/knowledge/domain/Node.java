@@ -45,8 +45,6 @@ public class Node implements Serializable {
     @Column(name = "item_id")
     private Integer itemId;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
     private String text;
 
     @CreationTimestamp

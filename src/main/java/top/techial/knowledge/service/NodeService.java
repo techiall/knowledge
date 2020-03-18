@@ -2,7 +2,10 @@ package top.techial.knowledge.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -153,7 +156,7 @@ public class NodeService {
         return new PageImpl<>(content, pageable, count == null ? 0 : count);
     }
 
-    public Page<NodeInfoDTO> findByNameLike(String name) {
+    public List<NodeInfoDTO> findByNameLike(String name) {
         List<Integer> itemIds = itemRepository.findByShare(true)
                 .parallelStream()
                 .map(Item::getId)
@@ -167,7 +170,7 @@ public class NodeService {
                 )
                 .withPageable(PageRequest.of(0, 10, Sort.by("updateTime").descending()))
                 .build();
-        return nodeSearchRepository.search(searchQuery).map(nodeMapper::toNodeInfoDTO);
+        return nodeSearchRepository.search(searchQuery).map(nodeMapper::toNodeInfoDTO).getContent();
     }
 
     public List<NodeBaseDTO> findByChildNode(Long id, int depth) {
