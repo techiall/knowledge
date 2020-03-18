@@ -13,6 +13,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./deploy/resources/application.yml:/app/resources/application.yml:ro
+      - ./deploy/resources/application-elastic.yml:/app/resources/application-elastic.yml:ro
       - ./deploy/resources/ehcache.xml:/app/resources/ehcache.xml:ro
       - ./deploy/resources/logback.xml:/app/resources/logback.xml:ro
       - /root/knowledge-storage:/knowledge/storage
