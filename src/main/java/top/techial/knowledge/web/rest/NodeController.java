@@ -187,7 +187,7 @@ public class NodeController {
     }
 
     @GetMapping("/name")
-    public ResultBean<List<NodeBaseDTO>> findByName(
+    public ResultBean<List<NodeInfoDTO>> findByName(
             @RequestParam(name = "query") String name,
             @RequestParam Integer itemId
     ) {

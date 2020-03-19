@@ -2,12 +2,13 @@ package top.techial.knowledge.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import top.techial.knowledge.repository.NodeRelationshipRepository;
 import top.techial.knowledge.repository.NodeRepository;
 import top.techial.knowledge.repository.search.NodeSearchRepository;
 import top.techial.knowledge.service.dto.NodeBaseDTO;
+import top.techial.knowledge.service.dto.NodeInfoDTO;
 import top.techial.knowledge.service.dto.NodeTreeDTO;
 import top.techial.knowledge.service.dto.ParentChildDTO;
 import top.techial.knowledge.service.mapper.NodeMapper;
@@ -36,6 +38,9 @@ import java.util.stream.Collectors;
 @Service
 @Log4j2
 public class NodeService {
+    private final static String INDEX = "nodes";
+    private final static String TYPE = "_doc";
+
     private final NodeRepository nodeRepository;
     private final NodeRelationshipRepository nodeRelationshipRepository;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -123,16 +128,18 @@ public class NodeService {
         return node;
     }
 
-    public List<NodeBaseDTO> findByNameLike(String name, Integer itemId) {
-        // language=sql
-        String value = "select id, name from node where name like :name and item_id = :itemId\n" +
-                "order by update_time desc limit 15;";
-        RowMapper<NodeBaseDTO> rowMapper = BeanPropertyRowMapper.newInstance(NodeBaseDTO.class);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", '%' + name + '%');
-        map.put("itemId", itemId);
-        return namedParameterJdbcTemplate.query(value, map, rowMapper);
+    public List<NodeInfoDTO> findByNameLike(String name, Integer itemId) {
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withIndices(INDEX)
+                .withQuery(QueryBuilders.boolQuery()
+                        .must(QueryBuilders.matchQuery("name", name))
+                        .must(QueryBuilders.termsQuery("itemId", itemId))
+                )
+                .withHighlightFields(new HighlightBuilder.Field(name))
+                .withPageable(PageRequest.of(0, 10))
+                .build();
+        return nodeSearchRepository.search(searchQuery).map(nodeMapper::toNodeInfoDTO)
+                .getContent();
     }
 
     public Page<Node> findContentByNameLike(String name, Pageable pageable) {
@@ -142,11 +149,12 @@ public class NodeService {
                 .collect(Collectors.toList());
 
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
-                .withIndices("nodes")
+                .withIndices(INDEX)
                 .withQuery(QueryBuilders.boolQuery()
                         .must(QueryBuilders.matchQuery("name", name))
                         .must(QueryBuilders.termsQuery("itemId", itemIds))
                 )
+                .withHighlightFields(new HighlightBuilder.Field(name))
                 .withPageable(pageable)
                 .build();
         return nodeSearchRepository.search(searchQuery);
