@@ -133,7 +133,7 @@ public class NodeService {
                 .withIndices(INDEX)
                 .withQuery(QueryBuilders.boolQuery()
                         .must(QueryBuilders.matchQuery("name", name))
-                        .must(QueryBuilders.termsQuery("itemId", itemId))
+                        .must(QueryBuilders.termQuery("itemId", itemId))
                 )
                 .withHighlightFields(new HighlightBuilder.Field(name))
                 .withPageable(PageRequest.of(0, 10))
