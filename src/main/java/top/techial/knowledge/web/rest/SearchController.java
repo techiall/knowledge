@@ -2,7 +2,6 @@ package top.techial.knowledge.web.rest;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +49,7 @@ public class SearchController {
         question = question.substring(0, Math.min(32, question.length()));
         if (Boolean.TRUE.equals(tips)) {
             return ResultBean.ok(nodeService
-                    .findContentByNameLike(question, PageRequest.of(0, 10, Sort.by("updateTime").descending()))
+                    .findContentByNameLike(question, PageRequest.of(0, 10))
                     .map(nodeMapper::toNodeInfoDTO)
                     .getContent());
         }
