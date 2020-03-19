@@ -31,7 +31,7 @@ export default {
       // 设置
       setting: {
         // 汉化地址
-        language_url: 'http://tinymce.ax-z.cn/static/tiny/langs/zh_CN.js',
+        language_url: 'https://adm.sumoli.com/lib/js/zh_CN.js',
         language: 'zh_CN',
         // 调整大小
         resize: false,
