@@ -7,7 +7,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -61,14 +60,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
             .exceptionHandling()
             .defaultAuthenticationEntryPointFor(authenticationEntryPoint, new AntPathRequestMatcher("/api/**"))
-        .and()
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-            .sessionAuthenticationFailureHandler(authenticationFailureHandler)
-            .sessionFixation()
-            .newSession()
-            .maximumSessions(1)
-            .maxSessionsPreventsLogin(false);
         accepts(http);
         // @formatter:on
     }
