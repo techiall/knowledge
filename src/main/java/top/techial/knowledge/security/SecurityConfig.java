@@ -2,7 +2,6 @@ package top.techial.knowledge.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.core.env.Profiles;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -60,32 +59,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
             .exceptionHandling()
             .defaultAuthenticationEntryPointFor(authenticationEntryPoint, new AntPathRequestMatcher("/api/**"))
-        accepts(http);
+        .and()
+            .authorizeRequests()
+            .antMatchers("/api/user/me", "/api/register/**").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/storage/text/**").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/storage/preview/**").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/node/**").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/search/**").permitAll()
+            .antMatchers("/api/**").authenticated()
+        .and()
+            .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         // @formatter:on
     }
-
-
-    private void accepts(HttpSecurity httpSecurity) throws Exception {
-        // @formatter:off
-        if (environment.acceptsProfiles(Profiles.of("dev"))) {
-            httpSecurity.authorizeRequests()
-                .antMatchers("/api/**").authenticated()
-            .and()
-                .csrf().disable();
-        } else {
-            httpSecurity
-                .authorizeRequests()
-                .antMatchers("/api/user/me", "/api/register/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/storage/text/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/storage/preview/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/node/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/search/**").permitAll()
-                .antMatchers("/api/**").authenticated()
-            .and()
-                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-        }
-        // @formatter:on
-    }
-
 }
 
