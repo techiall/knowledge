@@ -10,13 +10,11 @@
     <div class="s-c-m-b">
       <div class="know-s-c-m-h">
         <div class="know-s-c-m-ht">
-          <div class="know-s-c-m-htt">{{ShowSMeg}}</div>
-          <div class="know-s-c-m-htt-s">实体</div>
+          <div class="know-s-c-m-htt">{{ShowSMeg|handleExceeded}}</div>
         </div>
-        <div class="know-s-c-m-htn" title="总数据量">{{totalElements}}</div>
+        <div class="know-s-c-m-htn cup" title="查询结果数量">{{totalElements}}</div>
       </div>
     </div>
-
     <div class="know-s-c-m-c">
       <div v-for="(item) in reqShowData" :key="item.nodeId" class="know-s-c-m-c-f">
         <div class="s-c-m-b">
@@ -33,8 +31,7 @@
             <div class="know-s-c-m-attr-tittle">属性</div>
             <folding-panel>
               <span v-for="value in item.labels" :key="value" class="know-s-c-m-attr-d-list">
-                “
-                <span>{{value}}</span>”
+                <span>{{value}}</span>
               </span>
             </folding-panel>
           </div>
@@ -75,6 +72,17 @@
 import foldingPanel from '../../../components/foldingPanel';
 export default {
   components: { foldingPanel },
+  filters: {
+    handleExceeded(content) {
+      if (content.length >= 32) {
+        return `"${content.substr(
+          32,
+          3,
+        )}" 及其后面的字词均被忽略，因为知识图谱节点查询限制在32个字符以内。`;
+      }
+      return content;
+    },
+  },
   props: [
     'ShowSMeg',
     'totalElements',
@@ -140,11 +148,17 @@ export default {
   align-items: center;
 }
 .know-s-c-m-ht {
-  padding: 0px 0 5px 10px;
+  padding: 0px 0 0px 10px;
   flex: 1;
+  align-items: center;
 }
 .know-s-c-m-htt {
-  font-size: 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 600px;
+  font-size: 16px;
+  font-weight: 500;
   color: #17233d;
 }
 .know-s-c-m-htt-s {
@@ -154,12 +168,11 @@ export default {
 }
 .know-s-c-m-htn {
   border: 2px solid #19be6b;
-  width: 30px;
-  height: 30px;
+  min-width: 30px;
+  min-height: 30px;
   text-align: center;
   line-height: 25px;
   border-radius: 15px;
-  cursor: Default;
   user-select: none;
 }
 .know-s-c-m-attr {
@@ -185,6 +198,14 @@ export default {
   border-bottom: 1.2px solid #28a745;
   padding: 0 5px 2px 5px;
 }
+.know-s-c-m-attr-d-list::before {
+  content: '“';
+  font-weight: bold;
+}
+.know-s-c-m-attr-d-list::after {
+  content: '”';
+  font-weight: bold;
+}
 .know-s-c-m-attr-footr {
   text-align: center;
 }
@@ -196,10 +217,10 @@ export default {
 }
 .s-c-m-c-title {
   display: inline-block;
+  padding: 0 10px 10px;
   font-size: 18px;
   color: #14181c;
   cursor: pointer;
-  padding: 0 10px 10px;
 }
 
 .s-c-m-c-text {

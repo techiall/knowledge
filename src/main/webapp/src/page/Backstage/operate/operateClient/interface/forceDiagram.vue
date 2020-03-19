@@ -6,15 +6,15 @@
 
 
 <template>
-  <force-chart :style="{height:SetHeight}"  ref="forcechart"></force-chart>
+  <force-chart :style="{height:SetHeight}" ref="forcechart" />
 </template>
 
 <script>
 // 力导向组件
-import forceChart from "../../../../../components/forceChart";
+import forceChart from '@/components/forceChart';
 export default {
   components: { forceChart },
-  props: ["treeNode", "showSelectNum", "InnerHeight"],
+  props: ['treeNode', 'showSelectNum', 'InnerHeight', 'spinShow'],
   data() {
     return {
       // 获取数据 标志位
@@ -27,48 +27,47 @@ export default {
     // 获取 服务器 数据
     getforceData() {
       if (this.getDataFlag) return;
+      this.$emit('update:spinShow', true);
       this.getDataFlag = true;
-      let url = "/node/" + this.treeNode.id + "/graph";
+      let url = '/node/' + this.treeNode.id + '/graph';
       this.get(url)
-        .then(res => {
-          this.spinShow = true;
+        .then((res) => {
+          this.$emit('update:spinShow', false);
           if (this.showSelectNum === 2) {
             this.$refs.forcechart.handlecomponentsforceData(res.data);
           }
         })
-        .catch(() => {
-           this.spinShow = true;
-        });
+        .catch(() => {});
     },
     //从新获取数据
     setForce() {
       this.getDataFlag = false;
       if (this.showSelectNum !== 2) return;
       this.getforceData();
-    }
+    },
   },
   watch: {
     treeNode: {
       handler(newval, oldval) {
-        if (newval === "" || newval.id === oldval.id) return;
+        if (newval === '' || newval.id === oldval.id) return;
         this.getDataFlag = false;
         if (this.showSelectNum === 2) {
           this.getforceData();
         }
       },
-      deep: true
+      deep: true,
     },
     showSelectNum(val) {
       if (val !== 2) return;
       this.getforceData();
-    }
+    },
   },
   computed: {
     //设置  可视区 高度
     SetHeight() {
-      return this.InnerHeight - this.TopHeight + "px";
-    }
-  }
+      return this.InnerHeight - this.TopHeight + 'px';
+    },
+  },
 };
 </script>
 

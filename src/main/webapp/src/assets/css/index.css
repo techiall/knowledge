@@ -1,11 +1,13 @@
-@import url('./font.css');
+@import url("./font.css");
 
-.scroll::-webkit-scrollbar-thumb, textarea::-webkit-scrollbar-thumb {
+.scroll::-webkit-scrollbar-thumb,
+textarea::-webkit-scrollbar-thumb {
     background-color: #c5c8ce;
     border-radius: 5px;
 }
 
-.scroll::-webkit-scrollbar, textarea::-webkit-scrollbar {
+.scroll::-webkit-scrollbar,
+textarea::-webkit-scrollbar {
     width: 8px;
     height: 8px;
 }

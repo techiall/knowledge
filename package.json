@@ -8,8 +8,8 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@packy-tang/vue-tinymce": "^1.0.0",
     "core-js": "^3.4.3",
-    "froala-editor": "^3.0.6",
     "lunar-calendar": "^0.1.4",
     "qs": "^6.9.1",
     "view-design": "^4.0.2",

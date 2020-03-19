@@ -59,7 +59,7 @@ export default {
       let url = '/search';
       let obj = {
         size: this.pageSize,
-        q: this.InSearchMeg,
+        q: this.InSearchMeg.substr(0, 32),
         page: this.pageNum,
       };
       this.get(url, obj)
@@ -76,7 +76,6 @@ export default {
       this.ShowSMeg = this.InSearchMeg;
       this.totalPages = data.totalPages;
       let content = data.content;
-      let reg = new RegExp(this.ShowSMeg, 'gi');
       if (this.pageNum === 0) {
         this.reqShowData = [];
       }
@@ -89,16 +88,10 @@ export default {
             item.property === null
               ? {}
               : this.handleServerProperty(item.property.property),
-          text: this.html2Escape(item.text).replace(
-            reg,
-            '<span class="s-c-m-c-t-u">' + this.ShowSMeg + '</span>',
-          ),
+          text: item.text,
           nodeName: item.nodeName,
           Itemsource: item.nodeItemName,
-          nodeTitleName: this.html2Escape(item.nodeName).replace(
-            reg,
-            '<span class="s-c-m-c-t-u">' + this.ShowSMeg + '</span>',
-          ),
+          nodeTitleName: item.nodeName,
         });
       });
     },
@@ -115,12 +108,6 @@ export default {
         });
       }
       return Arr;
-    },
-    //HTML标签转义（< -> &lt;）
-    html2Escape(sHtml) {
-      return sHtml.replace(/[<>&"]/g, (c) => {
-        return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c];
-      });
     },
     //content 回调函数
     contentCallback(type, val) {

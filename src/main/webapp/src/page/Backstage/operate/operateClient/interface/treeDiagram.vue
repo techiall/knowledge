@@ -6,17 +6,14 @@
 
 
 <template>
-  <tree-chart
-    :style="{height:SetHeight}"
-    ref="treechart"
-  ></tree-chart>
+  <tree-chart :style="{height:SetHeight}" ref="treechart" />
 </template>
 
 <script>
-import treeChart from '../../../../../components/treeChart';
+import treeChart from '@/components/treeChart';
 export default {
   components: { treeChart },
-  props: ['treeNode', 'showSelectNum', 'InnerHeight'],
+  props: ['treeNode', 'showSelectNum', 'InnerHeight', 'spinShow'],
   data() {
     return {
       getDataFlag: false,
@@ -28,16 +25,15 @@ export default {
     // 获取服务器数据
     getTreeData() {
       if (this.getDataFlag) return;
+      this.$emit('update:spinShow', true);
       this.getDataFlag = true;
       let url = '/node/' + this.treeNode.id + '/link';
       this.get(url)
         .then((res) => {
-          this.spinShow = true;
+          this.$emit('update:spinShow', false);
           this.$refs.treechart.handletreeData(res.data);
         })
-        .catch(() => {
-          this.spinShow = true;
-        });
+        .catch(() => {});
     },
 
     //设置 数据重新获取

@@ -14,7 +14,7 @@
       </router-link>
       <div class="df" v-else>
         <span class="know-public-logo"></span>
-        <router-link to="/project">
+        <router-link to="/">
           <span class="know-public-title know-item-home cup">
             <span v-if="title">{{title}}</span>
             <span v-else>Knowledge Graph</span>

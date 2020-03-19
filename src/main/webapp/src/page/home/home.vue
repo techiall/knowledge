@@ -322,7 +322,11 @@ export default {
 }
 .g-auto-title {
   display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   padding: 7px 0px;
+  width: 460px;
   font-size: 14px;
   color: #52188c;
 }

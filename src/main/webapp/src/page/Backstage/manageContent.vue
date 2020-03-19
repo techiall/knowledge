@@ -89,7 +89,7 @@ export default {
   watch: {
     InnerWidth(val) {
       if (val < 800) {
-        this.splitMax = '40px';
+        this.splitMax = '0px';
         this.splitinit = 1;
       } else {
         this.splitMax = '500px';
