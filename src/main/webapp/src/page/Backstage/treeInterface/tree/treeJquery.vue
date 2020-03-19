@@ -6,13 +6,13 @@
 
 
 <template>
-  <div>
-    <ul id="ztreeDemo" class="ztree"></ul>
+  <div class="g-ztree-wrap" ref="ztreeWrap">
+    <ul id="ztreeDemo" class="ztree" />
   </div>
 </template>
 
 <script>
-import $ from '../../../../assets/jquery-vendor';
+import $ from '@/assets/jquery-vendor';
 import 'ztree';
 import 'ztree/css/metroStyle/metroStyle.css';
 export default {
@@ -56,10 +56,39 @@ export default {
       StreeNode: '',
       // 树
       zTree: '',
+      // 字母表
+      wordList: 'abcdefghigklmnopqrstuvwxyz1234567890',
+      // 随机
+      randomPass: '',
     };
   },
-  mounted() {},
+  created() {
+    for (let i = 0; i < 8; i++) {
+      this.randomPass += this.wordList[Math.floor(Math.random() * 36)];
+    }
+  },
+  mounted() {
+    this.$refs.ztreeWrap.dataset.ztree = this.randomPass;
+    window.addEventListener('click', this.selectedView);
+  },
+  beforeDestroy() {
+    window.removeEventListener('click', this.selectedView);
+  },
   methods: {
+    // 取消节点高亮
+    selectedView() {
+      const eventTaget = window.event.target;
+      if (eventTaget.dataset && eventTaget.dataset.ztree === this.randomPass) {
+        const selectedNodes = this.zTree.getSelectedNodes();
+        if (selectedNodes.length) {
+          this.zTree.cancelSelectedNode();
+          this.$emit('selectNode', 13);
+          this.$emit('selectNode', 1, false);
+          this.StreeId = '';
+          this.StreeNode = '';
+        }
+      }
+    },
     //获取服务器数据
     getTreeData() {
       const url = '/node';
@@ -215,7 +244,7 @@ export default {
     'treelistVal.addName': {
       handler: function(val) {
         if (this.StreeNode) {
-          //判断 是否双击 点击过
+          //判断 是否双击展开 点击过
           if (this.showChildClik('', this.StreeNode) === 1) {
             this.StreeNode.asyncParent = true;
             this.zTree.addNodes(this.StreeNode, {
@@ -261,8 +290,11 @@ export default {
   },
 };
 </script>
-
 <style>
+.g-ztree-wrap {
+  height: 100%;
+  padding: 10px;
+}
 .ztree * {
   font-size: 13px;
 }

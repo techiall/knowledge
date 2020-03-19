@@ -63,8 +63,13 @@ export default {
       userName: 'getuserName',
     }),
   },
-  created() {
-    this.routerAssignment();
+  watch: {
+    $route: {
+      handler() {
+        this.routerAssignment();
+      },
+      immediate: true,
+    },
   },
   mounted() {
     this.MonitoringlAddInput();

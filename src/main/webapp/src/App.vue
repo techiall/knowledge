@@ -13,7 +13,7 @@ export default {
     this.getServerUser();
   },
   methods: {
-    ...mapMutations(['setUserData', 'setToken']),
+    ...mapMutations(['setUserData', 'setToken','delToken']),
     getServerUser() {
       const url = '/user/me';
       this.get(url)
@@ -22,6 +22,7 @@ export default {
             let { data } = res;
             this.setUserData(data);
           } else {
+            this.delToken();
             this.setToken(res.data._csrf.token);
           }
         })

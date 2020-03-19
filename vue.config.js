@@ -14,6 +14,10 @@ module.exports = {
             '/api': {
                 target: "https://knowledge.pchelper666.com/",
                 changeOrigin: true,
+            },
+            '/static': {
+                target: "https://knowledge.pchelper666.com/",
+                changeOrigin: true,
             }
         }
     },

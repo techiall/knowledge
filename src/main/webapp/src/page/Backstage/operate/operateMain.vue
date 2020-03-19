@@ -12,7 +12,7 @@
       <selete-button
         ref="OperateSelectBu"
         :showClientFlag="showClientFlag"
-        :itemExitFlag ='itemExitFlag'
+        :itemExitFlag="itemExitFlag"
         @oMainCallback="oMainCallback"
       ></selete-button>
     </div>
@@ -33,22 +33,22 @@
 
 <script>
 // 导入operaSelete 组件
-import SeleteButton from "./operateSelete/SeleteButton";
+import SeleteButton from './operateSelete/SeleteButton';
 // 导入 展示操作 界面
-import showClient from "./operateClient/showClient";
+import showClient from './operateClient/showClient';
 export default {
   components: { SeleteButton, showClient },
-  props: ["InnerHeight", "treeNode", "itemId", "itemExitFlag"],
+  props: ['InnerHeight', 'treeNode', 'itemId', 'itemExitFlag'],
   data() {
     return {
       //节点名称
-      treeNodename: "",
+      treeNodename: '',
       // 设置top高度
       TopHeight: 100,
       //展示 操作界面标志位
       showClientFlag: false,
       // 选择 视图
-      showSelectNum: 0
+      showSelectNum: 0,
     };
   },
   methods: {
@@ -60,7 +60,7 @@ export default {
         },
         // 名称 改变
         2: () => {
-          this.$emit("MangageCallback", 2, val);
+          this.$emit('MangageCallback', 2, val);
         },
         //  添加,删除,编辑 重新获取节点
         3: () => {
@@ -69,16 +69,16 @@ export default {
         // 名称 改变 details 发送数据
         4: () => {
           this.$refs.showclient.SClientCallback(5, val);
-        }
+        },
       };
       statusMap[type]();
-    }
+    },
   },
   watch: {
     treeNode: {
       handler: function(val) {
-        if (val === "") {
-          this.treeNodename = "";
+        if (val === '') {
+          this.treeNodename = '';
           this.showSelectNum = 0;
           this.showClientFlag = false;
           return;
@@ -90,15 +90,15 @@ export default {
         this.showClientFlag = true;
         this.treeNodename = val.name;
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   computed: {
     //设置 树 可视区 高度
     setTreeClientHeight() {
-      return this.InnerHeight - this.TopHeight + "px";
-    }
-  }
+      return this.InnerHeight - this.TopHeight + 'px';
+    },
+  },
 };
 </script>
 

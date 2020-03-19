@@ -7,7 +7,7 @@
 
 <template>
   <div class="rich-text-wrap">
-    <vue-tinymce v-if="itemExitFlag" v-model="content" :setting="setting" />
+    <vue-tinymce v-if="itemExitFlag" v-model="content" :setting="setting" ref="editor" />
     <div v-else class="NText" v-html="content" />
   </div>
 </template>
@@ -31,7 +31,7 @@ export default {
       // 设置
       setting: {
         // 汉化地址
-        language_url: 'https://adm.sumoli.com/lib/js/zh_CN.js',
+        language_url: '/static/js/zh_CN.js',
         language: 'zh_CN',
         // 调整大小
         resize: false,
@@ -51,6 +51,7 @@ export default {
         ],
         toolbar:
           'save |undo redo |  formatselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |  blockquote | removeformat ',
+        // 保存
         save_onsavecallback: this.contentSave,
       },
       // 富文本内容
@@ -82,9 +83,18 @@ export default {
             this.content = '作者没有再此节点编辑任何信息。';
           } else {
             this.content = '';
+            this.$nextTick(() => {
+              this.content = '';
+              const iframeId = `#${this.$refs.editor.id}_ifr`;
+              document.getElementById(
+                iframeId,
+              ).contentWindow.document.body.innerText = '';
+            });
           }
         })
-        .catch(() => {});
+        .catch((err) => {
+          window.console.log(err);
+        });
     },
     // 设置上传照片
     imagesUpload(blobInfo, succFun, failFun) {
@@ -103,7 +113,8 @@ export default {
     // 保存
     contentSave() {
       let url = `storage/text/${this.treeNode.id}`;
-      this.post_text(url, this.content)
+      let content = this.content;
+      this.post_text(url, content)
         .then(() => {
           this.$Message.success('保存成功');
         })
@@ -119,6 +130,7 @@ export default {
         this.getDataFlag = false;
         this.charCount = 0;
         this.moreMisc = false;
+        this.content = undefined;
         if (this.showSelectNum === 5) {
           this.getExitText();
         }

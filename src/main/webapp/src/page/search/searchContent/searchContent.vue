@@ -6,20 +6,27 @@
 
 
 <template>
-  <div class="know-s-c scroll" v-show="searchFocus">
+  <div class="know-s-c scroll">
+    <Spin size="large" fix v-show="loadingSpin" />
     <div class="know-s-c-m">
       <content-mheader
-        :reqSuccessFlag="reqSuccessFlag"
-        :ShowSMeg="ShowSMeg"
+        :ShowSMeg="InSearchMeg"
         :totalElements="totalElements"
         :reqShowData="reqShowData"
-        :totalPages="totalPages"
+        :findTime="findTime"
         :pageNum="pageNum"
-        :transfer="true"
-        @contentCallback="contentCallback"
-      ></content-mheader>
+        :loadingSpin="loadingSpin"
+      />
+      <div class="g-footer" v-show="this.totalElements">
+        <Page
+          :total="totalElements"
+          :current="pageNum"
+          :page-size="pageSize"
+          @on-change="pageChange"
+        />
+      </div>
     </div>
-    <div class="know-s-c-a"></div>
+    <!-- <div class="know-s-c-a" /> -->
   </div>
 </template>
 
@@ -30,12 +37,8 @@ export default {
   components: { contentMheader },
   data() {
     return {
-      //用户输入的数据
-      ShowSMeg: '',
-      //纪录用户输入的数据防止重复提交
-      InOldSearchMeg: '',
-      // 分页 可以展示的总页数
-      totalPages: '',
+      // 数据加载
+      loadingSpin: false,
       // 当前请求的第几页
       pageNum: 1,
       // 一页可以展示的数据有多少
@@ -44,26 +47,32 @@ export default {
       totalElements: '',
       // 请求的数据
       reqShowData: [],
-      // 获取焦点标志位
-      searchFocus: false,
       // 数据加载成功标志为
       reqSuccessFlag: '',
       //用户输入的数据
       InSearchMeg: '',
+      // 查找时间
+      findTime: '',
+      // 查找排序
+      sort: '',
     };
   },
   methods: {
     // 请求 服务器数据
     getServerData() {
-      this.InOldSearchMeg = this.InSearchMeg;
-      let url = '/search';
-      let obj = {
+      const url = '/search';
+      const obj = {
         size: this.pageSize,
         q: this.InSearchMeg.substr(0, 32),
-        page: this.pageNum,
+        page: this.pageNum - 1,
       };
+      const startTime = new Date().getTime();
+      if (this.sort) obj.sort = this.sort;
+      this.loadingSpin = true;
       this.get(url, obj)
         .then((res) => {
+          this.loadingSpin = false;
+          this.findTime = new Date().getTime() - startTime;
           this.handleServerData(res.data);
           this.reqSuccessFlag = Math.random();
         })
@@ -71,14 +80,9 @@ export default {
     },
     // 处理请求的数据
     handleServerData(data) {
-      this.searchFocus = true;
       this.totalElements = data.totalElements;
-      this.ShowSMeg = this.InSearchMeg;
-      this.totalPages = data.totalPages;
-      let content = data.content;
-      if (this.pageNum === 0) {
-        this.reqShowData = [];
-      }
+      const { content } = data;
+      this.reqShowData = [];
       content.forEach((item) => {
         this.reqShowData.push({
           info: item.info,
@@ -91,7 +95,6 @@ export default {
           text: item.text,
           nodeName: item.nodeName,
           Itemsource: item.nodeItemName,
-          nodeTitleName: item.nodeName,
         });
       });
     },
@@ -109,38 +112,25 @@ export default {
       }
       return Arr;
     },
-    //content 回调函数
-    contentCallback(type, val) {
-      const statusMap = {
-        1: () => {
-          this.pageNum++;
-          this.getServerData();
-        },
-        2: () => {
-          this.$refs.contentaside.CAsideCallback(1, val);
-        },
+    // 页码改变的回调，返回改变后的页码
+    pageChange(page) {
+      const query = {
+        q: this.InSearchMeg,
+        page: page,
       };
-      statusMap[type]();
-    },
-    // 数据初始化
-    InitData() {
-      this.pageNum = 0;
-      this.getServerData();
+      if (this.sort) query.sort = this.sort;
+      this.$router.push({
+        path: '/search',
+        query,
+      });
     },
   },
   watch: {
     $route: {
       handler(to) {
-        if (!to.query.q) {
-          this.$emit('SearchInCancel');
-          this.$emit('setSearchMsg', '');
-          this.searchFocus = false;
-          return;
-        }
-        this.$emit('SearchInFocus');
-        this.$emit('setSearchMsg', to.query.q);
         this.InSearchMeg = to.query.q;
-        this.pageNum = 0;
+        this.pageNum = parseInt(to.query.page, 10) || 1;
+        this.sort = to.query.sort || '';
         this.getServerData();
       },
       immediate: true,
@@ -164,5 +154,9 @@ export default {
 .know-s-c-a {
   flex: 1;
   padding: 10px;
+}
+.g-footer {
+  margin: 10px 0 40px;
+  text-align: center;
 }
 </style>

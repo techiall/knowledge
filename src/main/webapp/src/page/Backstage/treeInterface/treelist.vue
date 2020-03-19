@@ -115,10 +115,10 @@ export default {
     TLCallback(type, val) {
       const statusMap = {
         1: () => {
-          //tree 点击
+          // tree 点击
           this.SeleteNodeFlag = val;
         },
-        //获取点击节点的名称
+        // 获取点击节点的名称
         2: () => {
           let node = {
             name: val.name,
@@ -128,7 +128,7 @@ export default {
           this.treeNode = node;
           this.$emit('MangageCallback', 1, node);
         },
-        //modal修改 触发
+        // modal修改 触发
         3: () => {
           this.treeZ.ExitName = val;
           this.selectNodeName = val;
@@ -163,26 +163,27 @@ export default {
           this.$emit('MangageCallback', 3, Math.random());
           this.treeZ.delName = val;
         },
-        //根节点 数量 获取
+        // 根节点 数量 获取
         9: () => {
           this.rootNodeNum = val;
         },
-        //ctrl 按下标志位置
+        // ctrl 按下标志位置
         10: () => {
           this.ctrlButtonFlag = true;
           this.SeleteNodeFlag = true;
           this.selectNodes = val;
         },
-        //ctrl 抬起标志位置
+        // ctrl 抬起标志位置
         11: () => {
           this.ctrlButtonFlag = false;
           this.selectNodes = val;
         },
-        //删除 多节点 标志位
+        // 删除 多节点 标志位
         12: () => {
           this.treeZ.delNodes = val;
         },
-        //删除 多节点 包括选中 treeNode
+        // 删除 多节点 包括选中 treeNode 
+        // 取消高亮触发的事件
         13: () => {
           this.selectNodeName = '';
           this.treeNode = '';
@@ -251,7 +252,6 @@ export default {
 }
 .know-tree-main-content {
   overflow: auto;
-  padding: 10px;
   border-radius: 10px;
   box-sizing: border-box;
   box-shadow: 0 1px 10px rgba(56, 37, 37, 0.08);
