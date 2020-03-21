@@ -50,6 +50,8 @@ spring:
         globally_quoted_identifiers: true
         dialect: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
+  liquibase:
+    enabled: true
   servlet:
     multipart:
       max-file-size: 60MB
