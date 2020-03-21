@@ -1,7 +1,6 @@
 package top.techial.knowledge.security;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,20 +24,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final AuthenticationEntryPoint authenticationEntryPoint;
-    private final Environment environment;
 
     public SecurityConfig(
             LogoutHandler logoutHandler,
             AuthenticationSuccessHandler authenticationSuccessHandler,
             AuthenticationFailureHandler authenticationFailureHandler,
-            AuthenticationEntryPoint authenticationEntryPoint,
-            Environment environment
+            AuthenticationEntryPoint authenticationEntryPoint
     ) {
         this.logoutHandler = logoutHandler;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
         this.authenticationFailureHandler = authenticationFailureHandler;
         this.authenticationEntryPoint = authenticationEntryPoint;
-        this.environment = environment;
     }
 
     @Override

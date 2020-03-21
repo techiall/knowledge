@@ -359,7 +359,7 @@ public class NodeService {
     }
 
     private void checkItemRoot(Long id) {
-        itemRepository.findItemIdByRootId(id).ifPresent(RootNodeException::new);
+        itemRepository.findItemIdByRootId(id).orElseThrow(RootNodeException::new);
     }
 
     public void move(Long id, Long target) {
