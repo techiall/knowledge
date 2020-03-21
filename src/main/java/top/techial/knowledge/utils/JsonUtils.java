@@ -19,7 +19,10 @@ public class JsonUtils {
     }
 
     @NonNull
-    public static String writeValueAsString(@NonNull ObjectMapper objectMapper, @NonNull Object object) {
+    public static String writeValueAsString(@NonNull ObjectMapper objectMapper, @Nullable Object object) {
+        if (object == null) {
+            return "";
+        }
         try {
             return objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
@@ -31,7 +34,10 @@ public class JsonUtils {
     }
 
     @Nullable
-    public static <T> T readValue(@NonNull ObjectMapper objectMapper, @NonNull String str, @NonNull Class<T> aClass) {
+    public static <T> T readValue(@NonNull ObjectMapper objectMapper, @Nullable String str, @NonNull Class<T> aClass) {
+        if (str == null) {
+            return null;
+        }
         try {
             return objectMapper.readValue(str, aClass);
         } catch (JsonProcessingException e) {
