@@ -2,6 +2,7 @@ package top.techial.knowledge.domain;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ import java.time.Instant;
 @Table(indexes = {
         @Index(columnList = "nodeId")
 })
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Record implements Serializable {
 
     private static final long serialVersionUID = 1L;

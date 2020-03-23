@@ -2,6 +2,7 @@ package top.techial.knowledge.domain;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import top.techial.knowledge.service.converter.PropertyConverter;
@@ -18,6 +19,7 @@ import java.time.Instant;
 @Entity
 @Table(name = "node_relationship")
 @IdClass(NodeRelationshipPK.class)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class NodeRelationship implements Serializable {
 
     private static final long serialVersionUID = 1L;

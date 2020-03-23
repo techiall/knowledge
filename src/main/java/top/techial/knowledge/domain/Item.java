@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.Version;
@@ -20,6 +21,7 @@ import java.time.Instant;
 @EqualsAndHashCode(exclude = {"author"})
 @ToString(exclude = {"author"})
 @Accessors(chain = true)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;
