@@ -35,6 +35,14 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/knowledge?useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
     username: root
     password: root
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
   redis:
     database: 0
     host: localhost
@@ -48,8 +56,11 @@ spring:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
     properties:
       hibernate:
-        globally_quoted_identifiers: true
-        dialect: org.hibernate.dialect.MySQL8Dialect
+      hibernate.id.new_generator_mappings: true
+      hibernate.connection.provider_disables_autocommit: true
+      hibernate.cache.use_second_level_cache: true
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: false
     open-in-view: false
   servlet:
     multipart:
