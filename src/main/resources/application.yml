@@ -17,8 +17,6 @@ spring:
       enabled: true
     livereload:
       enabled: true
-  session:
-    store-type: redis
   task:
     execution:
       thread-name-prefix: knowledge-task-
@@ -45,7 +43,7 @@ spring:
         useServerPrepStmts: true
   redis:
     database: 0
-    host: localhost
+    host: redis://localhost:6379
   jpa:
     generate-ddl: true
     show-sql: true

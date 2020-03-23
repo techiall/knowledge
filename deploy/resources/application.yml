@@ -43,7 +43,7 @@ spring:
         useServerPrepStmts: true
   redis:
     database: 0
-    host: redis
+    host: redis://redis:6379
   jpa:
     generate-ddl: true
     show-sql: true

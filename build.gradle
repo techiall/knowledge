@@ -42,8 +42,6 @@ apply from: "gradle/idea.gradle"
 
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter-security"
-    implementation "org.springframework.session:spring-session-data-redis"
-    implementation "org.springframework.boot:spring-boot-starter-cache"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-aop"
     implementation "org.springframework.boot:spring-boot-starter-web"
@@ -54,7 +52,9 @@ dependencies {
     // Hibernate h2 cache
     implementation "org.hibernate:hibernate-jcache"
     implementation "javax.cache:cache-api"
-    implementation "org.ehcache:ehcache"
+    implementation "org.redisson:redisson:3.12.1"
+    implementation "org.springframework.session:spring-session-core"
+    implementation "org.springframework.boot:spring-boot-starter-cache"
 
     implementation "org.apache.commons:commons-lang3:3.8.1"
     implementation "com.github.vanroy:spring-boot-starter-data-jest:3.3.0.RELEASE"
