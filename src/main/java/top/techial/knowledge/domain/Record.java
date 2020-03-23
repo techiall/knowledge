@@ -40,9 +40,9 @@ public class Record implements Serializable {
     @OneToOne
     private User user;
 
-    /**
-     * time
-     */
+    @Version
+    private Long version;
+
     @CreationTimestamp
     private Instant createTime;
 

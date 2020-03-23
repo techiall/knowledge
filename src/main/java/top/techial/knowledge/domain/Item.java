@@ -6,6 +6,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.Version;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -43,6 +44,9 @@ public class Item implements Serializable {
     private String image;
 
     private String description;
+
+    @Version
+    private Long version;
 
     @CreationTimestamp
     private Instant createTime;

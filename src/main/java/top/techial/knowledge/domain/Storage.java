@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Version;
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -26,6 +27,9 @@ public class Storage implements Serializable {
     private String originalFilename;
 
     private String contentType;
+
+    @Version
+    private Long version;
 
     @CreationTimestamp
     private Instant createTime;

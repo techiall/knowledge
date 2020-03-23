@@ -47,6 +47,9 @@ public class Node implements Serializable {
 
     private String text;
 
+    @Version
+    private Long version;
+
     @CreationTimestamp
     private Instant createTime;
 
