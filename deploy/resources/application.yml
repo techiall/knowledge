@@ -17,8 +17,6 @@ spring:
       enabled: false
     livereload:
       enabled: false
-  session:
-    store-type: redis
   task:
     execution:
       thread-name-prefix: knowledge-task-
