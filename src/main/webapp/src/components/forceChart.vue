@@ -310,7 +310,7 @@ export default {
             }
           })
           .attr('dx', (d) => {
-            const sr = nodeConf['radius'][d.source.PNid ? 'child' : 'root'];
+            const sr = nodeConf['radius'][d.source.PNid ? 'child' : 'root'];``
             const sx = d.source.x;
             const sy = d.source.y;
             const tx = d.target.x;

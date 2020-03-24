@@ -35,7 +35,7 @@
         <div class="g-error-title">抱歉，你访问的项目不存在。</div>
         <div>
           <Button type="primary">
-            <router-link to="/project" class="g-error-a">返回首页</router-link>
+            <router-link to="/project" class="g-error-a">返回项目管理页面</router-link>
           </Button>
         </div>
       </div>

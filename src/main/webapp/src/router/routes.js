@@ -59,7 +59,7 @@ export default [
         }
     },
     {
-        path: "/node/:id/:name",
+        path: "/node/:id/",
         name: "nodeshow",
         component: () => import("@/page/nodeshow/nodeshow.vue")
     },

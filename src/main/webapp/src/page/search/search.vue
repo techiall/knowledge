@@ -7,8 +7,8 @@
 
 <template>
   <div class="g-search-warp" v-title="知识图谱节点搜索">
-    <search-header routerKey="q" />
-    <search-content class="g-content scroll"  />
+    <search-header routerKey="q" class="g-search-header" />
+    <search-content class="g-content scroll" />
   </div>
 </template>
 
@@ -34,5 +34,9 @@ export default {
 .g-content {
   height: calc(100% - 60px);
   overflow: auto;
+}
+.g-search-header{
+  position: relative;
+  z-index: 1998;
 }
 </style>

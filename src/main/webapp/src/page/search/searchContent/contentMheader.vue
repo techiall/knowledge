@@ -18,7 +18,7 @@
       <div v-for="(item) in reqShowData" :key="item.nodeId" class="know-s-c-m-c-f">
         <div class="s-c-m-b">
           <router-link
-            :to="{name:'nodeshow', params: {id:item.nodeId,name:item.nodeName},query:{type:'force'}}"
+            :to="{name:'nodeshow', params: {id:item.nodeId},query:{type:'force'}}"
           >
             <div class="s-c-m-c-title">{{item.nodeName}}</div>
           </router-link>

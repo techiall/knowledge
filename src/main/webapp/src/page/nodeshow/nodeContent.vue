@@ -69,6 +69,17 @@ export default {
       immediate: true,
     },
   },
+  methods: {
+    // 请求 视图 数据
+    handlerView(type) {
+      const statusMap = {
+        force: {},
+        tree: {},
+        text: {},
+      };
+      statusMap[type]();
+    },
+  },
 };
 </script>
 

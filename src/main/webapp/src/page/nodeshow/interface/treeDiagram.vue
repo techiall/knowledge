@@ -42,7 +42,7 @@ export default {
         return;
       }
       this.getDataFlag = true;
-      let url = '/node/' + this.nodeId + '/link';
+      let url = `/node/${this.nodeId}/link`;
       this.get(url)
         .then((res) => {
           if (this.showSelectType === 'tree') {
@@ -59,13 +59,12 @@ export default {
   watch: {
     showSelectType: {
       handler(val) {
-        if (val !== 'tree') return;
+        if (val !== 'tree' || !this.nodeId) return;
         this.getforceData();
       },
-      // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法
-      immediate: true,
     },
-    nodeId() {
+    nodeId(val) {
+      if (!val) return;
       this.requestDataFlag = false;
       this.getDataFlag = false;
       this.$emit('update:spinShow', true);

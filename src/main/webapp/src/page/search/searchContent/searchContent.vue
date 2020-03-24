@@ -6,7 +6,7 @@
 
 
 <template>
-  <div class="know-s-c scroll">
+  <div class="know-s-c ">
     <Spin size="large" fix v-show="loadingSpin" />
     <div class="know-s-c-m">
       <content-mheader

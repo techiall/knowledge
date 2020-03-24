@@ -12,7 +12,7 @@
         <span>{{nodeName}}</span>
       </div>
       <node-select />
-      <node-content :InnerHeight="InnerHeight - topHeight" :nodeId="nodeId"></node-content>
+      <node-content :InnerHeight="InnerHeight - topHeight" :nodeId="nodeId" />
     </div>
   </div>
 </template>
@@ -48,11 +48,20 @@ export default {
     },
   },
   watch: {
-    '$route.params': {
-      handler(params) {
-        this.nodeName = params.name;
-        this.nodeId = parseInt(params.id, 10);
-        this.setTitleLabel(this.nodeName);
+    '$route.params.id': {
+      async handler(NodeID) {
+        this.nodeId = '';
+        document.title = `Knowledge Graph`;
+        const nodeID = parseInt(NodeID, 10);
+        const URL = `/node/${nodeID}`;
+        try {
+          const { data } = await this.get(URL);
+          this.nodeName = data.name;
+          this.nodeId = nodeID;
+          this.setTitleLabel(data.name);
+        } catch {
+          this.$router.push('/404');
+        }
       },
       immediate: true,
     },

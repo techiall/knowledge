@@ -58,7 +58,7 @@ export default {
     forceCallback(d) {
       if (d.Tid === this.nodeId) return;
       this.$router.push({
-        path: `/node/${d.Tid}/${d.name}`,
+        path: `/node/${d.Tid}`,
         query: {
           type: 'text',
         },
@@ -68,13 +68,12 @@ export default {
   watch: {
     showSelectType: {
       handler(val) {
-        if (val !== 'force') return;
+        if (val !== 'force' || !this.nodeId) return;
         this.getforceData();
       },
-      // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法
-      immediate: true,
     },
-    nodeId() {
+    nodeId(val) {
+      if (!val) return;
       this.getDataFlag = false;
       this.requestDataFlag = false;
       this.$emit('update:spinShow', true);
