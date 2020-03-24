@@ -5,6 +5,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -24,17 +25,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final AuthenticationEntryPoint authenticationEntryPoint;
+    private final UserDetailsService userDetailsService;
 
     public SecurityConfig(
             LogoutHandler logoutHandler,
             AuthenticationSuccessHandler authenticationSuccessHandler,
             AuthenticationFailureHandler authenticationFailureHandler,
-            AuthenticationEntryPoint authenticationEntryPoint
+            AuthenticationEntryPoint authenticationEntryPoint,
+            UserDetailsService userDetailsService
     ) {
         this.logoutHandler = logoutHandler;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
         this.authenticationFailureHandler = authenticationFailureHandler;
         this.authenticationEntryPoint = authenticationEntryPoint;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -66,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
             .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
         .and()
-            .rememberMe().useSecureCookie(true);
+            .rememberMe().useSecureCookie(true).userDetailsService(userDetailsService);
         // @formatter:on
     }
 }
