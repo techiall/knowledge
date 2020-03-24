@@ -212,7 +212,6 @@ export default {
         })
         .attr('stroke', '#696969');
       //绘制节点
-      //老规矩，先为节点和节点上的文字分组
       let gs = g
         .selectAll('.circleText')
         .data(nodes)
@@ -257,14 +256,7 @@ export default {
         .attr('dy', function(d, i) {
           return i === 0 ? 5 : 4;
         })
-        .attr('dx', (d, i) => {
-          const fontSize = parseInt(
-            i === 0
-              ? nodeConf['TextFontSize']['root']
-              : nodeConf['TextFontSize']['child'],
-          );
-          return (-1 * (fontSize * d.name.length)) / 2;
-        })
+        .style('text-anchor', 'middle') // 文字居中
         .style('fill', nodeConf['textFillColor'])
         .style('font-size', (d, i) => {
           return i === 0
@@ -319,7 +311,6 @@ export default {
           })
           .attr('dx', (d) => {
             const sr = nodeConf['radius'][d.source.PNid ? 'child' : 'root'];
-            // const tr = nodeConf["radius"][d.target.PNid ? "child" : "root"];
             const sx = d.source.x;
             const sy = d.source.y;
             const tx = d.target.x;

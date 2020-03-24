@@ -26,7 +26,7 @@
           <span>（用时约 {{findTime|handleTime}} 秒）</span>
         </div>
       </div>
-      <div class="g-exceeded" v-html="handleExceeded(ShowSMeg)" />
+      <div class="g-exceeded">{{ShowSMeg|handleExceeded}}</div>
     </div>
     <no-findnode v-else-if="!loadingSpin" :ShowSMeg="ShowSMeg" />
   </div>
@@ -41,6 +41,16 @@ export default {
   filters: {
     handleTime(time) {
       return (time / 1000).toFixed(2);
+    },
+    // 处理搜索字符串
+    handleExceeded(content) {
+      if (content.length >= 32) {
+        return `  "${content.substr(
+          32,
+          3,
+        )}" (及之后的字词)均被忽略，因为 知识图谱节点 的查询限制在 32 个词以内。`;
+      }
+      return '';
     },
   },
   props: {
@@ -94,16 +104,6 @@ export default {
         path: '/search',
         query,
       });
-    },
-    // 处理搜索字符串
-    handleExceeded(content) {
-      if (content.length >= 32) {
-        return `  "${content.substr(
-          32,
-          3,
-        )}"</strong> (及之后的字词)均被忽略，因为 知识图谱节点 的查询限制在 32 个词以内。`;
-      }
-      return '';
     },
   },
 };

@@ -26,7 +26,6 @@
         />
       </div>
     </div>
-    <!-- <div class="know-s-c-a" /> -->
   </div>
 </template>
 
