@@ -35,7 +35,7 @@ public class JsonUtils {
 
     @Nullable
     public static <T> T readValue(@NonNull ObjectMapper objectMapper, @Nullable String str, @NonNull Class<T> aClass) {
-        if (str == null) {
+        if (str == null || str.isEmpty()) {
             return null;
         }
         try {

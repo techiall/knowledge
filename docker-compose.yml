@@ -42,6 +42,8 @@ services:
     image: redis:alpine
     networks:
       - knowledge
+    ports:
+      - 6379:6379
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - redis_data:/data
@@ -56,7 +58,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - elastic_data:/usr/share/elasticsearch/data
     environment:
-      - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
+      - 'ES_JAVA_OPTS=-Xms1024m -Xmx1024m'
+      - 'discovery.type=single-node'
 
 networks:
   knowledge:
