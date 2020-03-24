@@ -14,6 +14,7 @@ import top.techial.knowledge.service.mapper.ItemMapper;
 import top.techial.knowledge.service.mapper.NodeMapper;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,7 +71,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .map(String::valueOf)
                 .map(SimpleGrantedAuthority::new)
                 .forEach(authorities::add);
-        return new UserPrincipal(user.getId(), user.getUserName(), user.getPassword(), authorities);
+        return new UserPrincipal(user.getId(), user.getUserName(), user.getPassword(), new HashSet<>(nodes));
     }
 
 }
