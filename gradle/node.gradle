@@ -7,6 +7,6 @@ node {
 
 task yarnBuild(type: YarnTask, dependsOn: yarn) {
     group = "node"
-    args = ["run", "build"]
+    args = ["run", "build", "--modern"]
 }
 
