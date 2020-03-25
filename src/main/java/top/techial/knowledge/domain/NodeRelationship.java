@@ -47,9 +47,6 @@ public class NodeRelationship implements Serializable {
     @Lob
     private Property property;
 
-    @Version
-    private Long version;
-
     @CreationTimestamp
     private Instant createTime;
 

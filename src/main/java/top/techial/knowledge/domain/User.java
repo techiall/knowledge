@@ -37,9 +37,6 @@ public class User implements Serializable {
     @JsonIgnore
     private String password;
 
-    @Version
-    private Long version;
-
     @CreationTimestamp
     private Instant createTime;
 

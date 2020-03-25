@@ -7,7 +7,6 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.Version;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -43,9 +42,6 @@ public class Item implements Serializable {
     private String image;
 
     private String description;
-
-    @Version
-    private Long version;
 
     @CreationTimestamp
     private Instant createTime;
