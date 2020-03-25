@@ -61,17 +61,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private UserPrincipal toUserPrincipal(User user, List<Long> node) {
-        List<SimpleGrantedAuthority> authorities = itemMapper
-                .toListSimpleGrantedAuthority(user.getItem());
-
+        List<SimpleGrantedAuthority> authorities = itemMapper.toListSimpleGrantedAuthority(user.getItem());
         List<SimpleGrantedAuthority> nodes = nodeMapper.toListSimpleGrantedAuthority(node);
         authorities.addAll(nodes);
-
-        node.parallelStream()
-                .map(String::valueOf)
-                .map(SimpleGrantedAuthority::new)
-                .forEach(authorities::add);
-        return new UserPrincipal(user.getId(), user.getUserName(), user.getPassword(), new HashSet<>(nodes));
+        return new UserPrincipal(user.getId(), user.getUserName(), user.getPassword(), new HashSet<>(authorities));
     }
 
 }
