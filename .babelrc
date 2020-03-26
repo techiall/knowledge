@@ -1,0 +1,23 @@
+{
+  "plugins": [
+    [
+      "prismjs",
+      {
+        "languages": [
+          "html",
+          "css",
+          "javascript",
+          "ruby",
+          "php",
+          "python",
+          "java",
+          "c",
+          "aspnet",
+          "cpp"
+        ], //这是语言类型
+        "theme": "default", //主题！！
+        "css": true
+      }
+    ]
+  ]
+}

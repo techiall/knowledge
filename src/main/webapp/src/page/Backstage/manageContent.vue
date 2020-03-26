@@ -8,7 +8,7 @@
 <template>
   <div class="know-manage-split" :style="{height:ClientHeight}">
     <Spin size="large" fix v-if="loadingFlag" class="g-lodding"></Spin>
-    <Split v-model="splitinit" :min="splitMin" :max="splitMax" v-if="showErrorFlag">
+    <Split v-if="showErrorFlag" v-model="splitinit" :min="splitMin" :max="splitMax" >
       <div slot="left" class="know-manage-split-pane">
         <tree-list
           ref="treelist"

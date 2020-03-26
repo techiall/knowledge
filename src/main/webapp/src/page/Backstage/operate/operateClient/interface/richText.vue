@@ -14,6 +14,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import Prism from 'prismjs';
 
 export default {
   props: [
@@ -79,6 +80,11 @@ export default {
           this.$emit('update:spinShow', false);
           if (res.data) {
             this.content = res.data;
+            if (!this.itemExitFlag) {
+              this.$nextTick(() => {
+                Prism.highlightAll();
+              });
+            }
           } else if (!this.itemExitFlag) {
             this.content = '作者没有再此节点编辑任何信息。';
           } else {

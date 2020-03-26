@@ -6,11 +6,13 @@
 
 
 <template>
-  <div class="know-searchshow-text" ref="eixtText"></div>
+  <div class="know-searchshow-text" v-html="Nodecontent" />
 </template>
 
 
 <script>
+import Prism from 'prismjs';
+
 export default {
   props: ['showSelectType', 'nodeId', 'spinShow'],
   data() {
@@ -19,6 +21,8 @@ export default {
       getDataFlag: false,
       // 数据请求过标志位
       requestDataFlag: false,
+      // 节点知识
+      Nodecontent: '',
     };
   },
   methods: {
@@ -42,14 +46,19 @@ export default {
             this.getDataFlag = false;
           }
         })
-        .catch(() => {});
+        .catch((err) => {
+          window.console.log(err);
+        });
     },
     //处理富文本数据
     handlerTextData(data) {
       if (data) {
-        this.$refs.eixtText.innerHTML = data;
+        this.Nodecontent = data;
+        this.$nextTick(() => {
+          Prism.highlightAll();
+        });
       } else {
-        this.$refs.eixtText.innerHTML = '作者没有再此节点编辑任何信息。';
+        this.Nodecontent = '作者没有再此节点编辑任何信息。';
       }
     },
   },
@@ -73,6 +82,5 @@ export default {
 };
 </script>
 
-
-<style scoped>
+<style scoped >
 </style>
