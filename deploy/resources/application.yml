@@ -21,13 +21,13 @@ spring:
     execution:
       thread-name-prefix: knowledge-task-
       pool:
-        core-size: 1
+        core-size: 8
         max-size: 50
         queue-capacity: 10000
     scheduling:
       thread-name-prefix: knowledge-scheduling-
       pool:
-        size: 1
+        size: 8
   datasource:
     url: jdbc:mysql://mysql:3306/knowledge?useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
     username: root
