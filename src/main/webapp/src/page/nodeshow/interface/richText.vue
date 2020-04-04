@@ -46,9 +46,7 @@ export default {
             this.getDataFlag = false;
           }
         })
-        .catch((err) => {
-          window.console.log(err);
-        });
+        .catch(() => {});
     },
     //处理富文本数据
     handlerTextData(data) {

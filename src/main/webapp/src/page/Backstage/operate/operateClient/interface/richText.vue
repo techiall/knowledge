@@ -98,9 +98,7 @@ export default {
             });
           }
         })
-        .catch((err) => {
-          window.console.log(err);
-        });
+        .catch(() => {});
     },
     // 设置上传照片
     imagesUpload(blobInfo, succFun, failFun) {
