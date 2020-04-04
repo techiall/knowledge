@@ -22,7 +22,8 @@
         />
         <transition name="knowerror">
           <div class="know-login-warn" v-show="registerusernameFlag">
-            <Icon type="ios-information-circle" size="17" color="#f5222d" />请输入用户名！
+            <Icon type="ios-information-circle" size="17" color="#f5222d" />
+            {{usernameShow}}
           </div>
         </transition>
       </div>
@@ -80,7 +81,7 @@
           <div class="know-login-warn" v-show="registerRepeatPassword">
             <Icon type="ios-information-circle" size="17" color="#f5222d" />
             &nbsp;&nbsp;&nbsp;
-            {{registerRepeatPasswordFalg?'两次输入的密码不匹配！':'请确认密码!'}}
+            {{registerRepeatPasswordFalg?'两次输入的密码不匹配！':'请确认密码！'}}
           </div>
         </transition>
       </div>
@@ -158,8 +159,10 @@ export default {
       registeruserClass: '',
       // 判断用户存在 请求 延迟 标志 符号
       registerdelayuserFlag: false,
-      //判断用户存在 请求 延迟 纪录
+      // 判断用户存在 请求 延迟 纪录
       registerdelayusername: '',
+      // 判断用户名输入格式正确
+      usernameShow: '请输入用户名！',
     };
   },
   methods: {
@@ -184,16 +187,13 @@ export default {
         return;
       if (this.submitFlag) return;
       this.submitFlag = true;
-
       this.post_json('/register', {
         userName: this.formRegister.username,
         password: this.formRegister.password,
       })
-        .then((res) => {
+        .then(() => {
           this.submitFlag = false;
-          if (res.code === 0 && res.msg === 'Success') {
-            this.$emit('mainCallback', 1, true);
-          }
+          this.$emit('mainCallback', 1, true);
         })
         .catch(() => {
           this.submitFlag = false;
@@ -219,7 +219,10 @@ export default {
             let registerName = this.registerdelayusername;
             this.registerdelayusername = '';
             this.IsregisterUser(registerName);
-          } else if (this.formRegister.username === '') {
+          } else if (
+            this.formRegister.username === '' ||
+            this.registerusernameFlag
+          ) {
             this.registerUserIcon = '';
             this.registeruserClass = '';
           } else {
@@ -238,19 +241,22 @@ export default {
     checkIswarn(val) {
       //空格正则
       let regSpace = /(^\s+)|(\s+$)|\s+/g;
+      // 只能 数字,字母,下划线
+      let regUNW = /^[0-9a-zA-Z_]+$/;
       //密码强度正则  包含字母、数字、符号中至少2种
       let regDifferent = /(?=.*[a-zA-Z])(?=.*\d)|(?=.*[a-zA-Z])(?=.*[-+=|,!@#$%^&*?_`.~/(){}[\]<>])|(?=.*\d)(?=.*[-+=|,!@#$%^&*?_`.~/(){}[\]<>])/;
 
       if (val === 3) {
-        if (this.formRegister.username !== '') {
+        if (regUNW.test(this.formRegister.username)) {
           this.registerusernameFlag = false;
-          if (regSpace.test(this.formRegister.username)) {
-            this.registerUserIcon = 'md-alert';
-            this.registeruserClass = 'register-warning';
-          } else {
-            this.IsregisterUser(this.formRegister.username);
-          }
+          this.IsregisterUser(this.formRegister.username);
         } else {
+          if (this.formRegister.username) {
+            this.usernameShow = '用户名只能包含数字，字母和下划线！';
+            this.registerusernameFlag = true;
+          } else {
+            this.registerusernameFlag = false;
+          }
           this.registerUserIcon = '';
           this.registeruserClass = '';
         }
@@ -313,11 +319,10 @@ export default {
     blurIswarn(val) {
       if (val === 3) {
         if (this.formRegister.username === '') {
+          this.usernameShow = '请输入用户名！';
           this.registerusernameFlag = true;
           this.registerUserIcon = '';
           this.registeruserClass = '';
-        } else {
-          this.registerusernameFlag = false;
         }
       } else if (val === 4) {
         this.registerPasswordShowTips = false;
@@ -330,10 +335,10 @@ export default {
             this.registerShowPassword = '不能包括空格！';
           } else if (!this.regexPassword.Nflag) {
             this.registerPassword = true;
-            this.registerShowPassword = '长度为6-32个字符';
+            this.registerShowPassword = '长度为6-32个字符！';
           } else if (!this.regexPassword.Dflag) {
             this.registerPassword = true;
-            this.registerShowPassword = '必须包含字母、数字、符号中至少2种';
+            this.registerShowPassword = '必须包含字母、数字、符号中至少2种！';
           } else this.registerPassword = false;
         }
       } else if (val === 5) {
@@ -355,6 +360,7 @@ export default {
       this.registerPassword = false;
       this.registerRepeatPassword = false;
       this.registerdelayuserFlag = false;
+      this.usernameFormatFlag = false;
       this.registerdelayusername = '';
       this.formRegister = {
         username: '',
@@ -374,7 +380,8 @@ export default {
         Dcolor: '#87CEFA',
         Dflag: false,
       };
-      this.registerShowPassword = '请输入密码!';
+      this.registerShowPassword = '请输入密码！';
+      this.usernameShow = '请输入用户名！';
     },
   },
   watch: {
