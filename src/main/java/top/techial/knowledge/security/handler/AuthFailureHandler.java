@@ -2,6 +2,7 @@ package top.techial.knowledge.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -33,6 +34,7 @@ public class AuthFailureHandler implements AuthenticationFailureHandler {
             clientErrorException = new UnauthorizedException();
         }
         response.setStatus(clientErrorException.getCode());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(JsonUtils.writeValueAsString(objectMapper, clientErrorException.getResultBean()));
     }
 }
