@@ -62,6 +62,7 @@ spring:
       max-file-size: 60MB
       max-request-size: 60MB
       enabled: true
+
 storage:
   location: /knowledge/storage
 

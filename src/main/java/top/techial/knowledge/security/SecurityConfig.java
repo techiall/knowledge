@@ -67,6 +67,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .defaultAuthenticationEntryPointFor(authenticationEntryPoint, new AntPathRequestMatcher("/api/**"))
         .and()
             .authorizeRequests()
+            .antMatchers(
+                    "/v2/api-docs",
+                    "/swagger-resources",
+                    "/swagger-resources/**",
+                    "/configuration/ui",
+                    "/configuration/security",
+                    "/swagger-ui.html",
+                    "/webjars/**"
+            ).permitAll()
             .antMatchers("/api/user/me", "/api/register/**").permitAll()
             .antMatchers(HttpMethod.GET, "/api/storage/text/**").permitAll()
             .antMatchers(HttpMethod.GET, "/api/storage/preview/**").permitAll()

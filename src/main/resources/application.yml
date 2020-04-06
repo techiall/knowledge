@@ -68,5 +68,7 @@ storage:
   location: /Users/techial/Downloads/knowledge
 logging:
   level:
+    springfox:
+      documentation: debug
     top.techial: debug
 

@@ -66,6 +66,9 @@ dependencies {
     implementation "org.mapstruct:mapstruct:1.3.1.Final"
     annotationProcessor "org.mapstruct:mapstruct-processor:1.3.1.Final"
 
+    // swagger
+    implementation 'io.springfox:springfox-swagger2:2.9.2'
+
     // lombok config
     compileOnly "org.projectlombok:lombok"
     testCompileOnly "org.projectlombok:lombok"
