@@ -8,6 +8,8 @@ services:
       - web
     ports:
       - "8080:8080"
+    networks:
+      - knowledge
   web:
     image: techial.top/knowledge:latest
     networks:
