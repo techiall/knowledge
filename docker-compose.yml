@@ -4,10 +4,10 @@ services:
     image: nginx:latest
     volumes:
       - ./deploy/nginx/knowledge.conf:/etc/nginx/conf.d/knowledge.conf
-      depends_on:
-        - web
-      ports:
-        - "8080:8080"
+    depends_on:
+      - web
+    ports:
+      - "8080:8080"
   web:
     image: techial.top/knowledge:latest
     networks:
