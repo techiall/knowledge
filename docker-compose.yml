@@ -1,5 +1,13 @@
 version: '3.7'
 services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./deploy/nginx/knowledge.conf:/etc/nginx/conf.d/knowledge.conf
+      depends_on:
+        - web
+      ports:
+        - "8080:8080"
   web:
     image: techial.top/knowledge:latest
     networks:
@@ -8,8 +16,6 @@ services:
       - mysql
       - redis
       - elastic
-    ports:
-      - 8080:8080
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./deploy/resources/application.yml:/app/resources/application.yml:ro
