@@ -1,6 +1,5 @@
 package top.techial.knowledge.security;
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,7 +21,6 @@ import java.util.stream.Collectors;
  * @author techial
  */
 @Service
-@Log4j2
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final NodeService nodeService;

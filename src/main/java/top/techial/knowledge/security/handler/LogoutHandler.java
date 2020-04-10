@@ -1,7 +1,6 @@
 package top.techial.knowledge.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,7 +16,6 @@ import java.io.IOException;
  * @author techial
  */
 @Configuration
-@Slf4j
 public class LogoutHandler implements LogoutSuccessHandler {
     private final ObjectMapper objectMapper;
 
