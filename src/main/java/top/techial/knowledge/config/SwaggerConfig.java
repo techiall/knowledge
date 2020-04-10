@@ -1,7 +1,6 @@
 package top.techial.knowledge.config;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -30,7 +29,6 @@ public class SwaggerConfig {
                 .directModelSubstitute(Pageable.class, SwaggerPageable.class);
     }
 
-    @Data
     public static class SwaggerPageable {
         @ApiModelProperty(value = "Number of records per page", example = "20")
         private Integer size;
@@ -41,5 +39,29 @@ public class SwaggerConfig {
         @ApiModelProperty(value = "Sorting criteria in the format: property(,asc|desc)." +
                 "Default sort order is ascending. Multiple sort criteria are supported.")
         private String sort;
+
+        public Integer getSize() {
+            return size;
+        }
+
+        public void setSize(Integer size) {
+            this.size = size;
+        }
+
+        public Integer getPage() {
+            return page;
+        }
+
+        public void setPage(Integer page) {
+            this.page = page;
+        }
+
+        public String getSort() {
+            return sort;
+        }
+
+        public void setSort(String sort) {
+            this.sort = sort;
+        }
     }
 }

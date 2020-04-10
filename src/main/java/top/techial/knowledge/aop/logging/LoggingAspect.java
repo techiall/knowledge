@@ -1,27 +1,31 @@
 package top.techial.knowledge.aop.logging;
 
-import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
 @Aspect
-@Log4j2
 public class LoggingAspect {
+
+    private static final Logger log = LoggerFactory.getLogger(LoggingAspect.class);
 
     @Pointcut("within(@org.springframework.stereotype.Repository *)" +
             " || within(@org.springframework.stereotype.Service *)" +
             " || within(@org.springframework.web.bind.annotation.RestController *)")
     public void springBeanPointcut() {
+        //
     }
 
     @Pointcut("within(top.techial.knowledge..*)")
     public void applicationPackagePointcut() {
+        //
     }
 
     @AfterThrowing(pointcut = "applicationPackagePointcut() && springBeanPointcut()", throwing = "e")

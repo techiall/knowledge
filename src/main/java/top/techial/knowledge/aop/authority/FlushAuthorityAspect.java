@@ -1,17 +1,19 @@
 package top.techial.knowledge.aop.authority;
 
-import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import top.techial.knowledge.service.UserService;
 
 /**
  * @author techial
  */
 @Aspect
-@Log4j2
 public class FlushAuthorityAspect {
+
+    private static final Logger log = LoggerFactory.getLogger(FlushAuthorityAspect.class);
 
     private final UserService userService;
 
