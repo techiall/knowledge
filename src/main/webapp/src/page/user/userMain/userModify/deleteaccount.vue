@@ -6,10 +6,12 @@
 
 
 <template>
-  <div class="msg-news-box">
+  <div class="msg-news-box b-user-border">
     <div class="msg-news-box-msg-title">
       <div class="box-msg-header-name">
-        <Icon type="md-arrow-round-back" class="box-msg-header-s curpoin" @click="selectBack" />
+        <router-link to="/user">
+          <Icon type="md-arrow-round-back" class="box-msg-header-s curpoin" />
+        </router-link>
         <span>删除您的 “知识图谱构建平台” 帐号</span>
       </div>
       <div
@@ -35,7 +37,7 @@
     </div>
     <div class="box-msg-row">
       <Button type="primary" class="box-msg-row-button" @click="modifyServer">删除账号</Button>
-      <Button type="text" class="box-msg-row-button" @click="selectBack">取消</Button>
+      <Button type="text" class="box-msg-row-button" to="/user">取消</Button>
     </div>
   </div>
 </template>
@@ -66,10 +68,6 @@ export default {
           this.$router.push({ path: '/login' });
         })
         .catch(() => {});
-    },
-    // 选择回退
-    selectBack() {
-      this.$emit('userMainCallback', 1, 1);
     },
   },
 };
@@ -106,6 +104,7 @@ export default {
   height: 34px;
   width: 34px;
   line-height: 34px;
+  color: #202124;
 }
 .box-msg-header-s:active {
   border-radius: 50%;

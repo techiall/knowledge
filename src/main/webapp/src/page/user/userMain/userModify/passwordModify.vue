@@ -6,10 +6,12 @@
 
 
 <template>
-  <div class="msg-news-box">
+  <div class="msg-news-box b-user-border">
     <div class="msg-news-box-msg-title">
       <div class="box-msg-header-name">
-        <Icon type="md-arrow-round-back" class="box-msg-header-s curpoin" @click="selectBack" />
+        <router-link to="/user">
+          <Icon type="md-arrow-round-back" class="box-msg-header-s curpoin" @click="selectBack" />
+        </router-link>
         <span>密码</span>
       </div>
       <div class="box-msg-header-title">请选择安全系数高的密码，并且不要将其用于其他帐号。</div>
@@ -58,7 +60,7 @@
     </div>
     <div class="box-msg-row">
       <Button type="primary" @click="modifyServer" class="box-msg-row-button">更改密码</Button>
-      <Button type="text" @click="selectBack">取消</Button>
+      <Button type="text" to="/user">取消</Button>
     </div>
   </div>
 </template>
@@ -66,75 +68,71 @@
 
 <script>
 export default {
-  props: ["viewSeletctFlag"],
+  props: ['viewSeletctFlag'],
   data() {
     return {
       //修改密碼 上传 的 信息
       fromCPass: {
-        oldPass: "",
-        newPass: "",
-        RepeatPass: ""
-      }
+        oldPass: '',
+        newPass: '',
+        RepeatPass: '',
+      },
     };
   },
   watch: {
     viewSeletctFlag(newVal) {
       if (newVal === 3) {
         this.fromCPass = {
-          oldPass: "",
-          newPass: "",
-          RepeatPass: ""
+          oldPass: '',
+          newPass: '',
+          RepeatPass: '',
         };
-        this.$refs.oldInTip.innerHTML = "";
-        this.$refs.newInTip.innerHTML = "";
-        this.$refs.RepeatInTip.innerHTML = "";
+        this.$refs.oldInTip.innerHTML = '';
+        this.$refs.newInTip.innerHTML = '';
+        this.$refs.RepeatInTip.innerHTML = '';
       }
-    }
+    },
   },
   methods: {
     // 发送密码名称到服务器
     modifyServer() {
       let flag = true;
       let numStatus = this.PasswordDetection();
-      if (this.fromCPass.oldPass === "") {
-        this.$refs.oldInTip.innerHTML = "请输入旧密码!";
+      if (this.fromCPass.oldPass === '') {
+        this.$refs.oldInTip.innerHTML = '请输入旧密码!';
         flag = false;
       }
-      if (this.fromCPass.newPass === "") {
-        this.$refs.newInTip.innerHTML = "请输入新密码!";
+      if (this.fromCPass.newPass === '') {
+        this.$refs.newInTip.innerHTML = '请输入新密码!';
         flag = false;
       } else if (numStatus !== 0) {
         this.blurInput();
         flag = false;
       } else if (this.fromCPass.oldPass === this.fromCPass.RepeatPass) {
-        this.$refs.newInTip.innerHTML = "旧密码和新密码不能一样!";
+        this.$refs.newInTip.innerHTML = '旧密码和新密码不能一样!';
         flag = false;
       }
-      if (this.fromCPass.RepeatPass === "") {
-        this.$refs.RepeatInTip.innerHTML = "请确认新密码!";
+      if (this.fromCPass.RepeatPass === '') {
+        this.$refs.RepeatInTip.innerHTML = '请确认新密码!';
         flag = false;
       } else if (this.fromCPass.RepeatPass !== this.fromCPass.newPass) {
-        this.$refs.RepeatInTip.innerHTML = "密码不一致!";
+        this.$refs.RepeatInTip.innerHTML = '密码不一致!';
         flag = false;
       }
       if (!flag) {
         return;
       }
-      let url = "/user/me/password";
+      let url = '/user/me/password';
       let obj = {
         srcPassword: this.fromCPass.oldPass,
-        password: this.fromCPass.newPass
+        password: this.fromCPass.newPass,
       };
       this.patch_string(url, obj)
         .then(() => {
-          this.$Message.success("密码修改成功");
-          this.$emit("userMainCallback", 1, 1);
+          this.$Message.success('密码修改成功');
+          this.$emit('userMainCallback', 1, 1);
         })
         .catch(() => {});
-    },
-    // 选择回退
-    selectBack() {
-      this.$emit("userMainCallback", 1, 1);
     },
     // input change 事件
     changeInput(val) {
@@ -148,14 +146,14 @@ export default {
       let RepeatPass = this.fromCPass.RepeatPass;
       switch (val) {
         case 1:
-          if (oldPass !== "") {
-            this.$refs.oldInTip.innerHTML = "";
+          if (oldPass !== '') {
+            this.$refs.oldInTip.innerHTML = '';
           }
           break;
         case 2:
-          this.$refs.newInTip.innerHTML = "";
-          if (password === "") {
-            this.$refs.newInTipTitle.innerHTML = "";
+          this.$refs.newInTip.innerHTML = '';
+          if (password === '') {
+            this.$refs.newInTipTitle.innerHTML = '';
           } else {
             // 匹配是否有空格
             if (!regSpace.test(password)) {
@@ -175,17 +173,17 @@ export default {
               numStatus === 5 ||
               numStatus === 6
             ) {
-              this.$refs.newInTipTitle.innerHTML = "太短";
+              this.$refs.newInTipTitle.innerHTML = '太短';
             } else if (numStatus === 3 || numStatus === 4) {
-              this.$refs.newInTipTitle.innerHTML = "良好";
+              this.$refs.newInTipTitle.innerHTML = '良好';
             } else if (numStatus === 8 || numStatus === 9) {
-              this.$refs.newInTipTitle.innerHTML = "极佳";
+              this.$refs.newInTipTitle.innerHTML = '极佳';
             }
           }
           break;
         case 3:
-          if (RepeatPass !== "") {
-            this.$refs.RepeatInTip.innerHTML = "";
+          if (RepeatPass !== '') {
+            this.$refs.RepeatInTip.innerHTML = '';
           }
           break;
       }
@@ -193,17 +191,17 @@ export default {
     //失去焦点
     blurInput(val) {
       if (val === 2) {
-        if (this.fromCPass.newPass !== "") {
+        if (this.fromCPass.newPass !== '') {
           let numStatus = this.PasswordDetection();
           if (numStatus === 1) {
-            this.$refs.newInTip.innerHTML = "不能包括空格!";
+            this.$refs.newInTip.innerHTML = '不能包括空格!';
           } else if (numStatus === 2) {
-            this.$refs.newInTip.innerHTML = "长度为6-32个字符!";
+            this.$refs.newInTip.innerHTML = '长度为6-32个字符!';
           } else if (numStatus === 3) {
             this.$refs.newInTip.innerHTML =
-              "必须包含字母、数字、符号中至少2种!";
+              '必须包含字母、数字、符号中至少2种!';
           } else {
-            this.$refs.newInTip.innerHTML = "";
+            this.$refs.newInTip.innerHTML = '';
           }
         }
       }
@@ -224,8 +222,8 @@ export default {
         numStatus = 3;
       }
       return numStatus;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -262,6 +260,7 @@ export default {
   height: 34px;
   width: 34px;
   line-height: 34px;
+  color: #202124;
 }
 .box-msg-header-s:active {
   border-radius: 50%;

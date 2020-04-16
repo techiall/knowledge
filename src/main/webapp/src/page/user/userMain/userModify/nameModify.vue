@@ -6,10 +6,12 @@
 
 
 <template>
-  <div class="msg-news-box">
+  <div class="msg-news-box b-user-border">
     <div class="msg-news-box-msg-title">
       <div class="box-msg-header-name">
-        <Icon type="md-arrow-round-back" class="box-msg-header-s curpoin" @click="selectBack" />
+        <router-link to="/user">
+          <Icon type="md-arrow-round-back" class="box-msg-header-s curpoin" />
+        </router-link>
         <span>昵称</span>
       </div>
       <div class="box-msg-header-title">对您的昵称所做的更改将反映在您的 “知识图谱构建平台” 帐号中</div>
@@ -139,10 +141,6 @@ export default {
       };
       statusMap[type]();
     },
-    // 选择回退
-    selectBack() {
-      this.$emit('userMainCallback', 1, 1);
-    },
     // 注册按键事件
     keyupEsc(e) {
       if (e.keyCode === 27) {
@@ -176,6 +174,7 @@ export default {
   height: 34px;
   width: 34px;
   line-height: 34px;
+  color: #202124;
 }
 .box-msg-header-s:active {
   border-radius: 50%;

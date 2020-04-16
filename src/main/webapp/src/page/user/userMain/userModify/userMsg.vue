@@ -12,7 +12,7 @@
       <div class="user-main-header-title">知识图谱构建平台</div>
     </div>
     <div class="main-content-msg-row">
-      <div class="msg-row-content dis-flex" @click.stop="selectRow(1)">
+      <div class="msg-row-content dis-flex" @click.stop="headPortrait">
         <div class="dis-flex-left">
           <div class="msg-row-name">头像</div>
           <div class="msg-row-title msg-row-title-tip">更改照片可帮助您个性化您的帐号</div>
@@ -33,7 +33,7 @@
       </div>
     </div>
     <div class="main-content-msg-row">
-      <div class="msg-row-content dis-flex" @click="selectRow(2)">
+      <router-link to="user/nickname" class="msg-row-content dis-flex">
         <div class="dis-flex-left">
           <div class="msg-row-name">昵称</div>
           <div class="msg-row-title">{{nickName}}</div>
@@ -41,7 +41,7 @@
         <div class="dis-flex-right">
           <Icon type="ios-arrow-forward" size="20" />
         </div>
-      </div>
+      </router-link>
     </div>
     <div class="main-content-msg-row">
       <div class="msg-row-content">
@@ -56,7 +56,7 @@
       </div>
     </div>
     <div class="main-content-msg-row">
-      <div class="msg-row-content dis-flex" @click="selectRow(3)">
+      <router-link to="/user/password" class="msg-row-content dis-flex" @click="selectRow(3)">
         <div class="dis-flex-left">
           <div class="msg-row-name">密码</div>
           <div class="msg-row-title">••••••••</div>
@@ -64,26 +64,29 @@
         <div class="dis-flex-right">
           <Icon type="ios-arrow-forward" size="20" />
         </div>
-      </div>
+      </router-link>
     </div>
+    <upload-images ref="uploadImages" />
   </div>
 </template>
 
 
 <script>
+// 点击上传照片
+import uploadImages from '@/components/uploadImages';
 import { mapGetters } from 'vuex';
 
 export default {
+  components: { uploadImages },
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     ...mapGetters({
       user: 'getUser',
       images: 'getImageSrc',
       nickName: 'getnickName',
-      updateTime:'getUpdateTime'
+      updateTime: 'getUpdateTime',
     }),
   },
   methods: {
@@ -102,13 +105,9 @@ export default {
         '日'
       );
     },
-    // 选择行
-    selectRow(val) {
-      if (val === 1) {
-        this.$emit('userMainCallback', 2, val);
-      } else {
-        this.$emit('userMainCallback', 1, val);
-      }
+    // 选择头像
+    headPortrait() {
+      this.$refs.uploadImages.clickStatus(3);
     },
   },
 };
@@ -154,6 +153,7 @@ export default {
   padding: 20px 20px 20px 0;
   margin: 0 0 0 20px;
   border-top: 1px solid #dadce0;
+  color: #515a6e;
 }
 .main-content-msg-row:hover:nth-of-type(2),
 .main-content-msg-row:nth-of-type(2) .msg-row-content {

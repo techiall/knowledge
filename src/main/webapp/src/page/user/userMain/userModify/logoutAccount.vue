@@ -16,7 +16,7 @@
       <div class="box-msg-header-title">您将无法使用需要通过该帐号登录的 "知识图谱构建平台" 服务</div>
     </div>
     <div class="box-msg-row">
-      <div class="box-msg-row-title curpoin" @click="selectRow">删除您的帐号</div>
+      <router-link to='user/deleteaccount' class="box-msg-row-title curpoin">删除您的帐号</router-link>
     </div>
   </div>
 </template>
@@ -25,15 +25,9 @@
 <script>
 export default {
   data() {
-    return {
-    };
+    return {};
   },
-  methods: {
-    // 确认选择
-    selectRow() {
-      this.$emit('userMainCallback',1,4);
-    }
-  }
+  methods: {},
 };
 </script>
 
@@ -60,7 +54,7 @@ export default {
   align-items: center;
   padding: 0px 20px 20px 20px;
 }
-.box-msg-row-title{
+.box-msg-row-title {
   color: #1a73e8;
 }
 .curpoin {
