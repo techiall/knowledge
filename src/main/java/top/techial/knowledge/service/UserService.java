@@ -1,5 +1,6 @@
 package top.techial.knowledge.service;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -10,8 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.domain.Item;
+import top.techial.knowledge.domain.QUser;
 import top.techial.knowledge.repository.ItemRepository;
-import top.techial.knowledge.repository.UserRepository;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.mapper.ItemMapper;
 import top.techial.knowledge.service.mapper.NodeMapper;
@@ -26,32 +27,43 @@ import java.util.stream.Collectors;
 @Log4j2
 public class UserService {
 
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ItemRepository itemRepository;
     private final NodeService nodeService;
     private final NodeMapper nodeMapper;
     private final ItemMapper itemMapper;
+    private final JPAQueryFactory jpaQueryFactory;
 
     public UserService(
-            UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             ItemRepository itemRepository,
             NodeService nodeService,
             NodeMapper nodeMapper,
-            ItemMapper itemMapper
+            ItemMapper itemMapper,
+            JPAQueryFactory jpaQueryFactory
     ) {
-        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.itemRepository = itemRepository;
         this.nodeService = nodeService;
         this.nodeMapper = nodeMapper;
         this.itemMapper = itemMapper;
+        this.jpaQueryFactory = jpaQueryFactory;
     }
 
     @Transactional
     public void updatePassword(Integer id, String password) {
-        userRepository.updatePassword(id, passwordEncoder.encode(password));
+        QUser qUser = QUser.user;
+        jpaQueryFactory.update(qUser)
+                .set(qUser.password, passwordEncoder.encode(password))
+                .where(qUser.id.eq(id))
+                .execute();
+    }
+
+    private String findPasswordById(Integer id) {
+        QUser qUser = QUser.user;
+        return jpaQueryFactory.select(qUser.password).where(qUser.id.eq(id))
+                .from(qUser)
+                .fetchFirst();
     }
 
     public void resetAuthority() {
@@ -72,7 +84,7 @@ public class UserService {
 
         List<Integer> ids = items.parallelStream().map(Item::getId).collect(Collectors.toList());
 
-        String password = userRepository.findPasswordById(userPrincipal.getId());
+        String password = findPasswordById(userPrincipal.getId());
         if (ids == null || ids.isEmpty()) {
             Authentication auth = new UsernamePasswordAuthenticationToken(userPrincipal, password, authority);
             context.setAuthentication(auth);
