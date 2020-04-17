@@ -39,6 +39,7 @@ public class ExceptionTranslator {
             MethodArgumentNotValidException.class,
             MissingServletRequestParameterException.class,
             JsonProcessingException.class,
+            IllegalArgumentException.class
     })
     public Object badRequest() {
         return handleException(ResultBean.of(400, "Bad Request"));
