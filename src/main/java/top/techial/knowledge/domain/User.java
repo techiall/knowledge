@@ -29,6 +29,14 @@ public class User implements Serializable {
 
     private String nickName;
 
+    private Boolean accountNonExpired;
+
+    private Boolean accountNonLocked;
+
+    private Boolean credentialsNonExpired;
+
+    private Boolean enabled;
+
     @OneToMany
     private Set<Item> item;
 

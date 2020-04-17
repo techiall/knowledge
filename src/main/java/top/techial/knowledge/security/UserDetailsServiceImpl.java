@@ -62,7 +62,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         List<SimpleGrantedAuthority> authorities = itemMapper.toListSimpleGrantedAuthority(user.getItem());
         List<SimpleGrantedAuthority> nodes = nodeMapper.toListSimpleGrantedAuthority(node);
         authorities.addAll(nodes);
-        return new UserPrincipal(user.getId(), user.getUserName(), user.getPassword(), new HashSet<>(authorities));
+        return new UserPrincipal(
+                user.getId(),
+                user.getUserName(),
+                user.getPassword(),
+                user.getEnabled(),
+                user.getAccountNonExpired(),
+                user.getCredentialsNonExpired(),
+                user.getAccountNonLocked(),
+                new HashSet<>(authorities)
+        );
     }
 
 }

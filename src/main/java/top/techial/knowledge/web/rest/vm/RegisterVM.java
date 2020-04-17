@@ -26,4 +26,11 @@ public class RegisterVM implements Serializable {
     @NotEmpty
     private String password;
 
+    private Boolean accountNonExpired = true;
+
+    private Boolean accountNonLocked = true;
+
+    private Boolean credentialsNonExpired = true;
+
+    private Boolean enabled = true;
 }
