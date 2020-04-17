@@ -2,6 +2,7 @@ package top.techial.knowledge.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.domain.Node;
@@ -14,7 +15,7 @@ import java.util.Optional;
  * @author techial
  */
 @Repository
-public interface NodeRepository extends JpaRepository<Node, Long> {
+public interface NodeRepository extends JpaRepository<Node, Long>, QuerydslPredicateExecutor<Node> {
     @Transactional
     void deleteAllByItemId(Integer id);
 
