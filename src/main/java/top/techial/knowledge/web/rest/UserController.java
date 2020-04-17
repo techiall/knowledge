@@ -18,6 +18,7 @@ import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.UserService;
 import top.techial.knowledge.service.dto.UserDTO;
 import top.techial.knowledge.service.mapper.UserMapper;
+import top.techial.knowledge.web.rest.errors.PasswordNotMatchException;
 import top.techial.knowledge.web.rest.errors.UserNotFoundException;
 import top.techial.knowledge.web.rest.vm.UserVM;
 
@@ -100,10 +101,11 @@ public class UserController {
             String srcPassword,
             String password
     ) {
-        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(userPrincipal.getId())
+                .orElseThrow(UserNotFoundException::new);
 
         if (!passwordEncoder.matches(srcPassword, user.getPassword())) {
-            throw new IllegalArgumentException("password not match.");
+            throw new PasswordNotMatchException();
         }
 
         userService.updatePassword(userPrincipal.getId(), password);
