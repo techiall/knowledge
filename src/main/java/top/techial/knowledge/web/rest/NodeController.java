@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author techial
@@ -129,7 +130,7 @@ public class NodeController {
     }
 
     @GetMapping("/{id}/link")
-    public ResultBean<Map<String, Object>> getChildAndParent(@PathVariable Long id) {
+    public ResultBean<Map<String, Object>> getChildAndParent(@PathVariable Long id) throws ExecutionException, InterruptedException {
         return ResultBean.ok(nodeService.getChildAndParent(id));
     }
 

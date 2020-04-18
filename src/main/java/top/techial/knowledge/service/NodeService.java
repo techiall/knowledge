@@ -10,6 +10,7 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.domain.Item;
@@ -32,6 +33,8 @@ import top.techial.knowledge.web.rest.errors.RootNodeException;
 import top.techial.knowledge.web.rest.vm.NodeVM;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -41,13 +44,13 @@ import java.util.stream.Collectors;
 @Service
 @Log4j2
 public class NodeService {
-    private final static String INDEX = "nodes";
-    private final static String TYPE = "_doc";
+    private static final String INDEX = "nodes";
 
     private final NodeRepository nodeRepository;
     private final NodeRelationshipRepository nodeRelationshipRepository;
     private final RecordService recordService;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
     private final RecordRepository recordRepository;
     private final NodeSearchRepository nodeSearchRepository;
     private final ItemRepository itemRepository;
@@ -58,6 +61,7 @@ public class NodeService {
             NodeRelationshipRepository nodeRelationshipRepository,
             RecordService recordService,
             NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+            ThreadPoolTaskExecutor threadPoolTaskExecutor,
             RecordRepository recordRepository,
             NodeSearchRepository nodeSearchRepository,
             ItemRepository itemRepository,
@@ -67,10 +71,26 @@ public class NodeService {
         this.nodeRelationshipRepository = nodeRelationshipRepository;
         this.recordService = recordService;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.threadPoolTaskExecutor = threadPoolTaskExecutor;
         this.recordRepository = recordRepository;
         this.nodeSearchRepository = nodeSearchRepository;
         this.itemRepository = itemRepository;
         this.nodeMapper = nodeMapper;
+    }
+
+    private static Map<String, Object> buildNodes(Long id, String name) {
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("id", id);
+        map.put("name", name);
+        return map;
+    }
+
+    private static Map<String, Object> buildLinks(Long sourceId, Long targetId, String relation) {
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("source", sourceId);
+        map.put("target", targetId);
+        map.put("relation", relation);
+        return map;
     }
 
     @Transactional
@@ -193,7 +213,8 @@ public class NodeService {
                 "from node n_child join node_relationship nr_child on (n_child.id = nr_child.descendant)\n" +
                 "where nr_child.ancestor = (:id)) as node on nr.descendant = node.id\n" +
                 "where nr.distance = 1 and nr.descendant != (:id)";
-        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("id", id), new BeanPropertyRowMapper<>(ParentChildDTO.class))
+        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("id", id),
+                new BeanPropertyRowMapper<>(ParentChildDTO.class))
                 .parallelStream()
                 .collect(Collectors.groupingBy(ParentChildDTO::getAncestor));
     }
@@ -205,7 +226,8 @@ public class NodeService {
                 "from node n_child join node_relationship nr_child on (n_child.id = nr_child.ancestor)\n" +
                 "where nr_child.descendant = (:id)) as node on nr.descendant = node.id\n" +
                 "where nr.distance = 1";
-        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("id", id), new BeanPropertyRowMapper<>(ParentChildDTO.class))
+        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("id", id),
+                new BeanPropertyRowMapper<>(ParentChildDTO.class))
                 .parallelStream()
                 .collect(Collectors.groupingBy(ParentChildDTO::getDescendant));
     }
@@ -216,7 +238,8 @@ public class NodeService {
                 "(select n.ancestor from node_relationship n where n.descendant = node0_.id and n.distance = 1) as parentNodeId\n" +
                 "from `node` node0_ inner join node_relationship noderelati1_ on (node0_.id = noderelati1_.ancestor)\n" +
                 "where noderelati1_.descendant = (:descendant)\n";
-        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("descendant", id), new BeanPropertyRowMapper<>(NodeBaseDTO.class))
+        return namedParameterJdbcTemplate.query(value, Collections.singletonMap("descendant", id),
+                new BeanPropertyRowMapper<>(NodeBaseDTO.class))
                 .parallelStream()
                 .filter(it -> it.getParentNodeId() != null)
                 .collect(Collectors.toList());
@@ -235,7 +258,8 @@ public class NodeService {
         return nodeTreeDTO;
     }
 
-    private void getChild(NodeTreeDTO node, List<ParentChildDTO> list, Set<Long> flag, Map<Long, Node> childNodeData, Map<Long, List<ParentChildDTO>> childNode) {
+    private void getChild(NodeTreeDTO node, List<ParentChildDTO> list, Set<Long> flag,
+                          Map<Long, Node> childNodeData, Map<Long, List<ParentChildDTO>> childNode) {
         List<NodeTreeDTO> childList = new ArrayList<>();
 
         if (list == null) {
@@ -253,38 +277,19 @@ public class NodeService {
         node.setChild(childList);
     }
 
-    public Map<String, Object> getChildAndParent(Long id) {
+    public Map<String, Object> getChildAndParent(Long id) throws ExecutionException, InterruptedException {
         Map<String, Object> map = new HashMap<>();
-        map.put("child", depthGetChild(id));
-        map.put("parent", findParent(id));
+        Future<NodeTreeDTO> child = threadPoolTaskExecutor.submit(() -> depthGetChild(id));
+        Future<List<NodeBaseDTO>> parent = threadPoolTaskExecutor.submit(() -> findParent(id));
+        map.put("child", child.get());
+        map.put("parent", parent.get());
         return map;
     }
 
-    private Map<String, Object> buildNodes(Long id, String name) {
-        Map<String, Object> map = new HashMap<>(2);
-        map.put("id", id);
-        map.put("name", name);
-        return map;
-    }
-
-    private Map<String, Object> buildLinks(Long sourceId, Long targetId, String relation) {
-        Map<String, Object> map = new HashMap<>(2);
-        map.put("source", sourceId);
-        map.put("target", targetId);
-        map.put("relation", relation);
-        return map;
-    }
-
-    public Map<String, Object> findByIdGraph(Long id) {
-
-        LinkedList<Node> queue = new LinkedList<>();
-        List<Map<String, Object>> links = new ArrayList<>();
-        List<Map<String, Object>> nodes = new ArrayList<>();
-
-        // Item root node
-        Long rootNode = nodeRepository.findItemRootNodeId(id);
-
-
+    /**
+     * relation
+     */
+    private void nodeRelation(Long id, List<Map<String, Object>> links, List<Map<String, Object>> nodes) {
         // relation
         Node node1 = findById(id);
         nodes.add(buildNodes(node1.getId(), node1.getName()));
@@ -292,8 +297,13 @@ public class NodeService {
             links.add(buildLinks(node1.getId(), it.getId(), key));
             nodes.add(buildNodes(it.getId(), it.getName()));
         }));
+    }
 
-        // child
+    /**
+     * child
+     */
+    private void nodeChild(Long id, LinkedList<Node> queue, Long rootNode,
+                           List<Map<String, Object>> links, List<Map<String, Object>> nodes) {
         Map<Long, List<ParentChildDTO>> childNode = buildChildNode(id);
         Map<Long, Node> childNodeData = buildChildNodeData(id);
         queue.add(childNodeData.get(id));
@@ -314,8 +324,14 @@ public class NodeService {
                 nodes.add(buildNodes(child.getId(), child.getName()));
             }
         }
+    }
 
-        // parent
+
+    /**
+     * node parent
+     */
+    private void nodeParent(Long id, LinkedList<Node> queue, Long rootNode,
+                            List<Map<String, Object>> links, List<Map<String, Object>> nodes) {
         Map<Long, Node> parentNodeData = buildParentNodeData(id);
         Map<Long, List<ParentChildDTO>> parentNode = buildParentNode(id);
         queue.add(parentNodeData.get(id));
@@ -335,6 +351,37 @@ public class NodeService {
                 nodes.add(buildNodes(parent.getId(), parent.getName()));
             }
         }
+    }
+
+    public Map<String, Object> findByIdGraph(Long id) {
+
+        LinkedList<Node> queue = new LinkedList<>();
+        List<Map<String, Object>> links = new ArrayList<>();
+        List<Map<String, Object>> nodes = new ArrayList<>();
+
+        // Item root node
+        Long rootNode = nodeRepository.findItemRootNodeId(id);
+
+        List<Future<?>> futures = new ArrayList<>();
+        // relation
+        futures.add(threadPoolTaskExecutor.submit(() -> nodeRelation(id, links, nodes)));
+
+        // child
+        futures.add(threadPoolTaskExecutor.submit(() -> nodeChild(id, queue, rootNode, links, nodes)));
+
+        // parent
+        futures.add(threadPoolTaskExecutor.submit(() -> nodeParent(id, queue, rootNode, links, nodes)));
+
+        futures.forEach(it -> {
+            try {
+                it.get();
+            } catch (InterruptedException | ExecutionException e) {
+                if (log.isErrorEnabled()) {
+                    log.error(e);
+                }
+                Thread.currentThread().interrupt();
+            }
+        });
 
         Map<String, Object> result = new HashMap<>();
         result.put("nodes", nodes);
@@ -347,18 +394,16 @@ public class NodeService {
         nodeRelationshipRepository.deleteByNodeIdIn(ids);
     }
 
-    private Integer checkItemRoot(Long id) {
-        return itemRepository.findItemIdByRootId(id).orElseThrow(RootNodeException::new);
-    }
-
     public void move(Long id, Long target) {
         Map<String, Long> result = new HashMap<>();
         result.put("id", id);
         result.put("target", target);
         // language=sql
         String value = "delete from node_relationship\n" +
-                "WHERE descendant IN (select tmp1.descendant from (SELECT d.descendant FROM node_relationship d WHERE d.ancestor = :id) as tmp1)\n" +
-                "  and ancestor IN (select tmp2.ancestor from (SELECT a.ancestor FROM node_relationship a WHERE a.descendant = :id AND a.ancestor != a.descendant) as tmp2)\n";
+                "WHERE descendant IN (select tmp1.descendant from " +
+                "(SELECT d.descendant FROM node_relationship d WHERE d.ancestor = :id) as tmp1)\n" +
+                "  and ancestor IN (select tmp2.ancestor from (SELECT a.ancestor FROM node_relationship a " +
+                "WHERE a.descendant = :id AND a.ancestor != a.descendant) as tmp2)\n";
         namedParameterJdbcTemplate.update(value, result);
 
         // language=sql
