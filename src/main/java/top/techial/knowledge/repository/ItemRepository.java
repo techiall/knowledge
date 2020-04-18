@@ -29,6 +29,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer>, QuerydslPr
 
     List<Item> findByShare(Boolean share);
 
+    @Transactional
     void deleteByAuthorId(Integer id);
 
     @Modifying
