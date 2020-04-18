@@ -3,6 +3,7 @@ package top.techial.knowledge.web.rest.errors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -39,7 +40,8 @@ public class ExceptionTranslator {
             MethodArgumentNotValidException.class,
             MissingServletRequestParameterException.class,
             JsonProcessingException.class,
-            IllegalArgumentException.class
+            IllegalArgumentException.class,
+            RequestRejectedException.class
     })
     public Object badRequest() {
         return handleException(ResultBean.of(400, "Bad Request"));
