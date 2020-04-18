@@ -17,9 +17,11 @@ import java.time.Instant;
 @Data
 @Accessors(chain = true)
 @Entity
-@Table(name = "node_relationship")
 @IdClass(NodeRelationshipPK.class)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Table(name = "node_relationship", indexes = {
+        @Index(name = "distance_index", columnList = "distance")
+})
 public class NodeRelationship implements Serializable {
 
     private static final long serialVersionUID = 1L;

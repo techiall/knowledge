@@ -37,8 +37,6 @@ public class Record implements Serializable {
 
     private String message;
 
-    private String content;
-
     @OneToOne
     private User user;
 

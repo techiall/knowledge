@@ -47,10 +47,8 @@ public class Node implements Serializable {
     @Column(name = "item_id")
     private Integer itemId;
 
+    @Transient
     private String text;
-
-    @Version
-    private Long version;
 
     @CreationTimestamp
     private Instant createTime;
