@@ -19,7 +19,7 @@ public interface NodeRepository extends JpaRepository<Node, Long>, QuerydslPredi
     @Transactional
     void deleteAllByItemId(Integer id);
 
-    @Query("select n from Node n inner join Item i on n.itemId = ?2 where n.name = ?1")
+    @Query("select n from Node n inner join Item i on n.itemId = i.id where n.itemId = ?2 and n.name = ?1")
     Optional<Node> findByItemIdAndName(String name, Integer itemId);
 
     @Transactional
