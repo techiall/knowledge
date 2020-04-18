@@ -7,7 +7,6 @@ import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 import top.techial.knowledge.aop.authority.FlushAuthority;
 import top.techial.knowledge.beans.ResultBean;
-import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.User;
 import top.techial.knowledge.repository.ItemRepository;
 import top.techial.knowledge.repository.RecordRepository;
@@ -23,7 +22,6 @@ import top.techial.knowledge.web.rest.errors.UserNotFoundException;
 import top.techial.knowledge.web.rest.vm.UserVM;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -115,10 +113,7 @@ public class UserController {
     @DeleteMapping("/me")
     @FlushAuthority
     public ResultBean<Object> deleteById(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-        List<Item> item = itemRepository.findAllByAuthorId(userPrincipal.getId());
-        itemService.deleteByUserIdAndItemId(userPrincipal.getId(), item);
-        itemRepository.deleteByAuthorId(userPrincipal.getId());
-        item.parallelStream().map(Item::getId).forEach(nodeService::deleteByItemId);
+        itemService.deleteByUserId(userPrincipal.getId());
         recordRepository.deleteByUserId(userPrincipal.getId());
         userRepository.deleteById(userPrincipal.getId());
         return ResultBean.ok();

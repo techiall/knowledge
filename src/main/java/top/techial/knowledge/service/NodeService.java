@@ -114,11 +114,6 @@ public class NodeService {
         return namedParameterJdbcTemplate.query(value, map, new BeanPropertyRowMapper<>(Property.PropertyDTO.class));
     }
 
-    @Transactional
-    public void deleteByItemId(Integer id) {
-        nodeRepository.deleteAllByItemId(id);
-    }
-
     public Node findById(Long id) {
         this.checkItemRoot(id);
         Node node = nodeRepository.findById(id).orElseThrow(NodeNotFoundException::new);
@@ -354,12 +349,8 @@ public class NodeService {
         nodeRelationshipRepository.deleteByNodeId(id);
     }
 
-    public List<Long> findByItemIds(Collection<Integer> ids) {
-        return nodeRepository.findByItemIdIn(ids);
-    }
-
-    private void checkItemRoot(Long id) {
-        itemRepository.findItemIdByRootId(id).orElseThrow(RootNodeException::new);
+    private Integer checkItemRoot(Long id) {
+        return itemRepository.findItemIdByRootId(id).orElseThrow(RootNodeException::new);
     }
 
     public void move(Long id, Long target) {

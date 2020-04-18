@@ -10,15 +10,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.techial.knowledge.domain.Item;
+import top.techial.knowledge.domain.QItem;
 import top.techial.knowledge.domain.QUser;
-import top.techial.knowledge.repository.ItemRepository;
+import top.techial.knowledge.repository.NodeRepository;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.mapper.ItemMapper;
 import top.techial.knowledge.service.mapper.NodeMapper;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author techial
@@ -28,25 +27,22 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final PasswordEncoder passwordEncoder;
-    private final ItemRepository itemRepository;
-    private final NodeService nodeService;
     private final NodeMapper nodeMapper;
     private final ItemMapper itemMapper;
+    private final NodeRepository nodeRepository;
     private final JPAQueryFactory jpaQueryFactory;
 
     public UserService(
             PasswordEncoder passwordEncoder,
-            ItemRepository itemRepository,
-            NodeService nodeService,
             NodeMapper nodeMapper,
             ItemMapper itemMapper,
+            NodeRepository nodeRepository,
             JPAQueryFactory jpaQueryFactory
     ) {
         this.passwordEncoder = passwordEncoder;
-        this.itemRepository = itemRepository;
-        this.nodeService = nodeService;
         this.nodeMapper = nodeMapper;
         this.itemMapper = itemMapper;
+        this.nodeRepository = nodeRepository;
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
@@ -76,21 +72,25 @@ public class UserService {
         }
         UserPrincipal userPrincipal = (UserPrincipal) context.getAuthentication().getPrincipal();
 
-        List<Item> items = itemRepository.findAllByAuthorId(userPrincipal.getId());
+        QItem qItem = QItem.item;
+        List<Integer> items = jpaQueryFactory.select(qItem.id)
+                .from(qItem)
+                .where(qItem.author.id.eq(userPrincipal.getId()))
+                .fetch();
+
         if (items == null) {
             return;
         }
         List<SimpleGrantedAuthority> authority = itemMapper.toListSimpleGrantedAuthority(items);
 
-        List<Integer> ids = items.parallelStream().map(Item::getId).collect(Collectors.toList());
-
         String password = findPasswordById(userPrincipal.getId());
-        if (ids == null || ids.isEmpty()) {
+
+        if (items.isEmpty()) {
             Authentication auth = new UsernamePasswordAuthenticationToken(userPrincipal, password, authority);
             context.setAuthentication(auth);
             return;
         }
-        List<Long> node = nodeService.findByItemIds(ids);
+        List<Long> node = nodeRepository.findByItemIdIn(items);
         List<SimpleGrantedAuthority> nodes = nodeMapper.toListSimpleGrantedAuthority(node);
         authority.addAll(nodes);
         Authentication auth = new UsernamePasswordAuthenticationToken(userPrincipal, password, authority);

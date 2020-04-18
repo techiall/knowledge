@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.User;
+import top.techial.knowledge.repository.NodeRepository;
 import top.techial.knowledge.repository.UserRepository;
-import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.mapper.ItemMapper;
 import top.techial.knowledge.service.mapper.NodeMapper;
 
@@ -23,18 +23,18 @@ import java.util.stream.Collectors;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final NodeService nodeService;
+    private final NodeRepository nodeRepository;
     private final ItemMapper itemMapper;
     private final NodeMapper nodeMapper;
     private final UserRepository userRepository;
 
     public UserDetailsServiceImpl(
-            NodeService nodeService,
+            NodeRepository nodeRepository,
             ItemMapper itemMapper,
             NodeMapper nodeMapper,
             UserRepository userRepository
     ) {
-        this.nodeService = nodeService;
+        this.nodeRepository = nodeRepository;
         this.itemMapper = itemMapper;
         this.nodeMapper = nodeMapper;
         this.userRepository = userRepository;
@@ -49,7 +49,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user.getItem() == null || user.getItem().isEmpty()) {
             nodes = Collections.emptyList();
         } else {
-            nodes = nodeService.findByItemIds(user
+            nodes = nodeRepository.findByItemIdIn(user
                     .getItem()
                     .parallelStream()
                     .map(Item::getId)
@@ -59,7 +59,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private UserPrincipal toUserPrincipal(User user, List<Long> node) {
-        List<SimpleGrantedAuthority> authorities = itemMapper.toListSimpleGrantedAuthority(user.getItem());
+        List<SimpleGrantedAuthority> authorities = itemMapper.toListSimpleGrantedAuthority(
+                user.getItem().parallelStream().map(Item::getId).collect(Collectors.toList()));
         List<SimpleGrantedAuthority> nodes = nodeMapper.toListSimpleGrantedAuthority(node);
         authorities.addAll(nodes);
         return new UserPrincipal(

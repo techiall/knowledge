@@ -21,10 +21,9 @@ public interface ItemMapper {
 
     Item toItem(ItemVM itemVM);
 
-    default List<SimpleGrantedAuthority> toListSimpleGrantedAuthority(Collection<Item> items) {
+    default List<SimpleGrantedAuthority> toListSimpleGrantedAuthority(Collection<Integer> items) {
         return items
                 .parallelStream()
-                .map(Item::getId)
                 .map(it -> "ITEM_" + it)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
