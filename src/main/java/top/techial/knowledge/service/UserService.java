@@ -9,13 +9,19 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.domain.QItem;
 import top.techial.knowledge.domain.QUser;
+import top.techial.knowledge.domain.User;
 import top.techial.knowledge.repository.NodeRepository;
+import top.techial.knowledge.repository.RecordRepository;
+import top.techial.knowledge.repository.UserRepository;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.mapper.ItemMapper;
 import top.techial.knowledge.service.mapper.NodeMapper;
+import top.techial.knowledge.web.rest.errors.PasswordNotMatchException;
+import top.techial.knowledge.web.rest.errors.UserNotFoundException;
+import top.techial.knowledge.web.rest.errors.UsernameIsRegisterException;
+import top.techial.knowledge.web.rest.vm.UserVM;
 
 import java.util.List;
 
@@ -26,6 +32,9 @@ import java.util.List;
 @Log4j2
 public class UserService {
 
+    private final UserRepository userRepository;
+    private final ItemService itemService;
+    private final RecordRepository recordRepository;
     private final PasswordEncoder passwordEncoder;
     private final NodeMapper nodeMapper;
     private final ItemMapper itemMapper;
@@ -33,26 +42,23 @@ public class UserService {
     private final JPAQueryFactory jpaQueryFactory;
 
     public UserService(
+            UserRepository userRepository,
+            ItemService itemService,
+            RecordRepository recordRepository,
             PasswordEncoder passwordEncoder,
             NodeMapper nodeMapper,
             ItemMapper itemMapper,
             NodeRepository nodeRepository,
             JPAQueryFactory jpaQueryFactory
     ) {
+        this.userRepository = userRepository;
+        this.itemService = itemService;
+        this.recordRepository = recordRepository;
         this.passwordEncoder = passwordEncoder;
         this.nodeMapper = nodeMapper;
         this.itemMapper = itemMapper;
         this.nodeRepository = nodeRepository;
         this.jpaQueryFactory = jpaQueryFactory;
-    }
-
-    @Transactional
-    public void updatePassword(Integer id, String password) {
-        QUser qUser = QUser.user;
-        jpaQueryFactory.update(qUser)
-                .set(qUser.password, passwordEncoder.encode(password))
-                .where(qUser.id.eq(id))
-                .execute();
     }
 
     private String findPasswordById(Integer id) {
@@ -95,5 +101,47 @@ public class UserService {
         authority.addAll(nodes);
         Authentication auth = new UsernamePasswordAuthenticationToken(userPrincipal, password, authority);
         context.setAuthentication(auth);
+    }
+
+    public void deleteById(Integer id) {
+        itemService.deleteByUserId(id);
+        recordRepository.deleteByUserId(id);
+        userRepository.deleteById(id);
+    }
+
+    public User updatePassword(Integer id, String srcPassword, String password) {
+        User user = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (!passwordEncoder.matches(srcPassword, user.getPassword())) {
+            throw new PasswordNotMatchException();
+        }
+
+        QUser qUser = QUser.user;
+        jpaQueryFactory.update(qUser)
+                .set(qUser.password, passwordEncoder.encode(password))
+                .where(qUser.id.eq(id))
+                .execute();
+        return user;
+    }
+
+    public User update(Integer id, UserVM userVM) {
+        User user = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+        if (userVM != null && userVM.getImage() != null && !userVM.getImage().isEmpty()) {
+            user.setImages(userVM.getImage());
+        }
+        if (userVM != null && userVM.getNickName() != null && !userVM.getNickName().isEmpty()) {
+            user.setNickName(userVM.getNickName());
+        }
+        return userRepository.save(user);
+    }
+
+    public User saveNewUser(User user) {
+        if (userRepository.existsByUserName(user.getUserName())) {
+            throw new UsernameIsRegisterException();
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 }

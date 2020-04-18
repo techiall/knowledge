@@ -13,17 +13,20 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.domain.Item;
+import top.techial.knowledge.domain.Labels;
 import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.domain.Property;
 import top.techial.knowledge.repository.ItemRepository;
 import top.techial.knowledge.repository.NodeRelationshipRepository;
 import top.techial.knowledge.repository.NodeRepository;
+import top.techial.knowledge.repository.RecordRepository;
 import top.techial.knowledge.repository.search.NodeSearchRepository;
 import top.techial.knowledge.service.dto.NodeBaseDTO;
 import top.techial.knowledge.service.dto.NodeInfoDTO;
 import top.techial.knowledge.service.dto.NodeTreeDTO;
 import top.techial.knowledge.service.dto.ParentChildDTO;
 import top.techial.knowledge.service.mapper.NodeMapper;
+import top.techial.knowledge.web.rest.errors.ItemNotFoundException;
 import top.techial.knowledge.web.rest.errors.NodeNotFoundException;
 import top.techial.knowledge.web.rest.errors.RootNodeException;
 import top.techial.knowledge.web.rest.vm.NodeVM;
@@ -43,7 +46,9 @@ public class NodeService {
 
     private final NodeRepository nodeRepository;
     private final NodeRelationshipRepository nodeRelationshipRepository;
+    private final RecordService recordService;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final RecordRepository recordRepository;
     private final NodeSearchRepository nodeSearchRepository;
     private final ItemRepository itemRepository;
     private final NodeMapper nodeMapper;
@@ -51,14 +56,18 @@ public class NodeService {
     public NodeService(
             NodeRepository nodeRepository,
             NodeRelationshipRepository nodeRelationshipRepository,
+            RecordService recordService,
             NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+            RecordRepository recordRepository,
             NodeSearchRepository nodeSearchRepository,
             ItemRepository itemRepository,
             NodeMapper nodeMapper
     ) {
         this.nodeRepository = nodeRepository;
         this.nodeRelationshipRepository = nodeRelationshipRepository;
+        this.recordService = recordService;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.recordRepository = recordRepository;
         this.nodeSearchRepository = nodeSearchRepository;
         this.itemRepository = itemRepository;
         this.nodeMapper = nodeMapper;
@@ -71,12 +80,7 @@ public class NodeService {
         return node;
     }
 
-    public Optional<Node> findByItemIdAndName(String name, Integer itemId) {
-        return nodeRepository.findByItemIdAndName(name, itemId);
-    }
-
-    @Transactional
-    public Node save(NodeVM nodeVM, Long itemRootNodeId) {
+    private Node nodeRelationshipSave(NodeVM nodeVM, Long itemRootNodeId) {
         Node node = nodeMapper.toNode(nodeVM.setProperty(buildProperty(nodeVM.getProperty())));
         node = nodeRepository.save(node);
         if (nodeVM.getParentId() != null) {
@@ -87,7 +91,7 @@ public class NodeService {
         return node;
     }
 
-    public Map<String, List<Property.PropertyDTO>> buildProperty(Map<String, List<Property.PropertyDTO>> property) {
+    private Map<String, List<Property.PropertyDTO>> buildProperty(Map<String, List<Property.PropertyDTO>> property) {
         if (property == null || property.values() == null || property.values().isEmpty()) {
             return Collections.emptyMap();
         }
@@ -115,7 +119,7 @@ public class NodeService {
     }
 
     public Node findById(Long id) {
-        this.checkItemRoot(id);
+        itemRepository.findItemIdByRootId(id).orElseThrow(RootNodeException::new);
         Node node = nodeRepository.findById(id).orElseThrow(NodeNotFoundException::new);
         if (node.getProperty() != null) {
             node.getProperty().setProperty(buildProperty(node.getProperty().getProperty()));
@@ -343,12 +347,6 @@ public class NodeService {
         nodeRelationshipRepository.deleteByNodeIdIn(ids);
     }
 
-    public void deleteIdAndRelationship(Long id) {
-        this.checkItemRoot(id);
-        nodeRepository.deleteById(id);
-        nodeRelationshipRepository.deleteByNodeId(id);
-    }
-
     private Integer checkItemRoot(Long id) {
         return itemRepository.findItemIdByRootId(id).orElseThrow(RootNodeException::new);
     }
@@ -371,4 +369,62 @@ public class NodeService {
         namedParameterJdbcTemplate.update(value, result);
     }
 
+    public Node update(Long id, NodeVM nodeVM, Integer userId) {
+        Node node = findById(id);
+
+        if (nodeVM != null && nodeVM.getName() != null && !nodeVM.getName().isEmpty()) {
+            node.setName(nodeVM.getName());
+            recordService.save(node.getId(), userId,
+                    nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
+        }
+        if (nodeVM != null && nodeVM.getLabels() != null) {
+            node.setLabels(new Labels().setLabels(nodeVM.getLabels()));
+            recordService.save(node.getId(), userId,
+                    nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
+        }
+
+        if (nodeVM != null && nodeVM.getProperty() != null) {
+            node.setProperty(new Property().setProperty(buildProperty(nodeVM.getProperty())));
+            recordService.save(node.getId(), userId,
+                    nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
+        }
+
+        node = nodeRepository.save(node);
+        nodeSearchRepository.index(node);
+        return node;
+    }
+
+    @Transactional
+    public Map<String, Object> save(Integer id, NodeVM nodeVM) {
+        Long itemId = itemRepository.findRootNodeId(nodeVM.getItemId())
+                .orElseThrow(ItemNotFoundException::new);
+
+        Node node = nodeRepository.findByItemIdAndName(nodeVM.getName().trim(), nodeVM.getItemId())
+                .orElse(null);
+        boolean flag = false;
+        if (node == null) {
+            node = nodeRelationshipSave(nodeVM, itemId);
+            nodeSearchRepository.index(node);
+            recordService.save(node.getId(), id,
+                    nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
+            flag = true;
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("node", nodeMapper.toNodeInfoDTO(node));
+        map.put("new", flag);
+        return map;
+    }
+
+    private void deleteIdAndRelationship(Long id) {
+        itemRepository.findItemIdByRootId(id).orElseThrow(RootNodeException::new);
+        nodeRepository.deleteById(id);
+        nodeRelationshipRepository.deleteByNodeId(id);
+    }
+
+
+    public void deleteById(Long id) {
+        deleteIdAndRelationship(id);
+        nodeSearchRepository.deleteById(id);
+        recordRepository.deleteByNodeId(id);
+    }
 }

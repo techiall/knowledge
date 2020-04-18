@@ -10,18 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import top.techial.knowledge.aop.authority.FlushAuthority;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.Item;
-import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.repository.ItemRepository;
-import top.techial.knowledge.repository.NodeRepository;
-import top.techial.knowledge.repository.UserRepository;
-import top.techial.knowledge.repository.search.NodeSearchRepository;
 import top.techial.knowledge.security.UserPrincipal;
-import top.techial.knowledge.service.NodeService;
+import top.techial.knowledge.service.ItemService;
 import top.techial.knowledge.service.dto.ItemDTO;
 import top.techial.knowledge.service.mapper.ItemMapper;
 import top.techial.knowledge.service.valid.Insert;
 import top.techial.knowledge.web.rest.errors.ItemNotFoundException;
-import top.techial.knowledge.web.rest.errors.UserNotFoundException;
 import top.techial.knowledge.web.rest.vm.ItemVM;
 
 /**
@@ -31,26 +26,17 @@ import top.techial.knowledge.web.rest.vm.ItemVM;
 @RequestMapping("/api/item")
 public class ItemController {
     private final ItemRepository itemRepository;
-    private final NodeService nodeService;
-    private final NodeSearchRepository nodeSearchRepository;
-    private final NodeRepository nodeRepository;
     private final ItemMapper itemMapper;
-    private final UserRepository userRepository;
+    private final ItemService itemService;
 
     public ItemController(
             ItemRepository itemRepository,
-            NodeService nodeService,
-            NodeSearchRepository nodeSearchRepository,
-            NodeRepository nodeRepository,
             ItemMapper itemMapper,
-            UserRepository userRepository
+            ItemService itemService
     ) {
         this.itemRepository = itemRepository;
-        this.nodeService = nodeService;
-        this.nodeSearchRepository = nodeSearchRepository;
-        this.nodeRepository = nodeRepository;
         this.itemMapper = itemMapper;
-        this.userRepository = userRepository;
+        this.itemService = itemService;
     }
 
     @GetMapping("share")
@@ -85,34 +71,15 @@ public class ItemController {
             throw new IllegalArgumentException(String
                     .format("itemVO error. %s", itemVM.toString()));
         }
-        Node node = new Node().setName("root");
-        node = nodeService.saveItemRoot(node);
-        Item item = itemMapper.toItem(itemVM)
-                .setAuthor(userRepository.findById(userPrincipal.getId()).orElseThrow(UserNotFoundException::new))
-                .setRootNode(node);
-        item = itemRepository.save(item);
-        nodeRepository.save(node.setItemId(item.getId()));
-        itemRepository.insert(userPrincipal.getId(), item.getId());
-
+        Item item = itemMapper.toItem(itemVM);
+        item = itemService.save(userPrincipal.getId(), item);
         return ResultBean.ok(itemMapper.toItemDTO(item));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ITEM_' + #id.toString())")
     public ResultBean<ItemDTO> update(@RequestBody ItemVM itemVM, @PathVariable Integer id) {
-        Item item = itemRepository.findById(id).orElseThrow(ItemNotFoundException::new);
-        if (itemVM != null && itemVM.getDescription() != null) {
-            item.setDescription(itemVM.getDescription());
-        }
-        if (itemVM != null && itemVM.getShare() != null) {
-            item.setShare(itemVM.getShare());
-        }
-        if (itemVM != null && itemVM.getName() != null) {
-            item.setName(itemVM.getName());
-        }
-        if (itemVM != null && itemVM.getImage() != null) {
-            item.setImage(itemVM.getImage());
-        }
+        Item item = itemService.update(id, itemVM);
         return ResultBean.ok(itemMapper.toItemDTO(itemRepository.save(item)));
     }
 
@@ -120,11 +87,7 @@ public class ItemController {
     @PreAuthorize("hasAnyAuthority('ITEM_' + #id.toString())")
     @FlushAuthority
     public ResultBean<Object> deleteById(@PathVariable Integer id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        itemRepository.deleteTmpByUserIdAndItemId(userPrincipal.getId(), id);
-        itemRepository.deleteById(id);
-        nodeSearchRepository.deleteByItemId(id);
-        nodeService.deleteByItemId(id);
-
+        itemService.deleteById(id, userPrincipal.getId());
         return ResultBean.ok();
     }
 

@@ -6,16 +6,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.techial.knowledge.aop.authority.FlushAuthority;
 import top.techial.knowledge.beans.ResultBean;
-import top.techial.knowledge.domain.Labels;
 import top.techial.knowledge.domain.Node;
-import top.techial.knowledge.domain.Property;
 import top.techial.knowledge.repository.ItemRepository;
-import top.techial.knowledge.repository.NodeRepository;
 import top.techial.knowledge.repository.RecordRepository;
 import top.techial.knowledge.repository.search.NodeSearchRepository;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.NodeService;
-import top.techial.knowledge.service.RecordService;
 import top.techial.knowledge.service.dto.NodeBaseDTO;
 import top.techial.knowledge.service.dto.NodeInfoDTO;
 import top.techial.knowledge.service.mapper.NodeMapper;
@@ -24,7 +20,10 @@ import top.techial.knowledge.service.valid.Update;
 import top.techial.knowledge.web.rest.errors.ItemNotFoundException;
 import top.techial.knowledge.web.rest.vm.NodeVM;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author techial
@@ -33,8 +32,6 @@ import java.util.*;
 @RequestMapping("/api/node")
 public class NodeController {
     private final NodeService nodeService;
-    private final NodeRepository nodeRepository;
-    private final RecordService recordService;
     private final ItemRepository itemRepository;
     private final NodeMapper nodeMapper;
     private final RecordRepository recordRepository;
@@ -42,16 +39,12 @@ public class NodeController {
 
     public NodeController(
             NodeService nodeService,
-            NodeRepository nodeRepository,
-            RecordService recordService,
             ItemRepository itemRepository,
             NodeMapper nodeMapper,
             RecordRepository recordRepository,
             NodeSearchRepository nodeSearchRepository
     ) {
         this.nodeService = nodeService;
-        this.nodeRepository = nodeRepository;
-        this.recordService = recordService;
         this.itemRepository = itemRepository;
         this.nodeMapper = nodeMapper;
         this.recordRepository = recordRepository;
@@ -71,22 +64,7 @@ public class NodeController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Validated(value = Insert.class) @RequestBody NodeVM nodeVM
     ) {
-        Long itemId = itemRepository.findRootNodeId(nodeVM.getItemId())
-                .orElseThrow(ItemNotFoundException::new);
-        Node node = nodeService.findByItemIdAndName(nodeVM.getName().trim(), nodeVM.getItemId())
-                .orElse(null);
-        boolean flag = false;
-        if (node == null) {
-            node = nodeService.save(nodeVM, itemId);
-            nodeSearchRepository.index(node);
-            recordService.save(node.getId(), userPrincipal.getId(),
-                    nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
-            flag = true;
-        }
-        Map<String, Object> map = new HashMap<>();
-        map.put("node", nodeMapper.toNodeInfoDTO(node));
-        map.put("new", flag);
-        return ResultBean.ok(map);
+        return ResultBean.ok(nodeService.save(userPrincipal.getId(), nodeVM));
     }
 
     @PutMapping("/{id}")
@@ -96,27 +74,7 @@ public class NodeController {
             @PathVariable Long id,
             @Validated(value = Update.class) @RequestBody NodeVM nodeVM
     ) {
-        Node node = nodeService.findById(id);
-
-        if (nodeVM != null && nodeVM.getName() != null && !nodeVM.getName().isEmpty()) {
-            node.setName(nodeVM.getName());
-            recordService.save(node.getId(), userPrincipal.getId(),
-                    nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
-        }
-        if (nodeVM != null && nodeVM.getLabels() != null) {
-            node.setLabels(new Labels().setLabels(nodeVM.getLabels()));
-            recordService.save(node.getId(), userPrincipal.getId(),
-                    nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
-        }
-
-        if (nodeVM != null && nodeVM.getProperty() != null) {
-            node.setProperty(new Property().setProperty(nodeService.buildProperty(nodeVM.getProperty())));
-            recordService.save(node.getId(), userPrincipal.getId(),
-                    nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
-        }
-
-        node = nodeRepository.save(node);
-        nodeSearchRepository.index(node);
+        Node node = nodeService.update(id, nodeVM, userPrincipal.getId());
         return ResultBean.ok(nodeMapper.toNodeInfoDTO(node));
     }
 
@@ -137,10 +95,7 @@ public class NodeController {
             @RequestParam Integer itemId,
             @PathVariable Long id
     ) {
-        nodeService.deleteIdAndRelationship(id);
-        nodeSearchRepository.deleteById(id);
-        recordRepository.deleteByNodeId(id);
-
+        nodeService.deleteById(id);
         return ResultBean.ok(true);
     }
 
