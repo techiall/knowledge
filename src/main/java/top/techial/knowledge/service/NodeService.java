@@ -423,13 +423,17 @@ public class NodeService {
         });
 
         vmOptional.map(NodeVM::getLabels).ifPresent(it -> {
-            node.setLabels(new Labels().setLabels(nodeVM.getLabels()));
+            Labels labels = new Labels();
+            labels.setLabels(nodeVM.getLabels());
+            node.setLabels(labels);
             recordService.save(node.getId(), userId,
                     nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
         });
 
         vmOptional.map(NodeVM::getProperty).ifPresent(it -> {
-            node.setProperty(new Property().setProperty(buildProperty(nodeVM.getProperty())));
+            Property property = new Property();
+            property.setProperty(buildProperty(nodeVM.getProperty()));
+            node.setProperty(property);
             recordService.save(node.getId(), userId,
                     nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
         });
