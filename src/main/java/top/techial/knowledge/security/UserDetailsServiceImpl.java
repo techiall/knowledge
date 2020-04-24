@@ -28,12 +28,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final NodeMapper nodeMapper;
     private final UserRepository userRepository;
 
-    public UserDetailsServiceImpl(
-            NodeRepository nodeRepository,
-            ItemMapper itemMapper,
-            NodeMapper nodeMapper,
-            UserRepository userRepository
-    ) {
+    public UserDetailsServiceImpl(NodeRepository nodeRepository,
+                                  ItemMapper itemMapper,
+                                  NodeMapper nodeMapper,
+                                  UserRepository userRepository) {
         this.nodeRepository = nodeRepository;
         this.itemMapper = itemMapper;
         this.nodeMapper = nodeMapper;

@@ -140,11 +140,9 @@ public class NodeService {
 
     public Node findById(Long id) {
         itemRepository.findItemIdByRootId(id).orElseThrow(RootNodeException::new);
-        Node node = nodeRepository.findById(id).orElseThrow(NodeNotFoundException::new);
-        if (node.getProperty() != null) {
-            node.getProperty().setProperty(buildProperty(node.getProperty().getProperty()));
-        }
-        return node;
+        Optional<Node> node = nodeRepository.findById(id);
+        node.map(Node::getProperty).ifPresent(it -> it.setProperty(buildProperty(it.getProperty())));
+        return node.orElseThrow(NodeNotFoundException::new);
     }
 
     public List<NodeInfoDTO> findByNameLike(String name, Integer itemId) {
@@ -372,7 +370,7 @@ public class NodeService {
         // parent
         futures.add(threadPoolTaskExecutor.submit(() -> nodeParent(id, queue, rootNode, links, nodes)));
 
-        futures.forEach(it -> {
+        futures.parallelStream().forEach(it -> {
             try {
                 it.get();
             } catch (InterruptedException | ExecutionException e) {
@@ -415,27 +413,29 @@ public class NodeService {
     }
 
     public Node update(Long id, NodeVM nodeVM, Integer userId) {
-        Node node = findById(id);
+        final Node node = findById(id);
+        Optional<NodeVM> vmOptional = Optional.of(nodeVM);
 
-        if (nodeVM != null && nodeVM.getName() != null && !nodeVM.getName().isEmpty()) {
+        vmOptional.map(NodeVM::getName).filter(it -> !it.isEmpty()).ifPresent(it -> {
             node.setName(nodeVM.getName());
             recordService.save(node.getId(), userId,
                     nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
-        }
-        if (nodeVM != null && nodeVM.getLabels() != null) {
+        });
+
+        vmOptional.map(NodeVM::getLabels).ifPresent(it -> {
             node.setLabels(new Labels().setLabels(nodeVM.getLabels()));
             recordService.save(node.getId(), userId,
                     nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
-        }
+        });
 
-        if (nodeVM != null && nodeVM.getProperty() != null) {
+        vmOptional.map(NodeVM::getProperty).ifPresent(it -> {
             node.setProperty(new Property().setProperty(buildProperty(nodeVM.getProperty())));
             recordService.save(node.getId(), userId,
                     nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
-        }
+        });
 
-        node = nodeRepository.save(node);
-        nodeSearchRepository.index(node);
+        Node tmp = nodeRepository.save(node);
+        nodeSearchRepository.index(tmp);
         return node;
     }
 

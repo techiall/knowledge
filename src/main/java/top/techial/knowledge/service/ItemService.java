@@ -12,6 +12,7 @@ import top.techial.knowledge.web.rest.errors.UserNotFoundException;
 import top.techial.knowledge.web.rest.vm.ItemVM;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author techial
@@ -26,13 +27,11 @@ public class ItemService {
     private final UserRepository userRepository;
 
 
-    public ItemService(
-            NodeSearchRepository nodeSearchRepository,
-            ItemRepository itemRepository,
-            NodeRepository nodeRepository,
-            NodeService nodeService,
-            UserRepository userRepository
-    ) {
+    public ItemService(NodeSearchRepository nodeSearchRepository,
+                       ItemRepository itemRepository,
+                       NodeRepository nodeRepository,
+                       NodeService nodeService,
+                       UserRepository userRepository) {
         this.nodeSearchRepository = nodeSearchRepository;
         this.itemRepository = itemRepository;
         this.nodeRepository = nodeRepository;
@@ -48,20 +47,13 @@ public class ItemService {
     }
 
     public Item update(Integer id, ItemVM itemVM) {
-        Item item = itemRepository.findById(id).orElseThrow(ItemNotFoundException::new);
-        if (itemVM != null && itemVM.getDescription() != null) {
-            item.setDescription(itemVM.getDescription());
-        }
-        if (itemVM != null && itemVM.getShare() != null) {
-            item.setShare(itemVM.getShare());
-        }
-        if (itemVM != null && itemVM.getName() != null) {
-            item.setName(itemVM.getName());
-        }
-        if (itemVM != null && itemVM.getImage() != null) {
-            item.setImage(itemVM.getImage());
-        }
-        return itemRepository.save(item);
+        return itemRepository.findById(id).map(item -> {
+            Optional<ItemVM> itemVMOptional = Optional.of(itemVM);
+            itemVMOptional.map(ItemVM::getDescription).ifPresent(item::setDescription);
+            itemVMOptional.map(ItemVM::getShare).ifPresent(item::setShare);
+            itemVMOptional.map(ItemVM::getImage).ifPresent(item::setImage);
+            return itemRepository.save(item);
+        }).orElseThrow(ItemNotFoundException::new);
     }
 
     public Item save(Integer id, Item item) {

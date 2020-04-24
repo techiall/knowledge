@@ -29,11 +29,9 @@ public class ItemController {
     private final ItemMapper itemMapper;
     private final ItemService itemService;
 
-    public ItemController(
-            ItemRepository itemRepository,
-            ItemMapper itemMapper,
-            ItemService itemService
-    ) {
+    public ItemController(ItemRepository itemRepository,
+                          ItemMapper itemMapper,
+                          ItemService itemService) {
         this.itemRepository = itemRepository;
         this.itemMapper = itemMapper;
         this.itemService = itemService;
@@ -48,25 +46,23 @@ public class ItemController {
 
     @GetMapping("/{id}")
     public ResultBean<ItemDTO> findById(@PathVariable Integer id) {
-        Item item = itemRepository.findById(id).orElseThrow(ItemNotFoundException::new);
-        return ResultBean.ok(itemMapper.toItemDTO(item));
+        return itemRepository.findById(id)
+                .map(itemMapper::toItemDTO)
+                .map(ResultBean::ok)
+                .orElseThrow(ItemNotFoundException::new);
     }
 
     @GetMapping
-    public ResultBean<Page<ItemDTO>> findByUserId(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @PageableDefault Pageable pageable
-    ) {
+    public ResultBean<Page<ItemDTO>> findByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                                  @PageableDefault Pageable pageable) {
         return ResultBean.ok(itemRepository.findAllByAuthorId(userPrincipal.getId(), pageable)
                 .map(itemMapper::toItemDTO));
     }
 
     @PostMapping
     @FlushAuthority
-    public ResultBean<ItemDTO> save(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @Validated(value = Insert.class) @RequestBody ItemVM itemVM
-    ) {
+    public ResultBean<ItemDTO> save(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                    @Validated(value = Insert.class) @RequestBody ItemVM itemVM) {
         if (itemVM.getName() == null || itemVM.getName().isEmpty()) {
             throw new IllegalArgumentException(String
                     .format("itemVO error. %s", itemVM.toString()));

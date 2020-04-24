@@ -42,15 +42,11 @@ public class ElasticsearchConfiguration {
 
     @Bean
     @Primary
-    public ElasticsearchOperations elasticsearchTemplate(
-            final JestClient jestClient,
-            final ElasticsearchConverter elasticsearchConverter,
-            final SimpleElasticsearchMappingContext simpleElasticsearchMappingContext,
-            @Qualifier("getEntityMapper") EntityMapper mapper
-    ) {
-        return new JestElasticsearchTemplate(
-                jestClient,
-                elasticsearchConverter,
+    public ElasticsearchOperations elasticsearchTemplate(final JestClient jestClient,
+                                                         final ElasticsearchConverter elasticsearchConverter,
+                                                         final SimpleElasticsearchMappingContext simpleElasticsearchMappingContext,
+                                                         @Qualifier("getEntityMapper") EntityMapper mapper) {
+        return new JestElasticsearchTemplate(jestClient, elasticsearchConverter,
                 new DefaultJestResultsMapper(simpleElasticsearchMappingContext, mapper));
     }
 

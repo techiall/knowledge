@@ -49,9 +49,10 @@ public class StorageController {
     @PostMapping("/text/{id}")
     @PreAuthorize("hasAnyAuthority(#id)")
     public ResultBean<Long> save(@RequestBody(required = false) String text, @PathVariable Long id) {
-        Node node = nodeSearchRepository.findById(id).orElseThrow(NodeNotFoundException::new);
-        nodeSearchRepository.index(node.setText(text));
-        return ResultBean.ok(id);
+        Node node = nodeSearchRepository.findById(id)
+                .map(it -> nodeSearchRepository.index(it.setText(text)))
+                .orElseThrow(NodeNotFoundException::new);
+        return ResultBean.ok(node.getId());
     }
 
     /**
@@ -59,8 +60,10 @@ public class StorageController {
      */
     @GetMapping("/text/{id}")
     public ResultBean<String> findById(@PathVariable Long id) {
-        Node node = nodeSearchRepository.findById(id).orElse(new Node());
-        return ResultBean.ok(node.getText());
+        String s = nodeSearchRepository.findById(id)
+                .map(Node::getText)
+                .orElse(null);
+        return ResultBean.ok(s);
     }
 
     @PostMapping

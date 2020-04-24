@@ -30,14 +30,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final AccessDeniedHandler accessDeniedHandler;
 
-    public SecurityConfig(
-            LogoutHandler logoutHandler,
-            AuthenticationSuccessHandler authenticationSuccessHandler,
-            AuthenticationFailureHandler authenticationFailureHandler,
-            AuthenticationEntryPoint authenticationEntryPoint,
-            @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
-            AccessDeniedHandler accessDeniedHandler
-    ) {
+    public SecurityConfig(LogoutHandler logoutHandler,
+                          AuthenticationSuccessHandler authenticationSuccessHandler,
+                          AuthenticationFailureHandler authenticationFailureHandler,
+                          AuthenticationEntryPoint authenticationEntryPoint,
+                          @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
+                          AccessDeniedHandler accessDeniedHandler) {
         this.logoutHandler = logoutHandler;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
         this.authenticationFailureHandler = authenticationFailureHandler;

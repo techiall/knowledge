@@ -38,13 +38,11 @@ public class NodeController {
     private final RecordRepository recordRepository;
     private final NodeSearchRepository nodeSearchRepository;
 
-    public NodeController(
-            NodeService nodeService,
-            ItemRepository itemRepository,
-            NodeMapper nodeMapper,
-            RecordRepository recordRepository,
-            NodeSearchRepository nodeSearchRepository
-    ) {
+    public NodeController(NodeService nodeService,
+                          ItemRepository itemRepository,
+                          NodeMapper nodeMapper,
+                          RecordRepository recordRepository,
+                          NodeSearchRepository nodeSearchRepository) {
         this.nodeService = nodeService;
         this.itemRepository = itemRepository;
         this.nodeMapper = nodeMapper;
@@ -61,10 +59,8 @@ public class NodeController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ITEM_' + #nodeVM.itemId.toString())")
     @FlushAuthority
-    public ResultBean<Map<String, Object>> save(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @Validated(value = Insert.class) @RequestBody NodeVM nodeVM
-    ) {
+    public ResultBean<Map<String, Object>> save(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                                @Validated(value = Insert.class) @RequestBody NodeVM nodeVM) {
         return ResultBean.ok(nodeService.save(userPrincipal.getId(), nodeVM));
     }
 
@@ -92,10 +88,7 @@ public class NodeController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ITEM_' + #itemId.toString()) AND hasAnyAuthority(#id)")
     @FlushAuthority
-    public ResultBean<Boolean> deleteById(
-            @RequestParam Integer itemId,
-            @PathVariable Long id
-    ) {
+    public ResultBean<Boolean> deleteById(@RequestParam Integer itemId, @PathVariable Long id) {
         nodeService.deleteById(id);
         return ResultBean.ok(true);
     }
@@ -103,10 +96,7 @@ public class NodeController {
     @DeleteMapping
     @PreAuthorize("hasAnyAuthority('ITEM_' + #itemId.toString()) AND hasAnyAuthority(#ids)")
     @FlushAuthority
-    public ResultBean<Boolean> deleteByIds(
-            @RequestBody Set<Long> ids,
-            @RequestParam Integer itemId
-    ) {
+    public ResultBean<Boolean> deleteByIds(@RequestBody Set<Long> ids, @RequestParam Integer itemId) {
         nodeService.deleteIdsAndRelationship(ids);
         nodeSearchRepository.deleteByIdIn(ids);
         recordRepository.deleteByNodeIdIn(ids);
@@ -115,10 +105,8 @@ public class NodeController {
     }
 
     @GetMapping
-    public ResultBean<List<NodeBaseDTO>> findByRootNode(
-            @RequestParam Integer itemId,
-            @RequestParam(defaultValue = "1") Integer depth
-    ) {
+    public ResultBean<List<NodeBaseDTO>> findByRootNode(@RequestParam Integer itemId,
+                                                        @RequestParam(defaultValue = "1") Integer depth) {
         Long rootNodeId = itemRepository.findRootNodeId(itemId)
                 .orElseThrow(ItemNotFoundException::new);
         return ResultBean.ok(nodeService.findByChildNode(rootNodeId, depth));
@@ -135,18 +123,14 @@ public class NodeController {
     }
 
     @GetMapping("/{id}/child")
-    public ResultBean<List<NodeBaseDTO>> findChildNode(
-            @PathVariable Long id,
-            @RequestParam(required = false, defaultValue = "1") int depth
-    ) {
+    public ResultBean<List<NodeBaseDTO>> findChildNode(@PathVariable Long id,
+                                                       @RequestParam(required = false, defaultValue = "1") int depth) {
         return ResultBean.ok(nodeService.findByChildNode(id, depth));
     }
 
     @GetMapping("/name")
-    public ResultBean<List<NodeInfoDTO>> findByName(
-            @RequestParam(name = "query") String name,
-            @RequestParam Integer itemId
-    ) {
+    public ResultBean<List<NodeInfoDTO>> findByName(@RequestParam(name = "query") String name,
+                                                    @RequestParam Integer itemId) {
         return ResultBean.ok(nodeService.findByNameLike(name, itemId));
     }
 

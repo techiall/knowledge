@@ -24,6 +24,7 @@ import top.techial.knowledge.web.rest.errors.UsernameIsRegisterException;
 import top.techial.knowledge.web.rest.vm.UserVM;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author techial
@@ -126,15 +127,12 @@ public class UserService {
     }
 
     public User update(Integer id, UserVM userVM) {
-        User user = userRepository.findById(id)
-                .orElseThrow(UserNotFoundException::new);
-        if (userVM != null && userVM.getImage() != null && !userVM.getImage().isEmpty()) {
-            user.setImages(userVM.getImage());
-        }
-        if (userVM != null && userVM.getNickName() != null && !userVM.getNickName().isEmpty()) {
-            user.setNickName(userVM.getNickName());
-        }
-        return userRepository.save(user);
+        return userRepository.findById(id).map(user -> {
+            Optional<UserVM> vmOptional = Optional.of(userVM);
+            vmOptional.map(UserVM::getImage).filter(it -> !it.isEmpty()).ifPresent(user::setImages);
+            vmOptional.map(UserVM::getNickName).filter(it -> !it.isEmpty()).ifPresent(user::setNickName);
+            return userRepository.save(user);
+        }).orElseThrow(UserNotFoundException::new);
     }
 
     public User saveNewUser(User user) {
