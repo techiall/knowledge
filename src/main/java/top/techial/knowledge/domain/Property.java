@@ -1,8 +1,5 @@
 package top.techial.knowledge.domain;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -40,8 +37,6 @@ public class Property implements Serializable {
         this.property = property;
     }
 
-    @Data
-    @Accessors(chain = true)
     public static class PropertyDTO implements Serializable {
 
         private static final long serialVersionUID = 1L;
