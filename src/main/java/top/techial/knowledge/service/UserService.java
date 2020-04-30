@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.techial.knowledge.domain.QItem;
 import top.techial.knowledge.domain.QUser;
 import top.techial.knowledge.domain.User;
@@ -110,6 +111,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    @Transactional
     public User updatePassword(Integer id, String srcPassword, String password) {
         User user = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
