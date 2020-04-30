@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.stereotype.Component;
 import top.techial.knowledge.web.rest.errors.ForbiddenException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +13,6 @@ import java.io.IOException;
 /**
  * @author techial
  */
-@Component
 public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 
     private final ObjectMapper objectMapper;

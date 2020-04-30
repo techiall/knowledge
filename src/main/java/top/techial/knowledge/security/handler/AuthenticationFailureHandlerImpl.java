@@ -1,7 +1,6 @@
 package top.techial.knowledge.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -17,11 +16,10 @@ import java.io.IOException;
 /**
  * @author techial
  */
-@Configuration
-public class AuthFailureHandler implements AuthenticationFailureHandler {
+public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHandler {
     private final ObjectMapper objectMapper;
 
-    public AuthFailureHandler(ObjectMapper objectMapper) {
+    public AuthenticationFailureHandlerImpl(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 

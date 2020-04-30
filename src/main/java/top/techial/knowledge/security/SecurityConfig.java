@@ -11,9 +11,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import top.techial.knowledge.security.handler.LogoutHandler;
 
 
 /**
@@ -23,20 +23,19 @@ import top.techial.knowledge.security.handler.LogoutHandler;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final LogoutHandler logoutHandler;
+    private final LogoutSuccessHandler logoutSuccessHandler;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final UserDetailsService userDetailsService;
     private final AccessDeniedHandler accessDeniedHandler;
 
-    public SecurityConfig(LogoutHandler logoutHandler,
-                          AuthenticationSuccessHandler authenticationSuccessHandler,
+    public SecurityConfig(LogoutSuccessHandler logoutSuccessHandler, AuthenticationSuccessHandler authenticationSuccessHandler,
                           AuthenticationFailureHandler authenticationFailureHandler,
                           AuthenticationEntryPoint authenticationEntryPoint,
                           @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
                           AccessDeniedHandler accessDeniedHandler) {
-        this.logoutHandler = logoutHandler;
+        this.logoutSuccessHandler = logoutSuccessHandler;
         this.authenticationSuccessHandler = authenticationSuccessHandler;
         this.authenticationFailureHandler = authenticationFailureHandler;
         this.authenticationEntryPoint = authenticationEntryPoint;
@@ -58,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .logout()
             .logoutUrl("/api/user/logout")
             .permitAll()
-            .logoutSuccessHandler(logoutHandler)
+            .logoutSuccessHandler(logoutSuccessHandler)
         .and()
             .exceptionHandling()
             .accessDeniedHandler(accessDeniedHandler)

@@ -1,7 +1,6 @@
 package top.techial.knowledge.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -15,7 +14,6 @@ import java.io.IOException;
 /**
  * @author techial
  */
-@Configuration
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
     private final ObjectMapper objectMapper;
 
