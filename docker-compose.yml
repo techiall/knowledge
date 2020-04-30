@@ -34,8 +34,6 @@ services:
 
   mysql:
     image: mysql:8.0
-    ports:
-      - 3306:3306
     networks:
       - knowledge
     volumes:
@@ -50,16 +48,12 @@ services:
     image: redis:alpine
     networks:
       - knowledge
-    ports:
-      - 6379:6379
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - redis_data:/data
 
   elastic:
     image: elasticsearch:latest
-    ports:
-      - 9200:9200
     networks:
       - knowledge
     volumes:
