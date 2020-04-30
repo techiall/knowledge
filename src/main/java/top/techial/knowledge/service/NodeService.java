@@ -56,17 +56,15 @@ public class NodeService {
     private final ItemRepository itemRepository;
     private final NodeMapper nodeMapper;
 
-    public NodeService(
-            NodeRepository nodeRepository,
-            NodeRelationshipRepository nodeRelationshipRepository,
-            RecordService recordService,
-            NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-            ThreadPoolTaskExecutor threadPoolTaskExecutor,
-            RecordRepository recordRepository,
-            NodeSearchRepository nodeSearchRepository,
-            ItemRepository itemRepository,
-            NodeMapper nodeMapper
-    ) {
+    public NodeService(NodeRepository nodeRepository,
+                       NodeRelationshipRepository nodeRelationshipRepository,
+                       RecordService recordService,
+                       NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+                       ThreadPoolTaskExecutor threadPoolTaskExecutor,
+                       RecordRepository recordRepository,
+                       NodeSearchRepository nodeSearchRepository,
+                       ItemRepository itemRepository,
+                       NodeMapper nodeMapper) {
         this.nodeRepository = nodeRepository;
         this.nodeRelationshipRepository = nodeRelationshipRepository;
         this.recordService = recordService;
