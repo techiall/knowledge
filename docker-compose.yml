@@ -39,7 +39,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./deploy/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
-      - mysql_data:/var/lib/mysql
+      - knowledge_mysql_data:/var/lib/mysql
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
     restart: always
@@ -50,7 +50,7 @@ services:
       - knowledge
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - redis_data:/data
+      - knowledge_redis_data:/data
 
   elastic:
     image: elasticsearch:latest
@@ -58,7 +58,7 @@ services:
       - knowledge
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - elastic_data:/usr/share/elasticsearch/data
+      - knowledge_elastic_data:/usr/share/elasticsearch/data
     environment:
       - 'ES_JAVA_OPTS=-Xms1024m -Xmx1024m'
       - 'discovery.type=single-node'
@@ -68,9 +68,9 @@ networks:
     external: true
 
 volumes:
-  elastic_data:
+  knowledge_elastic_data:
     external: true
-  redis_data:
+  knowledge_redis_data:
     external: true
-  mysql_data:
+  knowledge_mysql_data:
     external: true
