@@ -15,7 +15,6 @@ public class Init implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        userRepository.deleteAll();
         if (userRepository.count() == 0L) {
             userRepository.save(new User().setAccountNonExpired(true).setAccountNonLocked(true).setCredentialsNonExpired(true).setEnabled(true).setNickName("root").setUserName("root").setPassword("{noop}root"));
             userRepository.save(new User().setAccountNonExpired(true).setAccountNonLocked(true).setCredentialsNonExpired(true).setEnabled(true).setNickName("admin").setUserName("admin").setPassword("{noop}admin"));
