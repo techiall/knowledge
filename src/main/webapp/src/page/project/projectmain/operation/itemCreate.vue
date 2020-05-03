@@ -54,6 +54,8 @@
 
 
 <script>
+import { itemAdd } from '@/api/item';
+
 export default {
   data() {
     return {
@@ -61,14 +63,14 @@ export default {
       modalFlag: false,
       // 向服务器上传信息
       submitMsg: {
-        share: "false",
-        name: "",
-        description: ""
+        share: 'false',
+        name: '',
+        description: '',
       },
       // 允许发送标志位
       allowFlag: true,
       // 向服务器发送 标志位
-      serveLoadFlag: false
+      serveLoadFlag: false,
     };
   },
   methods: {
@@ -76,9 +78,9 @@ export default {
     setModalStatus() {
       this.modalFlag = true;
       this.submitMsg = {
-        share: "false",
-        name: "",
-        description: ""
+        share: 'false',
+        name: '',
+        description: '',
       };
       this.$nextTick(() => {
         this.$refs.NameI.focus();
@@ -90,7 +92,7 @@ export default {
     },
     // 项目名称 change事件触发
     itemNameChange() {
-      const name = this.submitMsg.name.replace(/^\s+|\s+$/g, "");
+      const name = this.submitMsg.name.replace(/^\s+|\s+$/g, '');
       if (name) {
         this.allowFlag = false;
       } else {
@@ -99,25 +101,23 @@ export default {
     },
     // 向服务器发送数据
     pushServer() {
-      const url = "/item";
       const obj = {
-        share: this.submitMsg.share === "true" ? true : false,
+        share: this.submitMsg.share === 'true' ? true : false,
         name: this.submitMsg.name,
-        description: this.submitMsg.description
+        description: this.submitMsg.description,
       };
       this.serveLoadFlag = true;
-      this.post_json(url, obj)
-        .then(res => {
-          this.$emit("addItem", res.data);
-          this.$Message.success("创建成功");
+      itemAdd(obj)
+        .then((data) => {
+          this.$emit('addItem', data);
+          this.$Message.success('创建成功');
           this.modalFlag = false;
-          this.serveLoadFlag = false;
         })
         .catch(() => {
           this.serveLoadFlag = false;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

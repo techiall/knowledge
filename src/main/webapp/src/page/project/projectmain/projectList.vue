@@ -33,9 +33,9 @@
         <div class="g-list-Ctitle">创建项目</div>
       </div>
     </item-list>
-    <item-setting ref="modalS" @updataItem="updataItem"></item-setting>
-    <item-delete ref="modalD" @delItem="delItem"></item-delete>
-    <item-create ref="modalC" @addItem="addItem"></item-create>
+    <item-setting ref="modalS" @updataItem="updataItem" />
+    <item-delete ref="modalD" @delItem="delItem" />
+    <item-create ref="modalC" @addItem="addItem" />
   </div>
 </template>
 
@@ -49,6 +49,7 @@ import itemDelete from './operation/itemDelete.vue';
 import itemCreate from './operation/itemCreate.vue';
 import loadAnimation from '@/components/loadAnimation.vue';
 import { mapGetters } from 'vuex';
+import { getItem } from '@/api/item';
 
 export default {
   components: {
@@ -80,18 +81,14 @@ export default {
   },
   methods: {
     // 获取项目列表
-    getItemList() {
-      const URL = '/item';
-      const OBJ = {
+    async getItemList() {
+      const data = await getItem({
         size: 50,
-      };
-      this.get(URL, OBJ)
-        .then((res) => {
-          this.itemload = true;
-          this.itemData = res.data.content;
-          this.totalElements = res.data.totalElements;
-        })
-        .catch(() => {});
+        sort: 'id,desc',
+      });
+      this.itemload = true;
+      this.itemData = data.content;
+      this.totalElements = data.totalElements;
     },
     // 创建项目
     createItem() {

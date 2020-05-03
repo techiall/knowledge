@@ -7,7 +7,7 @@
 
 <template>
   <div class="g-warp">
-    <item-header :totalElements="totalElements"/>
+    <item-header :totalElements="totalElements" />
     <loadAnimation v-if="!itemload" />
     <item-card
       :itemData="itemShareData"
@@ -37,6 +37,7 @@ import itemSetting from './operation/itemSetting.vue';
 import itemDelete from './operation/itemDelete.vue';
 import loadAnimation from '@/components/loadAnimation.vue';
 import { mapGetters } from 'vuex';
+import { getShareItem } from '@/api/item';
 
 export default {
   components: {
@@ -45,7 +46,7 @@ export default {
     itemCard,
     itemSetting,
     itemDelete,
-    loadAnimation
+    loadAnimation,
   },
   data() {
     return {
@@ -53,7 +54,7 @@ export default {
       itemShareData: [],
       // 项目个数
       totalElements: 0,
-       // 项目加载标志位
+      // 项目加载标志位
       itemload: false,
     };
   },
@@ -61,22 +62,18 @@ export default {
     ...mapGetters(['getShowType']),
   },
   created() {
-    this.getShareItem();
+    this.shareItem();
   },
   methods: {
     // 获取服务器里面分享的项目
-    getShareItem() {
-      const url = '/item/share';
-      const OBJ = {
+    async shareItem() {
+      const data = await getShareItem({
         size: 50,
-      };
-      this.get(url, OBJ)
-        .then((res) => {
-          this.itemload = true;
-          this.itemShareData = res.data.content;
-          this.totalElements = res.data.totalElements;
-        })
-        .catch(() => {});
+        sort: 'id,desc',
+      });
+      this.itemload = true;
+      this.itemShareData = data.content;
+      this.totalElements = data.totalElements;
     },
     // 选中设置
     selectSetting(index) {

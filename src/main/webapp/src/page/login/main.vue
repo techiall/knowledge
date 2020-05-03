@@ -40,10 +40,10 @@
         </span>
       </div>
       <div v-show="showLoginRegister">
-        <login-content :showLoginRegister="showLoginRegister"></login-content>
+        <login-content :showLoginRegister="showLoginRegister" />
       </div>
       <div v-show="!showLoginRegister">
-        <register-content :showLoginRegister="showLoginRegister" @mainCallback="mainCallback"></register-content>
+        <register-content :showLoginRegister="showLoginRegister" @mainCallback="mainCallback" />
       </div>
     </div>
   </div>
@@ -52,6 +52,7 @@
 
 <script>
 import { mapMutations } from 'vuex';
+import { getUserMe } from '@/api/user.js';
 import loginContent from './login/login';
 import registerContent from './register/register';
 
@@ -91,20 +92,15 @@ export default {
       statusMap[type]();
     },
     // 判断用户是否登录
-    getServerUser() {
-      const url = '/user/me';
-      this.get(url)
-        .then((res) => {
-          this.spinFlag = false;
-          if (res.data.user.id) {
-            let { data } = res;
-            this.setUserData(data);
-            this.$router.push(this.$route.query.redirect || '/project');
-          } else {
-            this.setToken(res.data._csrf.token);
-          }
-        })
-        .catch(() => {});
+    async getServerUser() {
+      const data = await getUserMe();
+      this.spinFlag = false;
+      if (data.user.id) {
+        this.setUserData(data);
+        this.$router.push(this.$route.query.redirect || '/project');
+      } else {
+        this.setToken(data._csrf.token);
+      }
     },
   },
 };

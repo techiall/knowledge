@@ -66,6 +66,7 @@
 
 <script>
 import { mapMutations } from 'vuex';
+import { userLogin, getUserMe } from '@/api/user';
 
 export default {
   props: ['showLoginRegister'],
@@ -90,7 +91,7 @@ export default {
   methods: {
     ...mapMutations(['setUserData']),
     //登录
-    Submitlanding() {
+    async Submitlanding() {
       if (this.formlogin.username === '') {
         this.showuserwarn = true;
       }
@@ -102,26 +103,19 @@ export default {
         return;
       }
       this.formloginFlag = true;
-      let register = {
-        username: this.formlogin.username,
-        password: this.formlogin.password,
-        'remember-me': this.formlogin.remeberMe ? 'on' : 'off',
-      };
-      let url = '/user/login';
-      this.post_string(url, register)
-        .then(() => {
-          return Promise.resolve();
-        })
-        .then(() => {
-          this.get('/user/me').then((res) => {
-            let data = res.data;
-            this.setUserData(data);
-            this.$router.push(this.$route.query.redirect || '/project');
-          });
-        })
-        .catch(() => {
-          this.formloginFlag = false;
+      try {
+        await userLogin({
+          username: this.formlogin.username,
+          password: this.formlogin.password,
+          'remember-me': this.formlogin.remeberMe ? 'on' : 'off',
         });
+      } catch (error) {
+        this.formloginFlag = false;
+        return;
+      }
+      const data = await getUserMe();
+      this.setUserData(data);
+      this.$router.push(this.$route.query.redirect || '/project');
     },
     //检测 信息 有误 change
     checkIswarn(val) {

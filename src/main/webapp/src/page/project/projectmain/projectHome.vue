@@ -51,6 +51,7 @@
 
 
 <script>
+import { getItem, getShareItem } from '@/api/item';
 import itemCard from './operation/itemCard.vue';
 import itemCreate from './operation/itemCreate.vue';
 import itemSetting from './operation/itemSetting.vue';
@@ -79,30 +80,22 @@ export default {
   },
   methods: {
     // 获取服务器里面的项目
-    getServeItem() {
-      const url = '/item';
-      const OBJ = {
+    async getServeItem() {
+      const data = await getItem({
         size: 4,
-      };
-      this.get(url, OBJ)
-        .then((res) => {
-          this.itemLoadFlag = false;
-          this.itemData = res.data.content;
-        })
-        .catch(() => {});
+        sort: 'id,desc',
+      });
+      this.itemLoadFlag = false;
+      this.itemData = data.content;
     },
     // 获取服务器里面分享的项目
-    getServeShareItem() {
-      const url = '/item/share';
-      const OBJ = {
+    async getServeShareItem() {
+      const data = await getShareItem({
         size: 4,
-      };
-      this.get(url, OBJ)
-        .then((res) => {
-          this.shareitemLoadFlag = false;
-          this.itemShareData = res.data.content;
-        })
-        .catch(() => {});
+        sort: 'id,desc',
+      });
+      this.shareitemLoadFlag = false;
+      this.itemShareData = data.content;
     },
     // 状态选择
     statusSelect(type) {
@@ -137,7 +130,8 @@ export default {
     },
     // 创建成功 添加数据
     addItem(val) {
-      this.itemData.push(val);
+      this.itemData.unshift(val);
+      this.itemData.pop();
       this.getServeShareItem();
     },
     // 修改数据

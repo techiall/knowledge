@@ -104,6 +104,8 @@
 </template>
 
 <script>
+import { userRegister, userRegisterQuery } from '@/api/user';
+
 export default {
   props: ['showLoginRegister'],
   data() {
@@ -167,7 +169,7 @@ export default {
   },
   methods: {
     // 注册
-    SubmitRegister() {
+    async SubmitRegister() {
       if (this.formRegister.username === '') {
         this.registerusernameFlag = true;
       }
@@ -187,55 +189,46 @@ export default {
         return;
       if (this.submitFlag) return;
       this.submitFlag = true;
-      this.post_json('/register', {
-        userName: this.formRegister.username,
-        password: this.formRegister.password,
-      })
-        .then(() => {
-          this.submitFlag = false;
-          this.$emit('mainCallback', 1, true);
-        })
-        .catch(() => {
-          this.submitFlag = false;
+      try {
+        await userRegister({
+          userName: this.formRegister.username,
+          password: this.formRegister.password,
         });
+        this.$emit('mainCallback', 1, true);
+      } catch {
+        this.submitFlag = false;
+      }
     },
     //判断用户名是否存在
-    IsregisterUser(userName) {
+    async IsregisterUser(name) {
       if (this.registeruserFlag) {
-        this.registerdelayusername = userName;
+        this.registerdelayusername = name;
         return;
       }
       this.registeruserFlag = true;
       this.registerUserIcon = 'md-refresh';
       this.registeruserClass = 'register-wait';
-      let url = '/register/query';
-      let obj = {
-        name: userName,
-      };
-      this.get(url, obj)
-        .then((res) => {
-          this.registeruserFlag = false;
-          if (this.registerdelayusername !== '') {
-            let registerName = this.registerdelayusername;
-            this.registerdelayusername = '';
-            this.IsregisterUser(registerName);
-          } else if (
-            this.formRegister.username === '' ||
-            this.registerusernameFlag
-          ) {
-            this.registerUserIcon = '';
-            this.registeruserClass = '';
-          } else {
-            if (res.data) {
-              this.registerUserIcon = 'md-alert';
-              this.registeruserClass = 'register-warning';
-            } else {
-              this.registerUserIcon = 'md-checkmark-circle';
-              this.registeruserClass = 'register-success';
-            }
-          }
-        })
-        .catch(() => {});
+      const data = await userRegisterQuery({ name });
+      this.registeruserFlag = false;
+      if (this.registerdelayusername !== '') {
+        let registerName = this.registerdelayusername;
+        this.registerdelayusername = '';
+        this.IsregisterUser(registerName);
+      } else if (
+        this.formRegister.username === '' ||
+        this.registerusernameFlag
+      ) {
+        this.registerUserIcon = '';
+        this.registeruserClass = '';
+      } else {
+        if (data) {
+          this.registerUserIcon = 'md-alert';
+          this.registeruserClass = 'register-warning';
+        } else {
+          this.registerUserIcon = 'md-checkmark-circle';
+          this.registeruserClass = 'register-success';
+        }
+      }
     },
     //检测 信息 有误 change
     checkIswarn(val) {
@@ -272,7 +265,6 @@ export default {
             }
           }
         }
-
         // 匹配是否有空格
         if (regSpace.test(password)) {
           this.regexPassword.space = this.information;
@@ -382,6 +374,7 @@ export default {
       };
       this.registerShowPassword = '请输入密码！';
       this.usernameShow = '请输入用户名！';
+      this.submitFlag = false;
     },
   },
   watch: {

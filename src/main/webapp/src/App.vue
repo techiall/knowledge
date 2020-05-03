@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import { getUserMe } from '@/api/user';
 import { mapMutations } from 'vuex';
 
 export default {
@@ -13,20 +14,15 @@ export default {
     this.getServerUser();
   },
   methods: {
-    ...mapMutations(['setUserData', 'setToken','delToken']),
-    getServerUser() {
-      const url = '/user/me';
-      this.get(url)
-        .then((res) => {
-          if (res.data.user.id) {
-            let { data } = res;
-            this.setUserData(data);
-          } else {
-            this.delToken();
-            this.setToken(res.data._csrf.token);
-          }
-        })
-        .catch(() => {});
+    ...mapMutations(['setUserData', 'setToken', 'delToken']),
+    async getServerUser() {
+      const data = await getUserMe();
+      if (data.user.id) {
+        this.setUserData(data);
+      } else {
+        this.delToken();
+        this.setToken(data._csrf.token);
+      }
     },
   },
 };

@@ -45,7 +45,12 @@
       </div>
     </div>
     <div class="box-floor">
-      <Button type="primary" :disabled="disabledFlag" @click.stop="clickStatus(6)">设置为个人资料照片</Button>
+      <Button
+        type="primary"
+        :disabled="disabledFlag"
+        :loading="loadingFlag"
+        @click.stop="clickStatus(6)"
+      >设置为个人资料照片</Button>
       <Button type="text" @click.stop="clickStatus(2)">取消</Button>
     </div>
   </div>
@@ -54,6 +59,7 @@
 
 <script>
 import { mapMutations } from 'vuex';
+import { patchUser } from '@/api/user';
 
 export default {
   data() {
@@ -72,6 +78,8 @@ export default {
       disabledFlag: true,
       // 照片名称
       ImagesName: '',
+      // 设置按钮为加载中状态
+      loadingFlag: false,
     };
   },
   mounted() {
@@ -133,19 +141,13 @@ export default {
           this.disabledFlag = true;
         },
         // 设置上传个人照片
-        6: () => {
-          const url = '/user/me';
-          const obj = {
-            image: this.srcImage,
-          };
-          this.patch_json(url, obj)
-            .then((res) => {
-              const data = res.data;
-              this.modifyImg(data);
-              this.$Message.success('修改成功');
-              this.uploadShowFlag = false;
-            })
-            .catch(() => {});
+        6: async () => {
+          this.loadingFlag = true;
+          const data = await patchUser({ image: this.srcImage });
+          this.loadingFlag = false;
+          this.modifyImg(data);
+          this.$Message.success('修改成功');
+          this.uploadShowFlag = false;
         },
       };
       statusMap[type]();

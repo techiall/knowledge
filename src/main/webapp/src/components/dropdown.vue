@@ -45,6 +45,7 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
+import { userLogout } from '@/api/user';
 // 点击上传照片
 import uploadImages from './uploadImages';
 
@@ -98,12 +99,9 @@ export default {
         },
         // 点击 退出
         3: () => {
-          if (this.logoutLoad) {
-            return;
-          }
-          const url = '/user/logout';
+          if (this.logoutLoad) return;
           this.logoutLoad = true;
-          this.post_json(url)
+          userLogout()
             .then(() => {
               this.delToken();
               this.$router.push({ path: '/login' });

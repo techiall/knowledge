@@ -26,9 +26,6 @@
     </div>
     <Divider />
     <div class="box-msg-row">
-      <div class="box-msg-header-tips box-msg-header-defaultC box-msg-header-default">勾选下方的注销按键</div>
-    </div>
-    <div class="box-msg-row">
       <Checkbox
         v-model="checkFlag"
         size="large"
@@ -45,6 +42,7 @@
 
 <script>
 import { mapMutations } from 'vuex';
+import { deleteUser } from '@/api/user';
 
 export default {
   data() {
@@ -56,18 +54,14 @@ export default {
   methods: {
     ...mapMutations(['delToken']),
     // 发送修改名称到服务器
-    modifyServer() {
+    async modifyServer() {
       if (!this.checkFlag) {
         this.$Message.info('请勾选注销');
         return;
       }
-      const url = '/user/me';
-      this.delete_string(url)
-        .then(() => {
-          this.delToken();
-          this.$router.push({ path: '/login' });
-        })
-        .catch(() => {});
+      await deleteUser();
+      this.delToken();
+      this.$router.push({ path: '/login' });
     },
   },
 };

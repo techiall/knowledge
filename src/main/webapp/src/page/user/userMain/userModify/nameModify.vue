@@ -46,7 +46,7 @@
         </div>
         <div class="editmodal-f">
           <Button type="text" @click="Statustriger(5)">取消</Button>
-          <Button type="primary" @click="Statustriger(7)">完成</Button>
+          <Button type="primary" :loading="loadingFlag" @click="Statustriger(7)">完成</Button>
         </div>
       </div>
     </div>
@@ -56,6 +56,7 @@
 
 <script>
 import { mapGetters, mapMutations } from 'vuex';
+import { patchUser } from '@/api/user';
 
 export default {
   data() {
@@ -64,6 +65,8 @@ export default {
       ExitModalFlag: false,
       // 昵称 修改
       nickNameM: '',
+      // 设置按钮为加载中状态
+      loadingFlag: false,
     };
   },
   computed: {
@@ -90,7 +93,7 @@ export default {
       storeModify: 'modify',
     }),
     // 发送修改名称到服务器
-    modifyServer() {
+    async modifyServer() {
       let nickName = this.nickNameM.replace(/^\s+|\s+$/g, '');
       if (nickName === this.nickName) {
         this.ExitModalFlag = false;
@@ -99,18 +102,12 @@ export default {
         this.$refs.FullName.classList.add('Editmodal-error');
         return;
       }
-      const url = '/user/me';
-      const obj = {
-        nickName,
-      };
-      this.patch_json(url, obj)
-        .then((res) => {
-          const data = res.data;
-          this.storeModify(data);
-          this.$Message.success('修改成功');
-          this.ExitModalFlag = false;
-        })
-        .catch(() => {});
+      this.loadingFlag = true;
+      const data = await patchUser({ nickName });
+      this.loadingFlag = false;
+      this.storeModify(data);
+      this.$Message.success('修改成功');
+      this.ExitModalFlag = false;
     },
     Statustriger(type) {
       const statusMap = {

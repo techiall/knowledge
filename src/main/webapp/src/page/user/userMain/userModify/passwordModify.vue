@@ -59,7 +59,12 @@
       <div class="box-msg-row-tip" ref="RepeatInTip"></div>
     </div>
     <div class="box-msg-row">
-      <Button type="primary" @click="modifyServer" class="box-msg-row-button">更改密码</Button>
+      <Button
+        type="primary"
+        class="box-msg-row-button"
+        :loading="loadingFlag"
+        @click="modifyServer"
+      >更改密码</Button>
       <Button type="text" to="/user">取消</Button>
     </div>
   </div>
@@ -67,8 +72,9 @@
 
 
 <script>
+import { patchPassword } from '@/api/user';
+
 export default {
-  props: ['viewSeletctFlag'],
   data() {
     return {
       //修改密碼 上传 的 信息
@@ -77,25 +83,13 @@ export default {
         newPass: '',
         RepeatPass: '',
       },
+      // 设置按钮为加载中状态
+      loadingFlag: false,
     };
-  },
-  watch: {
-    viewSeletctFlag(newVal) {
-      if (newVal === 3) {
-        this.fromCPass = {
-          oldPass: '',
-          newPass: '',
-          RepeatPass: '',
-        };
-        this.$refs.oldInTip.innerHTML = '';
-        this.$refs.newInTip.innerHTML = '';
-        this.$refs.RepeatInTip.innerHTML = '';
-      }
-    },
   },
   methods: {
     // 发送密码名称到服务器
-    modifyServer() {
+    async modifyServer() {
       let flag = true;
       let numStatus = this.PasswordDetection();
       if (this.fromCPass.oldPass === '') {
@@ -122,17 +116,18 @@ export default {
       if (!flag) {
         return;
       }
-      let url = '/user/me/password';
-      let obj = {
+      this.loadingFlag = true;
+      await patchPassword({
         srcPassword: this.fromCPass.oldPass,
         password: this.fromCPass.newPass,
+      });
+      this.loadingFlag = false;
+      this.$Message.success('密码修改成功');
+      this.fromCPass = {
+        oldPass: '',
+        newPass: '',
+        RepeatPass: '',
       };
-      this.patch_string(url, obj)
-        .then(() => {
-          this.$Message.success('密码修改成功');
-          this.$emit('userMainCallback', 1, 1);
-        })
-        .catch(() => {});
     },
     // input change 事件
     changeInput(val) {
