@@ -1,0 +1,35 @@
+[
+  {
+    "userName": "techial",
+    "nickName": "techial",
+    "password": "{noop}techial",
+    "accountNonExpired": true,
+    "accountNonLocked": true,
+    "credentialsNonExpired": true,
+    "enabled": true,
+    "createTime": null,
+    "updateTime": null
+  },
+  {
+    "userName": "admin",
+    "nickName": "admin",
+    "password": "{noop}admin",
+    "accountNonExpired": true,
+    "accountNonLocked": true,
+    "credentialsNonExpired": true,
+    "enabled": true,
+    "createTime": null,
+    "updateTime": null
+  },
+  {
+    "userName": "root",
+    "nickName": "root",
+    "password": "{noop}root",
+    "accountNonExpired": true,
+    "accountNonLocked": true,
+    "credentialsNonExpired": true,
+    "enabled": true,
+    "createTime": null,
+    "updateTime": null
+  }
+]
