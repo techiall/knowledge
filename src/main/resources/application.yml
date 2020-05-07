@@ -6,8 +6,9 @@ server:
 
 spring:
   profiles:
-    include: elastic
-    active: dev
+    include:
+      - elastic
+      - dev
   application:
     name: knowledge-dev
   main:
@@ -32,7 +33,7 @@ spring:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/knowledge?useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
     username: root
-#    password: root
+    #    password: root
     hikari:
       poolName: Hikari
       auto-commit: false

@@ -6,8 +6,9 @@ server:
 
 spring:
   profiles:
-    include: elastic
-    active: prod
+    include:
+      - elastic
+      - prod
   application:
     name: knowledge-docker
   main:
