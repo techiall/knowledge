@@ -86,6 +86,7 @@ export default {
         // 名称 改变
         1: () => {
           this.$emit('oMainCallback', 2, val);
+          window.console.log(val);
           this.$refs.forcediagram.setForce();
           this.$refs.treediagram.setForce();
         },

@@ -46,7 +46,7 @@ export default {
       // 设置top高度
       TopHeight: 100,
       //展示 操作界面标志位
-      showClientFlag: false,  // 修改
+      showClientFlag: false, // 修改
       // 选择 视图
       showSelectNum: 0, // 修改
     };

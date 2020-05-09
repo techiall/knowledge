@@ -99,9 +99,7 @@ export default {
       };
       await updateNode(this.treeNode.id, params);
       this.disabled = false;
-      this.$emit('SClientCallback', 4);
-      // 告诉其他 名称修改成功
-      this.$emit('SClientCallback', 1, name);
+      this.$emit('on-callback', 1, name);
     },
   },
 };

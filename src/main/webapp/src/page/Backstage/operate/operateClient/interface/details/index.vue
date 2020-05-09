@@ -7,7 +7,13 @@
 
 <template>
   <div>
-    <operate-view v-if="itemExitFlag" ref="operateView" :treeNode="treeNode" :itemId="itemId" />
+    <operate-view
+      v-if="itemExitFlag"
+      ref="operateView"
+      :treeNode="treeNode"
+      :itemId="itemId"
+      @on-callback="detailsCallback"
+    />
     <inoperable-view v-else ref="inoperableView" />
   </div>
 </template>
@@ -54,6 +60,18 @@ export default {
         this.$refs.inoperableView.setdetails(data);
       }
       this.$emit('update:spinShow', false);
+    },
+    // 回调函数
+    detailsCallback(type, val) {
+      const statusMap = {
+        // 名称 改变
+        1: () => {
+          this.$emit('SClientCallback', 4);
+          // 告诉其他 名称修改成功
+          this.$emit('SClientCallback', 1, val);
+        },
+      };
+      statusMap[type]();
     },
   },
 };
