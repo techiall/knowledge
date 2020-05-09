@@ -77,7 +77,7 @@ export default {
       this.disabled = true;
       const itemId = this.itemId;
       const queryData = await queryNode({ query: name, itemId });
-      if (queryData.length <= 0 || queryData[0].name === name) {
+      if (queryData.length > 0 && queryData[0].name === name) {
         this.disabled = false;
         this.$Message.warning({
           content: `${name}节点已存在,请重新修改`,
