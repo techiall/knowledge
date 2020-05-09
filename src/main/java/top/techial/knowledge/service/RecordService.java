@@ -19,7 +19,7 @@ public class RecordService {
     }
 
     public void save(Long nodeId, Integer userId, String operatorMessage, String message) {
-        Record record = new Record()
+        var record = new Record()
                 .setNodeId(nodeId)
                 .setOperator(operatorMessage)
                 .setMessage(message)

@@ -9,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.techial.knowledge.aop.authority.FlushAuthority;
 import top.techial.knowledge.beans.ResultBean;
-import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.repository.ItemRepository;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.ItemService;
@@ -39,7 +38,7 @@ public class ItemController {
 
     @GetMapping("share")
     public ResultBean<Page<ItemDTO>> share(@PageableDefault Pageable pageable) {
-        Page<ItemDTO> list = itemRepository.findByShare(true, pageable)
+        var list = itemRepository.findByShare(true, pageable)
                 .map(itemMapper::toItemDTO);
         return ResultBean.ok(list);
     }
@@ -67,7 +66,7 @@ public class ItemController {
             throw new IllegalArgumentException(String
                     .format("itemVO error. %s", itemVM.toString()));
         }
-        Item item = itemMapper.toItem(itemVM);
+        var item = itemMapper.toItem(itemVM);
         item = itemService.save(userPrincipal.getId(), item);
         return ResultBean.ok(itemMapper.toItemDTO(item));
     }
@@ -75,7 +74,7 @@ public class ItemController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ITEM_' + #id.toString())")
     public ResultBean<ItemDTO> update(@RequestBody ItemVM itemVM, @PathVariable Integer id) {
-        Item item = itemService.update(id, itemVM);
+        var item = itemService.update(id, itemVM);
         return ResultBean.ok(itemMapper.toItemDTO(itemRepository.save(item)));
     }
 

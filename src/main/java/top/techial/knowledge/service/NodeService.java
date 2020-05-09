@@ -6,7 +6,6 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -99,7 +98,7 @@ public class NodeService {
     }
 
     private Node nodeRelationshipSave(NodeVM nodeVM, Long itemRootNodeId) {
-        Node node = nodeMapper.toNode(nodeVM.setProperty(buildProperty(nodeVM.getProperty())));
+        var node = nodeMapper.toNode(nodeVM.setProperty(buildProperty(nodeVM.getProperty())));
         node = nodeRepository.save(node);
         if (nodeVM.getParentId() != null) {
             nodeRelationshipRepository.insertNode(node.getId(), nodeVM.getParentId());
@@ -130,7 +129,7 @@ public class NodeService {
             return Collections.emptyList();
         }
         // language=sql
-        String value = "select n.id, n.name from node n where id in (:ids)";
+        var value = "select n.id, n.name from node n where id in (:ids)";
         Map<String, Object> map = new HashMap<>();
         map.put("ids", ids);
         return namedParameterJdbcTemplate.query(value, map, new BeanPropertyRowMapper<>(Property.PropertyDTO.class));
@@ -144,7 +143,7 @@ public class NodeService {
     }
 
     public List<NodeInfoDTO> findByNameLike(String name, Integer itemId) {
-        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+        var searchQuery = new NativeSearchQueryBuilder()
                 .withIndices(INDEX)
                 .withQuery(QueryBuilders.boolQuery()
                         .must(QueryBuilders.matchQuery("name", name))
@@ -158,12 +157,12 @@ public class NodeService {
     }
 
     public Page<Node> findContentByNameLike(String name, Pageable pageable) {
-        List<Integer> itemIds = itemRepository.findByShare(true)
+        var itemIds = itemRepository.findByShare(true)
                 .parallelStream()
                 .map(Item::getId)
                 .collect(Collectors.toList());
 
-        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+        var searchQuery = new NativeSearchQueryBuilder()
                 .withIndices(INDEX)
                 .withQuery(QueryBuilders.boolQuery()
                         .must(QueryBuilders.matchQuery("name", name))
@@ -177,7 +176,7 @@ public class NodeService {
 
     public List<NodeBaseDTO> findByChildNode(Long id, int depth) {
         // language=sql
-        String value = "select noderelati1_.ancestor as parentNodeId, noderelati1_.descendant as id,\n" +
+        var value = "select noderelati1_.ancestor as parentNodeId, noderelati1_.descendant as id,\n" +
                 "(select count(*) - 1 from node_relationship k where k.ancestor = noderelati1_.descendant) as child,\n" +
                 "node0_.`name` as name\n" +
                 "from `node` node0_ inner join node_relationship noderelati1_ on (node0_.id = noderelati1_.descendant)\n" +
@@ -204,7 +203,7 @@ public class NodeService {
 
     private Map<Long, List<ParentChildDTO>> buildChildNode(Long id) {
         // language=sql
-        String value = "select nr.descendant as descendant, nr.ancestor as ancestor\n" +
+        var value = "select nr.descendant as descendant, nr.ancestor as ancestor\n" +
                 "from node_relationship as nr inner join (select n_child.id\n" +
                 "from node n_child join node_relationship nr_child on (n_child.id = nr_child.descendant)\n" +
                 "where nr_child.ancestor = (:id)) as node on nr.descendant = node.id\n" +
@@ -217,7 +216,7 @@ public class NodeService {
 
     private Map<Long, List<ParentChildDTO>> buildParentNode(Long id) {
         // language=sql
-        String value = "select nr.descendant as descendant, nr.ancestor as ancestor\n" +
+        var value = "select nr.descendant as descendant, nr.ancestor as ancestor\n" +
                 "from node_relationship as nr inner join (select n_child.id\n" +
                 "from node n_child join node_relationship nr_child on (n_child.id = nr_child.ancestor)\n" +
                 "where nr_child.descendant = (:id)) as node on nr.descendant = node.id\n" +
@@ -230,7 +229,7 @@ public class NodeService {
 
     private List<NodeBaseDTO> findParent(Long id) {
         // language=sql
-        String value = "select node0_.id as id, node0_.name as name, true as child,\n" +
+        var value = "select node0_.id as id, node0_.name as name, true as child,\n" +
                 "(select n.ancestor from node_relationship n where n.descendant = node0_.id and n.distance = 1) as parentNodeId\n" +
                 "from `node` node0_ inner join node_relationship noderelati1_ on (node0_.id = noderelati1_.ancestor)\n" +
                 "where noderelati1_.descendant = (:descendant)\n";
@@ -246,7 +245,7 @@ public class NodeService {
         Map<Long, Node> childNodeData = buildChildNodeData(id);
         Set<Long> flag = new HashSet<>();
 
-        NodeTreeDTO nodeTreeDTO = nodeMapper.toNodeTreeDTO(childNodeData.get(id));
+        var nodeTreeDTO = nodeMapper.toNodeTreeDTO(childNodeData.get(id));
         List<ParentChildDTO> child = childNode.get(id);
 
         getChild(nodeTreeDTO, child, flag, childNodeData, childNode);
@@ -287,7 +286,7 @@ public class NodeService {
      */
     private void nodeRelation(Long id, List<Map<String, Object>> links, List<Map<String, Object>> nodes) {
         // relation
-        Node node1 = findById(id);
+        var node1 = findById(id);
         nodes.add(buildNodes(node1.getId(), node1.getName()));
         node1.getProperty().getProperty().forEach((key, value) -> value.forEach(it -> {
             links.add(buildLinks(node1.getId(), it.getId(), key));
@@ -304,14 +303,14 @@ public class NodeService {
         Map<Long, Node> childNodeData = buildChildNodeData(id);
         queue.add(childNodeData.get(id));
         while (!queue.isEmpty()) {
-            Node first = queue.pollFirst();
+            var first = queue.pollFirst();
 
             List<ParentChildDTO> list = childNode.get(first.getId());
             if (list == null) {
                 continue;
             }
             for (ParentChildDTO it : list) {
-                Node child = childNodeData.get(it.getDescendant());
+                var child = childNodeData.get(it.getDescendant());
                 if (Objects.equals(rootNode, child.getId())) {
                     continue;
                 }
@@ -332,13 +331,13 @@ public class NodeService {
         Map<Long, List<ParentChildDTO>> parentNode = buildParentNode(id);
         queue.add(parentNodeData.get(id));
         while (!queue.isEmpty()) {
-            Node node = queue.pollFirst();
+            var node = queue.pollFirst();
             List<ParentChildDTO> list = parentNode.get(node.getId());
             if (list == null) {
                 continue;
             }
             for (ParentChildDTO it : list) {
-                Node parent = parentNodeData.get(it.getAncestor());
+                var parent = parentNodeData.get(it.getAncestor());
                 if (Objects.equals(rootNode, parent.getId())) {
                     continue;
                 }
@@ -356,7 +355,7 @@ public class NodeService {
         List<Map<String, Object>> nodes = new ArrayList<>();
 
         // Item root node
-        Long rootNode = nodeRepository.findItemRootNodeId(id);
+        var rootNode = nodeRepository.findItemRootNodeId(id);
 
         List<Future<?>> futures = new ArrayList<>();
         // relation
@@ -395,7 +394,7 @@ public class NodeService {
         result.put("id", id);
         result.put("target", target);
         // language=sql
-        String value = "delete from node_relationship\n" +
+        var value = "delete from node_relationship\n" +
                 "WHERE descendant IN (select tmp1.descendant from " +
                 "(SELECT d.descendant FROM node_relationship d WHERE d.ancestor = :id) as tmp1)\n" +
                 "  and ancestor IN (select tmp2.ancestor from (SELECT a.ancestor FROM node_relationship a " +
@@ -424,29 +423,27 @@ public class NodeService {
             Labels labels = new Labels();
             labels.setLabels(nodeVM.getLabels());
             node.setLabels(labels);
-            recordService.save(node.getId(), userId,
-                    nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
+            recordService.save(node.getId(), userId, nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
         });
 
         vmOptional.map(NodeVM::getProperty).ifPresent(it -> {
             Property property = new Property();
             property.setProperty(buildProperty(nodeVM.getProperty()));
             node.setProperty(property);
-            recordService.save(node.getId(), userId,
-                    nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
+            recordService.save(node.getId(), userId, nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
         });
 
-        Node tmp = nodeRepository.save(node);
+        var tmp = nodeRepository.save(node);
         nodeSearchRepository.index(tmp);
         return node;
     }
 
     @Transactional
     public Map<String, Object> save(Integer id, NodeVM nodeVM) {
-        Long itemId = itemRepository.findRootNodeId(nodeVM.getItemId())
+        var itemId = itemRepository.findRootNodeId(nodeVM.getItemId())
                 .orElseThrow(ItemNotFoundException::new);
 
-        Node node = nodeRepository.findByItemIdAndName(nodeVM.getName().trim(), nodeVM.getItemId())
+        var node = nodeRepository.findByItemIdAndName(nodeVM.getName().trim(), nodeVM.getItemId())
                 .orElse(null);
         boolean flag = false;
         if (node == null) {

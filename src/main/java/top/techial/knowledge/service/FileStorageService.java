@@ -46,7 +46,7 @@ public class FileStorageService {
     }
 
     public String upload(MultipartFile file) {
-        String originalFilename = file.getOriginalFilename();
+        var originalFilename = file.getOriginalFilename();
         if (file.isEmpty()) {
             throw new StorageFileNotFoundException();
         }
@@ -57,11 +57,11 @@ public class FileStorageService {
         }
 
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            var digest = MessageDigest.getInstance("SHA-1");
             if (originalFilename != null && !originalFilename.isEmpty()) {
                 digest.update(originalFilename.getBytes());
             }
-            Path temp = Files.createTempFile("temp-", null);
+            var temp = Files.createTempFile("temp-", null);
             try (
                     InputStream in = file.getInputStream();
                     OutputStream out = Files.newOutputStream(temp)
@@ -72,8 +72,8 @@ public class FileStorageService {
                     digest.update(buf, 0, n);
                     out.write(buf, 0, n);
                 }
-                String sha1 = String.format("%032X", new BigInteger(1, digest.digest()));
-                Path dest = rootLocation.resolve(sha1);
+                var sha1 = String.format("%032X", new BigInteger(1, digest.digest()));
+                var dest = rootLocation.resolve(sha1);
                 if (dest.toFile().exists()) {
                     return sha1;
                 }

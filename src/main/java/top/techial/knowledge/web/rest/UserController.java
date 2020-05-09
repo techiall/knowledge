@@ -44,8 +44,8 @@ public class UserController {
         Map<String, Object> map = new HashMap<>(16);
         if (object instanceof UserPrincipal) {
             UserPrincipal userPrincipal = (UserPrincipal) object;
-            User user = userRepository.findById(userPrincipal.getId()).orElse(new User());
-            map.put("user", userMapper.toUserDTO(user));
+            var user = userRepository.findById(userPrincipal.getId()).map(userMapper::toUserDTO).orElse(new UserDTO());
+            map.put("user", user);
         } else {
             map.put("user", new User());
         }
@@ -58,7 +58,7 @@ public class UserController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody UserVM userVM
     ) {
-        User user = userService.update(userPrincipal.getId(), userVM);
+        var user = userService.update(userPrincipal.getId(), userVM);
         return ResultBean.ok(userMapper.toUserDTO(user));
     }
 
@@ -69,7 +69,7 @@ public class UserController {
             String srcPassword,
             String password
     ) {
-        User user = userService.updatePassword(userPrincipal.getId(), srcPassword, password);
+        var user = userService.updatePassword(userPrincipal.getId(), srcPassword, password);
         return ResultBean.ok(userMapper.toUserDTO(user));
     }
 

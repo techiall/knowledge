@@ -37,7 +37,7 @@ public class RegisterController {
 
     @PostMapping
     public ResultBean<User> save(@Validated @RequestBody RegisterVM registerVM) {
-        User user = userMapper.toUser(registerVM);
+        var user = userMapper.toUser(registerVM);
         return ResultBean.ok(userService.saveNewUser(user));
     }
 

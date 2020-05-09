@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.techial.knowledge.beans.ResultBean;
-import top.techial.knowledge.domain.Item;
 import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.repository.ItemRepository;
 import top.techial.knowledge.service.NodeService;
 import top.techial.knowledge.service.dto.SearchDTO;
 import top.techial.knowledge.service.mapper.NodeMapper;
 import top.techial.knowledge.web.rest.errors.ItemNotFoundException;
+
+import java.util.Optional;
 
 /**
  * @author techial
@@ -34,10 +35,10 @@ public class SearchController {
     }
 
     private static String text(String text) {
-        text = text == null ? "" : text;
-        text = text.replaceAll(REGEX, "").trim();
-        text = text.substring(0, Math.min(200, text.length()));
-        return text;
+        return Optional.ofNullable(text)
+                .map(it -> it.replaceAll(REGEX, "").trim())
+                .map(s -> s.substring(0, Math.min(200, s.length())))
+                .orElse("");
     }
 
     @GetMapping
@@ -60,9 +61,9 @@ public class SearchController {
     }
 
     private SearchDTO convent(Node node) {
-        Item item = itemRepository.findById(node.getItemId())
+        var result = itemRepository.findById(node.getItemId())
+                .map(it -> nodeMapper.toSearchDTO(node, it))
                 .orElseThrow(ItemNotFoundException::new);
-        SearchDTO result = nodeMapper.toSearchDTO(node, item);
         return result.setText(text(result.getText()));
     }
 

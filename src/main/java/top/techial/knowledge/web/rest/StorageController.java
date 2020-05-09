@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.domain.Node;
-import top.techial.knowledge.domain.Storage;
 import top.techial.knowledge.repository.StorageRepository;
 import top.techial.knowledge.repository.search.NodeSearchRepository;
 import top.techial.knowledge.service.FileStorageService;
@@ -49,7 +48,7 @@ public class StorageController {
     @PostMapping("/text/{id}")
     @PreAuthorize("hasAnyAuthority(#id)")
     public ResultBean<Long> save(@RequestBody(required = false) String text, @PathVariable Long id) {
-        Node node = nodeSearchRepository.findById(id)
+        var node = nodeSearchRepository.findById(id)
                 .map(it -> nodeSearchRepository.index(it.setText(text)))
                 .orElseThrow(NodeNotFoundException::new);
         return ResultBean.ok(node.getId());
@@ -60,15 +59,13 @@ public class StorageController {
      */
     @GetMapping("/text/{id}")
     public ResultBean<String> findById(@PathVariable Long id) {
-        String s = nodeSearchRepository.findById(id)
-                .map(Node::getText)
-                .orElse(null);
+        var s = nodeSearchRepository.findById(id).map(Node::getText).orElse(null);
         return ResultBean.ok(s);
     }
 
     @PostMapping
     public Map<String, Object> save(@RequestParam MultipartFile file) {
-        String sha1 = fileStorageService.upload(file);
+        var sha1 = fileStorageService.upload(file);
         storageService.save(sha1, file);
         Map<String, Object> map = new HashMap<>();
         map.put("code", 200);
@@ -87,7 +84,7 @@ public class StorageController {
 
     @GetMapping(value = "/preview/{id}")
     public ResponseEntity<Resource> preview(@PathVariable String id) {
-        Storage storage = storageService.findById(id);
+        var storage = storageService.findById(id);
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.CONTENT_TYPE, storageService.findById(id).getContentType())
@@ -96,7 +93,7 @@ public class StorageController {
 
     @GetMapping(value = "/download/{id}")
     public ResponseEntity<Resource> download(@PathVariable String id) {
-        Storage storage = storageService.findById(id);
+        var storage = storageService.findById(id);
         return ResponseEntity.ok().header(
                 HttpHeaders.CONTENT_DISPOSITION,
                 String.format("attachment; filename=\"%s\"", storage.getOriginalFilename())

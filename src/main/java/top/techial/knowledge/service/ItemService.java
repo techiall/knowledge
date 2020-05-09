@@ -40,7 +40,7 @@ public class ItemService {
     }
 
     public void deleteByUserId(Integer id) {
-        List<Item> item = itemRepository.findAllByAuthorId(id);
+        var item = itemRepository.findAllByAuthorId(id);
         item.forEach(it -> itemRepository.deleteTmpByUserIdAndItemId(id, it.getId()));
         itemRepository.deleteByAuthorId(id);
         item.parallelStream().map(Item::getId).forEach(nodeRepository::deleteAllByItemId);
@@ -48,7 +48,7 @@ public class ItemService {
 
     public Item update(Integer id, ItemVM itemVM) {
         return itemRepository.findById(id).map(item -> {
-            Optional<ItemVM> itemVMOptional = Optional.of(itemVM);
+            var itemVMOptional = Optional.of(itemVM);
             itemVMOptional.map(ItemVM::getDescription).ifPresent(item::setDescription);
             itemVMOptional.map(ItemVM::getShare).ifPresent(item::setShare);
             itemVMOptional.map(ItemVM::getImage).ifPresent(item::setImage);
@@ -57,7 +57,7 @@ public class ItemService {
     }
 
     public Item save(Integer id, Item item) {
-        Node node = new Node().setName("root");
+        var node = new Node().setName("root");
         node = nodeService.saveItemRoot(node);
 
         item.setAuthor(userRepository.findById(id).orElseThrow(UserNotFoundException::new))

@@ -6,7 +6,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.techial.knowledge.aop.authority.FlushAuthority;
 import top.techial.knowledge.beans.ResultBean;
-import top.techial.knowledge.domain.Node;
 import top.techial.knowledge.repository.ItemRepository;
 import top.techial.knowledge.repository.RecordRepository;
 import top.techial.knowledge.repository.search.NodeSearchRepository;
@@ -52,7 +51,7 @@ public class NodeController {
 
     @GetMapping("/{id}")
     public ResultBean<NodeInfoDTO> findById(@PathVariable Long id) {
-        Node node = nodeService.findById(id);
+        var node = nodeService.findById(id);
         return ResultBean.ok(nodeMapper.toNodeInfoDTO(node));
     }
 
@@ -71,7 +70,7 @@ public class NodeController {
             @PathVariable Long id,
             @Validated(value = Update.class) @RequestBody NodeVM nodeVM
     ) {
-        Node node = nodeService.update(id, nodeVM, userPrincipal.getId());
+        var node = nodeService.update(id, nodeVM, userPrincipal.getId());
         return ResultBean.ok(nodeMapper.toNodeInfoDTO(node));
     }
 
@@ -107,8 +106,7 @@ public class NodeController {
     @GetMapping
     public ResultBean<List<NodeBaseDTO>> findByRootNode(@RequestParam Integer itemId,
                                                         @RequestParam(defaultValue = "1") Integer depth) {
-        Long rootNodeId = itemRepository.findRootNodeId(itemId)
-                .orElseThrow(ItemNotFoundException::new);
+        var rootNodeId = itemRepository.findRootNodeId(itemId).orElseThrow(ItemNotFoundException::new);
         return ResultBean.ok(nodeService.findByChildNode(rootNodeId, depth));
     }
 
