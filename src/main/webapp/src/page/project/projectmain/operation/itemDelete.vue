@@ -25,6 +25,8 @@
 
 
 <script>
+import { delItem } from '@/api/item';
+
 export default {
   data() {
     return {
@@ -45,19 +47,17 @@ export default {
       this.ItemId = val.id;
     },
     // 删除项目
-    delItem() {
-      const url = '/item/' + this.ItemId;
+    async delItem() {
       this.serveLoadFlag = true;
-      this.delete_string(url)
-        .then(() => {
-          this.$Message.success('删除成功');
-          this.delmodal = false;
-          this.serveLoadFlag = false;
-          this.$emit('delItem');
-        })
-        .catch(() => {
-          this.serveLoadFlag = false;
-        });
+      try {
+        await delItem(this.ItemId);
+        this.$Message.success('删除成功');
+        this.delmodal = false;
+        this.serveLoadFlag = false;
+        this.$emit('delItem');
+      } catch (err) {
+        this.serveLoadFlag = false;
+      }
     },
   },
 };
@@ -65,12 +65,12 @@ export default {
 
 
 <style scoped>
-.g-del-title{
+.g-del-title {
   padding: 4px 0px 20px;
   font-size: 16px;
   color: #000;
 }
-.g-footer{
+.g-footer {
   padding: 20px 0px 4px;
   text-align: right;
 }

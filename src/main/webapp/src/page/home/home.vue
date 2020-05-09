@@ -70,6 +70,7 @@
 import dropDown from '@/components/dropdown.vue';
 import LunarCalendar from 'lunar-calendar';
 import { mapMutations, mapGetters } from 'vuex';
+import { search } from '@/api/search';
 
 export default {
   components: { dropDown },
@@ -126,7 +127,7 @@ export default {
       }
     },
     // change 事件触发的函数
-    changeEvent() {
+    async changeEvent() {
       this.searchDataAsyn = this.InSearchMeg.replace(/\s+/, '');
       if (!this.searchDataAsyn) {
         this.searchData = [];
@@ -136,20 +137,14 @@ export default {
         return;
       }
       const q = this.searchDataAsyn;
-      const URL = '/search';
-      const OBJ = {
+      const params = {
         q,
         tips: true,
       };
       this.searchDataAsynFlag = true;
-      this.get(URL, OBJ)
-        .then((res) => {
-          this.searchDataAsynFlag = false;
-          this.SearchLists(res.data);
-        })
-        .catch(() => {
-          this.searchDataAsynFlag = false;
-        });
+      const data = await search(params);
+      this.SearchLists(data);
+      this.searchDataAsynFlag = false;
     },
     //下拉列表搜索显示的
     SearchLists(data) {

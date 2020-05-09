@@ -16,7 +16,9 @@
 
 
 <script>
-import forceChart from '../../../components/forceChart';
+import { getForce } from '@/api/node';
+import forceChart from '@/components/forceChart';
+
 export default {
   components: { forceChart },
   props: ['showSelectType', 'InnerHeight', 'nodeId', 'spinShow'],
@@ -34,7 +36,7 @@ export default {
   },
   methods: {
     // 获取 服务器 数据
-    getforceData() {
+    async getforceData() {
       if (this.requestDataFlag) {
         this.$emit('update:spinShow', false);
       }
@@ -42,18 +44,14 @@ export default {
         return;
       }
       this.getDataFlag = true;
-      let url = '/node/' + this.nodeId + '/graph';
-      this.get(url)
-        .then((res) => {
-          if (this.showSelectType === 'force') {
-            this.requestDataFlag = true;
-            this.$emit('update:spinShow', false);
-            this.$refs.forcechart.handlecomponentsforceData(res.data);
-          } else {
-            this.getDataFlag = false;
-          }
-        })
-        .catch(() => {});
+      const data = await getForce(this.nodeId);
+      if (this.showSelectType === 'force') {
+        this.requestDataFlag = true;
+        this.$emit('update:spinShow', false);
+        this.$refs.forcechart.handlecomponentsforceData(data);
+      } else {
+        this.getDataFlag = false;
+      }
     },
     forceCallback(d) {
       if (d.Tid === this.nodeId) return;

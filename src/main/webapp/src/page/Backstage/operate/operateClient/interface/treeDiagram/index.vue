@@ -10,7 +10,9 @@
 </template>
 
 <script>
+import { getTree } from '@/api/node';
 import treeChart from '@/components/treeChart';
+
 export default {
   components: { treeChart },
   props: ['treeNode', 'showSelectNum', 'InnerHeight', 'spinShow'],
@@ -23,17 +25,13 @@ export default {
   },
   methods: {
     // 获取服务器数据
-    getTreeData() {
+    async getTreeData() {
       if (this.getDataFlag) return;
       this.$emit('update:spinShow', true);
       this.getDataFlag = true;
-      let url = '/node/' + this.treeNode.id + '/link';
-      this.get(url)
-        .then((res) => {
-          this.$emit('update:spinShow', false);
-          this.$refs.treechart.handletreeData(res.data);
-        })
-        .catch(() => {});
+      const data = await getTree(this.treeNode.id);
+      this.$emit('update:spinShow', false);
+      this.$refs.treechart.handletreeData(data);
     },
 
     //设置 数据重新获取

@@ -38,6 +38,7 @@
 
 
 <script>
+import { search } from '@/api/search';
 import dropDown from '@/components/dropdown';
 import { mapMutations, mapGetters } from 'vuex';
 
@@ -84,7 +85,7 @@ export default {
       }
     },
     // change 事件触发的函数
-    changeEvent() {
+    async changeEvent() {
       this.searchDataAsyn = this.InSearchMeg.replace(/\s+/, '');
       if (!this.searchDataAsyn) {
         this.searchData = '';
@@ -94,20 +95,14 @@ export default {
         return;
       }
       const q = this.searchDataAsyn;
-      const URL = '/search';
-      const OBJ = {
+      const params = {
         q,
         tips: true,
       };
       this.searchDataAsynFlag = true;
-      this.get(URL, OBJ)
-        .then((res) => {
-          this.searchDataAsynFlag = false;
-          this.SearchLists(res.data);
-        })
-        .catch(() => {
-          this.searchDataAsynFlag = false;
-        });
+      const data = await search(params);
+      this.searchDataAsynFlag = false;
+      this.SearchLists(data);
     },
     //下拉列表搜索显示的
     SearchLists(data) {

@@ -8,7 +8,7 @@
 <template>
   <div class="know-manage-split" :style="{height:ClientHeight}">
     <Spin size="large" fix v-if="loadingFlag" class="g-lodding"></Spin>
-    <Split v-if="showErrorFlag" v-model="splitinit" :min="splitMin" :max="splitMax" >
+    <Split v-if="showErrorFlag" v-model="splitinit" :min="splitMin" :max="splitMax">
       <div slot="left" class="know-manage-split-pane">
         <tree-list
           ref="treelist"
@@ -50,6 +50,7 @@ import treeList from './treeInterface/treelist';
 // 导入 操作 模板
 import operateMain from './operate/operateMain';
 import { mapState } from 'vuex';
+import { getItemDetails } from '@/api/item';
 
 export default {
   components: { treeList, operateMain },
@@ -127,32 +128,29 @@ export default {
       }
     },
     // 获取项目
-    getItem() {
-      const url = '/item/' + this.itemId;
-      this.get(url)
-        .then((res) => {
-          this.loadingFlag = false;
-          const data = res.data;
-          const user = data.author.userName;
-          const userWeb = this.$route.params.user;
-          if (user === userWeb) {
-            this.$emit('sendItem', data.name);
-            this.setTitleLabel(data.name);
-            if (this.user.userName === user) {
-              this.itemExitFlag = true;
-              this.$refs.treelist.TLCallback(15);
-            } else if (data.share) {
-              this.itemExitFlag = false;
-              this.$refs.treelist.TLCallback(15);
-            }
-          } else {
-            this.showErrorFlag = false;
+    async getItem() {
+      try {
+        const data = await getItemDetails(this.itemId);
+        this.loadingFlag = false;
+        const user = data.author.userName;
+        const userWeb = this.$route.params.user;
+        if (user === userWeb) {
+          this.$emit('sendItem', data.name);
+          this.setTitleLabel(data.name);
+          if (this.user.userName === user) {
+            this.itemExitFlag = true;
+            this.$refs.treelist.TLCallback(15);
+          } else if (data.share) {
+            this.itemExitFlag = false;
+            this.$refs.treelist.TLCallback(15);
           }
-        })
-        .catch(() => {
+        } else {
           this.showErrorFlag = false;
-          this.loadingFlag = false;
-        });
+        }
+      } catch (err) {
+        this.showErrorFlag = false;
+        this.loadingFlag = false;
+      }
     },
     // 设置title标签
     setTitleLabel(title) {

@@ -14,7 +14,6 @@
         @click="TLCallback(4)"
         :class="{'know-tree-header-button-no-selete':ctrlButtonFlag}"
       >
-        <!-- <Icon type="md-add-circle" size="20" /> -->
         <div class="g-action-add g-action"></div>
         <div class="g-button-tip">添加</div>
       </div>
@@ -24,7 +23,6 @@
         :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag}"
         @click="TLCallback(5)"
       >
-        <!-- <Icon type="ios-close-circle" size="20" /> -->
         <div class="g-action-del g-action"></div>
         <div class="g-button-tip">删除</div>
       </div>
@@ -34,7 +32,6 @@
         :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag||ctrlButtonFlag}"
         @click="TLCallback(6)"
       >
-        <!-- <Icon type="ios-create" size="22" /> -->
         <div class="g-action-exit g-action"></div>
         <div class="g-button-tip">编辑</div>
       </div>
@@ -49,7 +46,7 @@
       :treeNode="treeNode"
       :itemId="itemId"
       @addNameS="TLCallback"
-    ></modal-a>
+    />
     <modal-d
       :DelModalFlag="buttonDelFlag"
       :selectNodeName="selectNodeName"
@@ -57,13 +54,14 @@
       :selectNodes="selectNodes"
       :itemId="itemId"
       @addNameS="TLCallback"
-    ></modal-d>
+    />
     <modal-e
       :ExitModalFalg="buttonExitFlag"
       :selectNodeName="selectNodeName"
       :treeNodeId="treeNode.id"
+      :itemId="itemId"
       @ExitNameS="TLCallback"
-    ></modal-e>
+    />
   </div>
 </template>
 
@@ -132,7 +130,7 @@ export default {
         3: () => {
           this.treeZ.ExitName = val;
           this.selectNodeName = val;
-          this.$emit('MangageCallback', 3, Math.random());
+          // this.$emit('MangageCallback', 3, Math.random());
         },
         // 点击 添加按键
         4: () => {
@@ -182,16 +180,20 @@ export default {
         12: () => {
           this.treeZ.delNodes = val;
         },
-        // 删除 多节点 包括选中 treeNode 
+        // 删除 多节点 包括选中 treeNode
         // 取消高亮触发的事件
         13: () => {
           this.selectNodeName = '';
           this.treeNode = '';
+          this.ctrlButtonFlag = false;
           this.$emit('MangageCallback', 1, '');
           this.$emit('MangageCallback', 3, Math.random());
         },
         // 名称 改变 details发送
         14: () => {
+          this.treeZ.ExitName = val;
+          this.selectNodeName = val;
+          this.$emit('MangageCallback', 3, Math.random());
           this.$emit('MangageCallback', 4, val);
         },
         // 树数据请求
@@ -226,6 +228,7 @@ export default {
   padding: 5px 10px 3px 10px;
   height: 40px;
   line-height: 40px;
+  color: #000;
 }
 .know-tree-header-button-title {
   display: inline-block;

@@ -60,6 +60,7 @@
 <script>
 import { mapMutations } from 'vuex';
 import { patchUser } from '@/api/user';
+import { uploadFile } from '@/api/storage';
 
 export default {
   data() {
@@ -110,7 +111,7 @@ export default {
           this.disabledFlag = true;
         },
         // 上传 照片
-        4: () => {
+        4: async () => {
           const file = this.$refs.MMButton.files[0];
           const reg = /^image/;
           if (!file || !reg.test(file.type)) {
@@ -118,20 +119,18 @@ export default {
           }
           this.ImagesName = file.name;
           this.uploadStatus = 2;
-          let data = new FormData();
-          let url = '/storage';
-          data.append('file', file);
-          this.post_progress(url, data, (res) => {
-            let loaded = res.loaded;
-            let total = res.total;
-            this.precent = (loaded / total) * 100;
-          })
-            .then((res) => {
-              this.showImgFlag = 2;
-              this.srcImage = res.link;
-              this.disabledFlag = false;
-            })
-            .catch(() => {});
+          let Filedata = new FormData();
+          Filedata.append('file', file);
+          const link = await uploadFile(Filedata, {
+            onUploadProgress: (res) => {
+              let loaded = res.loaded;
+              let total = res.total;
+              this.precent = (loaded / total) * 100;
+            },
+          });
+          this.showImgFlag = 2;
+          this.srcImage = link;
+          this.disabledFlag = false;
         },
         // 展示上传照片展示位
         5: () => {

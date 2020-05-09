@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import { getForce } from '@/api/node';
+
 // 力导向组件
 import forceChart from '@/components/forceChart';
 export default {
@@ -25,19 +27,16 @@ export default {
   },
   methods: {
     // 获取 服务器 数据
-    getforceData() {
+    async getforceData() {
       if (this.getDataFlag) return;
       this.$emit('update:spinShow', true);
       this.getDataFlag = true;
-      let url = '/node/' + this.treeNode.id + '/graph';
-      this.get(url)
-        .then((res) => {
-          this.$emit('update:spinShow', false);
-          if (this.showSelectNum === 2) {
-            this.$refs.forcechart.handlecomponentsforceData(res.data);
-          }
-        })
-        .catch(() => {});
+      const data = await getForce(this.treeNode.id);
+      // let url = '/node/' + this.treeNode.id + '/graph';
+      this.$emit('update:spinShow', false);
+      if (this.showSelectNum === 2) {
+        this.$refs.forcechart.handlecomponentsforceData(data);
+      }
     },
     //从新获取数据
     setForce() {

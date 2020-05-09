@@ -19,10 +19,12 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { getNode } from '@/api/node';
 // 导入头
 import searchHeader from '@/components/searchHeader.vue';
 import nodeSelect from './nodeshowButton.vue';
 import nodeContent from './nodeContent.vue';
+
 export default {
   components: { searchHeader, nodeSelect, nodeContent },
   data() {
@@ -53,9 +55,8 @@ export default {
         this.nodeId = '';
         document.title = `Knowledge Graph`;
         const nodeID = parseInt(NodeID, 10);
-        const URL = `/node/${nodeID}`;
         try {
-          const { data } = await this.get(URL);
+          const  data  = await getNode(nodeID);
           this.nodeName = data.name;
           this.nodeId = nodeID;
           this.setTitleLabel(data.name);

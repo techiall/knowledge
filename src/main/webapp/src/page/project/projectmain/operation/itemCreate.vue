@@ -101,17 +101,18 @@ export default {
     },
     // 向服务器发送数据
     pushServer() {
-      const obj = {
-        share: this.submitMsg.share === 'true' ? true : false,
+      const params = {
+        share: this.submitMsg.share === 'true',
         name: this.submitMsg.name,
         description: this.submitMsg.description,
       };
       this.serveLoadFlag = true;
-      itemAdd(obj)
+      itemAdd(params)
         .then((data) => {
+          this.modalFlag = false;
+          this.serveLoadFlag = false;
           this.$emit('addItem', data);
           this.$Message.success('创建成功');
-          this.modalFlag = false;
         })
         .catch(() => {
           this.serveLoadFlag = false;

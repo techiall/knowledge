@@ -77,6 +77,7 @@
 
 
 <script>
+import { keepItem } from '@/api/item';
 import { mapState } from 'vuex';
 
 export default {
@@ -172,30 +173,27 @@ export default {
       };
     },
     // 保存设置 并向服务器发送数据
-    keepSetting() {
-      const url = '/item/' + this.submitMsg.id;
-      const obj = {
+    async keepSetting() {
+      const params = {
         share: this.submitMsg.share === 'true' ? true : false,
         name: this.submitMsg.name,
         description: this.submitMsg.description,
       };
       this.serveLoadFlag = true;
-      this.put_json(url, obj)
-        .then((res) => {
-          const data = res.data;
-          this.$Message.success('保存成功');
-          this.oldMsg = {
-            name: data.name,
-            share: data.share ? 'true' : 'false',
-            description: data.description,
-          };
-          this.allowFlag = true;
-          this.$emit('updataItem', data);
-          this.serveLoadFlag = false;
-        })
-        .catch(() => {
-          this.serveLoadFlag = false;
-        });
+      try {
+        const data = await keepItem(this.submitMsg.id, params);
+        this.$Message.success('保存成功');
+        this.oldMsg = {
+          name: data.name,
+          share: data.share ? 'true' : 'false',
+          description: data.description,
+        };
+        this.allowFlag = true;
+        this.$emit('updataItem', data);
+        this.serveLoadFlag = false;
+      } catch (err) {
+        this.serveLoadFlag = false;
+      }
     },
   },
 };

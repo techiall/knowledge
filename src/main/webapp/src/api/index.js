@@ -33,10 +33,10 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => {
     // 对响应数据做点什么
-    const { data, code, msg } = response.data;
+    const { data, code, msg, link } = response.data;
 
     if (code === 200 && msg === 'OK') {
-      return data;
+      return data || link;
     } else {
       showStatus();
       return Promise.reject(2004);
@@ -54,7 +54,7 @@ const get = (url, params, config = {}) => api.get(url, { ...config, params });
 // 处理 post 请求
 const post = (url, params, config = {}) => api.post(url, params, config);
 // 处理 delete 请求，为了防止和关键词delete冲突，方法名定义为deletes
-const deletes = (url, params, config = {}) => api.delete(url, { ...config, params });
+const deletes = (url, params, config = {}) => api.delete(url, { ...config, data: params });
 // 处理 put 请求
 const put = (url, params, config = {}) => api.put(url, params, config);
 // 处理 patch 请求

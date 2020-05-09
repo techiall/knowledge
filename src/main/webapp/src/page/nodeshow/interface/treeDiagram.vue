@@ -16,7 +16,9 @@
 
 
 <script>
-import treeChart from '../../../components/treeChart';
+import { getTree } from '@/api/node';
+import treeChart from '@/components/treeChart';
+
 export default {
   components: { treeChart },
   props: ['showSelectType', 'InnerHeight', 'nodeId', 'spinShow'],
@@ -34,7 +36,7 @@ export default {
   },
   methods: {
     // 获取 服务器 数据
-    getforceData() {
+    async getforceData() {
       if (this.requestDataFlag) {
         this.$emit('update:spinShow', false);
       }
@@ -42,18 +44,14 @@ export default {
         return;
       }
       this.getDataFlag = true;
-      let url = `/node/${this.nodeId}/link`;
-      this.get(url)
-        .then((res) => {
-          if (this.showSelectType === 'tree') {
-            this.requestDataFlag = true;
-            this.$emit('update:spinShow', false);
-            this.$refs.treechart.handletreeData(res.data);
-          } else {
-            this.getDataFlag = false;
-          }
-        })
-        .catch(() => {});
+      const data = await getTree(this.nodeId);
+      if (this.showSelectType === 'tree') {
+        this.requestDataFlag = true;
+        this.$emit('update:spinShow', false);
+        this.$refs.treechart.handletreeData(data);
+      } else {
+        this.getDataFlag = false;
+      }
     },
   },
   watch: {

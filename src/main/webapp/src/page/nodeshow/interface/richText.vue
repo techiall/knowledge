@@ -11,6 +11,7 @@
 
 
 <script>
+import { getNodeText } from '@/api/storage';
 import Prism from 'prismjs';
 
 export default {
@@ -27,7 +28,7 @@ export default {
   },
   methods: {
     // 获取 服务器 数据
-    getforceData() {
+    async getforceData() {
       if (this.requestDataFlag) {
         this.$emit('update:spinShow', false);
       }
@@ -35,18 +36,14 @@ export default {
         return;
       }
       this.getDataFlag = true;
-      let url = '/storage/text/' + this.nodeId;
-      this.get(url)
-        .then((res) => {
-          if (this.showSelectType === 'text') {
-            this.requestDataFlag = true;
-            this.$emit('update:spinShow', false);
-            this.handlerTextData(res.data);
-          } else {
-            this.getDataFlag = false;
-          }
-        })
-        .catch(() => {});
+      const data = await getNodeText(this.nodeId);
+      if (this.showSelectType === 'text') {
+        this.requestDataFlag = true;
+        this.$emit('update:spinShow', false);
+        this.handlerTextData(data);
+      } else {
+        this.getDataFlag = false;
+      }
     },
     //处理富文本数据
     handlerTextData(data) {

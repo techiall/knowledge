@@ -1,4 +1,6 @@
 @import url("./font.css");
+@import url("./modal.css");
+@import url("./details.css");
 
 .scroll::-webkit-scrollbar-thumb,
 textarea::-webkit-scrollbar-thumb {

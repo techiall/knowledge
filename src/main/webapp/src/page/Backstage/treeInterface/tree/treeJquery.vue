@@ -15,6 +15,8 @@
 import $ from '@/assets/jquery-vendor';
 import 'ztree';
 import 'ztree/css/metroStyle/metroStyle.css';
+import { getRootNode, getChildNode } from '@/api/node';
+
 export default {
   props: ['treelistVal', 'itemId'],
   data() {
@@ -90,28 +92,23 @@ export default {
       }
     },
     //获取服务器数据
-    getTreeData() {
-      const url = '/node';
-      const obj = {
+    async getTreeData() {
+      const data = await getRootNode({
         itemId: this.itemId,
-      };
-      this.get(url, obj)
-        .then((res) => {
-          this.HandleData(res.data);
-        })
-        .catch(() => {});
+      });
+      this.HandleData(data);
     },
     // 请求数据处理
     HandleData(data) {
       let Arr = [];
       this.$emit('selectNode', 9, data.length);
       data.forEach((item) => {
-        let obj = {
+        let params = {
           id: item.id,
           name: item.name,
           isParent: item.child,
         };
-        Arr.push(obj);
+        Arr.push(params);
       });
       this.createTree(Arr);
     },
@@ -144,29 +141,24 @@ export default {
       this.$emit('selectNode', 2, treeNode);
     },
     // 双击 节点 展开 节点 函数
-    showChildClik(treeId, treeNode, callback, parameter) {
+    async showChildClik(treeId, treeNode, callback, parameter) {
       if (!treeNode) return;
       if (!treeNode.isParent || treeNode.asyncParent) return 1;
       //异步加载 防止重复加载
       treeNode.asyncParent = true;
-      let url = '/node/' + treeNode.id + '/child';
-      this.get(url)
-        .then((res) => {
-          let data = res.data;
-          let Arr = [];
-          data.forEach((item) => {
-            Arr.push({
-              id: item.id,
-              name: item.name,
-              isParent: item.child,
-            });
-          });
-          this.zTree.addNodes(treeNode, Arr, false);
-          if (callback) {
-            callback(...parameter);
-          }
-        })
-        .catch(() => {});
+      const data = await getChildNode(treeNode.id);
+      let Arr = [];
+      data.forEach((item) => {
+        Arr.push({
+          id: item.id,
+          name: item.name,
+          isParent: item.child,
+        });
+      });
+      this.zTree.addNodes(treeNode, Arr, false);
+      if (callback) {
+        callback(...parameter);
+      }
     },
     // 点击 节点 后
     zTreeOnClick(event, treeId, treeNode) {

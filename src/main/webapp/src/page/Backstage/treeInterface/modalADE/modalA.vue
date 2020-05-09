@@ -6,29 +6,38 @@
 
 
 <template>
-  <Modal v-model="modalFlag" width="500" :mask-closable="false">
-    <p slot="header" class="know-modal-header">
-      <Icon type="ios-information-circle"></Icon>
-      <span>&nbsp;&nbsp;添&nbsp;加&nbsp;节&nbsp;点</span>
-    </p>
-    <div class="know-modal-text">
-      <p>创建名称&nbsp;:</p>
-      <p>
-        <Input v-model="inputName" type="text" ref="modalAddInput" />
-      </p>
-      <p class="Tips">
-        按&nbsp;
-        <strong>ctrl&nbsp;+&nbsp;enter</strong>&nbsp;接受并关闭面板
-      </p>
+  <Modal
+    v-model="modalFlag"
+    width="500"
+    :mask-closable="false"
+    :footer-hide="true"
+    class="b-modal-wrap"
+  >
+    <div class="b-modal-header color-blue">
+      <Icon type="ios-information-circle" />
+      <span>添加节点</span>
     </div>
-    <div slot="footer">
-      <Button type="text" @click="modalFlag=false">取&nbsp;消</Button>
-      <Button type="primary" @click.stop="userAddfun">添&nbsp;加</Button>
+    <div class="b-modal-input-wrap">
+      <div class="b-modal-input-row">节点名称 :</div>
+      <div class="b-modal-input-row">
+        <Input v-model="inputName" type="text" ref="modalAddInput" />
+      </div>
+      <div class="b-modal-input-row b-modal-tips">
+        <span>按</span>
+        <strong class="b-modal-span">ctrl + enter</strong>
+        <span>接受并关闭面板</span>
+      </div>
+    </div>
+    <div class="b-modal-footer">
+      <Button type="text" @click="modalFlag=false">取 消</Button>
+      <Button type="primary" :loading="loadingFlag" @click.stop="userAddfun">添 加</Button>
     </div>
   </Modal>
 </template>
 
 <script>
+import { createNode } from '@/api/node';
+
 export default {
   props: ['AddModalFlag', 'treeNode', 'itemId'],
   data() {
@@ -37,38 +46,37 @@ export default {
       modalFlag: false,
       // input 输入的名称
       inputName: '',
+      // 设置按钮为加载中状态
+      loadingFlag: false,
     };
   },
   methods: {
     // 点击 添加 节点
-    userAddfun() {
-      this.modalFlag = false;
-      let name = this.inputName.replace(/^\s+|\s+$/g, '');
-      if (name === '') {
-        return;
-      }
-      let message = '添加节点，节点名称为 [' + name + ']';
-      let obj = {
+    async userAddfun() {
+      const name = this.inputName.replace(/\s+/g, '');
+      if (!name) return;
+      this.loadingFlag = true;
+      const message = `添加节点，节点名称为 [${name}]`;
+      const params = {
         name,
-        parentId: this.treeNode === '' ? null : this.treeNode.id,
+        parentId: this.treeNode ? this.treeNode.id : null,
         itemId: this.itemId,
         record: {
           message: JSON.stringify({ message, name }),
           operator: 'ADD_NODE',
         },
       };
-      this.post_json('/node', obj)
-        .then((res) => {
-          if (res.data.new) {
-            this.$emit('addNameS', 7, res.data.node);
-          } else {
-            this.$Message.warning({
-              content: '您添加的节点已经存在,请不要重复添加',
-              duration: 5,
-            });
-          }
-        })
-        .catch(() => {});
+      const data = await createNode(params);
+      if (data.new) {
+        this.$emit('addNameS', 7, data.node);
+        this.modalFlag = false;
+      } else {
+        this.$Message.warning({
+          content: '请勿重复添加相同名称节点',
+          duration: 5,
+        });
+        this.loadingFlag = false;
+      }
     },
     //监听 ctrl + ender 按键 执行函数
     upCtrlEnter(e) {
@@ -82,6 +90,7 @@ export default {
     AddModalFlag() {
       this.modalFlag = true;
       this.inputName = '';
+      this.loadingFlag = false;
       this.$nextTick(() => {
         this.$refs.modalAddInput.focus();
       });
@@ -98,12 +107,3 @@ export default {
 };
 </script>
 
-<style  scoped>
-.know-modal-header {
-  text-align: center;
-  color: #2d8cf0;
-}
-.Tips {
-  color: #c5c8ce;
-}
-</style>

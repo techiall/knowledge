@@ -1,0 +1,34 @@
+.b-modal-wrap .ivu-modal-close {
+  display: none;
+}
+.b-modal-header {
+  text-align: center;
+  font-size: 16px;
+  letter-spacing: 0.5em;
+}
+.b-modal-tips {
+  color: #000000aa;
+}
+.b-modal-input-wrap {
+  margin: 10px 0;
+  color: #000;
+}
+.b-modal-input-row {
+  margin: 5px 0;
+  font-size: 14px;
+}
+.b-modal-span {
+  margin: 0 5px;
+}
+.b-modal-footer {
+  text-align: right;
+}
+.b-modal-footer button:first-child {
+  margin: 0 10px 0 0;
+}
+.color-blue {
+  color: #2d8cf0;
+}
+.color-red {
+  color: #f60;
+}

@@ -130,8 +130,8 @@ export default {
     },
     // 创建成功 添加数据
     addItem(val) {
+      if (this.itemData.length >= 4) this.itemData.pop();
       this.itemData.unshift(val);
-      this.itemData.pop();
       this.getServeShareItem();
     },
     // 修改数据

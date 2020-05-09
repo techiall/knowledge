@@ -18,7 +18,7 @@
       :itemExitFlag="itemExitFlag"
       @SClientCallback="SClientCallback"
       class="know-Showclient-default"
-    ></details-show>
+    />
     <force-diagram
       v-show="showSelectNum === 2"
       ref="forcediagram"
@@ -26,9 +26,8 @@
       :treeNode="treeNode"
       :showSelectNum="showSelectNum"
       :spinShow.sync="spinShow"
-      :itemId="itemId"
       class="know-Showclient-default"
-    ></force-diagram>
+    />
     <tree-diagram
       v-show="showSelectNum === 3"
       ref="treediagram"
@@ -37,7 +36,7 @@
       :showSelectNum="showSelectNum"
       :spinShow.sync="spinShow"
       class="know-Showclient-default"
-    ></tree-diagram>
+    />
     <journal-show
       v-show="showSelectNum === 4"
       v-if="itemExitFlag"
@@ -47,7 +46,7 @@
       :InnerHeight="InnerHeight"
       :spinShow.sync="spinShow"
       class="know-Showclient-default"
-    ></journal-show>
+    />
     <rich-text
       v-show="showSelectNum === 5"
       :InnerHeight="InnerHeight"
@@ -55,21 +54,22 @@
       :showSelectNum="showSelectNum"
       :spinShow.sync="spinShow"
       :itemExitFlag="itemExitFlag"
-    ></rich-text>
+    />
   </div>
 </template>
 
 <script>
 //导入详情界面
-import detailsShow from './interface/details';
+import detailsShow from './interface/details/index.vue';
 //导入 日志
-import journalShow from './interface/journal';
+import journalShow from './interface/journal/index.vue';
 //导入 树图
-import treeDiagram from './interface/treeDiagram';
+import treeDiagram from './interface/treeDiagram/index.vue';
 //导入力导图
-import forceDiagram from './interface/forceDiagram';
+import forceDiagram from './interface/forceDiagram/index.vue';
 //导入富文本
-import richText from './interface/richText';
+import richText from './interface/richText/index.vue';
+
 export default {
   props: ['treeNode', 'showSelectNum', 'InnerHeight', 'itemId', 'itemExitFlag'],
   components: { detailsShow, journalShow, treeDiagram, forceDiagram, richText },
@@ -104,7 +104,7 @@ export default {
         },
         // 名称 改变 details 发送数据
         5: () => {
-          this.$refs.detailsShow.putServerName(val);
+          this.$refs.detailsShow.setNodeName(val);
         },
       };
       statusMap[type]();

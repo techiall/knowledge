@@ -6,7 +6,7 @@
 
 
 <template>
-  <div class="know-s-c ">
+  <div class="know-s-c">
     <Spin size="large" fix v-show="loadingSpin" />
     <div class="know-s-c-m">
       <content-mheader
@@ -31,7 +31,9 @@
 
 
 <script>
+import { search } from '@/api/search';
 import contentMheader from './contentMheader';
+
 export default {
   components: { contentMheader },
   data() {
@@ -58,24 +60,20 @@ export default {
   },
   methods: {
     // 请求 服务器数据
-    getServerData() {
-      const url = '/search';
-      const obj = {
+    async getServerData() {
+      const startTime = new Date().getTime();
+      const params = {
         size: this.pageSize,
         q: this.InSearchMeg.substr(0, 32),
         page: this.pageNum - 1,
       };
-      const startTime = new Date().getTime();
-      if (this.sort) obj.sort = this.sort;
+      if (this.sort) params.sort = this.sort;
       this.loadingSpin = true;
-      this.get(url, obj)
-        .then((res) => {
-          this.loadingSpin = false;
-          this.findTime = new Date().getTime() - startTime;
-          this.handleServerData(res.data);
-          this.reqSuccessFlag = Math.random();
-        })
-        .catch(() => {});
+      const data = await search(params);
+      this.loadingSpin = false;
+      this.findTime = new Date().getTime() - startTime;
+      this.handleServerData(data);
+      this.reqSuccessFlag = Math.random();
     },
     // 处理请求的数据
     handleServerData(data) {
@@ -86,11 +84,10 @@ export default {
         this.reqShowData.push({
           info: item.info,
           nodeId: item.nodeId,
-          labels: item.labels === null ? undefined : item.labels.labels,
-          property:
-            item.property === null
-              ? {}
-              : this.handleServerProperty(item.property.property),
+          labels: item.labels ? item.labels.labels : undefined,
+          property: item.property
+            ? this.handleServerProperty(item.property.property)
+            : {},
           text: item.text,
           nodeName: item.nodeName,
           Itemsource: item.nodeItemName,

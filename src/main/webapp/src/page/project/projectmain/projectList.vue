@@ -9,30 +9,32 @@
   <div class="g-warp">
     <item-header :totalElements="totalElements" />
     <loadAnimation v-if="!itemload" />
-    <item-card
-      :itemData="itemData"
-      status="true"
-      v-if="getShowType==='card'"
-      @selectItem="selectSetting"
-      @selectDelete="selectDelete"
-    >
-      <div class="g-card-create cup dis-fixc" @click="createItem">
-        <Icon type="md-add" class="g-card-i" />
-        <div class="g-card-Ctitle">创建项目</div>
-      </div>
-    </item-card>
-    <item-list
-      :itemData="itemData"
-      status="true"
-      v-if="getShowType==='list'"
-      @on-setting="selectSetting"
-      @on-delete="selectDelete"
-    >
-      <div class="g-list-create cup" @click="createItem">
-        <Icon type="md-add" class="g-list-i" />
-        <div class="g-list-Ctitle">创建项目</div>
-      </div>
-    </item-list>
+    <div class="g-body" ref="gBody">
+      <item-card
+        :itemData="itemData"
+        status="true"
+        v-if="getShowType==='card'"
+        @selectItem="selectSetting"
+        @selectDelete="selectDelete"
+      >
+        <div class="g-card-create cup dis-fixc" @click="createItem">
+          <Icon type="md-add" class="g-card-i" />
+          <div class="g-card-Ctitle">创建项目</div>
+        </div>
+      </item-card>
+      <item-list
+        :itemData="itemData"
+        status="true"
+        v-if="getShowType==='list'"
+        @on-setting="selectSetting"
+        @on-delete="selectDelete"
+      >
+        <div class="g-list-create cup" @click="createItem">
+          <Icon type="md-add" class="g-list-i" />
+          <div class="g-list-Ctitle">创建项目</div>
+        </div>
+      </item-list>
+    </div>
     <item-setting ref="modalS" @updataItem="updataItem" />
     <item-delete ref="modalD" @delItem="delItem" />
     <item-create ref="modalC" @addItem="addItem" />
@@ -121,6 +123,9 @@ export default {
 
 
 <style scoped>
+.g-warp,.g-body{
+  height: 100%;
+}
 .g-list-create {
   display: flex;
   align-items: center;

@@ -6,36 +6,39 @@
 
 
 <template>
-  <Modal v-model="modalFlag" width="500" :mask-closable="false">
-    <p slot="header" class="know-modal-header">
-      <Icon type="ios-information-circle"></Icon>
-      <span>&nbsp;&nbsp;删&nbsp;除&nbsp;节&nbsp;点</span>
-    </p>
-    <div class="know-modal-text">
-      <p v-show="selectNodesFlag">
-        你确定要&nbsp;&nbsp;
-        <strong>删除</strong>&nbsp;&nbsp;此节点吗?
-      </p>
-      <p v-show="!selectNodesFlag">
-        你确定要&nbsp;&nbsp;
-        <strong>删除</strong>&nbsp;&nbsp;这些节点吗?
-      </p>
-      <p class="know-modal-text-center" v-show="selectNodesFlag">{{selectNodeName}}</p>
-      <p
-        class="know-modal-text-nodes"
-        v-show="!selectNodesFlag"
-        v-for="(item,index) in Nodes"
-        :key="index"
-      >{{index + 1}}.&nbsp;{{item}}</p>
+  <Modal
+    v-model="modalFlag"
+    width="500"
+    :mask-closable="false"
+    :footer-hide="true"
+    class="b-modal-wrap"
+  >
+    <div class="b-modal-header color-red">
+      <Icon type="ios-information-circle" />
+      <span>删除节点</span>
     </div>
-    <div slot="footer">
-      <Button type="text" @click="modalFlag=false">取&nbsp;消</Button>
-      <Button type="error" @click.stop="userDelfun">删&nbsp;除</Button>
+    <div class="b-modal-input-wrap">
+      <div>
+        <span>你确定要</span>
+        <strong class="b-modal-span color-red">删除</strong>
+        <span>{{selectNodesFlag?'此':'这些'}}节点吗?</span>
+      </div>
+      <div>节点名称：</div>
+      <div v-if="selectNodesFlag" class="g-text center">{{selectNodeName}}</div>
+      <div v-else class="g-nodes-wrap">
+        <div v-for="(item) in Nodes" :key="item" class="g-nodes-row">{{item}}</div>
+      </div>
+    </div>
+    <div class="b-modal-footer">
+      <Button type="text" @click="modalFlag=false">取 消</Button>
+      <Button type="error" :loading="loadingFlag" @click.stop="userDelfun">删 除</Button>
     </div>
   </Modal>
 </template>
 
 <script>
+import { delNode, delNodes } from '@/api/node';
+
 export default {
   props: [
     'DelModalFlag',
@@ -51,27 +54,27 @@ export default {
       // 多节点按下 标志位
       selectNodesFlag: false,
       // 多节点
-      Nodes: '',
+      Nodes: [],
       // 多节点 id
-      NodeId: '',
+      NodeId: [],
+      // 设置按钮为加载中状态
+      loadingFlag: false,
     };
   },
   watch: {
     //监听 treelist 传过来的标志符
     DelModalFlag() {
       this.modalFlag = true;
-      let NodesLen = this.selectNodes.length;
-      // 判断 是ctrl 按下 还是 单个节点
+      this.loadingFlag = false;
+      this.Nodes = [];
+      this.NodeId = [];
+      const NodesLen = this.selectNodes.length;
       if (NodesLen) {
-        // 多节点
-        let arr = [];
-        let arrId = [];
         this.selectNodes.forEach((item) => {
-          arr.push(item.name);
-          arrId.push(item.id);
+          this.Nodes.push(item.name);
+          this.NodeId.push(item.id);
         });
-        this.NodeId = arrId;
-        this.Nodes = arr.sort(this.sortId);
+        this.Nodes.sort(this.sortId);
         this.selectNodesFlag = false;
       } else {
         this.selectNodesFlag = true;
@@ -88,30 +91,26 @@ export default {
   },
   methods: {
     //点击 删除 按键
-    userDelfun() {
-      this.modalFlag = false;
+    async userDelfun() {
+      this.loadingFlag = true;
       if (this.selectNodesFlag) {
-        let url = '/node/' + this.treeNodeId;
-        let obj = {
-          itemId: this.itemId,
-        };
-        this.delete_string(url, obj)
-          .then((res) => {
-            if (res.data) {
-              this.$emit('addNameS', 8, Math.random());
-            } else {
-              this.$Message.error('删除失败');
-            }
-          })
-          .catch(() => {});
+        const data = await delNode(this.treeNodeId, { itemId: this.itemId });
+        if (data) {
+          this.$emit('addNameS', 8, Math.random());
+          this.modalFlag = false;
+        } else {
+          this.$Message.error('删除失败');
+          this.loadingFlag = false;
+        }
       } else {
-        let url = '/node?itemId=' + this.itemId;
-        let obj = this.NodeId;
-        this.delete_json(url, obj)
-          .then(() => {
-            this.$emit('addNameS', 12, Math.random());
-          })
-          .catch(() => {});
+        const data = await delNodes(this.itemId, this.NodeId);
+        if (data) {
+          this.$emit('addNameS', 12, Math.random());
+          this.modalFlag = false;
+        } else {
+          this.$Message.error('删除失败');
+          this.loadingFlag = false;
+        }
       }
     },
     //监听 ctrl + ender 按键 执行函数
@@ -131,23 +130,22 @@ export default {
   },
 };
 </script>
-
-<style  scoped>
-.know-modal-header {
-  color: #f60;
-  text-align: center;
-  user-select: none;
+<style scoped>
+.g-text {
+  font-size: 14px;
 }
-.know-modal-text-center {
-  text-align: center;
-  font-size: 16px;
-  font-weight: bold;
+.g-nodes-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  counter-reset: num;
 }
-.know-modal-text-nodes {
-  display: inline-block;
-  margin-right: 10px;
+.g-nodes-row {
+  margin: 5px 5px 5px 0;
+  color: #d63447;
 }
-.Tips {
-  color: #c5c8ce;
+.g-nodes-row:before {
+  counter-increment: num;
+  content: counter(num) '. ';
+  color: #000;
 }
 </style>

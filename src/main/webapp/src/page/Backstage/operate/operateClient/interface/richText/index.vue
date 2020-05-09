@@ -14,6 +14,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { getNodeText, updateNodeText, uploadFile } from '@/api/storage';
 import Prism from 'prismjs';
 
 export default {
@@ -73,58 +74,46 @@ export default {
       this.getExitTextData();
     },
     //获取服务器数据
-    getExitTextData() {
-      let url = '/storage/text/' + this.treeNode.id;
-      this.get(url)
-        .then((res) => {
-          this.$emit('update:spinShow', false);
-          if (res.data) {
-            this.content = res.data;
-            if (!this.itemExitFlag) {
-              this.$nextTick(() => {
-                Prism.highlightAll();
-              });
-            }
-          } else if (!this.itemExitFlag) {
-            this.content = '作者没有再此节点编辑任何信息。';
-          } else {
-            this.content = '';
-            this.$nextTick(() => {
-              this.content = '';
-              const iframeId = `#${this.$refs.editor.id}_ifr`;
-              document.getElementById(
-                iframeId,
-              ).contentWindow.document.body.innerText = '';
-            });
-          }
-        })
-        .catch(() => {});
+    async getExitTextData() {
+      const data = await getNodeText(this.treeNode.id);
+      this.$emit('update:spinShow', false);
+      if (data) {
+        this.content = data;
+        if (!this.itemExitFlag) {
+          this.$nextTick(() => {
+            Prism.highlightAll();
+          });
+        }
+      } else if (!this.itemExitFlag) {
+        this.content = '作者没有再此节点编辑任何信息。';
+      } else {
+        this.content = '';
+        this.$nextTick(() => {
+          this.content = '';
+          const iframeId = `#${this.$refs.editor.id}_ifr`;
+          document.getElementById(
+            iframeId,
+          ).contentWindow.document.body.innerText = '';
+        });
+      }
     },
     // 设置上传照片
     imagesUpload(blobInfo, succFun, failFun) {
       let file = blobInfo.blob();
       let data = new FormData();
-      let url = '/storage';
       data.append('file', file);
-      this.post_progress(url, data)
-        .then((res) => {
-          succFun(res.link);
+      uploadFile(data)
+        .then((link) => {
+          succFun(link);
         })
         .catch((err) => {
           failFun(err.status);
         });
     },
     // 保存
-    contentSave() {
-      let url = `storage/text/${this.treeNode.id}`;
-      let content = this.content;
-      this.post_text(url, content)
-        .then(() => {
-          this.$Message.success('保存成功');
-        })
-        .catch(() => {
-          this.$Message.error('保存成功失败');
-        });
+    async contentSave() {
+      await updateNodeText(this.treeNode.id, this.content);
+      this.$Message.success('保存成功');
     },
   },
   watch: {

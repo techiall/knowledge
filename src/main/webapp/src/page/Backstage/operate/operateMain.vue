@@ -7,7 +7,7 @@
 
 <template>
   <div>
-    <div class="know-operate-mian-header-title">名称&nbsp;:&nbsp;{{treeNodename}}</div>
+    <div class="know-operate-mian-header-title">名称 : {{treeNodename}}</div>
     <div class="know-operate-mian-header-select">
       <selete-button
         ref="OperateSelectBu"
@@ -46,9 +46,9 @@ export default {
       // 设置top高度
       TopHeight: 100,
       //展示 操作界面标志位
-      showClientFlag: false,
+      showClientFlag: false,  // 修改
       // 选择 视图
-      showSelectNum: 0,
+      showSelectNum: 0, // 修改
     };
   },
   methods: {
@@ -113,6 +113,7 @@ export default {
   padding: 5px 10px 3px 10px;
   height: 40px;
   line-height: 40px;
+  color: #000;
 }
 .know-operate-mian-header-select {
   height: 50px;

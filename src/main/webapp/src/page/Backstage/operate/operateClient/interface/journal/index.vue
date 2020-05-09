@@ -37,6 +37,8 @@
 
 
 <script>
+import { getRecord } from '@/api/node';
+
 export default {
   props: ['treeNode', 'showSelectNum', 'InnerHeight', 'spinShow'],
   data() {
@@ -71,32 +73,26 @@ export default {
     // 分页点击加载 请求服务器数据 数据
     getPageLogData() {
       if (this.dataPage === this.dataEndPage) {
-        this.loadingText = '没有更多的日志了'
+        this.loadingText = '没有更多的日志了';
         return;
       }
       this.getServerData(this.dataPage++);
     },
     // 请求 服务器 数据
-    getServerData(Pageval) {
+    async getServerData(Pageval) {
       if (this.requestFlag) return;
       this.requestFlag = true;
-      let url = '/record/node/' + this.treeNode.id;
-      let obj = {
+
+      const data = await getRecord(this.treeNode.id, {
         size: this.dataSize,
         page: Pageval,
-      };
-      this.get(url, obj)
-        .then((res) => {
-          this.$emit('update:spinShow', false);
-          if (this.showSelectNum === 4) {
-            this.requestFlag = false;
-            this.dataEndPage = res.data.totalPages;
-            this.handleJournalData(res.data.content);
-          }
-        })
-        .catch(() => {
-          this.requestFlag = false;
-        });
+      });
+      this.$emit('update:spinShow', false);
+      if (this.showSelectNum === 4) {
+        this.requestFlag = false;
+        this.dataEndPage = data.totalPages;
+        this.handleJournalData(data.content);
+      }
     },
     // 设置重新获取数据
     setJournal() {
@@ -179,97 +175,22 @@ export default {
     // 处理message 信息
     handleMessage(type, val) {
       let value = JSON.parse(val);
-      let operator,
-        operatorCrux,
-        nodeName = value.name;
       const statusMap = {
-        UPDATE_NODE_NAME: () => {
-          operator = value.message;
-          operatorCrux = '修改节点名称';
-
-          return {
-            operator,
-            nodeName,
-            operatorCrux,
-          };
-        },
-        ADD_NODE: () => {
-          operator = value.message;
-          operatorCrux = '添加节点';
-          return {
-            operator,
-            nodeName,
-            operatorCrux,
-          };
-        },
-        ADD_NODE_PROPER: () => {
-          operator = value.message;
-          operatorCrux = '添加属性';
-
-          return {
-            operator,
-            nodeName,
-            operatorCrux,
-          };
-        },
-        UPDATE_NODE_PROPER: () => {
-          operator = value.message;
-          operatorCrux = '修改属性';
-          return {
-            operator,
-            nodeName,
-            operatorCrux,
-          };
-        },
-        DELETE_NODE_PROPER: () => {
-          operator = value.message;
-          operatorCrux = '删除属性';
-
-          return {
-            operator,
-            nodeName,
-            operatorCrux,
-          };
-        },
-        ADD_NODE_PROPERTY: () => {
-          operator = value.message;
-          operatorCrux = '添加节点关系';
-
-          return {
-            operator,
-            nodeName,
-            operatorCrux,
-          };
-        },
-        UPDATE_NODE_PROPERTY: () => {
-          operator = value.message;
-          operatorCrux = '修改节点关系';
-          return {
-            operator,
-            nodeName,
-            operatorCrux,
-          };
-        },
-        UPDATE_NODE_PROPERTYNAME: () => {
-          operator = value.message;
-          operatorCrux = '变更节点关系';
-          return {
-            operator,
-            nodeName,
-            operatorCrux,
-          };
-        },
-        DELETE_NODE_PROPERTY: () => {
-          operator = value.message;
-          operatorCrux = '删除节点关系';
-          return {
-            operator,
-            nodeName,
-            operatorCrux,
-          };
-        },
+        UPDATE_NODE_NAME: '修改节点名称',
+        ADD_NODE: '添加节点',
+        ADD_NODE_PROPER: '添加属性',
+        UPDATE_NODE_PROPER: '修改属性',
+        DELETE_NODE_PROPER: '删除属性',
+        ADD_NODE_PROPERTY: '添加节点关系',
+        UPDATE_NODE_PROPERTY: '修改节点关系',
+        UPDATE_NODE_PROPERTYNAME: '变更节点关系',
+        DELETE_NODE_PROPERTY: '删除节点关系',
       };
-      return statusMap[type]();
+      return {
+        operator: value.message,
+        nodeName: value.name,
+        operatorCrux: statusMap[type],
+      };
     },
   },
   watch: {
