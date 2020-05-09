@@ -74,6 +74,7 @@ public class ElasticsearchConfiguration {
         }
 
         @Override
+        @SuppressWarnings("unchecked")
         public Map<String, Object> mapObject(Object source) {
             try {
                 return objectMapper.readValue(mapToString(source), HashMap.class);
