@@ -78,7 +78,8 @@ export default {
       }
       const stateMap = {
         ADD_NODE_PROPER: async () => {
-          const labelInput = this.labelInput.replace(/\s+/, '');
+          const labelInput = this.labelInput.replace(/\s+/g, '');
+          window.console.log(labelInput);
           if (!labelInput || this.disabledLabel) return;
           if (this.labels.includes(labelInput)) {
             this.$Message.warning(`${labelInput} 属性已经存在`);
@@ -101,7 +102,7 @@ export default {
         },
         UPDATE_NODE_PROPER: async () => {
           const oldValue = this.labels[index];
-          const newValue = inputDom.value.replace(/\s+/, '');
+          const newValue = inputDom.value.replace(/\s+/g, '');
           const message = `[${oldValue}]属性名称修改为[${newValue}]`;
           if (oldValue === newValue) return;
           if (!newValue) {

@@ -65,7 +65,7 @@ export default {
   methods: {
     // 点击 编辑  上传 节点
     async userExitfun() {
-      const name = this.changeName.replace(/^\s+|\s+$/g, '');
+      const name = this.changeName.replace(/\s+/g, '');
       if (this.selectNodeName === name || !name) return;
       this.loadingFlag = true;
       const itemId = this.itemId;

@@ -214,7 +214,7 @@ export default {
     },
     // 输入节点change事件
     inputNodeEvent() {
-      const queryValue = this.nodeInput.replace(/\s+/, '');
+      const queryValue = this.nodeInput.replace(/\s+/g, '');
       if (!queryValue) return;
       this.remoteMethod(queryValue);
     },
@@ -243,8 +243,8 @@ export default {
           this.disabledFlag = true;
           if (type === 'nodeBlur' || type === 'nodeEnter')
             this.dropdownFlag = false;
-          const relationValue = this.relationInput.replace(/\s+/, '');
-          const nodeValue = this.nodeInput.replace(/\s+/, '');
+          const relationValue = this.relationInput.replace(/\s+/g, '');
+          const nodeValue = this.nodeInput.replace(/\s+/g, '');
           const nodeDom = document.querySelector('#id-property-node');
           const relationDom = document.querySelector('#id-property-relation');
           if (!nodeValue || !relationValue) {
@@ -316,7 +316,7 @@ export default {
           const relationDom = childDom.querySelector('.g-input-relation');
           const nodeDom = childDom.querySelector('.g-input-node');
           const nodeInputDom = nodeDom.querySelector('input');
-          const nodeValue = nodeInputDom.value.replace(/\s+/, '');
+          const nodeValue = nodeInputDom.value.replace(/\s+/g, '');
           const relationValue = this.property[propertyIndex].relation;
           const oldNodeName = this.property[propertyIndex].oldName;
           if (nodeValue === oldNodeName) return;
@@ -371,7 +371,7 @@ export default {
           const relationDom = childDom.querySelector('.g-input-relation');
           const nodeDom = childDom.querySelector('.g-input-node');
           const relationInputDom = relationDom.querySelector('input');
-          const relationViewValue = relationInputDom.value.replace(/\s+/, '');
+          const relationViewValue = relationInputDom.value.replace(/\s+/g, '');
           const propertyValue = this.property[propertyIndex];
           if (relationViewValue === propertyValue.relation) return;
           this.sendLoading(relationDom, 'start');
@@ -472,7 +472,7 @@ export default {
       const index = this.property.map((item) => item.keyId).indexOf(keyId);
       const childDom = this.$refs.propertyRef.children[index];
       const nodeInput = childDom.querySelector('.g-input-node input');
-      const queryValue = nodeInput.value.replace(/\s+/, '');
+      const queryValue = nodeInput.value.replace(/\s+/g, '');
       if (!queryValue) return;
       this.remoteMethod(queryValue);
     },
