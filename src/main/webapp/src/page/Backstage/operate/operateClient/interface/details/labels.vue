@@ -79,7 +79,6 @@ export default {
       const stateMap = {
         ADD_NODE_PROPER: async () => {
           const labelInput = this.labelInput.replace(/\s+/g, '');
-          window.console.log(labelInput);
           if (!labelInput || this.disabledLabel) return;
           if (this.labels.includes(labelInput)) {
             this.$Message.warning(`${labelInput} 属性已经存在`);
