@@ -13,7 +13,7 @@
       :itemName="itemName"
       :TitleShow="false"
     ></public-header>
-    <manage-content @sendItem="getItemName"></manage-content>
+    <manage-content @sendItem="getItemName" />
   </div>
 </template>
 
@@ -21,7 +21,6 @@
 <script>
 //导入 header 模板
 import publicHeader from '@/components/publicHeader.vue';
-
 import manageContent from './manageContent.vue';
 
 export default {

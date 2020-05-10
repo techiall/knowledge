@@ -143,6 +143,8 @@ export default {
           } else if (data.share) {
             this.itemExitFlag = false;
             this.$refs.treelist.TLCallback(15);
+          } else {
+            this.showErrorFlag = false;
           }
         } else {
           this.showErrorFlag = false;
