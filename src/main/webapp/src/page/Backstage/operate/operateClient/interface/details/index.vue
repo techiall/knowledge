@@ -70,6 +70,14 @@ export default {
           // 告诉其他 名称修改成功
           this.$emit('SClientCallback', 1, val);
         },
+        // 日志
+        2: () => {
+          this.$emit('SClientCallback', 4);
+        },
+        // 力导图
+        3: () => {
+           this.$emit('SClientCallback', 2);
+        },
       };
       statusMap[type]();
     },

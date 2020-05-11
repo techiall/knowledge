@@ -86,7 +86,7 @@ export default {
           }
           const message = `添加新的节点属性，属性名称为 [${labelInput}]`;
           params.labels.push(labelInput);
-          params.record.message = JSON.stringify({ message, NodeName });
+          params.record.message = JSON.stringify({ message, name: NodeName });
           this.disabledLabel = true;
           await updateNode(this.treeNode.id, params);
           this.$emit('journal');
@@ -113,7 +113,7 @@ export default {
             return;
           }
           params.labels[index] = newValue;
-          params.record.message = JSON.stringify({ message, NodeName });
+          params.record.message = JSON.stringify({ message, name: NodeName });
           this.sendLoading(childDom, 'start');
           await updateNode(this.treeNode.id, params);
           this.$emit('journal');
@@ -124,7 +124,7 @@ export default {
           const value = this.labels[index];
           const message = `[${value}] 属性被删除`;
           params.labels.splice(index, 1);
-          params.record.message = JSON.stringify({ message, NodeName });
+          params.record.message = JSON.stringify({ message, name: NodeName });
           this.sendLoading(childDom, 'start');
           await updateNode(this.treeNode.id, params);
           this.$emit('journal');

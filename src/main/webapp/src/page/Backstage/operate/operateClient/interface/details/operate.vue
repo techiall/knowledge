@@ -64,11 +64,11 @@ export default {
     },
     // 日志
     updateJournal() {
-      this.$emit('SClientCallback', 4);
+      this.$emit('on-callback', 2);
     },
     // 力导图
     updateforce() {
-      this.$emit('SClientCallback', 2);
+      this.$emit('on-callback', 3);
     },
     // 修改节点名称
     async updateNodeName() {

@@ -20,8 +20,8 @@ api.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 api.interceptors.request.use(
   (config) => {
     const configure = config;
-    // AUTHORIZATION
     configure.headers.AUTHORIZATION = sessionStorage.getItem('access_token');
+    // configure.headers['if-non-match'] = 
     return configure;
   },
   (error) => Promise.reject(error),

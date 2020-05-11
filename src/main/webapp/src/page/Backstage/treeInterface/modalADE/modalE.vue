@@ -89,7 +89,7 @@ export default {
       };
       await updateNode(this.treeNodeId, params);
       this.modalFlag = false;
-      this.$emit('ExitNameS', 14, name);
+      this.$emit('on-callback', 14, name);
     },
     //监听 ctrl + ender 按键 执行函数
     upCtrlEnter(e) {

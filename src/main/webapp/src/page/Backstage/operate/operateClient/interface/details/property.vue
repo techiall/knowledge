@@ -289,7 +289,7 @@ export default {
             return;
           }
           const message = `[${NodeName}] 与 [${nodeValue}] 添加新的关系,关系名称为 [${relationValue}]`;
-          params.record.message = JSON.stringify({ message, NodeName });
+          params.record.message = JSON.stringify({ message, name: NodeName });
           params.property = this.propertyServer;
           await updateNode(this.treeNode.id, params);
           this.$emit('journal');
@@ -352,7 +352,7 @@ export default {
             return;
           }
           const message = `[${oldNodeName}] 关系节点修改为 [${nodeValue}]`;
-          params.record.message = JSON.stringify({ message, NodeName });
+          params.record.message = JSON.stringify({ message, name: NodeName });
           params.property = this.propertyServer;
           await updateNode(this.treeNode.id, params);
           this.$emit('journal');
@@ -393,7 +393,7 @@ export default {
             .indexOf(propertyValue.name);
           this.propertyServer[propertyValue.relation].splice(ROldIndex, 1);
           const message = `[${NodeName}] 与 [${propertyValue.name}] 之间的关系由 [${propertyValue.relation}] 修改为 [${relationViewValue}]`;
-          params.record.message = JSON.stringify({ message, NodeName });
+          params.record.message = JSON.stringify({ message, name: NodeName });
           params.property = this.propertyServer;
           await updateNode(this.treeNode.id, params);
           this.$emit('journal');
@@ -417,7 +417,7 @@ export default {
           this.sendLoading(nodeDom, 'start');
           this.sendLoading(relationDom, 'start');
           this.propertyServer[relationValue].splice(ROldIndex, 1);
-          params.record.message = JSON.stringify({ message, NodeName });
+          params.record.message = JSON.stringify({ message, name: NodeName });
           params.property = this.propertyServer;
           await updateNode(this.treeNode.id, params);
           this.$emit('journal');

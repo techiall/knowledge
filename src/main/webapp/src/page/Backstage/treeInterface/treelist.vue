@@ -38,14 +38,20 @@
     </div>
     <div v-else class="know-tree-header-select"></div>
     <Content class="know-tree-main-content scroll" :style="{height:setTreeClientHeight}">
-      <tree-z @selectNode="TLCallback" :treelistVal="treeZ" :itemId="itemId" ref="treeZ"></tree-z>
+      <tree-z
+        ref="treeZ"
+        :treelistVal="treeZ"
+        :itemId="itemId"
+        :deleteNodes="deleteNodes"
+        @selectNode="TLCallback"
+      />
     </Content>
 
     <modal-a
       :AddModalFlag="buttonAddFlag"
       :treeNode="treeNode"
       :itemId="itemId"
-      @addNameS="TLCallback"
+      @on-addNode="TLCallback"
     />
     <modal-d
       :DelModalFlag="buttonDelFlag"
@@ -53,14 +59,14 @@
       :treeNodeId="treeNode.id"
       :selectNodes="selectNodes"
       :itemId="itemId"
-      @addNameS="TLCallback"
+      @on-callback="TLCallback"
     />
     <modal-e
       :ExitModalFalg="buttonExitFlag"
       :selectNodeName="selectNodeName"
       :treeNodeId="treeNode.id"
       :itemId="itemId"
-      @ExitNameS="TLCallback"
+      @on-callback="TLCallback"
     />
   </div>
 </template>
@@ -106,6 +112,8 @@ export default {
       rootNodeNum: '',
       // 选择多个节点 id + name
       selectNodes: [],
+      // 多节点删除
+      deleteNodes: [],
     };
   },
   methods: {
@@ -178,7 +186,8 @@ export default {
         },
         // 删除 多节点 标志位
         12: () => {
-          this.treeZ.delNodes = val;
+          this.treeZ.delNodes = Math.random();
+          this.deleteNodes = val;
         },
         // 删除 多节点 包括选中 treeNode
         // 取消高亮触发的事件
@@ -199,6 +208,10 @@ export default {
         // 树数据请求
         15: () => {
           this.$refs.treeZ.getTreeData();
+        },
+        // 取消选中状态
+        16: () => {
+          this.$refs.treeZ.cancelSelectedNode(val);
         },
       };
       statusMap[type]();

@@ -68,7 +68,7 @@ export default {
       };
       const data = await createNode(params);
       if (data.new) {
-        this.$emit('addNameS', 7, data.node);
+        this.$emit('on-addNode', 7, data.node);
         this.modalFlag = false;
       } else {
         this.$Message.warning({

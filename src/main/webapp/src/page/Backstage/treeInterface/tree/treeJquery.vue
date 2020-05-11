@@ -18,7 +18,7 @@ import 'ztree/css/metroStyle/metroStyle.css';
 import { getRootNode, getChildNode } from '@/api/node';
 
 export default {
-  props: ['treelistVal', 'itemId'],
+  props: ['treelistVal', 'itemId', 'deleteNodes'],
   data() {
     return {
       //设置 ztree 树
@@ -164,6 +164,7 @@ export default {
     zTreeOnClick(event, treeId, treeNode) {
       if (!treeNode) return;
       else if (event.ctrlKey) {
+        window.console.log(12312312313);
         this.$emit('selectNode', 10, this.zTree.getSelectedNodes());
       } else {
         this.StreeId = treeNode.tId;
@@ -223,6 +224,10 @@ export default {
         })
         .catch(() => {});
     },
+    // 取消节点的选中状态。
+    cancelSelectedNode(node) {
+      this.zTree.cancelSelectedNode(node);
+    },
   },
   watch: {
     'treelistVal.ExitName': {
@@ -263,7 +268,7 @@ export default {
     },
     'treelistVal.delNodes': {
       handler: function() {
-        let Nodes = this.zTree.getSelectedNodes();
+        const Nodes = this.deleteNodes;
         Nodes.forEach((item) => {
           if (this.StreeNode.id === item.id) {
             this.StreeNode = '';
@@ -272,6 +277,7 @@ export default {
           }
           this.zTree.removeNode(item, false);
         });
+        this.zTree.cancelSelectedNode();
         if (this.StreeNode) {
           this.zTree.selectNode(this.StreeNode);
           this.$emit('selectNode', 1, true);

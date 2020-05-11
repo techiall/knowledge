@@ -26,7 +26,14 @@
       <div>节点名称：</div>
       <div v-if="selectNodesFlag" class="g-text center">{{selectNodeName}}</div>
       <div v-else class="g-nodes-wrap">
-        <div v-for="(item) in Nodes" :key="item" class="g-nodes-row">{{item}}</div>
+        <Tag
+          class="g-nodes-row"
+          v-for="(item) in Nodes"
+          :name="item.id"
+          :key="item"
+          :closable="true"
+          @on-close="handleCloseEvent"
+        >{{item.name}}</Tag>
       </div>
     </div>
     <div class="b-modal-footer">
@@ -71,7 +78,7 @@ export default {
       const NodesLen = this.selectNodes.length;
       if (NodesLen) {
         this.selectNodes.forEach((item) => {
-          this.Nodes.push(item.name);
+          this.Nodes.push(item);
           this.NodeId.push(item.id);
         });
         this.Nodes.sort(this.sortId);
@@ -96,7 +103,7 @@ export default {
       if (this.selectNodesFlag) {
         const data = await delNode(this.treeNodeId, { itemId: this.itemId });
         if (data) {
-          this.$emit('addNameS', 8, Math.random());
+          this.$emit('on-callback', 8, Math.random());
           this.modalFlag = false;
         } else {
           this.$Message.error('删除失败');
@@ -105,12 +112,25 @@ export default {
       } else {
         const data = await delNodes(this.itemId, this.NodeId);
         if (data) {
-          this.$emit('addNameS', 12, Math.random());
+          this.$emit('on-callback', 12, this.Nodes);
           this.modalFlag = false;
         } else {
           this.$Message.error('删除失败');
           this.loadingFlag = false;
         }
+      }
+    },
+    // 处理关闭
+    handleCloseEvent(event, ID) {
+      const id = parseInt(ID, 10);
+      const nodeIndex = this.Nodes.map((item) => item.id).indexOf(id);
+      const idIndex = this.NodeId.indexOf(id);
+      this.$emit('on-callback', 16, this.Nodes[nodeIndex]);
+      if (this.Nodes.length <= 1) {
+        this.modalFlag = false;
+      } else {
+        this.Nodes.splice(nodeIndex, 1);
+        this.NodeId.splice(idIndex, 1);
       }
     },
     //监听 ctrl + ender 按键 执行函数
@@ -121,8 +141,8 @@ export default {
     },
     // 排序
     sortId(ObjA, ObjB) {
-      let valA = ObjA.length;
-      let valB = ObjB.length;
+      let valA = ObjA.name.length;
+      let valB = ObjB.name.length;
       if (valA < valB) return -1;
       else if (valA > valB) return 1;
       else return 0;
@@ -141,7 +161,6 @@ export default {
 }
 .g-nodes-row {
   margin: 5px 5px 5px 0;
-  color: #d63447;
 }
 .g-nodes-row:before {
   counter-increment: num;
