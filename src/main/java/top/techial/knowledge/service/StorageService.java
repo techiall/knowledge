@@ -22,11 +22,11 @@ public class StorageService {
 
     @Transactional
     public void save(String sha1, MultipartFile file) {
-        storageRepository.findById(sha1).map(it -> it
-                .setId(sha1)
-                .setContentType(file.getContentType())
-                .setOriginalFilename(file.getOriginalFilename()))
-                .ifPresent(storageRepository::save);
+        Storage storage = storageRepository.findById(sha1).orElse(new Storage());
+        storage.setId(sha1);
+        storage.setContentType(file.getContentType());
+        storage.setOriginalFilename(file.getOriginalFilename());
+        storageRepository.save(storage);
     }
 
     public Storage findById(String id) {
