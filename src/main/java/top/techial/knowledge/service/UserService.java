@@ -122,6 +122,7 @@ public class UserService {
         return user;
     }
 
+    @Transactional
     public User update(Integer id, UserVM userVM) {
         return userRepository.findById(id).map(user -> {
             var vmOptional = Optional.of(userVM);
