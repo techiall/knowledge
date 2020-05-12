@@ -53,7 +53,7 @@ public class UserController {
         return ResultBean.ok(map);
     }
 
-    @PatchMapping("/me")
+    @PutMapping("/me")
     public ResultBean<UserDTO> update(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody UserVM userVM
@@ -62,7 +62,7 @@ public class UserController {
         return ResultBean.ok(userMapper.toUserDTO(user));
     }
 
-    @PatchMapping("/me/password")
+    @PutMapping("/me/password")
     @FlushAuthority
     public ResultBean<UserDTO> updatePassword(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
