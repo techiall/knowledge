@@ -117,17 +117,21 @@ export default {
         return;
       }
       this.loadingFlag = true;
-      await patchPassword({
-        srcPassword: this.fromCPass.oldPass,
-        password: this.fromCPass.newPass,
-      });
-      this.loadingFlag = false;
-      this.$Message.success('密码修改成功');
-      this.fromCPass = {
-        oldPass: '',
-        newPass: '',
-        RepeatPass: '',
-      };
+      try {
+        await patchPassword({
+          srcPassword: this.fromCPass.oldPass,
+          password: this.fromCPass.newPass,
+        });
+        this.loadingFlag = false;
+        this.$Message.success('密码修改成功');
+        this.fromCPass = {
+          oldPass: '',
+          newPass: '',
+          RepeatPass: '',
+        };
+      } catch {
+        this.loadingFlag = false;
+      }
     },
     // input change 事件
     changeInput(val) {
