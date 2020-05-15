@@ -51,6 +51,7 @@ public class ItemService {
             itemVMOptional.map(ItemVM::getDescription).ifPresent(item::setDescription);
             itemVMOptional.map(ItemVM::getShare).ifPresent(item::setShare);
             itemVMOptional.map(ItemVM::getImage).ifPresent(item::setImage);
+            itemVMOptional.map(ItemVM::getName).ifPresent(item::setName);
             return itemRepository.save(item);
         }).orElseThrow(ItemNotFoundException::new);
     }
