@@ -11,7 +11,6 @@ import top.techial.knowledge.web.rest.errors.ItemNotFoundException;
 import top.techial.knowledge.web.rest.errors.UserNotFoundException;
 import top.techial.knowledge.web.rest.vm.ItemVM;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
