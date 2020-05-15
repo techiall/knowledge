@@ -75,7 +75,7 @@ public class ItemController {
     @PreAuthorize("hasAnyAuthority('ITEM_' + #id.toString())")
     public ResultBean<ItemDTO> update(@RequestBody ItemVM itemVM, @PathVariable Integer id) {
         var item = itemService.update(id, itemVM);
-        return ResultBean.ok(itemMapper.toItemDTO(itemRepository.save(item)));
+        return ResultBean.ok(itemMapper.toItemDTO(item));
     }
 
     @DeleteMapping("/{id}")
