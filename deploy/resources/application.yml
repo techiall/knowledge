@@ -5,6 +5,11 @@ server:
     enabled: true
 
 spring:
+  resources:
+    cache:
+      cachecontrol:
+        cache-public: true
+        max-age: 1h
   profiles:
     include:
       - elastic
