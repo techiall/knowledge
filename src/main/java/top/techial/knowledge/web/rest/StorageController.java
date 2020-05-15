@@ -2,6 +2,7 @@ package top.techial.knowledge.web.rest;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +18,7 @@ import top.techial.knowledge.web.rest.errors.NodeNotFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author techial
@@ -88,7 +90,8 @@ public class StorageController {
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.CONTENT_TYPE, storageService.findById(id).getContentType())
-                .header(HttpHeaders.CACHE_CONTROL, "public")
+                .header(HttpHeaders.CACHE_CONTROL,
+                        CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic().getHeaderValue())
                 .body(fileStorageService.findByHash(storage.getId()));
     }
 
