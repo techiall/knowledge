@@ -88,6 +88,7 @@ public class StorageController {
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.CONTENT_TYPE, storageService.findById(id).getContentType())
+                .header(HttpHeaders.CACHE_CONTROL, "public")
                 .body(fileStorageService.findByHash(storage.getId()));
     }
 
