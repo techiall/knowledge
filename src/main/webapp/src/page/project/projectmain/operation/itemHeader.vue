@@ -96,4 +96,9 @@ export default {
   margin: 0 10px 0 0;
   font-size: 18px;
 }
+@media screen and (max-width: 1000px) {
+  .g-header{
+    padding: 0 20px;
+  }
+}
 </style>

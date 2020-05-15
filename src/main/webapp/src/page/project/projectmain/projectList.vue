@@ -125,11 +125,10 @@ export default {
 
 <style scoped>
 .g-warp {
-  margin: 20px 0 0 0;
   height: calc(100% - 20px);
 }
 .g-body {
-  height: calc(100% - 80px);
+  height: calc(100% - 40px);
   padding: 0px 20px 20px;
   overflow: auto;
 }

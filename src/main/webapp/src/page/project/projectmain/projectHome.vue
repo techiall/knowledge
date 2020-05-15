@@ -153,6 +153,7 @@ export default {
 .project-home-wrap {
   height: 100%;
   overflow: auto;
+  
 }
 .title-h1 {
   height: 40px;
@@ -191,5 +192,10 @@ export default {
   font-size: 15px;
   margin: 5px 0 0 0;
   letter-spacing: 0.1em;
+}
+@media screen and (max-width: 1000px) {
+  .project-home-wrap{
+    padding: 0 20px;
+  }
 }
 </style>

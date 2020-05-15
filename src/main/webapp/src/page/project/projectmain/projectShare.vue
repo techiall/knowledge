@@ -8,8 +8,8 @@
 <template>
   <div class="g-wrap">
     <item-header :totalElements="totalElements" />
-    <loadAnimation v-if="!itemload" />
-    <div class="g-body">
+    <div class="g-body scroll">
+      <loadAnimation v-if="!itemload" />
       <item-card
         :itemData="itemShareData"
         status="false"
@@ -25,7 +25,6 @@
         @on-delete="selectDelete"
       />
     </div>
-
     <item-setting ref="modalS" @updataItem="updataItem" />
     <item-delete ref="modalD" @delItem="delItem" />
   </div>
@@ -93,7 +92,8 @@ export default {
     },
     // 删除项目
     delItem() {
-      this.getShareItem();
+      window.console.log(1);
+      this.shareItem();
     },
   },
 };
@@ -102,10 +102,11 @@ export default {
 
 <style scoped>
 .g-wrap {
-  margin: 20px 0 0 0;
   height: calc(100% - 20px);
 }
 .g-body {
-  padding: 0 20px 20px;
+  height: calc(100% - 40px);
+  padding: 0px 20px 20px;
+  overflow: auto;
 }
 </style>

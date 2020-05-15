@@ -7,7 +7,7 @@
 
 <template>
   <div class="project" v-title="知识图谱构建平台">
-    <public-header :RouterFlag="true"></public-header>
+    <public-header :RouterFlag="true" />
     <div class="project-content" :style="{height:ClientHeight}">
       <project-aside class="project-aside" />
       <project-main class="project-main" :InnerHeight="InnerHeight" />
@@ -70,6 +70,7 @@ export default {
 }
 .project-main {
   flex-grow: 1;
+  margin: 20px 0 0 0;
 }
 @media screen and (max-width: 1000px) {
   .project-content {
@@ -77,11 +78,12 @@ export default {
   }
   .project-aside {
     width: 100%;
-    margin: 0;
+    margin: 0 0 20px 0;
     padding: 30px 30px 0;
   }
-  .project-main{
-    height: calc(100% - 74px);
+  .project-main {
+    height: calc(100% - 94px);
+    margin: 0;
   }
 }
 </style>
