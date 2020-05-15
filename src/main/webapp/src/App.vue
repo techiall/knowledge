@@ -16,7 +16,7 @@ export default {
   methods: {
     ...mapMutations(['setUserData', 'setToken', 'delToken']),
     async getServerUser() {
-      const data = await getUserMe();
+      const data = await getUserMe(); 
       if (data.user.id) {
         this.setUserData(data);
       } else {

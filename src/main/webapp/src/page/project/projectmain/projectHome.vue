@@ -6,7 +6,7 @@
 
 
 <template>
-  <div>
+  <div class="project-home-wrap scroll">
     <div class="title-h1">项目创建</div>
     <div class="title-tips">欢迎使用 “知识图谱构建平台” ,尝试新建一个项目给自己</div>
     <div class="item-create">
@@ -150,7 +150,13 @@ export default {
 
 
 <style scoped>
+.project-home-wrap {
+  height: 100%;
+  overflow: auto;
+}
 .title-h1 {
+  height: 40px;
+  line-height: 40px;
   font-size: 18px;
   color: #202124;
 }

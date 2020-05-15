@@ -6,7 +6,7 @@
 
 
 <template>
-  <div class="g-main-wrap scroll">
+  <div class="g-main-wrap">
     <router-view></router-view>
   </div>
 </template>
@@ -23,8 +23,4 @@ export default {
 
 
 <style scoped>
-.g-main-wrap {
-  padding: 30px;
-  overflow: auto;
-}
 </style>

@@ -6,25 +6,28 @@
 
 
 <template>
-  <div class="g-warp">
+  <div class="g-wrap">
     <item-header :totalElements="totalElements" />
     <loadAnimation v-if="!itemload" />
-    <item-card
-      :itemData="itemShareData"
-      status="false"
-      v-if="getShowType==='card'"
-      @selectItem="selectSetting"
-      @selectDelete="selectDelete"
-    ></item-card>
-    <item-list
-      :itemData="itemShareData"
-      status="false"
-      v-if="getShowType==='list'"
-      @on-setting="selectSetting"
-      @on-delete="selectDelete"
-    ></item-list>
-    <item-setting ref="modalS" @updataItem="updataItem"></item-setting>
-    <item-delete ref="modalD" @delItem="delItem"></item-delete>
+    <div class="g-body">
+      <item-card
+        :itemData="itemShareData"
+        status="false"
+        v-if="getShowType==='card'"
+        @selectItem="selectSetting"
+        @selectDelete="selectDelete"
+      />
+      <item-list
+        :itemData="itemShareData"
+        status="false"
+        v-if="getShowType==='list'"
+        @on-setting="selectSetting"
+        @on-delete="selectDelete"
+      />
+    </div>
+
+    <item-setting ref="modalS" @updataItem="updataItem" />
+    <item-delete ref="modalD" @delItem="delItem" />
   </div>
 </template>
 
@@ -98,4 +101,11 @@ export default {
 
 
 <style scoped>
+.g-wrap {
+  margin: 20px 0 0 0;
+  height: calc(100% - 20px);
+}
+.g-body {
+  padding: 0 20px 20px;
+}
 </style>

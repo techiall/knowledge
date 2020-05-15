@@ -9,8 +9,8 @@
   <div class="project" v-title="知识图谱构建平台">
     <public-header :RouterFlag="true"></public-header>
     <div class="project-content" :style="{height:ClientHeight}">
-      <project-aside class="project-aside"></project-aside>
-      <project-main class="project-main"></project-main>
+      <project-aside class="project-aside" />
+      <project-main class="project-main" :InnerHeight="InnerHeight" />
     </div>
   </div>
 </template>
@@ -64,7 +64,7 @@ export default {
 }
 .project-aside {
   flex-shrink: 0;
-  width: 280px; 
+  width: 280px;
   padding: 30px 0 30px 30px;
   margin: 0 10px 0 0;
 }
@@ -78,7 +78,10 @@ export default {
   .project-aside {
     width: 100%;
     margin: 0;
-    padding:  30px 30px 0;
+    padding: 30px 30px 0;
+  }
+  .project-main{
+    height: calc(100% - 74px);
   }
 }
 </style>

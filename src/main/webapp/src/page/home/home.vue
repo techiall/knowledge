@@ -200,7 +200,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  min-width: 900px;
   height: 60px;
   padding: 0 55px 0 0;
 }

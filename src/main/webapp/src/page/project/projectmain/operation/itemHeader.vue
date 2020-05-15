@@ -63,6 +63,7 @@ export default {
 .g-header {
   align-items: center;
   padding: 0 30px 0 0;
+  margin: 0 0 20px 0;
 }
 .g-title {
   font-size: 15px;

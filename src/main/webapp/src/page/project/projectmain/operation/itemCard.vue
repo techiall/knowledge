@@ -8,9 +8,10 @@
 <template>
   <div class="item-list">
     <div
-      class="item-box box "
+      class="item-box box"
       v-for="(item,index) in itemData"
       :key="item.id"
+      :style="{backgroundImage : 'url(' + (item.image ? item.image  : baseImg) +')'}"
       @click.stop="selectItem(index)"
     >
       <div class="item-box-bgc">
@@ -19,7 +20,7 @@
             <div class="item-box-name">{{item.name}}</div>
           </Tooltip>
           <div class="dis-operation">
-            <Tooltip content="打开项目设置" placement="top">
+            <Tooltip content="打开项目设置" placement="top" transfer>
               <Icon
                 type="ios-settings"
                 class="item-box-icon"
@@ -29,6 +30,7 @@
             <Tooltip
               content="项目删除"
               placement="top"
+              transfer
               v-if="status !== 'false'||user.userName === item.author.userName"
             >
               <Icon type="ios-trash" class="item-box-icon" @click.stop="selectItemDelete(index)" />
@@ -53,6 +55,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import baseImg from '@/assets/images/itembg.jpg';
 
 export default {
   components: {},
@@ -60,6 +63,7 @@ export default {
   data() {
     return {
       modalFlag: false,
+      baseImg,
     };
   },
   computed: {
@@ -95,14 +99,12 @@ export default {
   cursor: pointer;
 }
 .item-box {
-  background: url('../../../../assets/images/itembg.jpg');
   background-size: 100% 100%;
   margin: 0 20px 20px 0;
   transition: all 0.2s;
   color: #fff;
 }
-.item-list{
-    margin: 20px 0;
+.item-list {
   display: flex;
   flex-wrap: wrap;
 }
@@ -124,7 +126,7 @@ export default {
 .item-box-f {
   align-items: center;
 }
-.item-box-bgc:hover .dis-operation{
+.item-box-bgc:hover .dis-operation {
   display: inline-block;
 }
 .dis-operation {

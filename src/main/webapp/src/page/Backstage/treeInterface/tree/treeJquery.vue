@@ -164,7 +164,6 @@ export default {
     zTreeOnClick(event, treeId, treeNode) {
       if (!treeNode) return;
       else if (event.ctrlKey) {
-        window.console.log(12312312313);
         this.$emit('selectNode', 10, this.zTree.getSelectedNodes());
       } else {
         this.StreeId = treeNode.tId;

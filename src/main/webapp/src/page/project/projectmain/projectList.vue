@@ -8,8 +8,8 @@
 <template>
   <div class="g-warp">
     <item-header :totalElements="totalElements" />
-    <loadAnimation v-if="!itemload" />
-    <div class="g-body" ref="gBody">
+    <div class="g-body scroll" ref="gBody">
+      <load-animation v-if="!itemload" />
       <item-card
         :itemData="itemData"
         status="true"
@@ -98,7 +98,8 @@ export default {
     },
     // 创建成功 添加数据
     addItem(val) {
-      this.itemData.push(val);
+      this.itemData.unshift(val);
+      this.totalElements += 1;
     },
     // 选中设置
     selectSetting(index) {
@@ -123,8 +124,14 @@ export default {
 
 
 <style scoped>
-.g-warp,.g-body{
-  height: 100%;
+.g-warp {
+  margin: 20px 0 0 0;
+  height: calc(100% - 20px);
+}
+.g-body {
+  height: calc(100% - 80px);
+  padding: 0px 20px 20px;
+  overflow: auto;
 }
 .g-list-create {
   display: flex;

@@ -14,7 +14,10 @@
       @click.stop="selectItem(index)"
     >
       <div class="g-list-left">
-        <div class="g-row-img"></div>
+        <div
+          class="g-row-img"
+          :style="{backgroundImage : 'url(' + (item.image ? item.image  : baseImg) +')'}"
+        />
       </div>
       <div class="g-list-right g-dis-fc">
         <div class="g-right-main">
@@ -43,11 +46,14 @@
 
 <script>
 import { mapState } from 'vuex';
+import baseImg from '@/assets/images/item_bg.png';
 
 export default {
   props: ['itemData', 'status'],
   data() {
-    return {};
+    return {
+      baseImg,
+    };
   },
   computed: {
     ...mapState(['user']),
@@ -86,7 +92,7 @@ export default {
 .g-row-img {
   width: 40px;
   height: 40px;
-  background: url('../../../../assets/images/item_bg.png') no-repeat;
+  background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
   border-radius: 4px;
