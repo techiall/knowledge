@@ -47,6 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // @formatter:off
         http
+            .headers().cacheControl().disable()
+        .and()
             .formLogin()
             .loginPage("/login")
             .loginProcessingUrl("/api/user/login")
