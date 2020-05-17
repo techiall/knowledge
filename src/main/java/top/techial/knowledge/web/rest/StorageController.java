@@ -1,6 +1,5 @@
 package top.techial.knowledge.web.rest;
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
@@ -25,8 +24,8 @@ import java.util.concurrent.TimeUnit;
  */
 @RestController
 @RequestMapping("/api/storage")
-@Log4j2
 public class StorageController {
+
     private final StorageService storageService;
     private final FileStorageService fileStorageService;
     private final StorageRepository storageRepository;

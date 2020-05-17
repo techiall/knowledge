@@ -1,6 +1,5 @@
 package top.techial.knowledge.web.rest;
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.techial.knowledge.beans.ResultBean;
@@ -15,7 +14,6 @@ import top.techial.knowledge.web.rest.vm.RegisterVM;
  */
 @RestController
 @RequestMapping("/api/register")
-@Log4j2
 public class RegisterController {
     private final UserRepository userRepository;
     private final UserService userService;

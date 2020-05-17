@@ -1,6 +1,7 @@
 package top.techial.knowledge.service;
 
-import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,8 @@ import java.security.NoSuchAlgorithmException;
  * @author techial
  */
 @Service
-@Log4j2
 public class FileStorageService {
+    private static final Logger log = LoggerFactory.getLogger(FileStorageService.class);
     private final Path rootLocation;
 
     public FileStorageService(StorageProperties storageProperties) {
@@ -42,7 +43,7 @@ public class FileStorageService {
                 log.error(e.getMessage());
             }
         }
-        log.info("file storage path = {}", rootLocation.toString());
+        log.info("file storage path = {}", rootLocation);
     }
 
     public String upload(MultipartFile file) {

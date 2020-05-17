@@ -1,6 +1,5 @@
 package top.techial.knowledge.web.rest;
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +22,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
-@Log4j2
 public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;

@@ -1,8 +1,9 @@
 package top.techial.knowledge.service;
 
-import lombok.extern.log4j.Log4j2;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,8 +42,9 @@ import java.util.stream.Collectors;
  * @author techial
  */
 @Service
-@Log4j2
 public class NodeService {
+    private static final Logger log = LoggerFactory.getLogger(NodeService.class);
+
     private static final String INDEX = "nodes";
 
     private final NodeRepository nodeRepository;
@@ -372,7 +374,7 @@ public class NodeService {
                 it.get();
             } catch (InterruptedException | ExecutionException e) {
                 if (log.isErrorEnabled()) {
-                    log.error(e);
+                    log.error("", e);
                 }
                 Thread.currentThread().interrupt();
             }

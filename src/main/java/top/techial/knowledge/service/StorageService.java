@@ -1,6 +1,5 @@
 package top.techial.knowledge.service;
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +11,6 @@ import top.techial.knowledge.web.rest.errors.StorageFileNotFoundException;
  * @author techial
  */
 @Service
-@Log4j2
 public class StorageService {
     private final StorageRepository storageRepository;
 
