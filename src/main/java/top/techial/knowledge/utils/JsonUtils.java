@@ -27,7 +27,7 @@ public class JsonUtils {
             return objectMapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             if (log.isErrorEnabled()) {
-                log.error("write value as string error. object = " + object, e);
+                log.error("write value as string error. object = {}", object, e);
             }
         }
         return "";
@@ -42,7 +42,7 @@ public class JsonUtils {
             return objectMapper.readValue(str, aClass);
         } catch (JsonProcessingException e) {
             if (log.isErrorEnabled()) {
-                log.error("read value error, str = " + str, e);
+                log.error("read value error, str = {}", str, e);
             }
         }
         return null;
