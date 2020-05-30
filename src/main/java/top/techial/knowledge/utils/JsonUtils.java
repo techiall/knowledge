@@ -10,13 +10,9 @@ import org.springframework.lang.Nullable;
 /**
  * @author techial
  */
-public class JsonUtils {
+public abstract class JsonUtils {
 
     private static final Logger log = LoggerFactory.getLogger(JsonUtils.class);
-
-    private JsonUtils() {
-
-    }
 
     @NonNull
     public static String writeValueAsString(@NonNull ObjectMapper objectMapper, @Nullable Object object) {
