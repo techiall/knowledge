@@ -20,9 +20,8 @@ plugins {
 }
 
 repositories {
-    maven {
-        url = 'https://maven.aliyun.com/nexus/content/groups/public'
-    }
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+    maven { url 'https://maven.aliyun.com/repository/spring/' }
     mavenCentral()
     mavenLocal()
 }
