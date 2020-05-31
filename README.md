@@ -7,9 +7,13 @@ This my graduation project.
 
 ### Prerequisites 
 
-*  [Gradle 5.5](https://gradle.org/)
-* [OpenJDK 1.8+](https://openjdk.java.net/)
+*  [Gradle 6.22](https://gradle.org/)
+* [OpenJDK 11](https://openjdk.java.net/)
 * [Mysql 8.0](https://www.mysql.com/)
+* [redis](https://redis.io/)
+* [Elasticsearch](https://www.elastic.co/)
+* [Node 12.14](https://nodejs.org/)
+* [yarn](https://yarnpkg.com/)
 
 
 ### Installing
