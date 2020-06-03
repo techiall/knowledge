@@ -24,7 +24,9 @@
     <div class="g-text-row">
       <div class="g-select-img cup">
         <Icon type="ios-image-outline" class="g-select-icon" />
-        <span>选择图片</span>
+        <span class="item-image-open-file">
+          <input type="file" title ref="FileMsgRef" @change="uploadImage" /> 选择图片
+        </span>
       </div>
       <div class="g-tip">（最佳图片比例2:1, 可以上传高质量图片进行裁剪）</div>
     </div>
@@ -84,12 +86,14 @@ export default {
     this.imageClass.src = this.imgSrc;
   },
   methods: {
+    // 得到照片位置
     getCanvasPos(imgSrc, sx, sy, sw, sh) {
       const ctxFirst = this.$refs.canvasFirst.getContext('2d');
       const ctxSecond = this.$refs.canvasSecond.getContext('2d');
       ctxFirst.drawImage(imgSrc, sx, sy, sw, sh, 0, 0, 300, 150);
       ctxSecond.drawImage(imgSrc, sx, sy, sw, sh, 0, 0, 50, 50);
     },
+    // 上传文件
     async saveEvent() {
       this.modalFlag = false;
       const base64String = this.$refs.canvasFirst.toDataURL('image/jpeg');
@@ -105,6 +109,20 @@ export default {
       const link = await uploadFile(fd);
       this.$emit('on-upload', link);
       this.$Notice.success({ title: '项目封面选取成功' });
+    },
+    // 打开文件
+    // 上传图片
+    uploadImage() {
+      const file = this.$refs.FileMsgRef.files[0];
+      const reg = /\.(png|jpg|jpeg)$/;
+      if (!file || reg.test(file.type)) {
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = e => {
+        this.$emit('update:imgSrc', e.target.result);
+      };
+      reader.readAsDataURL(file);
     },
   },
 };
@@ -177,6 +195,19 @@ canvas {
 }
 .g-footer button:first-of-type {
   margin: 0 10px 0 0;
+}
+.item-image-open-file {
+  position: relative;
+}
+.item-image-open-file input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  font-size: 0;
 }
 @media screen and (max-width: 560px) {
   .modal-body {

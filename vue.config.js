@@ -13,11 +13,11 @@ module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        target: 'https://knowledge.pchelper666.com/',
+        target: 'http://219.128.53.199:9004/',
         changeOrigin: true,
       },
       '/static': {
-        target: 'https://knowledge.pchelper666.com/',
+        target: 'http://219.128.53.199:9004/',
         changeOrigin: true,
       },
     },

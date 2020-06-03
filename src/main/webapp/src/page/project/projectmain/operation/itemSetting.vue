@@ -16,13 +16,7 @@
         <div class="g-upload-wrap">
           <img class="g-upload-img" :src="submitMsg.image" />
           <span class="g-upload-button" v-if="status||user.userName === submitMsg.userName">
-            <input
-              type="file"
-              accept="image/png, image/jpeg"
-              title
-              ref="FileMsgRef"
-              @change="uploadImage"
-            />
+            <input type="file" title ref="FileMsgRef" @change="uploadImage" />
             <span>上传新封面</span>
           </span>
         </div>
@@ -80,7 +74,7 @@
         <Button type="primary" @click="ModalFalg = false" v-else>确定</Button>
       </div>
     </Modal>
-    <item-image v-model="itemImageFlag" :imgSrc="ImgResult" @on-upload="handleUpload" />
+    <item-image v-model="itemImageFlag" :imgSrc.sync="ImgResult" @on-upload="handleUpload" />
   </div>
 </template>
 
@@ -96,7 +90,7 @@ export default {
   filters: {
     TimeConversion(time) {
       const date = new Date(time);
-      const completion = (num) => {
+      const completion = num => {
         return num.toString().padStart(2, '0');
       };
       return (
@@ -224,12 +218,11 @@ export default {
     uploadImage() {
       const file = this.$refs.FileMsgRef.files[0];
       const reg = /\.(png|jpg|jpeg)$/;
-
       if (!file || reg.test(file.type)) {
         return;
       }
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = e => {
         this.ImgResult = e.target.result;
         this.itemImageFlag = true;
       };
@@ -310,6 +303,7 @@ export default {
   color: #2d8cf0;
   border: 1px solid #2d8cf0;
   border-radius: 4px;
+  user-select: none;
 }
 .g-upload-button:hover {
   background: #2d8cf0;

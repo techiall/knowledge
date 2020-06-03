@@ -102,7 +102,7 @@ export default {
     HandleData(data) {
       let Arr = [];
       this.$emit('selectNode', 9, data.length);
-      data.forEach((item) => {
+      data.forEach(item => {
         let params = {
           id: item.id,
           name: item.name,
@@ -141,24 +141,23 @@ export default {
       this.$emit('selectNode', 2, treeNode);
     },
     // 双击 节点 展开 节点 函数
-    async showChildClik(treeId, treeNode, callback, parameter) {
+    showChildClik(treeId, treeNode, callback, parameter) {
       if (!treeNode) return;
       if (!treeNode.isParent || treeNode.asyncParent) return 1;
       //异步加载 防止重复加载
       treeNode.asyncParent = true;
-      const data = await getChildNode(treeNode.id);
-      let Arr = [];
-      data.forEach((item) => {
-        Arr.push({
-          id: item.id,
-          name: item.name,
-          isParent: item.child,
+      getChildNode(treeNode.id).then(data => {
+        let Arr = [];
+        data.forEach(item => {
+          Arr.push({
+            id: item.id,
+            name: item.name,
+            isParent: item.child,
+          });
         });
+        this.zTree.addNodes(treeNode, Arr, false);
+        if (callback) callback(...parameter);
       });
-      this.zTree.addNodes(treeNode, Arr, false);
-      if (callback) {
-        callback(...parameter);
-      }
     },
     // 点击 节点 后
     zTreeOnClick(event, treeId, treeNode) {
@@ -196,7 +195,7 @@ export default {
     // 拖拽结束,并向服务器发送请求成功
     DropSuccess(treeNodes) {
       let spaceWidth = 15;
-      let treeNodeBFS = (Node) => {
+      let treeNodeBFS = Node => {
         let spaceNum =
           parseInt($(`#${Node.parentTId}_space`).css('width') || 0) /
             spaceWidth +
@@ -204,12 +203,12 @@ export default {
         $(`#${Node.tId}_space`).css('width', spaceWidth * spaceNum + 'px');
         if (Node.isParent && Node.asyncParent) {
           let childNode = Node.children;
-          childNode.forEach((item) => {
+          childNode.forEach(item => {
             treeNodeBFS(item);
           });
         }
       };
-      treeNodes.forEach((item) => {
+      treeNodes.forEach(item => {
         treeNodeBFS(item);
       });
     },
@@ -268,7 +267,7 @@ export default {
     'treelistVal.delNodes': {
       handler: function() {
         const Nodes = this.deleteNodes;
-        Nodes.forEach((item) => {
+        Nodes.forEach(item => {
           if (this.StreeNode.id === item.id) {
             this.StreeNode = '';
             this.$emit('selectNode', 1, false);

@@ -106,7 +106,7 @@ export default {
 }
 .g-body {
   height: calc(100% - 40px);
-  padding: 0px 20px 20px;
+  padding: 10px 20px 20px;
   overflow: auto;
 }
 </style>

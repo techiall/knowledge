@@ -67,7 +67,7 @@ export default {
         const left = (clientWidth - this.canvasWidth) / 2;
         this.setConvasSize(canvasFirst, this.canvasWidth, this.canvasHeight);
         canvasFirst.style.left = `${left}px`;
-        ctxFirst.fillStyle = '#dcdee2';
+        ctxFirst.fillStyle = '#000';
         ctxFirst.fillRect(0, 0, this.canvasHeight, this.canvasHeight);
         ctxFirst.drawImage(img, 0, 0, this.canvasWidth, this.canvasHeight);
         let sx = this.canvasWidth / 2 - this.cropWidth / 2;
