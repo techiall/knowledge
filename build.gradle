@@ -82,3 +82,7 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+bootJar {
+    launchScript()
+}
