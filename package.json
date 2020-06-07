@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "websocket-extensions": ">=0.1.4",
     "@packy-tang/vue-tinymce": "^1.0.0",
     "babel-plugin-prismjs": "^2.0.1",
     "babel-polyfill": "^6.26.0",
