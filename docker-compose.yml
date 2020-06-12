@@ -11,7 +11,7 @@ services:
     networks:
       - knowledge
   web:
-    image: techial.top/knowledge:latest
+    image: techial.cc/knowledge:latest
     networks:
       - knowledge
     depends_on:

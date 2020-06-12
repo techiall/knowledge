@@ -3,7 +3,7 @@ jib {
         image = 'openjdk:12'
     }
     to {
-        image = "techial.top/${project.name}"
+        image = "techial.cc/${project.name}"
         tags = ['latest']
     }
     container {
