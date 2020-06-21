@@ -1,7 +1,5 @@
 package top.techial.knowledge.domain;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -14,8 +12,6 @@ import java.time.Instant;
 /**
  * @author techial
  */
-@Data
-@Accessors(chain = true)
 @Entity
 @IdClass(NodeRelationshipPK.class)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -54,4 +50,58 @@ public class NodeRelationship implements Serializable {
 
     @UpdateTimestamp
     private Instant updateTime;
+
+    public Long getAncestor() {
+        return ancestor;
+    }
+
+    public NodeRelationship setAncestor(Long ancestor) {
+        this.ancestor = ancestor;
+        return this;
+    }
+
+    public Long getDescendant() {
+        return descendant;
+    }
+
+    public NodeRelationship setDescendant(Long descendant) {
+        this.descendant = descendant;
+        return this;
+    }
+
+    public Long getDistance() {
+        return distance;
+    }
+
+    public NodeRelationship setDistance(Long distance) {
+        this.distance = distance;
+        return this;
+    }
+
+    public Property getProperty() {
+        return property;
+    }
+
+    public NodeRelationship setProperty(Property property) {
+        this.property = property;
+        return this;
+    }
+
+    public Instant getCreateTime() {
+        return createTime;
+    }
+
+    public NodeRelationship setCreateTime(Instant createTime) {
+        this.createTime = createTime;
+        return this;
+    }
+
+    public Instant getUpdateTime() {
+        return updateTime;
+    }
+
+    public NodeRelationship setUpdateTime(Instant updateTime) {
+        this.updateTime = updateTime;
+        return this;
+    }
 }

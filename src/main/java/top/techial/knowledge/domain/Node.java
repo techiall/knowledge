@@ -1,7 +1,5 @@
 package top.techial.knowledge.domain;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -17,12 +15,10 @@ import java.time.Instant;
  * @author techial
  */
 @Entity
-@Data
 @Table(name = "node", indexes = {
         @Index(name = "item_id_index", columnList = "item_id"),
         @Index(name = "name_index", columnList = "name")
 })
-@Accessors(chain = true)
 @Document(indexName = "nodes", type = "_doc")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Node implements Serializable {
@@ -55,4 +51,76 @@ public class Node implements Serializable {
 
     @UpdateTimestamp
     private Instant updateTime;
+
+    public Long getId() {
+        return id;
+    }
+
+    public Node setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Node setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public Labels getLabels() {
+        return labels;
+    }
+
+    public Node setLabels(Labels labels) {
+        this.labels = labels;
+        return this;
+    }
+
+    public Property getProperty() {
+        return property;
+    }
+
+    public Node setProperty(Property property) {
+        this.property = property;
+        return this;
+    }
+
+    public Integer getItemId() {
+        return itemId;
+    }
+
+    public Node setItemId(Integer itemId) {
+        this.itemId = itemId;
+        return this;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public Node setText(String text) {
+        this.text = text;
+        return this;
+    }
+
+    public Instant getCreateTime() {
+        return createTime;
+    }
+
+    public Node setCreateTime(Instant createTime) {
+        this.createTime = createTime;
+        return this;
+    }
+
+    public Instant getUpdateTime() {
+        return updateTime;
+    }
+
+    public Node setUpdateTime(Instant updateTime) {
+        this.updateTime = updateTime;
+        return this;
+    }
 }

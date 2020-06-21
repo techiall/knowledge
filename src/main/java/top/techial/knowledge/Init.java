@@ -21,6 +21,11 @@ public class Init implements CommandLineRunner {
         this.objectMapper = objectMapper;
     }
 
+    private static byte[] resource(String path) throws IOException {
+        ClassPathResource classPathResource = new ClassPathResource(path);
+        return FileCopyUtils.copyToByteArray(classPathResource.getInputStream());
+    }
+
     @Override
     public void run(String... args) throws IOException {
         if (userRepository.count() == 0L) {
@@ -28,10 +33,5 @@ public class Init implements CommandLineRunner {
             User[] users = objectMapper.readValue(bytes, User[].class);
             userRepository.saveAll(Arrays.asList(users));
         }
-    }
-
-    private static byte[] resource(String path) throws IOException {
-        ClassPathResource classPathResource = new ClassPathResource(path);
-        return FileCopyUtils.copyToByteArray(classPathResource.getInputStream());
     }
 }

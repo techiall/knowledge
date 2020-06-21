@@ -1,19 +1,10 @@
 package top.techial.knowledge.service.dto;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-
 import java.util.List;
 
 /**
  * @author techial
  */
-@Data
-@Accessors(chain = true)
-@EqualsAndHashCode(exclude = {"child"})
-@ToString(exclude = {"child"})
 public class NodeTreeDTO {
 
     private Long id;
@@ -21,5 +12,32 @@ public class NodeTreeDTO {
     private String name;
 
     private List<NodeTreeDTO> child;
+
+    public Long getId() {
+        return id;
+    }
+
+    public NodeTreeDTO setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public NodeTreeDTO setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public List<NodeTreeDTO> getChild() {
+        return child;
+    }
+
+    public NodeTreeDTO setChild(List<NodeTreeDTO> child) {
+        this.child = child;
+        return this;
+    }
 }
 

@@ -1,7 +1,5 @@
 package top.techial.knowledge.web.rest.vm;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
 import top.techial.knowledge.service.valid.Insert;
 
 import javax.validation.constraints.NotEmpty;
@@ -11,8 +9,6 @@ import java.io.Serializable;
 /**
  * @author techial
  */
-@Data
-@Accessors(chain = true)
 public class ItemVM implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,4 +22,40 @@ public class ItemVM implements Serializable {
     private String description;
 
     private String image;
+
+    public Boolean getShare() {
+        return share;
+    }
+
+    public ItemVM setShare(Boolean share) {
+        this.share = share;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ItemVM setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public ItemVM setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public ItemVM setImage(String image) {
+        this.image = image;
+        return this;
+    }
 }
