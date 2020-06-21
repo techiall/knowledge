@@ -7,6 +7,6 @@ jib {
         tags = ['latest']
     }
     container {
-        labels = ['maintainer': 'techial "me@techial.top"']
+        labels = ['maintainer': 'techial "dev@techial.cc"']
     }
 }

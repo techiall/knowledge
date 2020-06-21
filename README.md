@@ -44,7 +44,7 @@ java -jar ./build/libs/knolwedge-0.1.0.jar
 
 gradle clean yarnBuild jibDockerBuild
 
-docker run -d techial.top/knowledge:latest
+docker run -d techial.cc/knowledge:latest
 
 ```
 
