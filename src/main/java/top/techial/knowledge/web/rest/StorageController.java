@@ -15,8 +15,6 @@ import top.techial.knowledge.service.FileStorageService;
 import top.techial.knowledge.service.StorageService;
 import top.techial.knowledge.web.rest.errors.NodeNotFoundException;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -65,14 +63,10 @@ public class StorageController {
     }
 
     @PostMapping
-    public Map<String, Object> save(@RequestParam MultipartFile file) {
+    public ResultBean<String> save(@RequestParam MultipartFile file) {
         var sha1 = fileStorageService.upload(file);
         storageService.save(sha1, file);
-        Map<String, Object> map = new HashMap<>();
-        map.put("code", 200);
-        map.put("msg", "OK");
-        map.put("link", String.format("https://knowledge.pchelper666.com/api/storage/preview/%s", sha1));
-        return map;
+        return ResultBean.ok(String.format("/api/storage/preview/%s", sha1));
     }
 
     @DeleteMapping("/{id}")
