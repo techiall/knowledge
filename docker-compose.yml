@@ -4,6 +4,7 @@ services:
     image: nginx:latest
     volumes:
       - ./deploy/nginx/knowledge.conf:/etc/nginx/conf.d/knowledge.conf
+      - ./deploy/nginx/zh_CN.js:/usr/share/nginx/html/static/js/zh_CN.js
     depends_on:
       - web
     ports:
