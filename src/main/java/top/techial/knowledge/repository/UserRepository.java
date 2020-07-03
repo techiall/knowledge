@@ -18,5 +18,4 @@ public interface UserRepository extends JpaRepository<User, Integer>, QuerydslPr
     Optional<User> findFirstByUserName(String name);
 
     boolean existsByUserName(String name);
-
 }

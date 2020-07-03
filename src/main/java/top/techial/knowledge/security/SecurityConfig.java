@@ -15,7 +15,6 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-
 /**
  * @author techial
  */

@@ -25,7 +25,6 @@ public class ItemService {
     private final NodeService nodeService;
     private final UserRepository userRepository;
 
-
     public ItemService(NodeSearchRepository nodeSearchRepository,
                        ItemRepository itemRepository,
                        NodeRepository nodeRepository,
@@ -61,7 +60,7 @@ public class ItemService {
         node = nodeService.saveItemRoot(node);
 
         item.setAuthor(userRepository.findById(id).orElseThrow(UserNotFoundException::new))
-                .setRootNode(node);
+            .setRootNode(node);
         item = itemRepository.save(item);
 
         nodeRepository.save(node.setItemId(item.getId()));

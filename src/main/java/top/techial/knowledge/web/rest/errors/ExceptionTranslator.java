@@ -18,12 +18,12 @@ public class ExceptionTranslator {
 
     private static ResponseEntity<ResultBean<Object>> handleException(ClientErrorException exception) {
         return ResponseEntity.status(exception.getCode())
-                .body(exception.getResultBean());
+                             .body(exception.getResultBean());
     }
 
     private static ResponseEntity<ResultBean<String>> handleException(ResultBean<String> resultBean) {
         return ResponseEntity.status(resultBean.getCode())
-                .body(resultBean);
+                             .body(resultBean);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)

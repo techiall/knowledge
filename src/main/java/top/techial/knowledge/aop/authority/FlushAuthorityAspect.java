@@ -29,7 +29,6 @@ public class FlushAuthorityAspect {
         }
     }
 
-
     @AfterThrowing(value = "@annotation(flushAuthority)", throwing = "throwable")
     public void afterThrowing(FlushAuthority flushAuthority, Throwable throwable) {
         if (log.isErrorEnabled()) {

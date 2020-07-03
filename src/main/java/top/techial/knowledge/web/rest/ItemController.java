@@ -39,23 +39,23 @@ public class ItemController {
     @GetMapping("share")
     public ResultBean<Page<ItemDTO>> share(@PageableDefault Pageable pageable) {
         var list = itemRepository.findByShare(true, pageable)
-                .map(itemMapper::toItemDTO);
+                                 .map(itemMapper::toItemDTO);
         return ResultBean.ok(list);
     }
 
     @GetMapping("/{id}")
     public ResultBean<ItemDTO> findById(@PathVariable Integer id) {
         return itemRepository.findById(id)
-                .map(itemMapper::toItemDTO)
-                .map(ResultBean::ok)
-                .orElseThrow(ItemNotFoundException::new);
+                             .map(itemMapper::toItemDTO)
+                             .map(ResultBean::ok)
+                             .orElseThrow(ItemNotFoundException::new);
     }
 
     @GetMapping
     public ResultBean<Page<ItemDTO>> findByUserId(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                                   @PageableDefault Pageable pageable) {
         return ResultBean.ok(itemRepository.findAllByAuthorId(userPrincipal.getId(), pageable)
-                .map(itemMapper::toItemDTO));
+                                           .map(itemMapper::toItemDTO));
     }
 
     @PostMapping
@@ -64,7 +64,7 @@ public class ItemController {
                                     @Validated(value = Insert.class) @RequestBody ItemVM itemVM) {
         if (itemVM.getName() == null || itemVM.getName().isEmpty()) {
             throw new IllegalArgumentException(String
-                    .format("itemVO error. %s", itemVM.toString()));
+                                                       .format("itemVO error. %s", itemVM.toString()));
         }
         var item = itemMapper.toItem(itemVM);
         item = itemService.save(userPrincipal.getId(), item);
@@ -85,5 +85,4 @@ public class ItemController {
         itemService.deleteById(id, userPrincipal.getId());
         return ResultBean.ok();
     }
-
 }

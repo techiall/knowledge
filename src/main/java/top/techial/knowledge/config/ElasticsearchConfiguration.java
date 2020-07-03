@@ -47,7 +47,7 @@ public class ElasticsearchConfiguration {
                                                          final SimpleElasticsearchMappingContext simpleElasticsearchMappingContext,
                                                          @Qualifier("getEntityMapper") EntityMapper mapper) {
         return new JestElasticsearchTemplate(jestClient, elasticsearchConverter,
-                new DefaultJestResultsMapper(simpleElasticsearchMappingContext, mapper));
+                                             new DefaultJestResultsMapper(simpleElasticsearchMappingContext, mapper));
     }
 
     public static class CustomEntityMapper implements EntityMapper {

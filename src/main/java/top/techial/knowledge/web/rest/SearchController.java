@@ -36,9 +36,9 @@ public class SearchController {
 
     private static String text(String text) {
         return Optional.ofNullable(text)
-                .map(it -> it.replaceAll(REGEX, "").trim())
-                .map(s -> s.substring(0, Math.min(200, s.length())))
-                .orElse("");
+                       .map(it -> it.replaceAll(REGEX, "").trim())
+                       .map(s -> s.substring(0, Math.min(200, s.length())))
+                       .orElse("");
     }
 
     @GetMapping
@@ -50,9 +50,9 @@ public class SearchController {
         question = question.substring(0, Math.min(32, question.length()));
         if (Boolean.TRUE.equals(tips)) {
             return ResultBean.ok(nodeService
-                    .findContentByNameLike(question, PageRequest.of(0, 10))
-                    .map(nodeMapper::toNodeInfoDTO)
-                    .getContent());
+                                         .findContentByNameLike(question, PageRequest.of(0, 10))
+                                         .map(nodeMapper::toNodeInfoDTO)
+                                         .getContent());
         }
         int page = Math.min(50, pageable.getPageNumber());
         int size = Math.min(20, pageable.getPageSize());
@@ -62,9 +62,8 @@ public class SearchController {
 
     private SearchDTO convent(Node node) {
         var result = itemRepository.findById(node.getItemId())
-                .map(it -> nodeMapper.toSearchDTO(node, it))
-                .orElseThrow(ItemNotFoundException::new);
+                                   .map(it -> nodeMapper.toSearchDTO(node, it))
+                                   .orElseThrow(ItemNotFoundException::new);
         return result.setText(text(result.getText()));
     }
-
 }

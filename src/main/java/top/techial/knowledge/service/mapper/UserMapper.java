@@ -14,5 +14,4 @@ public interface UserMapper {
     User toUser(RegisterVM registerVM);
 
     UserDTO toUserDTO(User user);
-
 }

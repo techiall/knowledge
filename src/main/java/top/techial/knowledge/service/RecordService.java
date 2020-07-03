@@ -26,5 +26,4 @@ public class RecordService {
                 .setUser(userRepository.getOne(userId));
         recordRepository.save(record);
     }
-
 }

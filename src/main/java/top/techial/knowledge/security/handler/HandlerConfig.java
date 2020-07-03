@@ -44,5 +44,4 @@ public class HandlerConfig {
     public LogoutSuccessHandler logoutSuccessHandler() {
         return new LogoutSuccessHandlerImpl(objectMapper);
     }
-
 }

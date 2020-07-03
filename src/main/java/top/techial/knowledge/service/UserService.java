@@ -61,8 +61,8 @@ public class UserService {
     private String findPasswordById(Integer id) {
         var qUser = QUser.user;
         return jpaQueryFactory.select(qUser.password).where(qUser.id.eq(id))
-                .from(qUser)
-                .fetchFirst();
+                              .from(qUser)
+                              .fetchFirst();
     }
 
     public void resetAuthority() {
@@ -77,9 +77,9 @@ public class UserService {
 
         var qItem = QItem.item;
         var items = jpaQueryFactory.select(qItem.id)
-                .from(qItem)
-                .where(qItem.author.id.eq(userPrincipal.getId()))
-                .fetch();
+                                   .from(qItem)
+                                   .where(qItem.author.id.eq(userPrincipal.getId()))
+                                   .fetch();
 
         if (items == null) {
             return;
@@ -116,7 +116,7 @@ public class UserService {
 
         var qUser = QUser.user;
         jpaQueryFactory.update(qUser).set(qUser.password, passwordEncoder.encode(password))
-                .where(qUser.id.eq(id)).execute();
+                       .where(qUser.id.eq(id)).execute();
         return user;
     }
 

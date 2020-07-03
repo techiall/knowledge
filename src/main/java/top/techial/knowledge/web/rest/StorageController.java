@@ -48,8 +48,8 @@ public class StorageController {
     @PreAuthorize("hasAnyAuthority(#id)")
     public ResultBean<Long> save(@RequestBody(required = false) String text, @PathVariable Long id) {
         var node = nodeSearchRepository.findById(id)
-                .map(it -> nodeSearchRepository.index(it.setText(text)))
-                .orElseThrow(NodeNotFoundException::new);
+                                       .map(it -> nodeSearchRepository.index(it.setText(text)))
+                                       .orElseThrow(NodeNotFoundException::new);
         return ResultBean.ok(node.getId());
     }
 
@@ -76,7 +76,6 @@ public class StorageController {
         return ResultBean.ok(true);
     }
 
-
     @GetMapping(value = "/preview/{id}")
     public ResponseEntity<Resource> preview(@PathVariable String id) {
         var storage = storageService.findById(id);
@@ -96,5 +95,4 @@ public class StorageController {
                 String.format("attachment; filename=\"%s\"", storage.getOriginalFilename())
         ).body(fileStorageService.findByHash(id));
     }
-
 }

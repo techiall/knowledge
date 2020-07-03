@@ -38,5 +38,4 @@ public class RegisterController {
         var user = userMapper.toUser(registerVM);
         return ResultBean.ok(userService.saveNewUser(user));
     }
-
 }

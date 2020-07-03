@@ -22,7 +22,6 @@ public class UserPrincipal extends User {
         this.id = id;
     }
 
-
     public Integer getId() {
         return id;
     }

@@ -2,7 +2,7 @@ package top.techial.knowledge.repository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ParentChildRelationRepositoryTest {
 

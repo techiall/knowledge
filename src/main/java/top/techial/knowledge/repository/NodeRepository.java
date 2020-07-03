@@ -36,5 +36,4 @@ public interface NodeRepository extends JpaRepository<Node, Long>, QuerydslPredi
 
     @Query("select i.rootNode.id from Node n inner join Item i on n.itemId = i.id where n.id = ?1")
     Long findItemRootNodeId(Long id);
-
 }

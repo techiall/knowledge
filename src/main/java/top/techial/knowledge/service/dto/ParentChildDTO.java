@@ -1,6 +1,5 @@
 package top.techial.knowledge.service.dto;
 
-
 import java.io.Serializable;
 
 public class ParentChildDTO implements Serializable {

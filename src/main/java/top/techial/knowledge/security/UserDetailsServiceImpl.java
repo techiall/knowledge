@@ -40,18 +40,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) {
-        User user = userRepository.findFirstByUserName(s).orElseThrow(() ->
-                new UsernameNotFoundException(String.format("userName:[%s] not found.", s)));
+        User user = userRepository.findFirstByUserName(s)
+                                  .orElseThrow(() -> new UsernameNotFoundException(String.format("userName:[%s] not found.", s)));
 
         if (user.getItem() == null || user.getItem().isEmpty()) {
             return toUserPrincipal(user, Collections.emptyList());
         }
 
-        List<Long> nodes = nodeRepository.findByItemIdIn(user
-                .getItem()
-                .parallelStream()
-                .map(Item::getId)
-                .collect(Collectors.toList()));
+        List<Long> nodes = nodeRepository.findByItemIdIn(user.getItem()
+                                                             .parallelStream()
+                                                             .map(Item::getId)
+                                                             .collect(Collectors.toList()));
         return toUserPrincipal(user, nodes);
     }
 
@@ -71,5 +70,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 new HashSet<>(authorities)
         );
     }
-
 }

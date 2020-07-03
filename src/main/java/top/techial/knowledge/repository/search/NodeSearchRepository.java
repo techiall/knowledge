@@ -17,5 +17,4 @@ public interface NodeSearchRepository extends ElasticsearchRepository<Node, Long
 
     @Transactional
     void deleteByIdIn(Collection<Long> ids);
-
 }

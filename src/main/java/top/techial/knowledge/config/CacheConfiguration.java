@@ -48,7 +48,6 @@ public class CacheConfiguration {
         return RedissonConfiguration.fromInstance(redissonClient(), jcacheConfig);
     }
 
-
     @Bean
     public HibernatePropertiesCustomizer hibernatePropertiesCustomizer(javax.cache.CacheManager cm) {
         return hibernateProperties -> hibernateProperties.put(ConfigSettings.CACHE_MANAGER, cm);
@@ -72,6 +71,4 @@ public class CacheConfiguration {
             cm.createCache(cacheName, jcacheConfiguration);
         }
     }
-
-
 }

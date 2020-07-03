@@ -38,5 +38,4 @@ public class RecordController {
     ) {
         return ResultBean.ok(recordRepository.findAllByNodeId(id, pageable).map(recordMapper::toRecordDTO));
     }
-
 }

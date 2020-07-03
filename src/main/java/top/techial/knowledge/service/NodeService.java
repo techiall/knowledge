@@ -148,27 +148,27 @@ public class NodeService {
         var searchQuery = new NativeSearchQueryBuilder()
                 .withIndices(INDEX)
                 .withQuery(QueryBuilders.boolQuery()
-                        .must(QueryBuilders.matchQuery("name", name))
-                        .must(QueryBuilders.termQuery("itemId", itemId))
+                                        .must(QueryBuilders.matchQuery("name", name))
+                                        .must(QueryBuilders.termQuery("itemId", itemId))
                 )
                 .withHighlightFields(new HighlightBuilder.Field(name))
                 .withPageable(PageRequest.of(0, 10))
                 .build();
         return nodeSearchRepository.search(searchQuery).map(nodeMapper::toNodeInfoDTO)
-                .getContent();
+                                   .getContent();
     }
 
     public Page<Node> findContentByNameLike(String name, Pageable pageable) {
         var itemIds = itemRepository.findByShare(true)
-                .parallelStream()
-                .map(Item::getId)
-                .collect(Collectors.toList());
+                                    .parallelStream()
+                                    .map(Item::getId)
+                                    .collect(Collectors.toList());
 
         var searchQuery = new NativeSearchQueryBuilder()
                 .withIndices(INDEX)
                 .withQuery(QueryBuilders.boolQuery()
-                        .must(QueryBuilders.matchQuery("name", name))
-                        .must(QueryBuilders.termsQuery("itemId", itemIds))
+                                        .must(QueryBuilders.matchQuery("name", name))
+                                        .must(QueryBuilders.termsQuery("itemId", itemIds))
                 )
                 .withHighlightFields(new HighlightBuilder.Field(name))
                 .withPageable(pageable)
@@ -193,14 +193,14 @@ public class NodeService {
 
     private Map<Long, Node> buildChildNodeData(Long id) {
         return nodeRepository.findChildNode(id)
-                .parallelStream()
-                .collect(Collectors.toMap(Node::getId, Function.identity()));
+                             .parallelStream()
+                             .collect(Collectors.toMap(Node::getId, Function.identity()));
     }
 
     private Map<Long, Node> buildParentNodeData(Long id) {
         return nodeRepository.findParentNode(id)
-                .parallelStream()
-                .collect(Collectors.toMap(Node::getId, Function.identity()));
+                             .parallelStream()
+                             .collect(Collectors.toMap(Node::getId, Function.identity()));
     }
 
     private Map<Long, List<ParentChildDTO>> buildChildNode(Long id) {
@@ -211,9 +211,9 @@ public class NodeService {
                 "where nr_child.ancestor = (:id)) as node on nr.descendant = node.id\n" +
                 "where nr.distance = 1 and nr.descendant != (:id)";
         return namedParameterJdbcTemplate.query(value, Collections.singletonMap("id", id),
-                new BeanPropertyRowMapper<>(ParentChildDTO.class))
-                .parallelStream()
-                .collect(Collectors.groupingBy(ParentChildDTO::getAncestor));
+                                                new BeanPropertyRowMapper<>(ParentChildDTO.class))
+                                         .parallelStream()
+                                         .collect(Collectors.groupingBy(ParentChildDTO::getAncestor));
     }
 
     private Map<Long, List<ParentChildDTO>> buildParentNode(Long id) {
@@ -224,9 +224,9 @@ public class NodeService {
                 "where nr_child.descendant = (:id)) as node on nr.descendant = node.id\n" +
                 "where nr.distance = 1";
         return namedParameterJdbcTemplate.query(value, Collections.singletonMap("id", id),
-                new BeanPropertyRowMapper<>(ParentChildDTO.class))
-                .parallelStream()
-                .collect(Collectors.groupingBy(ParentChildDTO::getDescendant));
+                                                new BeanPropertyRowMapper<>(ParentChildDTO.class))
+                                         .parallelStream()
+                                         .collect(Collectors.groupingBy(ParentChildDTO::getDescendant));
     }
 
     private List<NodeBaseDTO> findParent(Long id) {
@@ -236,10 +236,10 @@ public class NodeService {
                 "from `node` node0_ inner join node_relationship noderelati1_ on (node0_.id = noderelati1_.ancestor)\n" +
                 "where noderelati1_.descendant = (:descendant)\n";
         return namedParameterJdbcTemplate.query(value, Collections.singletonMap("descendant", id),
-                new BeanPropertyRowMapper<>(NodeBaseDTO.class))
-                .parallelStream()
-                .filter(it -> it.getParentNodeId() != null)
-                .collect(Collectors.toList());
+                                                new BeanPropertyRowMapper<>(NodeBaseDTO.class))
+                                         .parallelStream()
+                                         .filter(it -> it.getParentNodeId() != null)
+                                         .collect(Collectors.toList());
     }
 
     private NodeTreeDTO depthGetChild(Long id) {
@@ -322,7 +322,6 @@ public class NodeService {
             }
         }
     }
-
 
     /**
      * node parent
@@ -418,7 +417,7 @@ public class NodeService {
         vmOptional.map(NodeVM::getName).filter(it -> !it.isEmpty()).ifPresent(it -> {
             node.setName(nodeVM.getName());
             recordService.save(node.getId(), userId,
-                    nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
+                               nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
         });
 
         vmOptional.map(NodeVM::getLabels).ifPresent(it -> {
@@ -443,16 +442,16 @@ public class NodeService {
     @Transactional
     public Map<String, Object> save(Integer id, NodeVM nodeVM) {
         var itemId = itemRepository.findRootNodeId(nodeVM.getItemId())
-                .orElseThrow(ItemNotFoundException::new);
+                                   .orElseThrow(ItemNotFoundException::new);
 
         var node = nodeRepository.findByItemIdAndName(nodeVM.getName().trim(), nodeVM.getItemId())
-                .orElse(null);
+                                 .orElse(null);
         boolean flag = false;
         if (node == null) {
             node = nodeRelationshipSave(nodeVM, itemId);
             nodeSearchRepository.index(node);
             recordService.save(node.getId(), id,
-                    nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
+                               nodeVM.getRecord().getOperator(), nodeVM.getRecord().getMessage());
             flag = true;
         }
         Map<String, Object> map = new HashMap<>();
@@ -466,7 +465,6 @@ public class NodeService {
         nodeRepository.deleteById(id);
         nodeRelationshipRepository.deleteByNodeId(id);
     }
-
 
     public void deleteById(Long id) {
         deleteIdAndRelationship(id);

@@ -1,6 +1,6 @@
 package top.techial.knowledge.file.storage;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +19,6 @@ public class FileStorageServiceImplTest {
     @Autowired
     private FileStorageService fileStorageService;
 
-
     @Test
     public void deleteAll() {
         fileStorageService.deleteAll();
@@ -33,7 +32,7 @@ public class FileStorageServiceImplTest {
     @Test
     public void store() throws IOException {
         MultipartFile file = new MockMultipartFile("admin.pdf",
-                new FileInputStream(Paths.get("/Users/techial/Downloads/admin.pdf").toFile()));
+                                                   new FileInputStream(Paths.get("/Users/techial/Downloads/admin.pdf").toFile()));
         fileStorageService.upload(file);
     }
 }
