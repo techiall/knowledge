@@ -18,34 +18,22 @@ public class ResultBean<T> implements Serializable {
 
     private final T data;
 
-    public ResultBean(Integer code, String msg, T data) {
+    private ResultBean(Integer code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
     }
 
-    public ResultBean() {
-        this(DEFAULT_CODE, DEFAULT_MSG, null);
-    }
-
-    public ResultBean(Integer code, String msg) {
-        this(code, msg, null);
-    }
-
-    public ResultBean(T data) {
-        this(DEFAULT_CODE, DEFAULT_MSG, data);
-    }
-
     public static <T> ResultBean<T> ok(T data) {
-        return new ResultBean<>(data);
+        return new ResultBean<>(DEFAULT_CODE, DEFAULT_MSG, data);
     }
 
     public static <T> ResultBean<T> ok() {
-        return new ResultBean<>();
+        return new ResultBean<>(DEFAULT_CODE, DEFAULT_MSG, null);
     }
 
     public static <T> ResultBean<T> of(Integer code, String msg) {
-        return new ResultBean<>(code, msg);
+        return new ResultBean<>(code, msg, null);
     }
 
     public static <T> ResultBean<T> of(Integer code, String msg, T data) {
