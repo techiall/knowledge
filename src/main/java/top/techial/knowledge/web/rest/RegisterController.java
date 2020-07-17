@@ -3,7 +3,6 @@ package top.techial.knowledge.web.rest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.techial.knowledge.beans.ResultBean;
-import top.techial.knowledge.domain.User;
 import top.techial.knowledge.repository.UserRepository;
 import top.techial.knowledge.service.UserService;
 import top.techial.knowledge.service.mapper.UserMapper;
@@ -29,12 +28,12 @@ public class RegisterController {
     }
 
     @GetMapping("/query")
-    public ResultBean<Boolean> existsByUserName(@RequestParam String name) {
+    public ResultBean existsByUserName(@RequestParam String name) {
         return ResultBean.ok(userRepository.existsByUserName(name));
     }
 
     @PostMapping
-    public ResultBean<User> save(@Validated @RequestBody RegisterVM registerVM) {
+    public ResultBean save(@Validated @RequestBody RegisterVM registerVM) {
         var user = userMapper.toUser(registerVM);
         return ResultBean.ok(userService.saveNewUser(user));
     }

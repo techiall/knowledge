@@ -24,7 +24,7 @@ public class ClientErrorException extends RuntimeException {
         return msg;
     }
 
-    public ResultBean<Object> getResultBean() {
+    public ResultBean getResultBean() {
         return ResultBean.of(code, msg);
     }
 }

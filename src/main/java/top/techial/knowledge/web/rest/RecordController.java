@@ -1,6 +1,5 @@
 package top.techial.knowledge.web.rest;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.techial.knowledge.beans.ResultBean;
 import top.techial.knowledge.repository.RecordRepository;
-import top.techial.knowledge.service.dto.RecordDTO;
 import top.techial.knowledge.service.mapper.RecordMapper;
 
 /**
@@ -32,7 +30,7 @@ public class RecordController {
 
     @GetMapping("/node/{id}")
     @PreAuthorize("hasAnyAuthority(#id.toString())")
-    public ResultBean<Page<RecordDTO>> findByNodeId(
+    public ResultBean findByNodeId(
             @PathVariable Long id,
             @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable
     ) {

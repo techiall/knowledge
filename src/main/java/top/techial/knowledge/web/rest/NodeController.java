@@ -11,16 +11,12 @@ import top.techial.knowledge.repository.RecordRepository;
 import top.techial.knowledge.repository.search.NodeSearchRepository;
 import top.techial.knowledge.security.UserPrincipal;
 import top.techial.knowledge.service.NodeService;
-import top.techial.knowledge.service.dto.NodeBaseDTO;
-import top.techial.knowledge.service.dto.NodeInfoDTO;
 import top.techial.knowledge.service.mapper.NodeMapper;
 import top.techial.knowledge.service.valid.Insert;
 import top.techial.knowledge.service.valid.Update;
 import top.techial.knowledge.web.rest.errors.ItemNotFoundException;
 import top.techial.knowledge.web.rest.vm.NodeVM;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -50,7 +46,7 @@ public class NodeController {
     }
 
     @GetMapping("/{id}")
-    public ResultBean<NodeInfoDTO> findById(@PathVariable Long id) {
+    public ResultBean findById(@PathVariable Long id) {
         var node = nodeService.findById(id);
         return ResultBean.ok(nodeMapper.toNodeInfoDTO(node));
     }
@@ -58,14 +54,14 @@ public class NodeController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ITEM_' + #nodeVM.itemId.toString())")
     @FlushAuthority
-    public ResultBean<Map<String, Object>> save(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                                @Validated(value = Insert.class) @RequestBody NodeVM nodeVM) {
+    public ResultBean save(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                           @Validated(value = Insert.class) @RequestBody NodeVM nodeVM) {
         return ResultBean.ok(nodeService.save(userPrincipal.getId(), nodeVM));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ITEM_' + #nodeVM.itemId.toString()) AND hasAnyAuthority(#id)")
-    public ResultBean<NodeInfoDTO> update(
+    public ResultBean update(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long id,
             @Validated(value = Update.class) @RequestBody NodeVM nodeVM
@@ -76,7 +72,7 @@ public class NodeController {
 
     @PutMapping("/{id}/movement")
     @PreAuthorize("hasAnyAuthority(#target) AND hasAnyAuthority(#id)")
-    public ResultBean<Boolean> move(@PathVariable Long id, @RequestParam Long target) {
+    public ResultBean move(@PathVariable Long id, @RequestParam Long target) {
         if (Objects.equals(id, target)) {
             throw new IllegalArgumentException(String.format("id: [%s], target: [%s]", id, target));
         }
@@ -87,7 +83,7 @@ public class NodeController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ITEM_' + #itemId.toString()) AND hasAnyAuthority(#id)")
     @FlushAuthority
-    public ResultBean<Boolean> deleteById(@RequestParam Integer itemId, @PathVariable Long id) {
+    public ResultBean deleteById(@RequestParam Integer itemId, @PathVariable Long id) {
         nodeService.deleteById(id);
         return ResultBean.ok(true);
     }
@@ -95,7 +91,7 @@ public class NodeController {
     @DeleteMapping
     @PreAuthorize("hasAnyAuthority('ITEM_' + #itemId.toString()) AND hasAnyAuthority(#ids)")
     @FlushAuthority
-    public ResultBean<Boolean> deleteByIds(@RequestBody Set<Long> ids, @RequestParam Integer itemId) {
+    public ResultBean deleteByIds(@RequestBody Set<Long> ids, @RequestParam Integer itemId) {
         nodeService.deleteIdsAndRelationship(ids);
         nodeSearchRepository.deleteByIdIn(ids);
         recordRepository.deleteByNodeIdIn(ids);
@@ -104,31 +100,31 @@ public class NodeController {
     }
 
     @GetMapping
-    public ResultBean<List<NodeBaseDTO>> findByRootNode(@RequestParam Integer itemId,
-                                                        @RequestParam(defaultValue = "1") Integer depth) {
+    public ResultBean findByRootNode(@RequestParam Integer itemId,
+                                     @RequestParam(defaultValue = "1") Integer depth) {
         var rootNodeId = itemRepository.findRootNodeId(itemId).orElseThrow(ItemNotFoundException::new);
         return ResultBean.ok(nodeService.findByChildNode(rootNodeId, depth));
     }
 
     @GetMapping("/{id}/graph")
-    public ResultBean<Map<String, Object>> findByIdGraph(@PathVariable Long id) {
+    public ResultBean findByIdGraph(@PathVariable Long id) {
         return ResultBean.ok(nodeService.findByIdGraph(id));
     }
 
     @GetMapping("/{id}/link")
-    public ResultBean<Map<String, Object>> getChildAndParent(@PathVariable Long id) throws ExecutionException, InterruptedException {
+    public ResultBean getChildAndParent(@PathVariable Long id) throws ExecutionException, InterruptedException {
         return ResultBean.ok(nodeService.getChildAndParent(id));
     }
 
     @GetMapping("/{id}/child")
-    public ResultBean<List<NodeBaseDTO>> findChildNode(@PathVariable Long id,
-                                                       @RequestParam(required = false, defaultValue = "1") int depth) {
+    public ResultBean findChildNode(@PathVariable Long id,
+                                    @RequestParam(required = false, defaultValue = "1") int depth) {
         return ResultBean.ok(nodeService.findByChildNode(id, depth));
     }
 
     @GetMapping("/name")
-    public ResultBean<List<NodeInfoDTO>> findByName(@RequestParam(name = "query") String name,
-                                                    @RequestParam Integer itemId) {
+    public ResultBean findByName(@RequestParam(name = "query") String name,
+                                 @RequestParam Integer itemId) {
         return ResultBean.ok(nodeService.findByNameLike(name, itemId));
     }
 }

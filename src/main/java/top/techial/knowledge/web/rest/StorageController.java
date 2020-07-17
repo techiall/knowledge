@@ -46,7 +46,7 @@ public class StorageController {
      */
     @PostMapping("/text/{id}")
     @PreAuthorize("hasAnyAuthority(#id)")
-    public ResultBean<Long> save(@RequestBody(required = false) String text, @PathVariable Long id) {
+    public ResultBean save(@RequestBody(required = false) String text, @PathVariable Long id) {
         var node = nodeSearchRepository.findById(id)
                                        .map(it -> nodeSearchRepository.index(it.setText(text)))
                                        .orElseThrow(NodeNotFoundException::new);
@@ -57,20 +57,20 @@ public class StorageController {
      * 文本获取，对应 node 节点
      */
     @GetMapping("/text/{id}")
-    public ResultBean<String> findById(@PathVariable Long id) {
+    public ResultBean findById(@PathVariable Long id) {
         var s = nodeSearchRepository.findById(id).map(Node::getText).orElse(null);
         return ResultBean.ok(s);
     }
 
     @PostMapping
-    public ResultBean<String> save(@RequestParam MultipartFile file) {
+    public ResultBean save(@RequestParam MultipartFile file) {
         var sha1 = fileStorageService.upload(file);
         storageService.save(sha1, file);
         return ResultBean.ok(String.format("/api/storage/preview/%s", sha1));
     }
 
     @DeleteMapping("/{id}")
-    public ResultBean<Boolean> delete(@PathVariable String id) {
+    public ResultBean delete(@PathVariable String id) {
         fileStorageService.delete(id);
         storageRepository.deleteById(id);
         return ResultBean.ok(true);

@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResultBean<Map<String, Object>> me(@AuthenticationPrincipal Object object, CsrfToken csrfToken) {
+    public ResultBean me(@AuthenticationPrincipal Object object, CsrfToken csrfToken) {
         Map<String, Object> map = new HashMap<>(16);
         if (object instanceof UserPrincipal) {
             UserPrincipal userPrincipal = (UserPrincipal) object;
@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @PutMapping("/me")
-    public ResultBean<UserDTO> update(
+    public ResultBean update(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestBody UserVM userVM
     ) {
@@ -62,7 +62,7 @@ public class UserController {
 
     @PutMapping("/me/password")
     @FlushAuthority
-    public ResultBean<UserDTO> updatePassword(
+    public ResultBean updatePassword(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             String srcPassword,
             String password
@@ -73,7 +73,7 @@ public class UserController {
 
     @DeleteMapping("/me")
     @FlushAuthority
-    public ResultBean<Object> deleteById(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResultBean deleteById(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         userService.deleteById(userPrincipal.getId());
         return ResultBean.ok();
     }

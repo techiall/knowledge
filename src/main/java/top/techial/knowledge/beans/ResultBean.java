@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * @author techial
  */
-public class ResultBean<T> implements Serializable {
+public class ResultBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -13,31 +13,29 @@ public class ResultBean<T> implements Serializable {
     private static final String DEFAULT_MSG = "OK";
 
     private final Integer code;
-
     private final String msg;
+    private final Object data;
 
-    private final T data;
-
-    private ResultBean(Integer code, String msg, T data) {
+    private ResultBean(Integer code, String msg, Object data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
     }
 
-    public static <T> ResultBean<T> ok(T data) {
-        return new ResultBean<>(DEFAULT_CODE, DEFAULT_MSG, data);
+    public static ResultBean ok(Object data) {
+        return new ResultBean(DEFAULT_CODE, DEFAULT_MSG, data);
     }
 
-    public static <T> ResultBean<T> ok() {
-        return new ResultBean<>(DEFAULT_CODE, DEFAULT_MSG, null);
+    public static ResultBean ok() {
+        return new ResultBean(DEFAULT_CODE, DEFAULT_MSG, null);
     }
 
-    public static <T> ResultBean<T> of(Integer code, String msg) {
-        return new ResultBean<>(code, msg, null);
+    public static ResultBean of(Integer code, String msg) {
+        return new ResultBean(code, msg, null);
     }
 
-    public static <T> ResultBean<T> of(Integer code, String msg, T data) {
-        return new ResultBean<>(code, msg, data);
+    public static ResultBean of(Integer code, String msg, Object data) {
+        return new ResultBean(code, msg, data);
     }
 
     public Integer getCode() {
@@ -48,7 +46,7 @@ public class ResultBean<T> implements Serializable {
         return msg;
     }
 
-    public T getData() {
+    public Object getData() {
         return data;
     }
 }

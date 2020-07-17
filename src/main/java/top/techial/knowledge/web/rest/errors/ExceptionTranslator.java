@@ -16,23 +16,23 @@ import top.techial.knowledge.beans.ResultBean;
 @ControllerAdvice
 public class ExceptionTranslator {
 
-    private static ResponseEntity<ResultBean<Object>> handleException(ClientErrorException exception) {
+    private static ResponseEntity<ResultBean> handleException(ClientErrorException exception) {
         return ResponseEntity.status(exception.getCode())
                              .body(exception.getResultBean());
     }
 
-    private static ResponseEntity<ResultBean<String>> handleException(ResultBean<String> resultBean) {
+    private static ResponseEntity<ResultBean> handleException(ResultBean resultBean) {
         return ResponseEntity.status(resultBean.getCode())
                              .body(resultBean);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ResultBean<String>> noHandlerFoundException() {
+    public ResponseEntity<ResultBean> noHandlerFoundException() {
         return handleException(ResultBean.of(404, "Not Found"));
     }
 
     @ExceptionHandler(ClientErrorException.class)
-    public HttpEntity<ResultBean<Object>> clientErrorException(ClientErrorException ex) {
+    public HttpEntity<ResultBean> clientErrorException(ClientErrorException ex) {
         return handleException(ex);
     }
 
