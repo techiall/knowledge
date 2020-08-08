@@ -15,7 +15,7 @@
     "core-js": "^3.4.3",
     "jquery": ">=3.5.0",
     "lunar-calendar": "^0.1.4",
-    "prismjs": "^1.19.0",
+    "prismjs": "^1.21.0",
     "qs": "^6.9.1",
     "view-design": "^4.0.2",
     "ztree": "^3.5.24"
