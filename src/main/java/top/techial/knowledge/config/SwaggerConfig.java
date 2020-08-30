@@ -16,7 +16,7 @@ import top.techial.knowledge.security.UserPrincipal;
  */
 @Configuration
 @EnableSwagger2
-@Profile(Constants.DEV)
+@Profile(ProfileConstants.DEV)
 public class SwaggerConfig {
 
     @Bean
