@@ -10,6 +10,7 @@
   "dependencies": {
     "@packy-tang/vue-tinymce": "^1.0.0",
     "babel-plugin-prismjs": "^2.0.1",
+    "node-forge": ">=0.10.0",
     "babel-polyfill": "^6.26.0",
     "core-js": "^3.4.3",
     "jquery": ">=3.5.0",
