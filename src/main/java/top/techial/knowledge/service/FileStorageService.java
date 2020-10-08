@@ -63,10 +63,8 @@ public class FileStorageService {
                 digest.update(originalFilename.getBytes());
             }
             var temp = Files.createTempFile("temp-", null);
-            try (
-                    InputStream in = file.getInputStream();
-                    OutputStream out = Files.newOutputStream(temp)
-            ) {
+            try (InputStream in = file.getInputStream();
+                 OutputStream out = Files.newOutputStream(temp)) {
                 byte[] buf = new byte[8192];
                 int n;
                 while (-1 != (n = in.read(buf, 0, buf.length))) {

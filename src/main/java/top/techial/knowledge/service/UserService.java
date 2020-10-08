@@ -38,16 +38,14 @@ public class UserService {
     private final NodeRepository nodeRepository;
     private final JPAQueryFactory jpaQueryFactory;
 
-    public UserService(
-            UserRepository userRepository,
-            ItemService itemService,
-            RecordRepository recordRepository,
-            PasswordEncoder passwordEncoder,
-            NodeMapper nodeMapper,
-            ItemMapper itemMapper,
-            NodeRepository nodeRepository,
-            JPAQueryFactory jpaQueryFactory
-    ) {
+    public UserService(UserRepository userRepository,
+                       ItemService itemService,
+                       RecordRepository recordRepository,
+                       PasswordEncoder passwordEncoder,
+                       NodeMapper nodeMapper,
+                       ItemMapper itemMapper,
+                       NodeRepository nodeRepository,
+                       JPAQueryFactory jpaQueryFactory) {
         this.userRepository = userRepository;
         this.itemService = itemService;
         this.recordRepository = recordRepository;

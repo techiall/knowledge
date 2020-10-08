@@ -22,8 +22,9 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
     }
 
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException)
-            throws IOException {
+    public void handle(HttpServletRequest request,
+                       HttpServletResponse response,
+                       AccessDeniedException accessDeniedException) throws IOException {
         ForbiddenException e = new ForbiddenException();
         response.setStatus(e.getCode());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

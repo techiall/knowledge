@@ -23,17 +23,16 @@ public class RecordController {
     private final RecordRepository recordRepository;
     private final RecordMapper recordMapper;
 
-    public RecordController(RecordRepository recordRepository, RecordMapper recordMapper) {
+    public RecordController(RecordRepository recordRepository,
+                            RecordMapper recordMapper) {
         this.recordRepository = recordRepository;
         this.recordMapper = recordMapper;
     }
 
     @GetMapping("/node/{id}")
     @PreAuthorize("hasAnyAuthority(#id.toString())")
-    public ResultBean findByNodeId(
-            @PathVariable Long id,
-            @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable
-    ) {
+    public ResultBean findByNodeId(@PathVariable Long id,
+                                   @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResultBean.ok(recordRepository.findAllByNodeId(id, pageable).map(recordMapper::toRecordDTO));
     }
 }

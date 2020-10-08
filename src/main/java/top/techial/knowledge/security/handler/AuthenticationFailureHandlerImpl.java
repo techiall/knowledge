@@ -24,7 +24,9 @@ public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHa
     }
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
+    public void onAuthenticationFailure(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        AuthenticationException exception) throws IOException {
         ClientErrorException clientErrorException;
         if (exception instanceof InternalAuthenticationServiceException && exception.getCause() instanceof ClientErrorException) {
             clientErrorException = (ClientErrorException) exception.getCause();

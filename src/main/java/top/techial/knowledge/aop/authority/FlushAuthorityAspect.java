@@ -13,7 +13,7 @@ import top.techial.knowledge.service.UserService;
 @Aspect
 public class FlushAuthorityAspect {
 
-    private static final Logger log = LoggerFactory.getLogger(FlushAuthorityAspect.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FlushAuthorityAspect.class);
 
     private final UserService userService;
 
@@ -24,15 +24,15 @@ public class FlushAuthorityAspect {
     @After("@annotation(flushAuthority)")
     public void after(FlushAuthority flushAuthority) {
         userService.resetAuthority();
-        if (log.isDebugEnabled()) {
-            log.debug("flush authority success.");
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("flush authority success.");
         }
     }
 
     @AfterThrowing(value = "@annotation(flushAuthority)", throwing = "throwable")
     public void afterThrowing(FlushAuthority flushAuthority, Throwable throwable) {
-        if (log.isErrorEnabled()) {
-            log.error("flush authority error.", throwable);
+        if (LOGGER.isErrorEnabled()) {
+            LOGGER.error("flush authority error.", throwable);
         }
     }
 }

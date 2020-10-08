@@ -18,10 +18,8 @@ public class RegisterController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    public RegisterController(
-            UserRepository userRepository,
-            UserService userService, UserMapper userMapper
-    ) {
+    public RegisterController(UserRepository userRepository,
+                              UserService userService, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.userMapper = userMapper;

@@ -27,22 +27,23 @@ public class UserController {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public UserController(
-            UserService userService,
-            UserRepository userRepository,
-            UserMapper userMapper
-    ) {
+    public UserController(UserService userService,
+                          UserRepository userRepository,
+                          UserMapper userMapper) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
     }
 
     @GetMapping("/me")
-    public ResultBean me(@AuthenticationPrincipal Object object, CsrfToken csrfToken) {
+    public ResultBean me(@AuthenticationPrincipal Object object,
+                         CsrfToken csrfToken) {
         Map<String, Object> map = new HashMap<>(16);
         if (object instanceof UserPrincipal) {
             UserPrincipal userPrincipal = (UserPrincipal) object;
-            var user = userRepository.findById(userPrincipal.getId()).map(userMapper::toUserDTO).orElse(new UserDTO());
+            var user = userRepository.findById(userPrincipal.getId())
+                                     .map(userMapper::toUserDTO)
+                                     .orElse(new UserDTO());
             map.put("user", user);
         } else {
             map.put("user", new User());
@@ -52,21 +53,17 @@ public class UserController {
     }
 
     @PutMapping("/me")
-    public ResultBean update(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestBody UserVM userVM
-    ) {
+    public ResultBean update(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                             @RequestBody UserVM userVM) {
         var user = userService.update(userPrincipal.getId(), userVM);
         return ResultBean.ok(userMapper.toUserDTO(user));
     }
 
     @PutMapping("/me/password")
     @FlushAuthority
-    public ResultBean updatePassword(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
-            String srcPassword,
-            String password
-    ) {
+    public ResultBean updatePassword(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                     String srcPassword,
+                                     String password) {
         var user = userService.updatePassword(userPrincipal.getId(), srcPassword, password);
         return ResultBean.ok(userMapper.toUserDTO(user));
     }

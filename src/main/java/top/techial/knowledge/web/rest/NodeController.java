@@ -61,18 +61,17 @@ public class NodeController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ITEM_' + #nodeVM.itemId.toString()) AND hasAnyAuthority(#id)")
-    public ResultBean update(
-            @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @PathVariable Long id,
-            @Validated(value = Update.class) @RequestBody NodeVM nodeVM
-    ) {
+    public ResultBean update(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                             @PathVariable Long id,
+                             @Validated(value = Update.class) @RequestBody NodeVM nodeVM) {
         var node = nodeService.update(id, nodeVM, userPrincipal.getId());
         return ResultBean.ok(nodeMapper.toNodeInfoDTO(node));
     }
 
     @PutMapping("/{id}/movement")
     @PreAuthorize("hasAnyAuthority(#target) AND hasAnyAuthority(#id)")
-    public ResultBean move(@PathVariable Long id, @RequestParam Long target) {
+    public ResultBean move(@PathVariable Long id,
+                           @RequestParam Long target) {
         if (Objects.equals(id, target)) {
             throw new IllegalArgumentException(String.format("id: [%s], target: [%s]", id, target));
         }
@@ -83,7 +82,8 @@ public class NodeController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ITEM_' + #itemId.toString()) AND hasAnyAuthority(#id)")
     @FlushAuthority
-    public ResultBean deleteById(@RequestParam Integer itemId, @PathVariable Long id) {
+    public ResultBean deleteById(@RequestParam Integer itemId,
+                                 @PathVariable Long id) {
         nodeService.deleteById(id);
         return ResultBean.ok(true);
     }
@@ -91,7 +91,8 @@ public class NodeController {
     @DeleteMapping
     @PreAuthorize("hasAnyAuthority('ITEM_' + #itemId.toString()) AND hasAnyAuthority(#ids)")
     @FlushAuthority
-    public ResultBean deleteByIds(@RequestBody Set<Long> ids, @RequestParam Integer itemId) {
+    public ResultBean deleteByIds(@RequestBody Set<Long> ids,
+                                  @RequestParam Integer itemId) {
         nodeService.deleteIdsAndRelationship(ids);
         nodeSearchRepository.deleteByIdIn(ids);
         recordRepository.deleteByNodeIdIn(ids);

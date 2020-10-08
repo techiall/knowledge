@@ -23,7 +23,9 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Authentication authentication) throws IOException {
         response.getWriter().write(JsonUtils.writeValueAsString(objectMapper, ResultBean.ok()));
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.OK.value());

@@ -29,7 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final AccessDeniedHandler accessDeniedHandler;
 
-    public SecurityConfig(LogoutSuccessHandler logoutSuccessHandler, AuthenticationSuccessHandler authenticationSuccessHandler,
+    public SecurityConfig(LogoutSuccessHandler logoutSuccessHandler,
+                          AuthenticationSuccessHandler authenticationSuccessHandler,
                           AuthenticationFailureHandler authenticationFailureHandler,
                           AuthenticationEntryPoint authenticationEntryPoint,
                           @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,

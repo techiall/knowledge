@@ -71,7 +71,8 @@ public class ItemController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ITEM_' + #id.toString())")
-    public ResultBean update(@RequestBody ItemVM itemVM, @PathVariable Integer id) {
+    public ResultBean update(@RequestBody ItemVM itemVM,
+                             @PathVariable Integer id) {
         var item = itemService.update(id, itemVM);
         return ResultBean.ok(itemMapper.toItemDTO(item));
     }
@@ -79,7 +80,8 @@ public class ItemController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ITEM_' + #id.toString())")
     @FlushAuthority
-    public ResultBean deleteById(@PathVariable Integer id, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResultBean deleteById(@PathVariable Integer id,
+                                 @AuthenticationPrincipal UserPrincipal userPrincipal) {
         itemService.deleteById(id, userPrincipal.getId());
         return ResultBean.ok();
     }

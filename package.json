@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "serialize-javascript": ">=3.1.0",
     "@packy-tang/vue-tinymce": "^1.0.0",
     "babel-plugin-prismjs": "^2.0.1",
     "node-forge": ">=0.10.0",

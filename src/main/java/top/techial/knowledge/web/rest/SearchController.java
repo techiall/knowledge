@@ -28,7 +28,9 @@ public class SearchController {
     private final NodeService nodeService;
     private final ItemRepository itemRepository;
 
-    public SearchController(NodeMapper nodeMapper, NodeService nodeService, ItemRepository itemRepository) {
+    public SearchController(NodeMapper nodeMapper,
+                            NodeService nodeService,
+                            ItemRepository itemRepository) {
         this.nodeMapper = nodeMapper;
         this.nodeService = nodeService;
         this.itemRepository = itemRepository;
@@ -42,17 +44,14 @@ public class SearchController {
     }
 
     @GetMapping
-    public ResultBean search(
-            @RequestParam(name = "q") String question,
-            @RequestParam(required = false, defaultValue = "false") Boolean tips,
-            @PageableDefault Pageable pageable
-    ) {
+    public ResultBean search(@RequestParam(name = "q") String question,
+                             @RequestParam(required = false, defaultValue = "false") Boolean tips,
+                             @PageableDefault Pageable pageable) {
         question = question.substring(0, Math.min(32, question.length()));
         if (Boolean.TRUE.equals(tips)) {
-            return ResultBean.ok(nodeService
-                                         .findContentByNameLike(question, PageRequest.of(0, 10))
-                                         .map(nodeMapper::toNodeInfoDTO)
-                                         .getContent());
+            return ResultBean.ok(nodeService.findContentByNameLike(question, PageRequest.of(0, 10))
+                                            .map(nodeMapper::toNodeInfoDTO)
+                                            .getContent());
         }
         int page = Math.min(50, pageable.getPageNumber());
         int size = Math.min(20, pageable.getPageSize());

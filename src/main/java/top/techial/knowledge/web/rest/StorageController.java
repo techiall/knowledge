@@ -29,12 +29,10 @@ public class StorageController {
     private final StorageRepository storageRepository;
     private final NodeSearchRepository nodeSearchRepository;
 
-    public StorageController(
-            StorageService storageService,
-            FileStorageService fileStorageService,
-            StorageRepository storageRepository,
-            NodeSearchRepository nodeSearchRepository
-    ) {
+    public StorageController(StorageService storageService,
+                             FileStorageService fileStorageService,
+                             StorageRepository storageRepository,
+                             NodeSearchRepository nodeSearchRepository) {
         this.storageService = storageService;
         this.fileStorageService = fileStorageService;
         this.storageRepository = storageRepository;
@@ -46,7 +44,8 @@ public class StorageController {
      */
     @PostMapping("/text/{id}")
     @PreAuthorize("hasAnyAuthority(#id)")
-    public ResultBean save(@RequestBody(required = false) String text, @PathVariable Long id) {
+    public ResultBean save(@RequestBody(required = false) String text,
+                           @PathVariable Long id) {
         var node = nodeSearchRepository.findById(id)
                                        .map(it -> nodeSearchRepository.index(it.setText(text)))
                                        .orElseThrow(NodeNotFoundException::new);
@@ -79,20 +78,17 @@ public class StorageController {
     @GetMapping(value = "/preview/{id}")
     public ResponseEntity<Resource> preview(@PathVariable String id) {
         var storage = storageService.findById(id);
-        return ResponseEntity
-                .ok()
-                .header(HttpHeaders.CONTENT_TYPE, storageService.findById(id).getContentType())
-                .header(HttpHeaders.CACHE_CONTROL,
-                        CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic().getHeaderValue())
-                .body(fileStorageService.findByHash(storage.getId()));
+        return ResponseEntity.ok()
+                             .header(HttpHeaders.CONTENT_TYPE, storageService.findById(id).getContentType())
+                             .header(HttpHeaders.CACHE_CONTROL, CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic().getHeaderValue())
+                             .body(fileStorageService.findByHash(storage.getId()));
     }
 
     @GetMapping(value = "/download/{id}")
     public ResponseEntity<Resource> download(@PathVariable String id) {
         var storage = storageService.findById(id);
-        return ResponseEntity.ok().header(
-                HttpHeaders.CONTENT_DISPOSITION,
-                String.format("attachment; filename=\"%s\"", storage.getOriginalFilename())
-        ).body(fileStorageService.findByHash(id));
+        return ResponseEntity.ok()
+                             .header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=\"%s\"", storage.getOriginalFilename()))
+                             .body(fileStorageService.findByHash(id));
     }
 }
