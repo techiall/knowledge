@@ -1,11 +1,11 @@
 package top.techial.knowledge.file.storage;
 
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.multipart.MultipartFile;
 import top.techial.knowledge.service.FileStorageService;
 
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 @SpringBootTest
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class FileStorageServiceImplTest {
     @Autowired
     private FileStorageService fileStorageService;

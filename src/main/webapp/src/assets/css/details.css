@@ -1,38 +1,46 @@
 .b-detail-wrap {
-  color: #000;
+    color: #000;
 }
+
 .b-detail-wrap input,
 .b-detail-wrap .ivu-select-selection {
-  border-width: 0px;
-  border-bottom: 1px solid #e8eaec;
-  border-radius: 0;
-  box-shadow: none;
+    border-width: 0px;
+    border-bottom: 1px solid #e8eaec;
+    border-radius: 0;
+    box-shadow: none;
 }
+
 .b-detail-wrap input:focus,
 .b-detail-wrap .ivu-select-selection:focus {
-  box-shadow: none;
+    box-shadow: none;
 }
+
 .b-detail-wrap input[disabled] {
-  background-color: transparent;
-  cursor: default;
+    background-color: transparent;
+    cursor: default;
 }
+
 .b-detail-wrap .ivu-select-selection:hover {
-  border-bottom: 1px solid #57a3f3;
+    border-bottom: 1px solid #57a3f3;
 }
+
 .b-detail-wrap .ivu-select-selection input {
-  border-width: 0px;
+    border-width: 0px;
 }
+
 .b-detail-wrap .ivu-select-prefix {
-  min-width: 32px;
-  height: 32px;
-  padding: 0;
-  text-align: center;
-  line-height: 32px;
+    min-width: 32px;
+    height: 32px;
+    padding: 0;
+    text-align: center;
+    line-height: 32px;
 }
+
 .b-detail-wrap .ivu-select-prefix i {
-  font-size: 16px;
-  line-height: 32px;
+    font-size: 16px;
+    line-height: 32px;
 }
-.b-detail-wrap .ivu-select-input{
-  padding: 0;
+
+.b-detail-wrap .ivu-select-input {
+    padding: 0;
 }

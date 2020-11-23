@@ -1,6 +1,6 @@
 import api from './index';
 
-const header = { headers: { 'Content-Type': 'application/json;charset=UTF-8' } };
+const header = {headers: {'Content-Type': 'application/json;charset=UTF-8'}};
 
 // 添加项目
 export const itemAdd = (data) => api.post('/item', data, header);

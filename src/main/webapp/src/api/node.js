@@ -1,7 +1,7 @@
 import api from './index';
 import qs from 'qs';
 
-const header = { headers: { 'Content-Type': 'application/json;charset=UTF-8' } };
+const header = {headers: {'Content-Type': 'application/json;charset=UTF-8'}};
 
 
 // 创建节点

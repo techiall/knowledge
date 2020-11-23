@@ -1,7 +1,7 @@
 import api from './index';
 import qs from 'qs';
 
-const header = { headers: { 'Content-Type': 'application/json;charset=UTF-8' } };
+const header = {headers: {'Content-Type': 'application/json;charset=UTF-8'}};
 
 // 获取当前用户信息
 export const getUserMe = () => api.get('/user/me');
