@@ -1,5 +1,7 @@
 package top.techial.knowledge.beans;
 
+import org.springframework.lang.Nullable;
+
 import java.io.Serializable;
 
 /**
@@ -13,10 +15,12 @@ public class ResultBean implements Serializable {
     private static final String DEFAULT_MSG = "OK";
 
     private final Integer code;
+
     private final String msg;
+    @Nullable
     private final Object data;
 
-    private ResultBean(Integer code, String msg, Object data) {
+    private ResultBean(Integer code, String msg, @Nullable Object data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
@@ -46,6 +50,7 @@ public class ResultBean implements Serializable {
         return msg;
     }
 
+    @Nullable
     public Object getData() {
         return data;
     }

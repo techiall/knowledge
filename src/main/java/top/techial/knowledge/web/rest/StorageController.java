@@ -46,9 +46,12 @@ public class StorageController {
     @PreAuthorize("hasAnyAuthority(#id)")
     public ResultBean save(@RequestBody(required = false) String text,
                            @PathVariable Long id) {
-        var node = nodeSearchRepository.findById(id)
-                                       .map(it -> nodeSearchRepository.index(it.setText(text)))
-                                       .orElseThrow(NodeNotFoundException::new);
+        final var node = nodeSearchRepository.findById(id)
+                                             .map(it -> {
+                                                 it.setText(text);
+                                                 return nodeSearchRepository.index(it);
+                                             })
+                                             .orElseThrow(NodeNotFoundException::new);
         return ResultBean.ok(node.getId());
     }
 
@@ -57,13 +60,15 @@ public class StorageController {
      */
     @GetMapping("/text/{id}")
     public ResultBean findById(@PathVariable Long id) {
-        var s = nodeSearchRepository.findById(id).map(Node::getText).orElse(null);
+        final var s = nodeSearchRepository.findById(id)
+                                          .map(Node::getText)
+                                          .orElse(null);
         return ResultBean.ok(s);
     }
 
     @PostMapping
     public ResultBean save(@RequestParam MultipartFile file) {
-        var sha1 = fileStorageService.upload(file);
+        final var sha1 = fileStorageService.upload(file);
         storageService.save(sha1, file);
         return ResultBean.ok(String.format("/api/storage/preview/%s", sha1));
     }
@@ -77,7 +82,7 @@ public class StorageController {
 
     @GetMapping(value = "/preview/{id}")
     public ResponseEntity<Resource> preview(@PathVariable String id) {
-        var storage = storageService.findById(id);
+        final var storage = storageService.findById(id);
         return ResponseEntity.ok()
                              .header(HttpHeaders.CONTENT_TYPE, storageService.findById(id).getContentType())
                              .header(HttpHeaders.CACHE_CONTROL, CacheControl.maxAge(1, TimeUnit.HOURS).cachePublic().getHeaderValue())

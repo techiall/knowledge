@@ -38,12 +38,12 @@ public class UserController {
     @GetMapping("/me")
     public ResultBean me(@AuthenticationPrincipal Object object,
                          CsrfToken csrfToken) {
-        Map<String, Object> map = new HashMap<>(16);
+        final Map<String, Object> map = new HashMap<>(2);
         if (object instanceof UserPrincipal) {
             UserPrincipal userPrincipal = (UserPrincipal) object;
-            var user = userRepository.findById(userPrincipal.getId())
-                                     .map(userMapper::toUserDTO)
-                                     .orElse(new UserDTO());
+            final var user = userRepository.findById(userPrincipal.getId())
+                                           .map(userMapper::toUserDTO)
+                                           .orElse(new UserDTO());
             map.put("user", user);
         } else {
             map.put("user", new User());
@@ -55,7 +55,7 @@ public class UserController {
     @PutMapping("/me")
     public ResultBean update(@AuthenticationPrincipal UserPrincipal userPrincipal,
                              @RequestBody UserVM userVM) {
-        var user = userService.update(userPrincipal.getId(), userVM);
+        final var user = userService.update(userPrincipal.getId(), userVM);
         return ResultBean.ok(userMapper.toUserDTO(user));
     }
 
@@ -64,7 +64,7 @@ public class UserController {
     public ResultBean updatePassword(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                      String srcPassword,
                                      String password) {
-        var user = userService.updatePassword(userPrincipal.getId(), srcPassword, password);
+        final var user = userService.updatePassword(userPrincipal.getId(), srcPassword, password);
         return ResultBean.ok(userMapper.toUserDTO(user));
     }
 

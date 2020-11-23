@@ -1,6 +1,7 @@
 package top.techial.knowledge.web.rest.vm;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 
@@ -14,23 +15,23 @@ public class UserVM implements Serializable {
 
     private String nickName;
 
+    @Nullable
     private String image;
 
     public String getNickName() {
         return nickName;
     }
 
-    public UserVM setNickName(String nickName) {
+    public void setNickName(String nickName) {
         this.nickName = nickName;
-        return this;
     }
 
+    @Nullable
     public String getImage() {
         return image;
     }
 
-    public UserVM setImage(String image) {
+    public void setImage(@Nullable String image) {
         this.image = image;
-        return this;
     }
 }

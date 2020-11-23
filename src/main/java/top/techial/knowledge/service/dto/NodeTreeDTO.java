@@ -1,11 +1,13 @@
 package top.techial.knowledge.service.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author techial
  */
-public class NodeTreeDTO {
+public class NodeTreeDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private Long id;
 
@@ -17,27 +19,24 @@ public class NodeTreeDTO {
         return id;
     }
 
-    public NodeTreeDTO setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
-        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public NodeTreeDTO setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     public List<NodeTreeDTO> getChild() {
         return child;
     }
 
-    public NodeTreeDTO setChild(List<NodeTreeDTO> child) {
+    public void setChild(List<NodeTreeDTO> child) {
         this.child = child;
-        return this;
     }
 }
 

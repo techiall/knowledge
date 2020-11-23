@@ -35,44 +35,39 @@ public class Storage implements Serializable {
         return id;
     }
 
-    public Storage setId(String id) {
+    public void setId(String id) {
         this.id = id;
-        return this;
     }
 
     public String getOriginalFilename() {
         return originalFilename;
     }
 
-    public Storage setOriginalFilename(String originalFilename) {
+    public void setOriginalFilename(String originalFilename) {
         this.originalFilename = originalFilename;
-        return this;
     }
 
     public String getContentType() {
         return contentType;
     }
 
-    public Storage setContentType(String contentType) {
+    public void setContentType(String contentType) {
         this.contentType = contentType;
-        return this;
     }
 
     public Instant getCreateTime() {
         return createTime;
     }
 
-    public Storage setCreateTime(Instant createTime) {
+    public void setCreateTime(Instant createTime) {
         this.createTime = createTime;
-        return this;
     }
 
     public Instant getUpdateTime() {
         return updateTime;
     }
 
-    public Storage setUpdateTime(Instant updateTime) {
+    public void setUpdateTime(Instant updateTime) {
         this.updateTime = updateTime;
-        return this;
     }
 }

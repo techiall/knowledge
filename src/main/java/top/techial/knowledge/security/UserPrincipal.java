@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * @author techial
@@ -11,14 +12,6 @@ import java.util.Collection;
 public class UserPrincipal extends User {
 
     private final Integer id;
-
-    public UserPrincipal(Integer id,
-                         String username,
-                         String password,
-                         Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, authorities);
-        this.id = id;
-    }
 
     public UserPrincipal(Integer id,
                          String username,
@@ -41,16 +34,12 @@ public class UserPrincipal extends User {
         if (this == o) return true;
         if (!(o instanceof UserPrincipal)) return false;
         if (!super.equals(o)) return false;
-
         UserPrincipal that = (UserPrincipal) o;
-
-        return getId() != null ? getId().equals(that.getId()) : that.getId() == null;
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (getId() != null ? getId().hashCode() : 0);
-        return result;
+        return Objects.hash(super.hashCode(), getId());
     }
 }

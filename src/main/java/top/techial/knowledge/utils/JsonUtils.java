@@ -2,8 +2,6 @@ package top.techial.knowledge.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -12,35 +10,23 @@ import org.springframework.lang.Nullable;
  */
 public abstract class JsonUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(JsonUtils.class);
+    public static final ObjectMapper DEFAULT_MAPPER = new ObjectMapper().findAndRegisterModules();
 
-    @NonNull
-    public static String writeValueAsString(@NonNull ObjectMapper objectMapper, @Nullable Object object) {
-        if (object == null) {
-            return "";
-        }
+    @Nullable
+    public static String writeValueAsString(@Nullable Object object) {
         try {
-            return objectMapper.writeValueAsString(object);
+            return DEFAULT_MAPPER.writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            if (log.isErrorEnabled()) {
-                log.error("write value as string error. object = {}", object, e);
-            }
+            return null;
         }
-        return "";
     }
 
     @Nullable
-    public static <T> T readValue(@NonNull ObjectMapper objectMapper, @Nullable String str, @NonNull Class<T> aClass) {
-        if (str == null || str.isEmpty()) {
+    public static <T> T readValue(@Nullable String str, @NonNull Class<T> aClass) {
+        try {
+            return DEFAULT_MAPPER.readValue(str, aClass);
+        } catch (JsonProcessingException e) {
             return null;
         }
-        try {
-            return objectMapper.readValue(str, aClass);
-        } catch (JsonProcessingException e) {
-            if (log.isErrorEnabled()) {
-                log.error("read value error, str = {}", str, e);
-            }
-        }
-        return null;
     }
 }

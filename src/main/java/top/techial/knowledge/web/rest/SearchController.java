@@ -36,7 +36,7 @@ public class SearchController {
         this.itemRepository = itemRepository;
     }
 
-    private static String text(String text) {
+    private static String textFilter(String text) {
         return Optional.ofNullable(text)
                        .map(it -> it.replaceAll(REGEX, "").trim())
                        .map(s -> s.substring(0, Math.min(200, s.length())))
@@ -53,16 +53,18 @@ public class SearchController {
                                             .map(nodeMapper::toNodeInfoDTO)
                                             .getContent());
         }
-        int page = Math.min(50, pageable.getPageNumber());
-        int size = Math.min(20, pageable.getPageSize());
+        final int page = Math.min(50, pageable.getPageNumber());
+        final int size = Math.min(20, pageable.getPageSize());
         return ResultBean.ok(nodeService.findContentByNameLike(
                 question, PageRequest.of(page, size, pageable.getSort())).map(this::convent));
     }
 
     private SearchDTO convent(Node node) {
-        var result = itemRepository.findById(node.getItemId())
-                                   .map(it -> nodeMapper.toSearchDTO(node, it))
-                                   .orElseThrow(ItemNotFoundException::new);
-        return result.setText(text(result.getText()));
+        final var result = itemRepository.findById(node.getItemId())
+                                         .map(it -> nodeMapper.toSearchDTO(node, it))
+                                         .orElseThrow(ItemNotFoundException::new);
+        final var textFilter = textFilter(result.getText());
+        result.setText(textFilter);
+        return result;
     }
 }

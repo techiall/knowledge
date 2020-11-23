@@ -45,80 +45,71 @@ public class Item implements Serializable {
         return id;
     }
 
-    public Item setId(Integer id) {
+    public void setId(Integer id) {
         this.id = id;
-        return this;
     }
 
     public User getAuthor() {
         return author;
     }
 
-    public Item setAuthor(User author) {
+    public void setAuthor(User author) {
         this.author = author;
-        return this;
     }
 
     public Boolean getShare() {
         return share;
     }
 
-    public Item setShare(Boolean share) {
+    public void setShare(Boolean share) {
         this.share = share;
-        return this;
     }
 
     public Node getRootNode() {
         return rootNode;
     }
 
-    public Item setRootNode(Node rootNode) {
+    public void setRootNode(Node rootNode) {
         this.rootNode = rootNode;
-        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public Item setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     public String getImage() {
         return image;
     }
 
-    public Item setImage(String image) {
+    public void setImage(String image) {
         this.image = image;
-        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public Item setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
-        return this;
     }
 
     public Instant getCreateTime() {
         return createTime;
     }
 
-    public Item setCreateTime(Instant createTime) {
+    public void setCreateTime(Instant createTime) {
         this.createTime = createTime;
-        return this;
     }
 
     public Instant getUpdateTime() {
         return updateTime;
     }
 
-    public Item setUpdateTime(Instant updateTime) {
+    public void setUpdateTime(Instant updateTime) {
         this.updateTime = updateTime;
-        return this;
     }
 }

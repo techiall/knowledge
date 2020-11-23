@@ -44,8 +44,12 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-aop"
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-aop"
+    implementation 'org.jetbrains:annotations:19.0.0'
+    implementation 'org.jetbrains:annotations:19.0.0'
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
     // Hibernate h2 cache
     implementation "org.hibernate:hibernate-jcache"
@@ -68,9 +72,6 @@ dependencies {
     annotationProcessor 'com.querydsl:querydsl-apt:4.2.1:jpa'
     annotationProcessor 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'com.querydsl:querydsl-jpa:4.2.1'
-
-    // swagger
-    implementation 'io.springfox:springfox-swagger2:2.9.2'
 }
 
 test {

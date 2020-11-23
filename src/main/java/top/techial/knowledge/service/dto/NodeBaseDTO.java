@@ -18,7 +18,6 @@ public class NodeBaseDTO implements Serializable {
     private Boolean child;
 
     public NodeBaseDTO() {
-
     }
 
     public NodeBaseDTO(Long parentNodeId, Long id, String name, Boolean child) {
@@ -32,35 +31,31 @@ public class NodeBaseDTO implements Serializable {
         return parentNodeId;
     }
 
-    public NodeBaseDTO setParentNodeId(Long parentNodeId) {
+    public void setParentNodeId(Long parentNodeId) {
         this.parentNodeId = parentNodeId;
-        return this;
     }
 
     public Long getId() {
         return id;
     }
 
-    public NodeBaseDTO setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
-        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public NodeBaseDTO setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     public Boolean getChild() {
         return child;
     }
 
-    public NodeBaseDTO setChild(Boolean child) {
+    public void setChild(Boolean child) {
         this.child = child;
-        return this;
     }
 }

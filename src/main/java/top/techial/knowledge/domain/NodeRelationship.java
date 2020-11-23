@@ -55,53 +55,47 @@ public class NodeRelationship implements Serializable {
         return ancestor;
     }
 
-    public NodeRelationship setAncestor(Long ancestor) {
+    public void setAncestor(Long ancestor) {
         this.ancestor = ancestor;
-        return this;
     }
 
     public Long getDescendant() {
         return descendant;
     }
 
-    public NodeRelationship setDescendant(Long descendant) {
+    public void setDescendant(Long descendant) {
         this.descendant = descendant;
-        return this;
     }
 
     public Long getDistance() {
         return distance;
     }
 
-    public NodeRelationship setDistance(Long distance) {
+    public void setDistance(Long distance) {
         this.distance = distance;
-        return this;
     }
 
     public Property getProperty() {
         return property;
     }
 
-    public NodeRelationship setProperty(Property property) {
+    public void setProperty(Property property) {
         this.property = property;
-        return this;
     }
 
     public Instant getCreateTime() {
         return createTime;
     }
 
-    public NodeRelationship setCreateTime(Instant createTime) {
+    public void setCreateTime(Instant createTime) {
         this.createTime = createTime;
-        return this;
     }
 
     public Instant getUpdateTime() {
         return updateTime;
     }
 
-    public NodeRelationship setUpdateTime(Instant updateTime) {
+    public void setUpdateTime(Instant updateTime) {
         this.updateTime = updateTime;
-        return this;
     }
 }

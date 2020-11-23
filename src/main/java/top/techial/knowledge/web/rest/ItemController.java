@@ -36,8 +36,8 @@ public class ItemController {
 
     @GetMapping("share")
     public ResultBean share(@PageableDefault Pageable pageable) {
-        var list = itemRepository.findByShare(true, pageable)
-                                 .map(itemMapper::toItemDTO);
+        final var list = itemRepository.findByShare(true, pageable)
+                                       .map(itemMapper::toItemDTO);
         return ResultBean.ok(list);
     }
 
@@ -64,8 +64,8 @@ public class ItemController {
             throw new IllegalArgumentException(String
                                                        .format("itemVO error. %s", itemVM.toString()));
         }
-        var item = itemMapper.toItem(itemVM);
-        item = itemService.save(userPrincipal.getId(), item);
+        final var _item = itemMapper.toItem(itemVM);
+        final var item = itemService.save(userPrincipal.getId(), _item);
         return ResultBean.ok(itemMapper.toItemDTO(item));
     }
 
@@ -73,7 +73,7 @@ public class ItemController {
     @PreAuthorize("hasAnyAuthority('ITEM_' + #id.toString())")
     public ResultBean update(@RequestBody ItemVM itemVM,
                              @PathVariable Integer id) {
-        var item = itemService.update(id, itemVM);
+        final var item = itemService.update(id, itemVM);
         return ResultBean.ok(itemMapper.toItemDTO(item));
     }
 

@@ -47,7 +47,7 @@ public class NodeController {
 
     @GetMapping("/{id}")
     public ResultBean findById(@PathVariable Long id) {
-        var node = nodeService.findById(id);
+        final var node = nodeService.findById(id);
         return ResultBean.ok(nodeMapper.toNodeInfoDTO(node));
     }
 
@@ -64,7 +64,7 @@ public class NodeController {
     public ResultBean update(@AuthenticationPrincipal UserPrincipal userPrincipal,
                              @PathVariable Long id,
                              @Validated(value = Update.class) @RequestBody NodeVM nodeVM) {
-        var node = nodeService.update(id, nodeVM, userPrincipal.getId());
+        final var node = nodeService.update(id, nodeVM, userPrincipal.getId());
         return ResultBean.ok(nodeMapper.toNodeInfoDTO(node));
     }
 
@@ -103,7 +103,7 @@ public class NodeController {
     @GetMapping
     public ResultBean findByRootNode(@RequestParam Integer itemId,
                                      @RequestParam(defaultValue = "1") Integer depth) {
-        var rootNodeId = itemRepository.findRootNodeId(itemId).orElseThrow(ItemNotFoundException::new);
+        final var rootNodeId = itemRepository.findRootNodeId(itemId).orElseThrow(ItemNotFoundException::new);
         return ResultBean.ok(nodeService.findByChildNode(rootNodeId, depth));
     }
 

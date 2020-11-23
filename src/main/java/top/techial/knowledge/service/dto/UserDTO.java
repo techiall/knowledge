@@ -26,53 +26,47 @@ public class UserDTO implements Serializable {
         return id;
     }
 
-    public UserDTO setId(Integer id) {
+    public void setId(Integer id) {
         this.id = id;
-        return this;
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public UserDTO setUserName(String userName) {
+    public void setUserName(String userName) {
         this.userName = userName;
-        return this;
     }
 
     public String getNickName() {
         return nickName;
     }
 
-    public UserDTO setNickName(String nickName) {
+    public void setNickName(String nickName) {
         this.nickName = nickName;
-        return this;
     }
 
     public String getImages() {
         return images;
     }
 
-    public UserDTO setImages(String images) {
+    public void setImages(String images) {
         this.images = images;
-        return this;
     }
 
     public Instant getCreateTime() {
         return createTime;
     }
 
-    public UserDTO setCreateTime(Instant createTime) {
+    public void setCreateTime(Instant createTime) {
         this.createTime = createTime;
-        return this;
     }
 
     public Instant getUpdateTime() {
         return updateTime;
     }
 
-    public UserDTO setUpdateTime(Instant updateTime) {
+    public void setUpdateTime(Instant updateTime) {
         this.updateTime = updateTime;
-        return this;
     }
 }

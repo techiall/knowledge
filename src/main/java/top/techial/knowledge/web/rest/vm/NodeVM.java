@@ -1,6 +1,7 @@
 package top.techial.knowledge.web.rest.vm;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.lang.Nullable;
 import top.techial.knowledge.domain.Property;
 import top.techial.knowledge.service.valid.Insert;
 import top.techial.knowledge.service.valid.Update;
@@ -24,8 +25,10 @@ public class NodeVM implements Serializable {
     @NotEmpty(groups = Insert.class)
     private String name;
 
+    @Nullable
     private Set<String> labels;
 
+    @Nullable
     private Map<String, List<Property.PropertyDTO>> property;
 
     /**
@@ -45,54 +48,50 @@ public class NodeVM implements Serializable {
         return name;
     }
 
-    public NodeVM setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
+    @Nullable
     public Set<String> getLabels() {
         return labels;
     }
 
-    public NodeVM setLabels(Set<String> labels) {
+    public void setLabels(@Nullable Set<String> labels) {
         this.labels = labels;
-        return this;
     }
 
+    @Nullable
     public Map<String, List<Property.PropertyDTO>> getProperty() {
         return property;
     }
 
-    public NodeVM setProperty(Map<String, List<Property.PropertyDTO>> property) {
+    public void setProperty(@Nullable Map<String, List<Property.PropertyDTO>> property) {
         this.property = property;
-        return this;
     }
 
     public Long getParentId() {
         return parentId;
     }
 
-    public NodeVM setParentId(Long parentId) {
+    public void setParentId(Long parentId) {
         this.parentId = parentId;
-        return this;
     }
 
     public Integer getItemId() {
         return itemId;
     }
 
-    public NodeVM setItemId(Integer itemId) {
+    public void setItemId(Integer itemId) {
         this.itemId = itemId;
-        return this;
     }
 
     public Record getRecord() {
         return record;
     }
 
-    public NodeVM setRecord(Record record) {
+    public void setRecord(Record record) {
         this.record = record;
-        return this;
     }
 
     public static class Record implements Serializable {
@@ -107,18 +106,16 @@ public class NodeVM implements Serializable {
             return operator;
         }
 
-        public Record setOperator(String operator) {
+        public void setOperator(String operator) {
             this.operator = operator;
-            return this;
         }
 
         public String getMessage() {
             return message;
         }
 
-        public Record setMessage(String message) {
+        public void setMessage(String message) {
             this.message = message;
-            return this;
         }
     }
 }

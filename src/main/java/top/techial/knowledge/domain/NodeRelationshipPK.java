@@ -3,6 +3,7 @@ package top.techial.knowledge.domain;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author techial
@@ -47,18 +48,13 @@ public class NodeRelationshipPK implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof NodeRelationshipPK)) return false;
-
         NodeRelationshipPK that = (NodeRelationshipPK) o;
-
-        if (getAncestor() != null ? !getAncestor().equals(that.getAncestor()) : that.getAncestor() != null)
-            return false;
-        return getDescendant() != null ? getDescendant().equals(that.getDescendant()) : that.getDescendant() == null;
+        return Objects.equals(getAncestor(), that.getAncestor()) &&
+                Objects.equals(getDescendant(), that.getDescendant());
     }
 
     @Override
     public int hashCode() {
-        int result = getAncestor() != null ? getAncestor().hashCode() : 0;
-        result = 31 * result + (getDescendant() != null ? getDescendant().hashCode() : 0);
-        return result;
+        return Objects.hash(getAncestor(), getDescendant());
     }
 }

@@ -20,11 +20,11 @@ public class RecordService {
     }
 
     public void save(Long nodeId, Integer userId, String operatorMessage, String message) {
-        var record = new Record()
-                .setNodeId(nodeId)
-                .setOperator(operatorMessage)
-                .setMessage(message)
-                .setUser(userRepository.getOne(userId));
+        final var record = new Record();
+        record.setNodeId(nodeId);
+        record.setOperator(operatorMessage);
+        record.setMessage(message);
+        record.setUser(userRepository.getOne(userId));
         recordRepository.save(record);
     }
 }

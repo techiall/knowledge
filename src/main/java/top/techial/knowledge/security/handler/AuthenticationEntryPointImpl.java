@@ -1,6 +1,5 @@
 package top.techial.knowledge.security.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -15,19 +14,15 @@ import java.io.IOException;
  * @author techial
  */
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
-    private final ObjectMapper objectMapper;
-
-    public AuthenticationEntryPointImpl(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
-
     @Override
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
-        NotFoundException e = new NotFoundException();
+        final var e = new NotFoundException();
         response.setStatus(e.getCode());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write(JsonUtils.writeValueAsString(objectMapper, e.getResultBean()));
+
+        final var str = JsonUtils.writeValueAsString(e.getResultBean());
+        response.getWriter().write(str == null ? "" : str);
     }
 }

@@ -1,6 +1,5 @@
 package top.techial.knowledge.service.converter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import top.techial.knowledge.domain.Labels;
 import top.techial.knowledge.utils.JsonUtils;
 
@@ -12,19 +11,13 @@ import javax.persistence.Convert;
  */
 @Convert
 public class LabelsConverter implements AttributeConverter<Labels, String> {
-    private final ObjectMapper objectMapper;
-
-    public LabelsConverter(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
-
     @Override
     public String convertToDatabaseColumn(Labels attribute) {
-        return JsonUtils.writeValueAsString(objectMapper, attribute);
+        return JsonUtils.writeValueAsString(attribute);
     }
 
     @Override
     public Labels convertToEntityAttribute(String dbData) {
-        return JsonUtils.readValue(objectMapper, dbData, Labels.class);
+        return JsonUtils.readValue(dbData, Labels.class);
     }
 }

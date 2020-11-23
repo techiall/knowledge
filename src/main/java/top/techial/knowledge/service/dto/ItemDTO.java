@@ -30,71 +30,63 @@ public class ItemDTO implements Serializable {
         return id;
     }
 
-    public ItemDTO setId(Integer id) {
+    public void setId(Integer id) {
         this.id = id;
-        return this;
     }
 
     public Boolean getShare() {
         return share;
     }
 
-    public ItemDTO setShare(Boolean share) {
+    public void setShare(Boolean share) {
         this.share = share;
-        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public ItemDTO setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     public String getImage() {
         return image;
     }
 
-    public ItemDTO setImage(String image) {
+    public void setImage(String image) {
         this.image = image;
-        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public ItemDTO setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
-        return this;
     }
 
     public Instant getCreateTime() {
         return createTime;
     }
 
-    public ItemDTO setCreateTime(Instant createTime) {
+    public void setCreateTime(Instant createTime) {
         this.createTime = createTime;
-        return this;
     }
 
     public Instant getUpdateTime() {
         return updateTime;
     }
 
-    public ItemDTO setUpdateTime(Instant updateTime) {
+    public void setUpdateTime(Instant updateTime) {
         this.updateTime = updateTime;
-        return this;
     }
 
     public UserDTO getAuthor() {
         return author;
     }
 
-    public ItemDTO setAuthor(UserDTO author) {
+    public void setAuthor(UserDTO author) {
         this.author = author;
-        return this;
     }
 }

@@ -100,7 +100,8 @@ public class NodeService {
     }
 
     private Node nodeRelationshipSave(NodeVM nodeVM, Long itemRootNodeId) {
-        var node = nodeMapper.toNode(nodeVM.setProperty(buildProperty(nodeVM.getProperty())));
+        nodeVM.setProperty(buildProperty(nodeVM.getProperty()));
+        var node = nodeMapper.toNode(nodeVM);
         node = nodeRepository.save(node);
         if (nodeVM.getParentId() != null) {
             nodeRelationshipRepository.insertNode(node.getId(), nodeVM.getParentId());

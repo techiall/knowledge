@@ -1,5 +1,6 @@
 package top.techial.knowledge.web.rest.vm;
 
+import org.springframework.lang.Nullable;
 import top.techial.knowledge.service.valid.Insert;
 
 import javax.validation.constraints.NotEmpty;
@@ -19,43 +20,43 @@ public class ItemVM implements Serializable {
     @NotEmpty(groups = Insert.class)
     private String name;
 
+    @Nullable
     private String description;
 
+    @Nullable
     private String image;
 
     public Boolean getShare() {
         return share;
     }
 
-    public ItemVM setShare(Boolean share) {
+    public void setShare(Boolean share) {
         this.share = share;
-        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public ItemVM setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
+    @Nullable
     public String getDescription() {
         return description;
     }
 
-    public ItemVM setDescription(String description) {
+    public void setDescription(@Nullable String description) {
         this.description = description;
-        return this;
     }
 
+    @Nullable
     public String getImage() {
         return image;
     }
 
-    public ItemVM setImage(String image) {
+    public void setImage(@Nullable String image) {
         this.image = image;
-        return this;
     }
 }

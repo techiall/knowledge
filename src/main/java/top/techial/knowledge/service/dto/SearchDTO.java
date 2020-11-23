@@ -28,53 +28,48 @@ public class SearchDTO implements Serializable {
         return nodeId;
     }
 
-    public SearchDTO setNodeId(Long nodeId) {
+    public void setNodeId(Long nodeId) {
         this.nodeId = nodeId;
-        return this;
     }
 
     public Labels getLabels() {
         return labels;
     }
 
-    public SearchDTO setLabels(Labels labels) {
+    public void setLabels(Labels labels) {
         this.labels = labels;
-        return this;
     }
 
     public Property getProperty() {
         return property;
     }
 
-    public SearchDTO setProperty(Property property) {
+    public void setProperty(Property property) {
         this.property = property;
-        return this;
     }
 
     public String getNodeName() {
         return nodeName;
     }
 
-    public SearchDTO setNodeName(String nodeName) {
+    public void setNodeName(String nodeName) {
         this.nodeName = nodeName;
-        return this;
     }
 
     public String getNodeItemName() {
         return nodeItemName;
     }
 
-    public SearchDTO setNodeItemName(String nodeItemName) {
+    public void setNodeItemName(String nodeItemName) {
         this.nodeItemName = nodeItemName;
-        return this;
     }
 
     public String getText() {
         return text;
     }
 
-    public SearchDTO setText(String text) {
+    public void setText(String text) {
         this.text = text;
-        return this;
     }
 }
+

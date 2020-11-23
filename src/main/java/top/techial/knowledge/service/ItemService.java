@@ -46,7 +46,7 @@ public class ItemService {
 
     public Item update(Integer id, ItemVM itemVM) {
         return itemRepository.findById(id).map(item -> {
-            var itemVMOptional = Optional.of(itemVM);
+            final var itemVMOptional = Optional.of(itemVM);
             itemVMOptional.map(ItemVM::getDescription).ifPresent(item::setDescription);
             itemVMOptional.map(ItemVM::getShare).ifPresent(item::setShare);
             itemVMOptional.map(ItemVM::getImage).ifPresent(item::setImage);
@@ -56,14 +56,16 @@ public class ItemService {
     }
 
     public Item save(Integer id, Item item) {
-        var node = new Node().setName("root");
+        var node = new Node();
+        node.setName("root");
         node = nodeService.saveItemRoot(node);
 
-        item.setAuthor(userRepository.findById(id).orElseThrow(UserNotFoundException::new))
-            .setRootNode(node);
+        item.setAuthor(userRepository.findById(id).orElseThrow(UserNotFoundException::new));
+        item.setRootNode(node);
         item = itemRepository.save(item);
 
-        nodeRepository.save(node.setItemId(item.getId()));
+        node.setItemId(item.getId());
+        nodeRepository.save(node);
         itemRepository.insert(id, item.getId());
 
         return item;

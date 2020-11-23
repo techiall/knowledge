@@ -16,9 +16,8 @@ import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.EntityMapper;
 import org.springframework.data.elasticsearch.core.convert.ElasticsearchConverter;
 import org.springframework.data.elasticsearch.core.mapping.SimpleElasticsearchMappingContext;
-import org.springframework.data.mapping.MappingException;
+import top.techial.knowledge.utils.JsonUtils;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,15 +28,9 @@ import java.util.Map;
 @EnableConfigurationProperties(ElasticsearchProperties.class)
 public class ElasticsearchConfiguration {
 
-    private final ObjectMapper objectMapper;
-
-    public ElasticsearchConfiguration(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
-
     @Bean
     public EntityMapper getEntityMapper() {
-        return new CustomEntityMapper(objectMapper);
+        return new CustomEntityMapper();
     }
 
     @Bean
@@ -52,10 +45,8 @@ public class ElasticsearchConfiguration {
 
     public static class CustomEntityMapper implements EntityMapper {
 
-        private final ObjectMapper objectMapper;
-
-        public CustomEntityMapper(ObjectMapper objectMapper) {
-            this.objectMapper = objectMapper;
+        public CustomEntityMapper() {
+            ObjectMapper objectMapper = JsonUtils.DEFAULT_MAPPER;
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
             objectMapper.configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, true);
@@ -64,32 +55,24 @@ public class ElasticsearchConfiguration {
         }
 
         @Override
-        public String mapToString(Object object) throws IOException {
-            return objectMapper.writeValueAsString(object);
+        public String mapToString(Object object) {
+            return JsonUtils.writeValueAsString(object);
         }
 
         @Override
-        public <T> T mapToObject(String source, Class<T> clazz) throws IOException {
-            return objectMapper.readValue(source, clazz);
+        public <T> T mapToObject(String source, Class<T> clazz) {
+            return JsonUtils.readValue(source, clazz);
         }
 
         @Override
         @SuppressWarnings("unchecked")
         public Map<String, Object> mapObject(Object source) {
-            try {
-                return objectMapper.readValue(mapToString(source), HashMap.class);
-            } catch (IOException e) {
-                throw new MappingException(e.getMessage(), e);
-            }
+            return JsonUtils.readValue(mapToString(source), HashMap.class);
         }
 
         @Override
         public <T> T readObject(Map<String, Object> source, Class<T> targetType) {
-            try {
-                return mapToObject(mapToString(source), targetType);
-            } catch (IOException e) {
-                throw new MappingException(e.getMessage(), e);
-            }
+            return mapToObject(mapToString(source), targetType);
         }
     }
 }

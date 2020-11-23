@@ -65,62 +65,55 @@ public class Node implements Serializable {
         return name;
     }
 
-    public Node setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     public Labels getLabels() {
         return labels;
     }
 
-    public Node setLabels(Labels labels) {
+    public void setLabels(Labels labels) {
         this.labels = labels;
-        return this;
     }
 
     public Property getProperty() {
         return property;
     }
 
-    public Node setProperty(Property property) {
+    public void setProperty(Property property) {
         this.property = property;
-        return this;
     }
 
     public Integer getItemId() {
         return itemId;
     }
 
-    public Node setItemId(Integer itemId) {
+    public void setItemId(Integer itemId) {
         this.itemId = itemId;
-        return this;
     }
 
     public String getText() {
         return text;
     }
 
-    public Node setText(String text) {
+    public void setText(String text) {
         this.text = text;
-        return this;
     }
 
     public Instant getCreateTime() {
         return createTime;
     }
 
-    public Node setCreateTime(Instant createTime) {
+    public void setCreateTime(Instant createTime) {
         this.createTime = createTime;
-        return this;
     }
 
     public Instant getUpdateTime() {
         return updateTime;
     }
 
-    public Node setUpdateTime(Instant updateTime) {
+    public void setUpdateTime(Instant updateTime) {
         this.updateTime = updateTime;
-        return this;
     }
 }

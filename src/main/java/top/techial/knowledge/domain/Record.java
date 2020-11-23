@@ -43,53 +43,47 @@ public class Record implements Serializable {
         return id;
     }
 
-    public Record setId(Integer id) {
+    public void setId(Integer id) {
         this.id = id;
-        return this;
     }
 
     public Long getNodeId() {
         return nodeId;
     }
 
-    public Record setNodeId(Long nodeId) {
+    public void setNodeId(Long nodeId) {
         this.nodeId = nodeId;
-        return this;
     }
 
     public String getOperator() {
         return operator;
     }
 
-    public Record setOperator(String operator) {
+    public void setOperator(String operator) {
         this.operator = operator;
-        return this;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public Record setMessage(String message) {
+    public void setMessage(String message) {
         this.message = message;
-        return this;
     }
 
     public User getUser() {
         return user;
     }
 
-    public Record setUser(User user) {
+    public void setUser(User user) {
         this.user = user;
-        return this;
     }
 
     public Instant getCreateTime() {
         return createTime;
     }
 
-    public Record setCreateTime(Instant createTime) {
+    public void setCreateTime(Instant createTime) {
         this.createTime = createTime;
-        return this;
     }
 }

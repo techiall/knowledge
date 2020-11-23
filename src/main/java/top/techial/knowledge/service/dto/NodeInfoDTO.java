@@ -29,54 +29,48 @@ public class NodeInfoDTO implements Serializable {
         return id;
     }
 
-    public NodeInfoDTO setId(Long id) {
+    public void setId(Long id) {
         this.id = id;
-        return this;
     }
 
     public Set<String> getLabels() {
         return labels;
     }
 
-    public NodeInfoDTO setLabels(Set<String> labels) {
+    public void setLabels(Set<String> labels) {
         this.labels = labels;
-        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public NodeInfoDTO setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     public Integer getItemId() {
         return itemId;
     }
 
-    public NodeInfoDTO setItemId(Integer itemId) {
+    public void setItemId(Integer itemId) {
         this.itemId = itemId;
-        return this;
     }
 
     public Long getParentNodeId() {
         return parentNodeId;
     }
 
-    public NodeInfoDTO setParentNodeId(Long parentNodeId) {
+    public void setParentNodeId(Long parentNodeId) {
         this.parentNodeId = parentNodeId;
-        return this;
     }
 
     public Map<String, List<Property.PropertyDTO>> getProperty() {
         return property;
     }
 
-    public NodeInfoDTO setProperty(Map<String, List<Property.PropertyDTO>> property) {
+    public void setProperty(Map<String, List<Property.PropertyDTO>> property) {
         this.property = property;
-        return this;
     }
 }
 

@@ -1,6 +1,5 @@
 package top.techial.knowledge.security.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -14,34 +13,28 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
  */
 @Configuration
 public class HandlerConfig {
-    private final ObjectMapper objectMapper;
-
-    public HandlerConfig(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
-
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
-        return new AccessDeniedHandlerImpl(objectMapper);
+        return new AccessDeniedHandlerImpl();
     }
 
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new AuthenticationEntryPointImpl(objectMapper);
+        return new AuthenticationEntryPointImpl();
     }
 
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
-        return new AuthenticationFailureHandlerImpl(objectMapper);
+        return new AuthenticationFailureHandlerImpl();
     }
 
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new AuthenticationSuccessHandlerImpl(objectMapper);
+        return new AuthenticationSuccessHandlerImpl();
     }
 
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler() {
-        return new LogoutSuccessHandlerImpl(objectMapper);
+        return new LogoutSuccessHandlerImpl();
     }
 }

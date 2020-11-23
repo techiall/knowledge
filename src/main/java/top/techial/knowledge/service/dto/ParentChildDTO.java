@@ -11,17 +11,15 @@ public class ParentChildDTO implements Serializable {
         return descendant;
     }
 
-    public ParentChildDTO setDescendant(Long descendant) {
+    public void setDescendant(Long descendant) {
         this.descendant = descendant;
-        return this;
     }
 
     public Long getAncestor() {
         return ancestor;
     }
 
-    public ParentChildDTO setAncestor(Long ancestor) {
+    public void setAncestor(Long ancestor) {
         this.ancestor = ancestor;
-        return this;
     }
 }

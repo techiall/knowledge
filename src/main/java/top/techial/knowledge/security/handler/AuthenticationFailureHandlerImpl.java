@@ -1,6 +1,5 @@
 package top.techial.knowledge.security.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -17,17 +16,11 @@ import java.io.IOException;
  * @author techial
  */
 public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHandler {
-    private final ObjectMapper objectMapper;
-
-    public AuthenticationFailureHandlerImpl(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
-
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException {
-        ClientErrorException clientErrorException;
+        final ClientErrorException clientErrorException;
         if (exception instanceof InternalAuthenticationServiceException && exception.getCause() instanceof ClientErrorException) {
             clientErrorException = (ClientErrorException) exception.getCause();
         } else {
@@ -35,6 +28,8 @@ public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHa
         }
         response.setStatus(clientErrorException.getCode());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write(JsonUtils.writeValueAsString(objectMapper, clientErrorException.getResultBean()));
+
+        final var str = JsonUtils.writeValueAsString(clientErrorException.getResultBean());
+        response.getWriter().write(str == null ? "" : str);
     }
 }

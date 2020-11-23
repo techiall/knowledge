@@ -1,6 +1,7 @@
 package top.techial.knowledge.domain;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -24,14 +25,12 @@ public class Labels implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Labels)) return false;
-
         Labels labels1 = (Labels) o;
-
-        return getLabels() != null ? getLabels().equals(labels1.getLabels()) : labels1.getLabels() == null;
+        return Objects.equals(getLabels(), labels1.getLabels());
     }
 
     @Override
     public int hashCode() {
-        return getLabels() != null ? getLabels().hashCode() : 0;
+        return Objects.hash(getLabels());
     }
 }

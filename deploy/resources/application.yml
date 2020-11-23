@@ -49,6 +49,7 @@ spring:
     database: 0
     host: redis://redis:6379
   jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
     generate-ddl: true
     show-sql: true
     hibernate:

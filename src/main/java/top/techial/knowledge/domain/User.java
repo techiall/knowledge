@@ -51,107 +51,95 @@ public class User implements Serializable {
         return id;
     }
 
-    public User setId(Integer id) {
+    public void setId(Integer id) {
         this.id = id;
-        return this;
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public User setUserName(String userName) {
+    public void setUserName(String userName) {
         this.userName = userName;
-        return this;
     }
 
     public String getNickName() {
         return nickName;
     }
 
-    public User setNickName(String nickName) {
+    public void setNickName(String nickName) {
         this.nickName = nickName;
-        return this;
     }
 
     public Boolean getAccountNonExpired() {
         return accountNonExpired;
     }
 
-    public User setAccountNonExpired(Boolean accountNonExpired) {
+    public void setAccountNonExpired(Boolean accountNonExpired) {
         this.accountNonExpired = accountNonExpired;
-        return this;
     }
 
     public Boolean getAccountNonLocked() {
         return accountNonLocked;
     }
 
-    public User setAccountNonLocked(Boolean accountNonLocked) {
+    public void setAccountNonLocked(Boolean accountNonLocked) {
         this.accountNonLocked = accountNonLocked;
-        return this;
     }
 
     public Boolean getCredentialsNonExpired() {
         return credentialsNonExpired;
     }
 
-    public User setCredentialsNonExpired(Boolean credentialsNonExpired) {
+    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
-        return this;
     }
 
     public Boolean getEnabled() {
         return enabled;
     }
 
-    public User setEnabled(Boolean enabled) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
-        return this;
     }
 
     public Set<Item> getItem() {
         return item;
     }
 
-    public User setItem(Set<Item> item) {
+    public void setItem(Set<Item> item) {
         this.item = item;
-        return this;
     }
 
     public String getImages() {
         return images;
     }
 
-    public User setImages(String images) {
+    public void setImages(String images) {
         this.images = images;
-        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public User setPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
-        return this;
     }
 
     public Instant getCreateTime() {
         return createTime;
     }
 
-    public User setCreateTime(Instant createTime) {
+    public void setCreateTime(Instant createTime) {
         this.createTime = createTime;
-        return this;
     }
 
     public Instant getUpdateTime() {
         return updateTime;
     }
 
-    public User setUpdateTime(Instant updateTime) {
+    public void setUpdateTime(Instant updateTime) {
         this.updateTime = updateTime;
-        return this;
     }
 }

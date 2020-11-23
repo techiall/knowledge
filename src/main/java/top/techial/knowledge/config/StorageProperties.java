@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "storage")
 public class StorageProperties {
 
-    private String location;
+    private String location = "/opt/knowledge/storage";
 
     public String getLocation() {
         return location;
