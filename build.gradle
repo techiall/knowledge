@@ -39,14 +39,15 @@ apply from: "gradle/idea.gradle"
 
 
 dependencies {
-    implementation "org.springframework.boot:spring-boot-starter-security"
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
-    implementation "org.springframework.boot:spring-boot-starter-aop"
-    implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.springframework.boot:spring-boot-starter-aop"
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation 'org.jetbrains:annotations:19.0.0'
-    implementation 'org.jetbrains:annotations:19.0.0'
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
