@@ -30,8 +30,8 @@ public class RecordController {
     }
 
     @GetMapping("/node/{id}")
-    @PreAuthorize("hasAnyAuthority(#id.toString())")
-    public ResultBean findByNodeId(@PathVariable Long id,
+    @PreAuthorize("hasAnyAuthority(#id)")
+    public ResultBean findByNodeId(@PathVariable long id,
                                    @PageableDefault(sort = "createTime", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResultBean.ok(recordRepository.findAllByNodeId(id, pageable).map(recordMapper::toRecordDTO));
     }

@@ -17,10 +17,10 @@ import java.util.Optional;
 @Repository
 public interface NodeRepository extends JpaRepository<Node, Long>, QuerydslPredicateExecutor<Node> {
     @Transactional
-    void deleteAllByItemId(Integer id);
+    void deleteAllByItemId(int id);
 
     @Query("select n from Node n inner join Item i on n.itemId = i.id where n.itemId = ?2 and n.name = ?1")
-    Optional<Node> findByItemIdAndName(String name, Integer itemId);
+    Optional<Node> findByItemIdAndName(String name, int itemId);
 
     @Transactional
     void deleteByIdIn(Collection<Long> ids);
@@ -29,11 +29,11 @@ public interface NodeRepository extends JpaRepository<Node, Long>, QuerydslPredi
     List<Long> findByItemIdIn(Collection<Integer> ids);
 
     @Query("select n from Node n inner join NodeRelationship nr on n.id = nr.descendant where nr.ancestor = ?1")
-    List<Node> findChildNode(Long id);
+    List<Node> findChildNode(long id);
 
     @Query("select n from Node n inner join NodeRelationship nr on n.id = nr.ancestor where nr.descendant = ?1")
-    List<Node> findParentNode(Long id);
+    List<Node> findParentNode(long id);
 
     @Query("select i.rootNode.id from Node n inner join Item i on n.itemId = i.id where n.id = ?1")
-    Long findItemRootNodeId(Long id);
+    Long findItemRootNodeId(long id);
 }

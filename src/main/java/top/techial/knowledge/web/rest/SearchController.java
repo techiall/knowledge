@@ -45,7 +45,7 @@ public class SearchController {
 
     @GetMapping
     public ResultBean search(@RequestParam(name = "q") String question,
-                             @RequestParam(required = false, defaultValue = "false") Boolean tips,
+                             @RequestParam(required = false, defaultValue = "false") boolean tips,
                              @PageableDefault Pageable pageable) {
         question = question.substring(0, Math.min(32, question.length()));
         if (Boolean.TRUE.equals(tips)) {

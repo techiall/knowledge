@@ -56,7 +56,7 @@ public class UserService {
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
-    private String findPasswordById(Integer id) {
+    private String findPasswordById(int id) {
         var qUser = QUser.user;
         return jpaQueryFactory.select(qUser.password).where(qUser.id.eq(id))
                               .from(qUser)
@@ -98,14 +98,14 @@ public class UserService {
         context.setAuthentication(auth);
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(int id) {
         itemService.deleteByUserId(id);
         recordRepository.deleteByUserId(id);
         userRepository.deleteById(id);
     }
 
     @Transactional
-    public User updatePassword(Integer id, String srcPassword, String password) {
+    public User updatePassword(int id, String srcPassword, String password) {
         var user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
 
         if (!passwordEncoder.matches(srcPassword, user.getPassword())) {
@@ -119,7 +119,7 @@ public class UserService {
     }
 
     @Transactional
-    public User update(Integer id, UserVM userVM) {
+    public User update(int id, UserVM userVM) {
         return userRepository.findById(id).map(user -> {
             var vmOptional = Optional.of(userVM);
             vmOptional.map(UserVM::getImage).filter(it -> !it.isEmpty()).ifPresent(user::setImages);

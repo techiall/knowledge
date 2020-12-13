@@ -42,7 +42,7 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public ResultBean findById(@PathVariable Integer id) {
+    public ResultBean findById(@PathVariable int id) {
         return itemRepository.findById(id)
                              .map(itemMapper::toItemDTO)
                              .map(ResultBean::ok)
@@ -78,9 +78,9 @@ public class ItemController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ITEM_' + #id.toString())")
+    @PreAuthorize("hasAnyAuthority('ITEM_' + #id)")
     @FlushAuthority
-    public ResultBean deleteById(@PathVariable Integer id,
+    public ResultBean deleteById(@PathVariable int id,
                                  @AuthenticationPrincipal UserPrincipal userPrincipal) {
         itemService.deleteById(id, userPrincipal.getId());
         return ResultBean.ok();

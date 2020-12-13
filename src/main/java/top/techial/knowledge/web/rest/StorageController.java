@@ -45,7 +45,7 @@ public class StorageController {
     @PostMapping("/text/{id}")
     @PreAuthorize("hasAnyAuthority(#id)")
     public ResultBean save(@RequestBody(required = false) String text,
-                           @PathVariable Long id) {
+                           @PathVariable long id) {
         final var node = nodeSearchRepository.findById(id)
                                              .map(it -> {
                                                  it.setText(text);
@@ -59,7 +59,7 @@ public class StorageController {
      * 文本获取，对应 node 节点
      */
     @GetMapping("/text/{id}")
-    public ResultBean findById(@PathVariable Long id) {
+    public ResultBean findById(@PathVariable long id) {
         final var s = nodeSearchRepository.findById(id)
                                           .map(Node::getText)
                                           .orElse(null);

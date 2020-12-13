@@ -20,9 +20,9 @@ import java.util.Optional;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Integer>, QuerydslPredicateExecutor<Item> {
 
-    Page<Item> findAllByAuthorId(Integer id, Pageable pageable);
+    Page<Item> findAllByAuthorId(int id, Pageable pageable);
 
-    List<Item> findAllByAuthorId(Integer id);
+    List<Item> findAllByAuthorId(int id);
 
     @EntityGraph(attributePaths = "author")
     Page<Item> findByShare(Boolean share, Pageable pageable);
@@ -30,7 +30,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer>, QuerydslPr
     List<Item> findByShare(Boolean share);
 
     @Transactional
-    void deleteByAuthorId(Integer id);
+    void deleteByAuthorId(int id);
 
     @Modifying
     @Query(
@@ -38,7 +38,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer>, QuerydslPr
             value = "insert into user_item (user_id, item_id) values (?1, ?2);"
     )
     @Transactional
-    void insert(Integer userId, Integer itemId);
+    void insert(int userId, int itemId);
 
     @Modifying
     @Query(
@@ -49,8 +49,8 @@ public interface ItemRepository extends JpaRepository<Item, Integer>, QuerydslPr
     void deleteTmpByUserIdAndItemId(Integer userId, Integer itemId);
 
     @Query("select i.rootNode.id from Item i where i.id = :id")
-    Optional<Long> findRootNodeId(Integer id);
+    Optional<Long> findRootNodeId(int id);
 
     @Query("select i.rootNode.id from Item i inner join Node n on n.itemId = i.id where n.id = :id")
-    Optional<Integer> findItemIdByRootId(Long id);
+    Optional<Integer> findItemIdByRootId(long id);
 }

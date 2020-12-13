@@ -17,13 +17,13 @@ import java.util.Collection;
 public interface RecordRepository extends JpaRepository<Record, Integer>, QuerydslPredicateExecutor<Record> {
 
     @Transactional
-    void deleteByNodeId(Long id);
+    void deleteByNodeId(long id);
 
     @Transactional
-    void deleteByUserId(Integer id);
+    void deleteByUserId(int id);
 
     @Transactional
     void deleteByNodeIdIn(Collection<Long> ids);
 
-    Page<Record> findAllByNodeId(Long nodeId, Pageable pageable);
+    Page<Record> findAllByNodeId(long nodeId, Pageable pageable);
 }

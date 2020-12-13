@@ -19,7 +19,7 @@ public class RecordService {
         this.userRepository = userRepository;
     }
 
-    public void save(Long nodeId, Integer userId, String operatorMessage, String message) {
+    public void save(long nodeId, int userId, String operatorMessage, String message) {
         final var record = new Record();
         record.setNodeId(nodeId);
         record.setOperator(operatorMessage);
