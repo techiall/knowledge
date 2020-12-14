@@ -8,13 +8,16 @@ on:
 jobs:
   tag:
     runs-on: ubuntu-20.04
-
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Get the version
         id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        run: |
+          echo ::set-output name=VERSION::$(git describe --tags --always)
 
       - uses: actions/setup-java@v1
         with:
@@ -49,10 +52,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Build Jar
-        run: chmod +x ./gradlew && ./gradlew clean yarnBuild bootJar
+      - name: Build jar and docker tar
+        run: chmod +x ./gradlew && ./gradlew clean yarnBuild jibBuildTar bootJar
 
-      - name: Create Release
+      - name: Create release
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -65,12 +68,11 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Jar
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      - name: Upload to release
+        uses: softprops/action-gh-release@v1
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/libs/knowledge-0.0.1.jar
-          asset_name: knowledge-${{ steps.get_version.outputs.VERSION }}.jar
-          asset_content_type: application/tar+gzip
+          files: |
+            build/libs/knowledge-0.0.1.jar
+            build/jib-image.tar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
