@@ -1,0 +1,18 @@
+final Map<String, String> map = [
+        'HTTP_PROXY' : 'http',
+        'HTTPS_PROXY': 'https'
+]
+task setHttpProxyFromEnv() {
+    for (e in System.getenv()) {
+        final String key = e.key.toUpperCase()
+        if (map.containsValue(key)) {
+            final String base = map[key]
+            final URL url = e.value.toURL()
+            println " - systemProp.${base}.proxy=${url.host}:${url.port}"
+            System.setProperty("${base}.proxyHost", url.host.toString())
+            System.setProperty("${base}.proxyPort", url.port.toString())
+        }
+    }
+}
+
+compileJava.dependsOn(setHttpProxyFromEnv)

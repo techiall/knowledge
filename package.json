@@ -8,16 +8,16 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "serialize-javascript": ">=3.1.0",
     "@packy-tang/vue-tinymce": "^1.0.0",
     "babel-plugin-prismjs": "^2.0.1",
-    "node-forge": ">=0.10.0",
     "babel-polyfill": "^6.26.0",
     "core-js": "^3.4.3",
     "jquery": ">=3.5.0",
     "lunar-calendar": "^0.1.4",
+    "node-forge": ">=0.10.0",
     "prismjs": "^1.21.0",
     "qs": "^6.9.1",
+    "serialize-javascript": ">=3.1.0",
     "view-design": "^4.0.2",
     "websocket-extensions": ">=0.1.4",
     "ztree": "^3.5.24"
