@@ -8,5 +8,6 @@ jib {
     }
     container {
         labels = ['maintainer': 'techial "dev@techial.cc"']
+        environment = ["LANG": "en_US.UTF-8"]
     }
 }
